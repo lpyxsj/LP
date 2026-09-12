@@ -141,11 +141,32 @@
   .dh-lightbox-body{max-width:100%;max-height:100%;}
   .dh-lightbox-body img{display:block;max-width:100%;max-height:calc(100vh - 64px);border-radius:6px;box-shadow:0 12px 40px rgba(0,0,0,.4);}
   .dh-lightbox-body svg{display:block;max-width:100%;max-height:calc(100vh - 64px);background:#fff;border-radius:6px;box-shadow:0 12px 40px rgba(0,0,0,.4);padding:20px;box-sizing:border-box;}
+  .dh-lightbox-body .dh-flow{max-width:min(92vw,920px);max-height:calc(100vh - 64px);overflow:auto;margin:0;box-shadow:0 12px 40px rgba(0,0,0,.4);}
+  .dh-lightbox-body .dh-flow .flow-step{font-size:16px;padding:12px 18px;max-width:260px;}
+  .dh-lightbox-body .dh-flow .flow-step .sub{font-size:13px;}
+  .dh-lightbox-body .dh-flow .flow-arrow{font-size:20px;padding:0 8px;}
+  .dh-lightbox-body .dh-flow .flow-branch{font-size:15px;}
+  .dh-lightbox-body .dh-flow .flow-branch .result{font-size:14px;padding:3px 12px;}
+  .dh-lightbox-body .dh-flow .cap{font-size:13px;}
 
   .dh-flow{max-width:82ch;margin:10px 0 4px;background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:6px;padding:14px 16px;box-shadow:var(--shadow-card);cursor:zoom-in;}
-  .dh-flow .cap{font-size:12px;color:var(--doc-ink-faint);margin-top:8px;text-align:center;}
+  .dh-flow .cap{font-size:12px;color:var(--doc-ink-faint);margin-top:10px;text-align:center;}
   .dh-flow .cap::before{content:"🔍 ";}
-  .dh-flow pre.mermaid{background:transparent;margin:0;}
+
+  /* ---------- Static (no-JS) flow diagrams: plain HTML/CSS boxes + arrows ---------- */
+  .flow-diagram{display:flex;flex-wrap:wrap;align-items:center;gap:2px;}
+  .flow-step{background:var(--doc-paper);border:1px solid var(--doc-line);border-radius:6px;padding:8px 12px;font-size:12.5px;line-height:1.45;color:var(--doc-ink);text-align:center;max-width:200px;}
+  .flow-step .sub{display:block;font-size:11px;color:var(--doc-ink-faint);margin-top:2px;}
+  .flow-arrow{display:flex;align-items:center;justify-content:center;color:var(--doc-ink-faint);font-size:15px;padding:0 4px;flex:0 0 auto;}
+  .flow-branches{display:flex;flex-direction:column;gap:7px;margin-top:10px;padding-left:10px;border-left:2px solid var(--doc-line);}
+  .flow-branches.first{margin-top:0;margin-bottom:12px;}
+  .flow-branch{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;}
+  .flow-branch .cond{color:var(--doc-ink-soft);}
+  .flow-branch .arr{color:var(--doc-ink-faint);flex:0 0 auto;}
+  .flow-branch .result{font-weight:600;padding:2px 10px;border-radius:100px;font-size:12px;white-space:nowrap;}
+  .flow-branch .result.good{color:var(--doc-status-done-fg);background:var(--doc-status-done-bg);}
+  .flow-branch .result.bad{color:var(--doc-p1);background:var(--doc-p1-soft);}
+  .flow-branch .result.neutral{color:var(--doc-ink-soft);background:var(--doc-line-soft);}
 
   .proto-jump{
     display:inline-flex;align-items:center;gap:6px;margin-top:2px;
@@ -650,6 +671,28 @@
           <p><strong>3）多端推送路由：</strong>用户在哪个已安装的客户端（Web 或 App）收到推送，点击后就在这个客户端自己的路由里跳转。详见「多端推送与频控」模块。</p>
         </div>
       </div>
+      <div class="req-block">
+        <h3>整体业务流程（三个模块串起来看）</h3>
+        <div class="dh-prose"><p>上面 3 件事对应的 Tab 顺序，是按本次需求被发现/讨论的先后排的，<strong>不代表真实发生的时间顺序</strong>，容易造成误解，这里单独说明：引导授权（「推送配置」模块）是用户安装并打开应用后就要完成的一次性系统权限设置，和"有没有发过某一条具体的推送消息"完全无关——不是"先发了一条推送、用户才被要求授权"，而是"必须先有用户已经授权，运营配置并发送的任意一条推送（「消息推送」模块）才谈得上能不能送达、点击后跳不跳得过去"。多端各自独立收发的规则（「多端推送与频控」模块）建立在前两者之上。</p></div>
+        <div class="dh-flow">
+          <div class="flow-diagram">
+            <div class="flow-step">用户安装 App，或 PWA 添加至主屏幕</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">打开应用</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">「推送配置」模块：引导授权流程<span class="sub">用户同意系统授权，一次性生效，与具体消息无关</span></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">该用户设备成为可接收推送的对象</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">「消息推送」模块：运营配置并发送任意一条推送</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">已授权设备收到通知，点击后按配置的跳转规则跳转</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">「多端推送与频控」模块：同一用户多端各自独立收发</div>
+          </div>
+          <div class="cap">图：三个模块的真实时间顺序——授权在最前，且与具体推送消息内容无关</div>
+        </div>
+      </div>
     </div>
 
     <!-- 1 消息推送 -->
@@ -689,16 +732,34 @@
 
       <div class="req-block">
         <h3>前台展示与交互</h3>
-        <div class="dh-prose"><p>用户在已安装的 Web(PWA) 或 App 上收到系统推送通知后，点击通知应直接打开对应端并跳转到后台配置的目标页；目标页需要登录时，登录完成后应自动回跳到该目标页，而不是停在登录页或被带回首页；若设备未安装对应端或版本过旧无法处理跳转，则降级进入首页。</p></div>
+        <div class="dh-prose"><p>前提:用户需已完成安装（App 安装包，或 PWA 添加至主屏幕）并完成推送授权，才收得到这条系统推送通知——未安装/未授权的用户根本不会收到通知，不在本流程覆盖范围内，详见「推送配置」模块。在此前提下，用户点击收到的通知应直接打开对应端并跳转到后台配置的目标页；目标页需要登录时，登录完成后应自动回跳到该目标页，而不是停在登录页或被带回首页；若 App 版本过旧、无法处理该跳转协议，则降级进入首页。</p></div>
         <div class="dh-flow">
-          <pre class="mermaid">flowchart LR
-  A[配置跳转目标] --> B[极光下发推送]
-  B --> C[用户设备收到通知]
-  C --> D{点击通知}
-  D -->|已安装且已登录| E[打开目标页]
-  D -->|未登录| F[先登录] --> E
-  D -->|未安装/版本过旧| G[降级进入首页]</pre>
-          <div class="cap">图：推送点击跳转流程</div>
+          <div class="flow-diagram">
+            <div class="flow-step">配置跳转目标</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">极光下发推送</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">已安装且已授权的用户设备收到通知</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">点击通知</div>
+          </div>
+          <div class="flow-branches">
+            <div class="flow-branch"><span class="cond">App 版本过旧，无法处理该跳转协议</span><span class="arr">→</span><span class="result bad">降级进入首页</span></div>
+            <div class="flow-branch"><span class="cond">目标页不需要登录，或已登录</span><span class="arr">→</span><span class="result good">直接打开目标页</span></div>
+            <div class="flow-branch"><span class="cond">目标页需要登录且当前未登录</span><span class="arr">→</span><span class="result good">先进入登录页，登录成功后自动回跳目标页</span></div>
+          </div>
+          <div class="cap">图：推送点击跳转流程（前提:已安装且已授权，未安装/未授权用户见「推送配置」模块）</div>
+        </div>
+        <div class="dh-table-simple" style="margin-top:14px;">
+          <table>
+            <thead><tr><th>触发条件</th><th>系统反馈</th></tr></thead>
+            <tbody>
+              <tr><td>已安装且已授权，目标页不需要登录，或用户已处于登录状态</td><td>点击通知后直接打开配置的目标页</td></tr>
+              <tr><td>已安装且已授权，目标页需要登录但用户当前未登录</td><td>先进入登录页，登录完成后自动回跳到原目标页（本期硬性验收要求）</td></tr>
+              <tr><td>已安装但 App 版本过旧，无法处理该跳转协议</td><td>降级进入首页</td></tr>
+              <tr><td>未安装对应端，或未完成推送授权</td><td>根本收不到这条通知，不会触发点击/跳转；详见「推送配置」模块的触发条件与反馈</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -732,17 +793,37 @@
           <div class="cap">图：前台实际效果（KK678 App）——引导授权提示条，文案即对应后台"引导授权文案"配置</div>
         </div>
         <div class="dh-flow">
-          <pre class="mermaid">flowchart LR
-  A[安装App或PWA添加至主屏幕] --> B[打开该应用]
-  B --> C[弹出站内引导提示条]
-  C --> D[提示条文案取自本页引导授权文案配置]
-  D --> E{用户点击接收通知}
-  E -->|是| F[弹出系统授权提示]
-  E -->|否/关闭| G[不再弹出，收不到推送]
-  F --> H{系统授权}
-  H -->|同意| I[可正常接收推送]
-  H -->|拒绝| G</pre>
+          <div class="flow-branches first">
+            <div class="flow-branch"><span class="cond">纯网页访问，未安装为独立应用</span><span class="arr">→</span><span class="result bad">不触发授权引导，始终无法接收推送</span></div>
+          </div>
+          <div class="flow-diagram">
+            <div class="flow-step">已安装（App 或 PWA 添加至主屏幕），打开该应用</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">弹出站内引导提示条<span class="sub">文案取自「引导授权文案」配置</span></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">点击"接收通知"</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">弹出系统授权提示</div>
+          </div>
+          <div class="flow-branches">
+            <div class="flow-branch"><span class="cond">用户点击拒绝/关闭引导提示条</span><span class="arr">→</span><span class="result bad">不再弹出，收不到推送</span></div>
+            <div class="flow-branch"><span class="cond">系统授权提示，用户同意</span><span class="arr">→</span><span class="result good">可正常接收推送</span></div>
+            <div class="flow-branch"><span class="cond">系统授权提示，用户拒绝</span><span class="arr">→</span><span class="result bad">收不到推送</span></div>
+          </div>
           <div class="cap">图：引导授权文案生效流程</div>
+        </div>
+        <div class="dh-table-simple" style="margin-top:14px;">
+          <table>
+            <thead><tr><th>触发条件</th><th>系统反馈</th></tr></thead>
+            <tbody>
+              <tr><td>纯网页访问，未安装为独立应用（未装 App / 未将 PWA 添加到主屏幕）</td><td>不会弹出任何授权引导，该用户始终无法接收此推送</td></tr>
+              <tr><td>已安装（App 或 PWA 添加至主屏幕），打开该应用</td><td>弹出站内引导提示条，文案取自「引导授权文案」配置（默认或自定义）</td></tr>
+              <tr><td>用户在引导提示条上点击"接收通知"类按钮</td><td>继续弹出系统级授权提示</td></tr>
+              <tr><td>用户在引导提示条上点击拒绝/关闭</td><td>不再弹出，之后收不到推送</td></tr>
+              <tr><td>系统授权提示用户点击同意</td><td>可正常接收推送</td></tr>
+              <tr><td>系统授权提示用户点击拒绝</td><td>收不到推送，效果同拒绝引导提示条</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -751,19 +832,39 @@
     <div class="dh-panel" data-panel="multi">
       <div class="req-block">
         <h3>后台配置</h3>
-        <div class="dh-prose"><p>「消息推送」发送时可勾选 Web、App 一端或两端下发，本模块无新增配置项。推送发送的节奏（即"频控"）由运营在「消息推送」页面通过已有的"定时推送"配置（全部 / 仅一次 / 每天）自行把控，这是一期已有的能力，本期未做任何改动，不涉及新增的系统级频率限制。</p></div>
+        <div class="dh-prose"><p>「消息推送」发送时可勾选 Web、App 一端或两端下发，本模块无新增配置项。推送发送的节奏（即"频控"）由运营在「消息推送」页面通过已有的"定时推送"配置（全部 / 仅一次 / 每天）自行把控，这是一期已有的能力，本期未做任何改动，不涉及新增的系统级频率限制。为方便对照，"定时推送"三种模式的触发条件与效果如下（均为一期已有能力，非本期新增）：</p></div>
+        <div class="dh-table-simple">
+          <table>
+            <thead><tr><th>定时推送模式</th><th>触发条件</th><th>效果</th></tr></thead>
+            <tbody>
+              <tr><td>关闭定时推送</td><td>点击"推送"按钮</td><td>立即向所有满足勾选条件（Web/App）的用户发送一次</td></tr>
+              <tr><td>仅一次</td><td>到达配置的指定时间点</td><td>在该时间点自动发送一次</td></tr>
+              <tr><td>每天</td><td>每天到达配置的时间点</td><td>按设定时间每天重复发送一次，直到任务被停止/删除</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div class="req-block">
         <h3>前台展示与交互</h3>
         <div class="dh-prose"><p>用户在哪个已安装的客户端（Web/PWA 或 App）收到推送，点击后就在该客户端自身的路由体系里跳转，不做跨端统一处理。若同一用户 Web、App 都登录且都被运营勾选，两端会各自独立收到一条推送，<strong>不做去重或合并</strong>——这是本期确认的预期行为。</p></div>
         <div class="dh-flow">
-          <pre class="mermaid">flowchart TD
-  A[消息推送勾选Web和/或App] --> B[Web端收到推送]
-  A --> C[App端收到推送]
-  B --> D[点击后在Web自身路由跳转]
-  C --> E[点击后在App自身路由跳转]</pre>
+          <div class="flow-branches first">
+            <div class="flow-branch"><span class="cond">本条推送勾选了 Web</span><span class="arr">→</span><span class="result neutral">Web 端收到推送，点击后在 Web 自身路由跳转</span></div>
+            <div class="flow-branch"><span class="cond">本条推送勾选了 App</span><span class="arr">→</span><span class="result neutral">App 端收到推送，点击后在 App 自身路由跳转</span></div>
+          </div>
           <div class="cap">图：多端推送路由规则</div>
+        </div>
+        <div class="dh-table-simple" style="margin-top:14px;">
+          <table>
+            <thead><tr><th>触发条件</th><th>系统反馈</th></tr></thead>
+            <tbody>
+              <tr><td>消息推送仅勾选 Web</td><td>只有 Web 端收到推送，App 不收到</td></tr>
+              <tr><td>消息推送仅勾选 App</td><td>只有 App 端收到推送，Web 不收到</td></tr>
+              <tr><td>消息推送勾选 Web+App，且用户在两端都已登录</td><td>两端各自独立收到一条推送，不做去重或合并</td></tr>
+              <tr><td>消息推送勾选 Web+App，但用户从未在其中一端登录/使用过（该端从未与账号的推送别名绑定）</td><td>基于极光按别名（通常对应用户账号）下发推送的机制，从未绑定该账号别名的那一端收不到；同一账号在多台设备间重复登录时是否要解绑旧设备的别名，是另一个尚待拍板的独立问题，不在本表讨论范围内</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -837,14 +938,8 @@
   });
   document.querySelectorAll('.dh-flow').forEach(function(flow){
     flow.addEventListener('click', function(e){
-      var svg = flow.querySelector('svg');
-      if(!svg) return; // flowchart hasn't rendered yet
       e.stopPropagation();
-      // Keep the original id: Mermaid scopes its inlined <style> rules to the
-      // SVG's own id (e.g. "#mermaid-xyz .node rect{...}"), so stripping the id
-      // on the clone made those rules stop matching and shapes fell back to the
-      // SVG default (solid black) fill.
-      var clone = svg.cloneNode(true);
+      var clone = flow.cloneNode(true);
       dhLightboxBody.innerHTML = '';
       dhLightboxBody.appendChild(clone);
       openLightbox();
