@@ -193,7 +193,7 @@
      Embedded prototype styles (faithful antd / Vben replica)
      Scoped under .proto-window so it never inherits doc tokens.
      ========================================================= */
-  .proto-window{
+  .proto-window,.modal-mask{
     --primary:#1890ff;--primary-active:#096dd9;--danger:#ff4d4f;
     --sider-bg:#001529;--sider-bg-light:#000c17;--sider-selected:#1890ff;
     --body-bg:#f0f2f5;--panel-bg:#ffffff;--table-head-bg:#fafafa;
@@ -610,7 +610,7 @@
                 <label class="radio checked" data-value="default"><span class="dot-outer"></span>默认</label>
                 <label class="radio" data-value="custom"><span class="dot-outer"></span>自定义</label>
               </div>
-              <div id="webAuthCustomWrap" style="margin-top:10px;">
+              <div id="webAuthCustomWrap" style="margin-top:10px;display:none;">
                 <textarea class="input" id="webAuthTextarea" maxlength="150" placeholder="请输入" style="height:60px;"></textarea>
                 <div class="char-count"><span id="webAuthCount">0</span> / 150</div>
               </div>
@@ -1023,6 +1023,7 @@
       r.addEventListener('click', function(){
         webAuthGroup.querySelectorAll('.radio').forEach(function(x){ x.classList.remove('checked'); });
         r.classList.add('checked');
+        if(webAuthCustomWrap){ webAuthCustomWrap.style.display = (r.dataset.value === 'custom') ? '' : 'none'; }
       });
     });
   }
