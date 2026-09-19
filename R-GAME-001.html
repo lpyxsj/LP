@@ -280,6 +280,14 @@
   table.dtable tr:hover td{background:#fafafa;}
   table.dtable th.pf-mark,table.dtable td.pf-mark{position:relative;box-shadow:inset 3px 0 0 0 #fa8c16;background:#fff7e6;}
   table.dtable th.pf-mark::after{content:"本期新增";position:absolute;top:2px;right:4px;font-size:9px;font-weight:600;line-height:1.6;color:#d46b08;background:#ffe7ba;padding:0 5px;border-radius:100px;white-space:nowrap;}
+  .inline-limit-value{border:0;background:none;color:inherit;font:inherit;cursor:pointer;padding:2px 6px;border-radius:2px;min-width:48px;}
+  .inline-limit-value:hover,.inline-limit-value:focus-visible{color:var(--primary);outline:1px solid var(--primary);background:#fff;}
+  .inline-limit-editor{display:inline-flex;align-items:center;gap:5px;}
+  .inline-limit-editor input{width:82px;height:28px;padding:3px 6px;border:1px solid var(--primary);border-radius:2px;font:inherit;text-align:center;outline:none;background:#fff;}
+  .inline-limit-editor input.err{border-color:var(--danger);}
+  .inline-limit-save{width:28px;height:28px;border:1px solid var(--primary);border-radius:2px;background:var(--primary);color:#fff;cursor:pointer;font-size:17px;line-height:1;}
+  .inline-limit-save:hover{background:var(--primary-active);}
+  .inline-limit-error{display:block;color:var(--danger);font-size:11px;white-space:normal;min-width:132px;}
   .status-pill{display:inline-block;padding:1px 10px;border-radius:10px;font-size:12px;}
   .status-pill.on{background:#f0fbf4;color:#3ba55d;border:1px solid #b6e6c6;}
   .status-pill.off{background:#fff1f0;color:#ff4d4f;border:1px solid #ffccc7;}
@@ -685,7 +693,7 @@
 
       <div class="req-block" style="margin-top:18px;">
         <h3>后台配置</h3>
-        <div class="dh-prose"><p>场馆列表新增三列：<strong>入场余额限制</strong>、<strong>最后操作人</strong>、<strong>最后操作时间</strong>（橙色标记为本期新增）。编辑弹窗里新增"入场余额限制"输入项，校验规则见下方字段说明表。</p></div>
+        <div class="dh-prose"><p>场馆列表新增三列：<strong>入场余额限制</strong>、<strong>最后操作人</strong>、<strong>最后操作时间</strong>（橙色标记为本期新增）。点击表格中的余额数值可直接输入金额，点击对钩保存；原有编辑弹窗也可设置该值。两种方式使用相同的金额校验规则。</p></div>
         <div class="dh-table-simple">
           <table>
             <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
@@ -750,6 +758,9 @@
           <table>
             <thead><tr><th>触发条件</th><th>系统反馈</th></tr></thead>
             <tbody>
+              <tr><td>点击场馆列表中的入场余额限制数值</td><td>当前数值切换为输入框，并显示对钩保存按钮；按 Esc 可取消本次编辑</td></tr>
+              <tr><td>输入合法金额后点击对钩</td><td>保存该场馆的新限制金额，恢复数值展示，并更新最后操作人与最后操作时间</td></tr>
+              <tr><td>输入为空、负数、非数字或超过 2 位小数后点击对钩</td><td>保持输入状态，显示校验提示，不保存原值</td></tr>
               <tr><td>该场馆入场余额限制 = 0</td><td>不限制，直接进入游戏，无提示</td></tr>
               <tr><td>用户余额 ≥ 该场馆配置的入场余额限制</td><td>直接进入游戏，无提示</td></tr>
               <tr><td>用户余额 &lt; 该场馆配置的入场余额限制</td><td>拦截进入，弹出提示条"Saldo insuficiente {金额}"（金额=该场馆配置值），用户停留在游戏大厅原地</td></tr>
@@ -1052,6 +1063,89 @@
     var editCurrentRow = null;
     var limitReg = /^\d+(\.\d{1,2})?$/;
 
+    function saveLimit(row, value){
+      if(activeInlineRow === row) activeInlineRow = null;
+      row.dataset.limit = value;
+      row.dataset.editor = 'zune01';
+      var now = new Date(Date.now() - 3 * 3600 * 1000);
+      var optime = now.getUTCFullYear() + '-' + pad(now.getUTCMonth()+1) + '-' + pad(now.getUTCDate()) + ' ' + pad(now.getUTCHours()) + ':' + pad(now.getUTCMinutes());
+      row.dataset.optime = optime;
+      row.querySelector('[data-cell="limit"]').textContent = value;
+      row.querySelector('[data-cell="editor"]').textContent = 'zune01';
+      row.querySelector('[data-cell="optime"]').textContent = optime;
+      renderInlineLimit(row);
+    }
+    function renderInlineLimit(row){
+      var cell = row.querySelector('[data-cell="limit"]');
+      cell.innerHTML = '';
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'inline-limit-value';
+      button.textContent = row.dataset.limit;
+      button.setAttribute('aria-label', '编辑' + row.dataset.name + '的入场余额限制，当前值' + row.dataset.limit);
+      cell.appendChild(button);
+    }
+    var activeInlineRow = null;
+    function cancelInlineEdit(){
+      if(activeInlineRow){ renderInlineLimit(activeInlineRow); activeInlineRow = null; }
+    }
+    proWin.querySelectorAll('#venueTable tbody tr').forEach(renderInlineLimit);
+    proWin.querySelector('#venueTable').addEventListener('click', function(e){
+      var trigger = e.target.closest('.inline-limit-value');
+      if(trigger){
+        var row = trigger.closest('tr');
+        cancelInlineEdit();
+        activeInlineRow = row;
+        var cell = row.querySelector('[data-cell="limit"]');
+        cell.innerHTML = '';
+        var editor = document.createElement('span');
+        editor.className = 'inline-limit-editor';
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.inputMode = 'decimal';
+        input.value = row.dataset.limit;
+        input.setAttribute('aria-label', row.dataset.name + '入场余额限制金额');
+        var save = document.createElement('button');
+        save.type = 'button';
+        save.className = 'inline-limit-save';
+        save.textContent = '✓';
+        save.setAttribute('aria-label', '保存入场余额限制');
+        var error = document.createElement('span');
+        error.className = 'inline-limit-error';
+        error.textContent = '请输入大于等于 0 的数字，最多 2 位小数';
+        error.hidden = true;
+        editor.appendChild(input); editor.appendChild(save);
+        cell.appendChild(editor); cell.appendChild(error);
+        input.focus(); input.select();
+        return;
+      }
+      var saveButton = e.target.closest('.inline-limit-save');
+      if(!saveButton) return;
+      var row = saveButton.closest('tr');
+      var cell = row.querySelector('[data-cell="limit"]');
+      var input = cell.querySelector('input');
+      var value = input.value.trim();
+      if(!limitReg.test(value)){
+        input.classList.add('err');
+        cell.querySelector('.inline-limit-error').hidden = false;
+        input.focus();
+        return;
+      }
+      saveLimit(row, value);
+      activeInlineRow = null;
+    });
+    proWin.querySelector('#venueTable').addEventListener('input', function(e){
+      if(!e.target.matches('.inline-limit-editor input')) return;
+      e.target.classList.remove('err');
+      e.target.closest('td').querySelector('.inline-limit-error').hidden = true;
+    });
+    proWin.querySelector('#venueTable').addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && e.target.matches('.inline-limit-editor input')){
+        e.stopPropagation();
+        cancelInlineEdit();
+      }
+    });
+
     function validateLimit(){
       var v = editLimitInput.value.trim();
       var valid = limitReg.test(v);
@@ -1079,14 +1173,8 @@
     editConfirm.addEventListener('click', function(){
       if(!validateLimit() || !editCurrentRow) return;
       var v = editLimitInput.value.trim();
-      editCurrentRow.dataset.limit = v;
-      editCurrentRow.dataset.editor = 'zune01';
-      var now = new Date(Date.now() - 3 * 3600 * 1000);
-      var optime = now.getUTCFullYear() + '-' + pad(now.getUTCMonth()+1) + '-' + pad(now.getUTCDate()) + ' ' + pad(now.getUTCHours()) + ':' + pad(now.getUTCMinutes());
-      editCurrentRow.dataset.optime = optime;
-      editCurrentRow.querySelector('[data-cell="limit"]').textContent = v;
-      editCurrentRow.querySelector('[data-cell="editor"]').textContent = 'zune01';
-      editCurrentRow.querySelector('[data-cell="optime"]').textContent = optime;
+      saveLimit(editCurrentRow, v);
+      activeInlineRow = null;
       editModal.classList.remove('open');
     });
 
