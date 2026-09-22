@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>视讯真人扣款记录与扣款日报表交付文档</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --doc-paper:#faf8f4; --doc-paper-raised:#ffffff;
+  --doc-ink:#211f1a; --doc-ink-soft:#5c584e; --doc-ink-faint:#8b8677;
+  --doc-line:#e4ded1; --doc-line-soft:#eee9de;
+  --doc-accent:#a8481f; --doc-accent-soft:#f4e2d3;
+  --doc-teal:#0d6d66; --doc-teal-soft:#dcefec;
+  --doc-p0:#b3261e; --doc-p1:#a8481f; --doc-p1-soft:#f4e2d3; --doc-p2:#6b6a5f;
+  --doc-status-done-fg:#0d6d66; --doc-status-done-bg:#dcefec;
+  --doc-status-open-fg:#8a7f5f; --doc-status-open-bg:#f1ecdc;
+  --shadow-card:0 1px 2px rgba(33,31,26,.06),0 4px 14px rgba(33,31,26,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --doc-paper:#18160f; --doc-paper-raised:#221f17;
+    --doc-ink:#f1ece0; --doc-ink-soft:#c2bba8; --doc-ink-faint:#8f8877;
+    --doc-line:#3b3627; --doc-line-soft:#2c2919;
+    --doc-accent:#e2925e; --doc-accent-soft:#3c2a1a;
+    --doc-teal:#63c2b8; --doc-teal-soft:#183430;
+    --doc-p1-soft:#3c2a1a;
+    --shadow-card:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --doc-paper:#18160f; --doc-paper-raised:#221f17;
+  --doc-ink:#f1ece0; --doc-ink-soft:#c2bba8; --doc-ink-faint:#8f8877;
+  --doc-line:#3b3627; --doc-line-soft:#2c2919;
+  --doc-accent:#e2925e; --doc-accent-soft:#3c2a1a;
+  --doc-teal:#63c2b8; --doc-teal-soft:#183430;
+  --doc-p1-soft:#3c2a1a;
+  --shadow-card:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box;}
+img{max-width:100%;}
+body{margin:0;background:var(--doc-paper);color:var(--doc-ink);font-family:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14.5px;line-height:1.6;}
+h1,h2,h3{font-family:'Source Serif 4',Georgia,serif;font-weight:600;margin:0 0 10px;}
+.mono{font-family:'IBM Plex Mono',Consolas,Menlo,monospace;}
+a{color:var(--doc-teal);}
+
+/* header / navbar / tabs */
+.dh-header{background:var(--doc-paper-raised);border-bottom:1px solid var(--doc-line);padding:22px 20px;}
+.dh-header-inner{max-width:1360px;margin:0 auto;}
+.dh-header h1{font-size:22px;}
+.dh-meta{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12.5px;color:var(--doc-ink-faint);margin-top:6px;}
+.dh-meta span b{color:var(--doc-ink-soft);font-weight:500;}
+
+.dh-navbar{position:sticky;top:0;z-index:30;background:var(--doc-paper-raised);border-bottom:1px solid var(--doc-line);box-shadow:var(--shadow-card);}
+.dh-navbar-inner{max-width:1360px;margin:0 auto;padding:0 20px;display:flex;gap:6px;}
+.dh-primary-btn{appearance:none;border:none;background:transparent;padding:13px 16px;font-family:'IBM Plex Sans';font-size:14px;font-weight:500;color:var(--doc-ink-faint);cursor:pointer;border-bottom:2.5px solid transparent;display:flex;flex-direction:column;align-items:flex-start;gap:1px;}
+.dh-primary-btn small{font-weight:400;font-size:11px;color:var(--doc-ink-faint);}
+.dh-primary-btn.active{color:var(--doc-accent);border-bottom-color:var(--doc-accent);}
+.dh-primary-btn.active small{color:var(--doc-accent);opacity:.75;}
+
+.dh-wrap{max-width:1360px;margin:0 auto;padding:0 20px 64px;}
+.dh-primary-panel{display:none;}
+.dh-primary-panel.active{display:block;}
+
+.dh-tabs{position:sticky;top:47px;z-index:20;display:flex;gap:2px;overflow-x:auto;background:var(--doc-paper);padding:14px 0 0;border-bottom:1px solid var(--doc-line);}
+.dh-tab{appearance:none;border:none;background:transparent;padding:9px 14px;font-size:13.5px;color:var(--doc-ink-soft);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;display:flex;align-items:center;gap:7px;}
+.dh-tab .n{font-family:'IBM Plex Mono';font-size:11px;color:var(--doc-accent);border:1px solid var(--doc-accent);border-radius:100px;width:17px;height:17px;display:inline-flex;align-items:center;justify-content:center;}
+.dh-tab.active{color:var(--doc-ink);font-weight:600;border-bottom-color:var(--doc-accent);}
+.dh-tab.active .n{background:var(--doc-accent);color:#fff;}
+
+.dh-panel{display:none;padding:24px 0 8px;}
+.dh-panel.active{display:block;}
+
+/* prose */
+.dh-prose{max-width:74ch;}
+.dh-prose p{color:var(--doc-ink-soft);margin:0 0 12px;}
+.dh-prose strong{color:var(--doc-ink);}
+.req-block{max-width:82ch;margin-bottom:30px;}
+.req-block h3{font-size:16px;margin-bottom:10px;}
+.req-block h3 .n{color:var(--doc-accent);font-family:'IBM Plex Mono';font-size:13px;margin-right:6px;}
+
+.dh-callout{border-left:3px solid var(--doc-teal);background:var(--doc-teal-soft);border-radius:0 6px 6px 0;padding:10px 14px;font-size:13px;color:var(--doc-ink-soft);margin:14px 0;max-width:82ch;}
+.dh-callout.warn{border-left-color:var(--doc-p1);background:var(--doc-p1-soft);}
+.dh-callout b{color:var(--doc-ink);}
+
+/* tables */
+.dh-table-simple{width:100%;max-width:82ch;border-collapse:collapse;background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:8px;overflow:hidden;font-size:13px;box-shadow:var(--shadow-card);margin:14px 0;}
+.dh-table-simple th{background:var(--doc-line-soft);color:var(--doc-ink-soft);font-weight:600;text-align:left;padding:9px 12px;font-size:12.5px;}
+.dh-table-simple td{padding:9px 12px;border-top:1px solid var(--doc-line);color:var(--doc-ink-soft);vertical-align:top;}
+.dh-table-simple tr:first-child td{border-top:none;}
+.dh-table-simple td strong,.dh-table-simple td b{color:var(--doc-ink);font-weight:600;}
+
+/* flow diagrams */
+.dh-flow{background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:8px;padding:16px 18px;box-shadow:var(--shadow-card);max-width:82ch;cursor:zoom-in;margin:14px 0;}
+.flow-diagram{display:flex;flex-wrap:wrap;align-items:center;gap:2px;}
+.flow-step{background:var(--doc-paper);border:1px solid var(--doc-line);border-radius:6px;padding:8px 12px;font-size:12.5px;line-height:1.45;text-align:center;max-width:210px;}
+.flow-step .sub{display:block;font-size:11px;color:var(--doc-ink-faint);margin-top:2px;}
+.flow-arrow{color:var(--doc-ink-faint);font-size:15px;padding:0 4px;}
+.flow-branches{display:flex;flex-direction:column;gap:7px;margin-top:10px;padding-left:10px;border-left:2px solid var(--doc-line);}
+.flow-branches.first{margin-top:0;margin-bottom:12px;}
+.flow-branch{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;}
+.flow-branch .cond{color:var(--doc-ink-soft);}
+.flow-branch .arr{color:var(--doc-ink-faint);}
+.flow-branch .result{font-weight:600;padding:2px 10px;border-radius:100px;font-size:12px;}
+.flow-branch .result.good{color:var(--doc-status-done-fg);background:var(--doc-status-done-bg);}
+.flow-branch .result.bad{color:var(--doc-p1);background:var(--doc-p1-soft);}
+.flow-branch .result.neutral{color:var(--doc-ink-soft);background:var(--doc-line-soft);}
+.dh-flow .cap{margin-top:12px;font-size:12px;color:var(--doc-ink-faint);}
+.dh-flow .cap::before{content:"🔍 ";}
+
+/* illustration (static structure/position, not a process — see K-UI-004 §3.5b) */
+.dh-illustration{background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:8px;padding:16px 18px;box-shadow:var(--shadow-card);max-width:82ch;margin:14px 0;}
+.illus-list{display:flex;flex-wrap:wrap;align-items:center;gap:0;}
+.illus-item{background:var(--doc-paper);border:1px solid var(--doc-line);border-radius:6px;padding:8px 14px;font-size:12.5px;color:var(--doc-ink-soft);white-space:nowrap;}
+.illus-item.new{border-color:var(--doc-accent);color:var(--doc-accent);background:var(--doc-accent-soft);font-weight:600;}
+.illus-item .tag{display:inline-block;margin-left:6px;font-size:10px;background:var(--doc-accent);color:#fff;border-radius:3px;padding:0 4px;vertical-align:1px;}
+.illus-sep{width:16px;height:1px;background:var(--doc-line);margin:0 2px;flex:none;}
+.dh-illustration .cap{margin-top:12px;font-size:12px;color:var(--doc-ink-faint);}
+
+/* lightbox */
+.dh-lightbox{position:fixed;inset:0;background:rgba(20,18,13,.72);display:none;align-items:center;justify-content:center;z-index:100;padding:32px;}
+.dh-lightbox.open{display:flex;}
+.dh-lightbox-body{cursor:auto;}
+.dh-lightbox-body .dh-flow{max-width:min(92vw,920px);max-height:calc(100vh - 64px);overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.4);cursor:auto;}
+.dh-lightbox-body .dh-flow .flow-step{font-size:16px;padding:12px 18px;max-width:260px;}
+.dh-lightbox-body .dh-flow .flow-arrow{font-size:20px;}
+.dh-lightbox-body .dh-flow .flow-branch{font-size:15px;}
+
+/* ===== proto-window: 复刻后台 ===== */
+.proto-legend{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--doc-ink-faint);margin:0 0 12px;}
+.proto-legend .sw{width:12px;height:12px;border-radius:3px;background:var(--doc-accent-soft);border-left:3px solid var(--doc-accent);display:inline-block;}
+.proto-window{
+  --p-primary:#1890ff; --p-primary-soft:#e6f7ff;
+  --p-border:#d9d9d9; --p-text:rgba(0,0,0,.85); --p-text-secondary:rgba(0,0,0,.45);
+  --p-bg-body:#f0f2f5; --p-bg-card:#ffffff; --p-bg-head:#fafafa;
+  --p-sider-bg:#001529; --p-sider-text:rgba(255,255,255,.65); --p-sider-text-active:#ffffff; --p-sider-active-bg:#1890ff;
+  --p-success:#52c41a; --p-success-soft:#f6ffed;
+  --p-danger:#ff4d4f; --p-danger-soft:#fff1f0;
+  color-scheme:light;
+  border:1px solid var(--doc-line);border-radius:10px;overflow:hidden;
+  box-shadow:0 2px 4px rgba(33,31,26,.08),0 12px 32px rgba(33,31,26,.10);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+.proto-window .shell{display:flex;min-height:640px;background:var(--p-bg-body);}
+.proto-window .sider{width:210px;flex:none;background:var(--p-sider-bg);padding-bottom:20px;overflow-y:auto;}
+.proto-window .sider .logo{display:flex;align-items:center;gap:9px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);}
+.proto-window .sider .logo .badge{width:26px;height:26px;border-radius:50%;background:#0b3a63;border:2px solid #f5b942;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#f5b942;flex:none;}
+.proto-window .sider .logo .word{color:#fff;font-weight:700;font-size:15px;letter-spacing:.3px;}
+.proto-window .sider ul{list-style:none;margin:6px 0 0;padding:0;}
+.proto-window .sider li.item{padding:11px 16px;font-size:13px;color:var(--p-sider-text);display:flex;align-items:center;justify-content:space-between;cursor:default;}
+.proto-window .sider li.item.expandable{cursor:pointer;}
+.proto-window .sider li.item.expandable:hover{color:#fff;background:rgba(255,255,255,.04);}
+.proto-window .sider li.item .car{transition:transform .15s;font-size:10px;color:var(--p-sider-text);}
+.proto-window .sider li.item.open .car{transform:rotate(180deg);}
+.proto-window .sider .sub{list-style:none;margin:0;padding:0;background:#000c17;max-height:0;overflow:hidden;transition:max-height .18s ease;}
+.proto-window .sider .sub.open{max-height:900px;}
+.proto-window .sider .sub li{padding:9px 16px 9px 44px;font-size:12.5px;color:var(--p-sider-text);cursor:pointer;position:relative;}
+.proto-window .sider .sub li:hover{color:#fff;}
+.proto-window .sider .sub li.active{color:#fff;background:var(--p-sider-active-bg);}
+.proto-window .sider .sub li.pf-new{color:#ffb877;}
+.proto-window .sider .sub li.pf-new.active{color:#fff;background:var(--doc-accent);}
+.proto-window .sider .sub li.pf-new .tag{display:inline-block;margin-left:6px;font-size:10px;background:var(--doc-accent);color:#fff;border-radius:3px;padding:0 4px;vertical-align:1px;}
+.proto-window .sider .note{padding:10px 16px;font-size:11px;color:rgba(255,255,255,.3);line-height:1.5;}
+
+.proto-window .main{flex:1;min-width:0;display:flex;flex-direction:column;}
+.proto-window .phdr{height:50px;flex:none;background:var(--p-bg-card);border-bottom:1px solid var(--p-border);display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-size:13px;color:var(--p-text-secondary);}
+.proto-window .phdr .crumb{display:flex;align-items:center;gap:8px;}
+.proto-window .phdr .crumb .ham{cursor:default;color:var(--p-text-secondary);}
+.proto-window .phdr .crumb b{color:var(--p-text);font-weight:500;}
+.proto-window .phdr .right{display:flex;align-items:center;gap:16px;font-size:12px;}
+.proto-window .phdr .right .clock{font-family:'IBM Plex Mono';color:var(--p-text-secondary);}
+.proto-window .phdr .right .acct{display:flex;align-items:center;gap:6px;color:var(--p-text);}
+.proto-window .phdr .right .acct .av{width:22px;height:22px;border-radius:50%;background:var(--p-primary-soft);color:var(--p-primary);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;}
+
+.proto-window .page-tabs{flex:none;background:var(--p-bg-card);border-bottom:1px solid var(--p-border);display:flex;padding:0 8px;overflow-x:auto;}
+.proto-window .page-tabs .pt{padding:8px 14px;font-size:12.5px;color:var(--p-text-secondary);border:1px solid transparent;border-bottom:none;margin:6px 3px 0;border-radius:4px 4px 0 0;cursor:pointer;background:var(--p-bg-body);white-space:nowrap;}
+.proto-window .page-tabs .pt.active{background:var(--p-bg-card);color:var(--p-primary);border-color:var(--p-border);font-weight:500;}
+.proto-window .page-tabs .pt.pf-new.active{color:var(--doc-accent);}
+
+.proto-window .page-content{flex:1;padding:16px;overflow:auto;background:var(--p-bg-body);}
+.proto-window .card{background:var(--p-bg-card);border-radius:6px;padding:16px;box-shadow:0 1px 2px rgba(0,0,0,.03);margin-bottom:14px;}
+
+.pfield{display:flex;flex-direction:column;gap:4px;}
+.pfield label{font-size:12px;color:var(--p-text-secondary);}
+.pfield .ctl{border:1px solid var(--p-border);border-radius:4px;padding:5px 10px;font-size:12.5px;color:var(--p-text);background:#fff;min-width:150px;display:flex;align-items:center;justify-content:space-between;gap:6px;cursor:default;}
+.pfield .ctl.select::after{content:"▾";color:var(--p-text-secondary);font-size:10px;}
+.pfield .ctl .hint{font-size:10.5px;color:var(--p-text-secondary);white-space:nowrap;}
+.filter-row{display:flex;flex-wrap:wrap;align-items:end;gap:14px 18px;}
+.pbtn{appearance:none;border:1px solid var(--p-border);background:#fff;color:var(--p-text);border-radius:4px;padding:6px 15px;font-size:12.5px;cursor:pointer;}
+.pbtn.primary{background:var(--p-primary);border-color:var(--p-primary);color:#fff;}
+.pbtn:hover{opacity:.88;}
+.filter-status{font-size:12px;color:var(--doc-teal);margin-left:2px;}
+
+.toolbar-row{display:flex;justify-content:flex-end;gap:8px;margin:-2px 0 12px;}
+
+.ptable{width:100%;border-collapse:collapse;font-size:12px;background:#fff;}
+.ptable th{background:var(--p-bg-head);color:var(--p-text-secondary);font-weight:500;text-align:left;padding:9px 10px;border-bottom:1px solid var(--p-border);white-space:nowrap;}
+.ptable td{padding:9px 10px;border-bottom:1px solid #f0f0f0;color:var(--p-text);white-space:nowrap;}
+.ptable tbody tr:hover{background:#fafafa;}
+.ptable tfoot td{font-weight:600;background:var(--p-bg-head);color:var(--p-text);}
+.ptable .empty-row td{text-align:center;color:var(--p-text-secondary);padding:36px 0;background:#fff;}
+.tfoot-label{color:var(--p-text-secondary);}
+.table-caption{padding:8px 10px;font-size:11.5px;color:var(--p-text-secondary);background:#fff;border-top:none;}
+.page-footer{display:flex;justify-content:space-between;align-items:center;padding-top:10px;font-size:12px;color:var(--p-text-secondary);}
+
+.pf-pagination{display:flex;flex-wrap:wrap;align-items:center;gap:14px 18px;padding:10px 12px;font-size:12.5px;color:var(--p-text-secondary);border-top:1px solid #f0f0f0;background:#fff;}
+.pf-pagination .pf-total{margin-right:auto;}
+.pf-pagination .pg-list{display:flex;align-items:center;gap:4px;}
+.pf-pagination .pg-btn,.pf-pagination .pg-num{min-width:24px;height:24px;padding:0 4px;border:1px solid var(--p-border);border-radius:4px;background:#fff;color:var(--p-text);font-size:12px;display:inline-flex;align-items:center;justify-content:center;cursor:default;}
+.pf-pagination .pg-num.active{background:var(--p-primary);border-color:var(--p-primary);color:#fff;}
+.pf-pagination .pg-ellipsis{padding:0 2px;color:var(--p-text-secondary);}
+.pf-pagination .pg-size{border:1px solid var(--p-border);border-radius:4px;padding:3px 8px;font-size:12px;color:var(--p-text);background:#fff;}
+.pf-pagination .pg-jump{display:flex;align-items:center;gap:6px;}
+.pf-pagination .pg-jump input{width:34px;text-align:center;border:1px solid var(--p-border);border-radius:4px;padding:3px 4px;font-size:12px;color:var(--p-text);background:#fff;}
+
+.proto-caption-box{max-width:82ch;font-size:12px;color:var(--doc-ink-faint);margin-top:12px;line-height:1.7;}
+</style>
+</head>
+<body>
+
+<header class="dh-header">
+  <div class="dh-header-inner">
+    <h1>视讯真人扣款记录与扣款日报表交付文档</h1>
+    <div class="dh-meta">
+      <span>模块:<b>报表BI</b></span>
+      <span>产品经理:<b>Zuno</b></span>
+      <span>更新日期:<b>2026-09-21</b></span>
+    </div>
+  </div>
+</header>
+
+<nav class="dh-navbar" id="dhNavbar">
+  <div class="dh-navbar-inner dh-primary" id="dhPrimary">
+    <button class="dh-primary-btn active" data-primary="proto">交互原型 <small>完整后台复刻,可点击操作</small></button>
+    <button class="dh-primary-btn" data-primary="docs">需求文档 <small>现状说明与报表统计口径</small></button>
+  </div>
+</nav>
+
+<div class="dh-wrap"><main class="dh-main">
+
+  <!-- ===================== 交互原型 ===================== -->
+  <section class="dh-primary-panel active" data-primary-panel="proto">
+    <div class="proto-legend"><span class="sw"></span> 橙色标记 = 本次需求新增的菜单(两张报表内部为全新页面,不逐列标注新增)</div>
+
+    <div class="proto-window">
+      <div class="shell">
+        <aside class="sider">
+          <div class="logo"><span class="badge">TEST</span><span class="word">DD.GG</span></div>
+          <ul>
+            <li class="item">平台概况<span class="car">▾</span></li>
+            <li class="item">系统管理<span class="car">▾</span></li>
+            <li class="item">商户游戏管理<span class="car">▾</span></li>
+            <li class="item">会员管理<span class="car">▾</span></li>
+            <li class="item">商户财务管理<span class="car">▾</span></li>
+            <li class="item expandable open" id="menuReport">报表查询<span class="car">▾</span></li>
+            <ul class="sub open" id="subReport">
+              <li>平台报表</li>
+              <li>游戏对局记录</li>
+              <li>日汇总数据</li>
+              <li>充提汇总报表</li>
+              <li>每日用户数据</li>
+              <li>返现报表</li>
+              <li>多日用户数据</li>
+              <li>会员输赢报表</li>
+              <li>留存率报表</li>
+              <li>返水报表</li>
+              <li>会员明细报表</li>
+              <li>会员充提明细</li>
+              <li class="pf-new active" data-pagetab="record">视讯真人扣款记录<span class="tag">新增</span></li>
+              <li class="pf-new" data-pagetab="daily">视讯真人扣款日报表<span class="tag">新增</span></li>
+              <li>公司盈亏汇总</li>
+              <li>实时数据统计</li>
+              <li>导出页面</li>
+            </ul>
+            <li class="item">代理中心(无限极差)<span class="car">▾</span></li>
+            <li class="item">商户财务配置<span class="car">▾</span></li>
+            <li class="item">消息管理<span class="car">▾</span></li>
+            <li class="item">福利中心<span class="car">▾</span></li>
+            <li class="item">运营相关<span class="car">▾</span></li>
+            <li class="item">推广渠道管理<span class="car">▾</span></li>
+            <li class="item">返水管理<span class="car">▾</span></li>
+          </ul>
+          <div class="note">仅"报表查询"完成过真实展开走查,其余一级菜单不展开子项。</div>
+        </aside>
+
+        <div class="main">
+          <div class="phdr">
+            <div class="crumb"><span class="ham">☰</span><span>报表查询 / <b id="crumbTitle">视讯真人扣款记录</b></span></div>
+            <div class="right">
+              <span class="clock" id="protoClock">2026-09-21 05:50:00 (巴西雷亚尔:UTC-3)</span>
+              <span class="acct"><span class="av">z</span>zune01</span>
+            </div>
+          </div>
+          <div class="page-tabs">
+            <div class="pt">首页</div>
+            <div class="pt pf-new active" id="ptRecord" data-pagetab="record">视讯真人扣款记录</div>
+            <div class="pt pf-new" id="ptDaily" data-pagetab="daily">视讯真人扣款日报表</div>
+          </div>
+
+          <div class="page-content">
+
+            <!-- 视讯真人扣款记录 -->
+            <div class="pagebody" id="pageRecord">
+              <div class="card">
+                <div class="filter-row">
+                  <div class="pfield"><label>统计日期</label><div class="ctl">2026-09-19 ~ 2026-09-19<span class="hint">默认:当日</span></div></div>
+                  <div class="pfield"><label>会员ID</label><div class="ctl">请输入会员ID</div></div>
+                  <div class="pfield"><label>厂商名称</label><div class="ctl select">全部厂商</div></div>
+                  <button class="pbtn" id="btnResetRecord">重 置</button>
+                  <button class="pbtn primary" id="btnQueryRecord">查 询</button>
+                  <button class="pbtn">导 出</button>
+                  <span class="filter-status" id="statusRecord"></span>
+                </div>
+              </div>
+              <div class="card" style="padding:0;overflow:auto;">
+                <table class="ptable">
+                  <thead><tr>
+                    <th>会员ID</th><th>手机号(会员账号)</th>
+                    <th>厂商名称</th>
+                    <th>扣款类型</th>
+                    <th>计费金额</th>
+                    <th>服务费比例</th>
+                    <th>扣款金额</th>
+                    <th>扣款时间</th>
+                  </tr></thead>
+                  <tbody>
+                    <tr><td>73566571</td><td>11944218585</td><td>EVO真人</td><td>视讯真人入场扣款</td><td>250.00</td><td>2%</td><td>5.00</td><td>2026-09-19 21:03:12</td></tr>
+                    <tr><td>50028925</td><td>11956568844</td><td>EVO真人</td><td>视讯真人入场扣款</td><td>250.00</td><td>2%</td><td>5.00</td><td>2026-09-19 20:47:55</td></tr>
+                    <tr><td>69931590</td><td>11976544560</td><td>EVO真人</td><td>视讯真人入场扣款</td><td>250.00</td><td>2%</td><td>5.00</td><td>2026-09-18 19:12:40</td></tr>
+                    <tr><td>45975735</td><td>11976544561</td><td>EVO真人</td><td>视讯真人入场扣款</td><td>250.00</td><td>2%</td><td>5.00</td><td>2026-09-18 18:05:21</td></tr>
+                    <tr><td>71629814</td><td>11966884242</td><td>EVO真人</td><td>视讯真人入场扣款</td><td>250.00</td><td>2%</td><td>5.00</td><td>2026-09-17 22:31:09</td></tr>
+                    <tr><td>40444461</td><td>11976544562</td><td>EVO真人</td><td>视讯真人入场扣款</td><td>250.00</td><td>2%</td><td>5.00</td><td>2026-09-16 09:14:47</td></tr>
+                  </tbody>
+                </table>
+                <div class="pf-pagination">
+                  <div class="pf-total">共 128 条(示意)· 记录随扣款事件持续增长,查询结果分页展示</div>
+                  <div class="pg-list">
+                    <span class="pg-btn">‹</span>
+                    <span class="pg-num active">1</span>
+                    <span class="pg-num">2</span>
+                    <span class="pg-num">3</span>
+                    <span class="pg-ellipsis">…</span>
+                    <span class="pg-num">13</span>
+                    <span class="pg-btn">›</span>
+                  </div>
+                  <select class="pg-size"><option>10 条/页</option><option>20 条/页</option><option>50 条/页</option></select>
+                  <div class="pg-jump">跳至 <input value="1">页</div>
+                </div>
+                <div class="table-caption">统计日期默认展示当日,默认按扣款时间倒序排列(最新的记录排在最前面);下方示例数据为演示多日字段与分页效果特意放宽的日期范围,非默认状态。表格结构对齐"会员充提明细"的真实筛选栏与列宽,金额均保留两位小数;分页组件对齐现有明细类报表的分页方式;"扣款前/后余额"仅为单笔扣款自身的前后余额,相邻两行之间可能因其他账变行为而不连续,属正常现象</div>
+              </div>
+            </div>
+
+            <!-- 视讯真人扣款日报表 -->
+            <div class="pagebody" id="pageDaily" style="display:none;">
+              <div class="card">
+                <div class="filter-row">
+                  <div class="pfield"><label>统计日期</label><div class="ctl">2026-09-01 ~ 2026-09-19<span class="hint">默认:当月</span></div></div>
+                  <button class="pbtn" id="btnResetDaily">重 置</button>
+                  <button class="pbtn primary" id="btnQueryDaily">查 询</button>
+                  <button class="pbtn">手动汇总数据</button>
+                  <button class="pbtn">导 出</button>
+                  <span class="filter-status" id="statusDaily"></span>
+                </div>
+              </div>
+              <div class="card" style="padding:0;overflow:auto;">
+                <table class="ptable">
+                  <thead><tr>
+                    <th>日期</th>
+                    <th>扣款金额</th>
+                    <th>扣款次数</th>
+                    <th>扣款人数</th>
+                  </tr></thead>
+                  <tbody>
+                    <tr><td>2026-09-19</td><td>10.00</td><td>2</td><td>2</td></tr>
+                    <tr><td>2026-09-18</td><td>10.00</td><td>2</td><td>2</td></tr>
+                    <tr><td>2026-09-17</td><td>5.00</td><td>1</td><td>1</td></tr>
+                    <tr><td>2026-09-16</td><td>5.00</td><td>1</td><td>1</td></tr>
+                    <tr><td>2026-09-15</td><td>0.00</td><td>0</td><td>0</td></tr>
+                  </tbody>
+                  <tfoot>
+                    <tr><td class="tfoot-label">总计</td><td>30.00</td><td>6</td><td>6</td></tr>
+                  </tfoot>
+                </table>
+                <div class="table-caption">统计日期默认展示当月,默认按日期倒序排列(最新的日期排在最前面)。共 5 条数据(示意)· 表格结构对齐"日汇总数据"的按日聚合与总计行呈现方式;按日聚合、数据量有限,查询区间内全部日期一次性展示,不分页,末尾展示"总计"行</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="proto-caption-box">
+      交互原型的侧边栏、Header、页签栏结构基于对测试商户后台的真实只读走查复刻;橙色标记的菜单为本次需求新增,其余外层结构与现有"会员充提明细""日汇总数据"一致。两张报表页面本身整体都是新增内容,页面内部不再逐列标注"新增"。表格数据均为示意样例,非真实生产数据;"扣款类型"字段展示名称已确定为"视讯真人入场扣款"。
+    </div>
+  </section>
+
+  <!-- ===================== 需求文档 ===================== -->
+  <section class="dh-primary-panel" data-primary-panel="docs">
+    <nav class="dh-tabs" id="dhTabs">
+      <button class="dh-tab active" data-tab="overview"><span class="n">0</span>总览</button>
+      <button class="dh-tab" data-tab="record"><span class="n">1</span>视讯真人扣款记录</button>
+      <button class="dh-tab" data-tab="daily"><span class="n">2</span>视讯真人扣款日报表</button>
+    </nav>
+
+    <div class="dh-panel active" data-panel="overview">
+      <div class="req-block">
+        <h3>背景</h3>
+        <div class="dh-prose">
+          <p>前台"视讯真人"厂商即将上线入场扣款机制:会员进入视讯真人游戏前,需在弹窗中确认扣款金额并同意扣款,同意后才能进入游戏,不同意则无法进入,类似门票。该机制本身由配套需求负责设计与实现,不在本次交付范围内。</p>
+          <p>该机制上线后,报表查询菜单下目前没有任何位置可以查看这些扣款事件的发生次数、金额、涉及会员数,运营与客服无法核实或统计这项新增的扣款行为。本次需求为该机制配套两张只读报表:明细级的"视讯真人扣款记录",以及日汇总级的"视讯真人扣款日报表"。</p>
+        </div>
+      </div>
+
+      <div class="req-block">
+        <h3>本期范围</h3>
+        <table class="dh-table-simple">
+          <thead><tr><th>范围</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td><strong>本期做</strong></td><td>新增"视讯真人扣款记录"(明细级,一行对应一次扣款事件)与"视讯真人扣款日报表"(日汇总级,一行对应一天,全部视讯真人厂商合计);两个菜单挂载到报表查询菜单下,紧跟在现有"会员充提明细"之后。</td></tr>
+            <tr><td><strong>本期不做</strong></td><td>视讯真人厂商入场扣款机制本身(触发时机、金额规则、前台扣款弹窗交互);账变类型字典中扣款相关类型的具体命名与归属;扣款失败/异常场景的记录与展示。</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="req-block">
+        <h3>菜单位置</h3>
+        <div class="dh-illustration">
+          <div class="illus-list">
+            <div class="illus-item">会员明细报表</div><span class="illus-sep"></span>
+            <div class="illus-item">会员充提明细</div><span class="illus-sep"></span>
+            <div class="illus-item new">视讯真人扣款记录<span class="tag">本次新增</span></div><span class="illus-sep"></span>
+            <div class="illus-item new">视讯真人扣款日报表<span class="tag">本次新增</span></div><span class="illus-sep"></span>
+            <div class="illus-item">公司盈亏汇总</div><span class="illus-sep"></span>
+            <div class="illus-item">实时数据统计</div><span class="illus-sep"></span>
+            <div class="illus-item">导出页面</div>
+          </div>
+          <div class="cap">示意图:两个新菜单在报表查询菜单下的真实插入位置(菜单名称不做改写),表示列表顺序,非流程</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dh-panel" data-panel="record">
+      <div class="req-block">
+        <h3><span class="n">1.1</span>后台配置——字段说明</h3>
+        <div class="dh-prose"><p>只读查询,不提供编辑/新增/删除能力。维度为每一次扣款事件,一行对应一次扣款,不做日/月等维度的聚合。</p></div>
+        <table class="dh-table-simple">
+          <thead><tr><th>字段</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>会员ID</td><td>发生扣款的会员</td></tr>
+            <tr><td>手机号(会员账号)</td><td>对齐"会员充提明细"现有展示口径</td></tr>
+            <tr><td>厂商名称</td><td>发生扣款的视讯真人场馆,取自实际场馆而非写死的下拉选项</td></tr>
+            <tr><td>扣款类型</td><td>标识该笔扣款的业务类型;具体命名由配套的扣款功能需求定义,本报表按其归属过滤展示</td></tr>
+            <tr><td>计费金额</td><td>本次扣款实际计算手续费所依据的基数金额,两位小数;由配套的扣款机制计算得出(全额扣费时为会员钱包余额,部分扣费时为余额中新增的部分),本报表直接展示该基数,不重复计算</td></tr>
+            <tr><td>服务费比例</td><td>本次扣款适用的费率,按厂商配置,百分比展示(如 2%);不同视讯真人厂商费率可能不同</td></tr>
+            <tr><td>扣款金额</td><td>本次实际扣款金额,两位小数;等于"计费金额 × 服务费比例",由配套的扣款机制计算得出;本商户仅单一货币,不涉及多币种,不单独展示币种字段</td></tr>
+            <tr><td>扣款时间</td><td>扣款事件发生的时间</td></tr>
+          </tbody>
+        </table>
+        <div class="dh-callout">"扣款类型"字段展示名称已确定为"视讯真人入场扣款";账变类型字典中的归属定义,以及向账变记录、会员明细报表等其他表插入该账变字段,均由配套的扣款功能需求负责,不在本需求范围内。本报表不新增扣款结果(成功/失败)字段,只记录已实际发生的扣款事件本身。</div>
+        <div class="dh-callout">"计费金额"与"服务费比例"可直接核对本次扣款的计算是否正确:扣款金额 = 计费金额 × 服务费比例。</div>
+      </div>
+
+      <div class="req-block">
+        <h3><span class="n">1.2</span>数据流转与触发反馈</h3>
+        <div class="dh-flow">
+          <div class="flow-diagram">
+            <div class="flow-step">会员进入视讯真人厂商<span class="sub">配套扣款机制触发</span></div><div class="flow-arrow">→</div>
+            <div class="flow-step">产生一条扣款账变事件</div><div class="flow-arrow">→</div>
+            <div class="flow-step">视讯真人扣款记录<span class="sub">新增一行</span></div>
+          </div>
+          <div class="flow-branches">
+            <div class="flow-branch"><span class="cond">当日无任何视讯真人厂商扣款事件</span><span class="arr">→</span><span class="result neutral">本报表当日无新增行,与现有报表"暂无数据"状态一致</span></div>
+            <div class="flow-branch"><span class="cond">运营按会员ID/厂商名称/日期范围筛选</span><span class="arr">→</span><span class="result good">表格按条件过滤展示对应记录,支持导出</span></div>
+          </div>
+          <div class="cap">图:扣款事件从产生到本报表新增一行的链路</div>
+        </div>
+        <table class="dh-table-simple">
+          <thead><tr><th>触发条件</th><th>系统反馈</th></tr></thead>
+          <tbody>
+            <tr><td>会员进入视讯真人厂商产生一次扣款</td><td>本报表新增一行,包含会员、厂商、扣款类型、金额、扣款前后余额、时间</td></tr>
+            <tr><td>当日无任何视讯真人厂商扣款事件</td><td>本报表当日展示为空数据</td></tr>
+            <tr><td>扣款机制尚未上线</td><td>本报表展示为空,菜单已可见,不影响其他既有报表</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="req-block">
+        <h3><span class="n">1.3</span>其他规则说明</h3>
+        <table class="dh-table-simple">
+          <thead><tr><th>规则项</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>权限</td><td>沿用报表查询菜单现有的角色-菜单权限分配机制,不新增独立权限点;本报表只读,不涉及编辑权限的区分</td></tr>
+            <tr><td>操作留痕</td><td>不适用,本报表为只读查询,不产生可变更的配置数据</td></tr>
+            <tr><td>历史数据</td><td>本期上线前无历史扣款数据可回溯,只展示上线后新产生的扣款事件</td></tr>
+            <tr><td>金额口径</td><td>本商户仅单一货币,不涉及多币种展示/筛选;金额统一保留两位小数</td></tr>
+            <tr><td>默认查询范围与排序</td><td>页面进入时默认展示"当日"(今天)的扣款记录,默认按扣款时间倒序排列,最新一笔扣款排在最前面;运营可通过"统计日期"筛选查询其他日期范围</td></tr>
+            <tr><td>分页</td><td>记录量随扣款事件持续增长,查询结果分页展示(每页条数可选,支持跳转到指定页),不一次性加载全部数据</td></tr>
+            <tr><td>菜单顺序</td><td>不影响报表查询菜单下其他既有报表的顺序,在"会员充提明细"之后插入</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="dh-panel" data-panel="daily">
+      <div class="req-block">
+        <h3><span class="n">2.1</span>后台配置——字段说明</h3>
+        <div class="dh-prose"><p>只读查询,不提供编辑/新增/删除能力。维度为按日,一行对应一天,汇总口径为全部视讯真人厂商合计,不按具体厂商拆分。</p></div>
+        <table class="dh-table-simple">
+          <thead><tr><th>字段</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>日期</td><td>按自然日聚合</td></tr>
+            <tr><td>扣款金额</td><td>当日全部视讯真人厂商扣款总金额</td></tr>
+            <tr><td>扣款次数</td><td>当日扣款事件总笔数</td></tr>
+            <tr><td>扣款人数</td><td>当日发生过扣款的会员去重人数</td></tr>
+          </tbody>
+        </table>
+        <div class="dh-callout">统计时区以后台服务器时区为准,不单独设计时区选择或转换能力,与现有报表(如"日汇总数据")的口径一致。</div>
+      </div>
+
+      <div class="req-block">
+        <h3><span class="n">2.2</span>数据流转与触发反馈</h3>
+        <div class="dh-flow">
+          <div class="flow-diagram">
+            <div class="flow-step">视讯真人扣款记录<span class="sub">当日新增行</span></div><div class="flow-arrow">→</div>
+            <div class="flow-step">按日聚合</div><div class="flow-arrow">→</div>
+            <div class="flow-step">视讯真人扣款日报表<span class="sub">当日汇总同步更新</span></div>
+          </div>
+          <div class="flow-branches">
+            <div class="flow-branch"><span class="cond">当日该会员已产生过扣款,再次发生扣款</span><span class="arr">→</span><span class="result good">当日扣款次数与金额累加,扣款人数不重复计数</span></div>
+            <div class="flow-branch"><span class="cond">当日无任何视讯真人厂商扣款事件</span><span class="arr">→</span><span class="result neutral">当日展示为空,与现有报表"暂无数据"状态一致</span></div>
+            <div class="flow-branch"><span class="cond">运营按日期范围筛选</span><span class="arr">→</span><span class="result good">表格按条件过滤展示对应日期,支持导出</span></div>
+          </div>
+          <div class="cap">图:扣款记录按日聚合为本报表的链路</div>
+        </div>
+        <table class="dh-table-simple">
+          <thead><tr><th>触发条件</th><th>系统反馈</th></tr></thead>
+          <tbody>
+            <tr><td>当日已有扣款事件的会员再次产生扣款</td><td>当日扣款次数、扣款金额累加;扣款人数按会员去重,不重复计数</td></tr>
+            <tr><td>当日无任何视讯真人厂商扣款事件</td><td>本报表当日展示为空数据</td></tr>
+            <tr><td>扣款机制尚未上线</td><td>本报表展示为空,菜单已可见,不影响其他既有报表</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="req-block">
+        <h3><span class="n">2.3</span>其他规则说明</h3>
+        <table class="dh-table-simple">
+          <thead><tr><th>规则项</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>权限</td><td>沿用报表查询菜单现有的角色-菜单权限分配机制,不新增独立权限点;本报表只读,不涉及编辑权限的区分</td></tr>
+            <tr><td>操作留痕</td><td>不适用,本报表为只读查询,不产生可变更的配置数据</td></tr>
+            <tr><td>历史数据</td><td>本期上线前无历史扣款数据可回溯,只展示上线后新产生的汇总</td></tr>
+            <tr><td>金额与聚合口径</td><td>本商户仅单一货币,不涉及多币种展示/筛选;金额统一保留两位小数;按自然日聚合,统计时区以后台服务器时区为准,不单独定义</td></tr>
+            <tr><td>默认查询范围与排序</td><td>页面进入时默认展示"当月"(本月)的日汇总数据,默认按日期倒序排列,最新的日期排在最前面;运营可通过"统计日期"筛选查询其他月份/日期范围</td></tr>
+            <tr><td>分页</td><td>按日聚合,数据量有限,不分页;查询区间内全部日期一次性展示,末尾展示"总计"行</td></tr>
+            <tr><td>菜单顺序</td><td>不影响报表查询菜单下其他既有报表的顺序,在"视讯真人扣款记录"之后插入</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</main></div>
+
+<div class="dh-lightbox" id="dhLightbox"><div class="dh-lightbox-body" id="dhLightboxBody"></div></div>
+
+<script>
+// primary switch
+document.querySelectorAll('.dh-primary-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.dh-primary-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.dh-primary-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelector('.dh-primary-panel[data-primary-panel="'+btn.dataset.primary+'"]').classList.add('active');
+  });
+});
+// docs tabs
+document.querySelectorAll('.dh-tab').forEach(function(tab){
+  tab.addEventListener('click', function(){
+    document.querySelectorAll('.dh-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.dh-panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelector('.dh-panel[data-panel="'+tab.dataset.tab+'"]').classList.add('active');
+  });
+});
+// sidebar accordion (仅报表查询可展开)
+var menuReport = document.getElementById('menuReport');
+var subReport = document.getElementById('subReport');
+menuReport.addEventListener('click', function(){
+  menuReport.classList.toggle('open');
+  subReport.classList.toggle('open');
+});
+// page-tab switch (侧边栏 + 顶部页签栏 共用同一组状态)
+function switchPageTab(key){
+  document.querySelectorAll('[data-pagetab]').forEach(function(el){
+    el.classList.toggle('active', el.dataset.pagetab === key);
+  });
+  document.getElementById('pageRecord').style.display = key === 'record' ? '' : 'none';
+  document.getElementById('pageDaily').style.display = key === 'daily' ? '' : 'none';
+  document.getElementById('crumbTitle').textContent = key === 'record' ? '视讯真人扣款记录' : '视讯真人扣款日报表';
+}
+document.querySelectorAll('[data-pagetab]').forEach(function(el){
+  el.addEventListener('click', function(){ switchPageTab(el.dataset.pagetab); });
+});
+// 查询/重置 反馈
+function bindFilter(btnQueryId, btnResetId, statusId, label){
+  var q = document.getElementById(btnQueryId), r = document.getElementById(btnResetId), s = document.getElementById(statusId);
+  if(q) q.addEventListener('click', function(){ s.textContent = '已按当前条件查询 '+label; setTimeout(function(){s.textContent='';}, 2200); });
+  if(r) r.addEventListener('click', function(){ s.textContent = '已重置筛选条件'; setTimeout(function(){s.textContent='';}, 2200); });
+}
+bindFilter('btnQueryRecord','btnResetRecord','statusRecord','视讯真人扣款记录');
+bindFilter('btnQueryDaily','btnResetDaily','statusDaily','视讯真人扣款日报表');
+// lightbox
+var dhLightbox = document.getElementById('dhLightbox'), dhLightboxBody = document.getElementById('dhLightboxBody');
+document.querySelectorAll('.dh-flow').forEach(function(flow){
+  flow.addEventListener('click', function(e){
+    e.stopPropagation();
+    var clone = flow.cloneNode(true);
+    dhLightboxBody.innerHTML = '';
+    dhLightboxBody.appendChild(clone);
+    dhLightbox.classList.add('open');
+  });
+});
+dhLightbox.addEventListener('click', function(){ dhLightbox.classList.remove('open'); });
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') dhLightbox.classList.remove('open'); });
+
+// ticking clock (UTC-3, 巴西雷亚尔时区示意)
+function tickClock(){
+  var now = new Date(Date.now() - 3*3600*1000);
+  var pad = function(n){ return String(n).padStart(2,'0'); };
+  var s = now.getUTCFullYear()+'-'+pad(now.getUTCMonth()+1)+'-'+pad(now.getUTCDate())+' '+pad(now.getUTCHours())+':'+pad(now.getUTCMinutes())+':'+pad(now.getUTCSeconds())+' (巴西雷亚尔:UTC-3)';
+  var el = document.getElementById('protoClock');
+  if(el) el.textContent = s;
+}
+tickClock();
+setInterval(tickClock, 1000);
+</script>
+</body>
+</html>
