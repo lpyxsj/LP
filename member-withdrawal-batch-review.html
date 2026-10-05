@@ -57,10 +57,6 @@ img{max-width:100%}
 .dh-table-simple th,.dh-table-simple td{padding:8px 12px;border-bottom:1px solid var(--doc-line-soft);text-align:left;vertical-align:top}
 .dh-table-simple th{background:var(--doc-line-soft);font-weight:600;color:var(--doc-ink);white-space:nowrap}
 .dh-table-simple tr:last-child td{border-bottom:0}
-.dh-table-simple.mx td{font-size:13px;line-height:1.55}
-.dh-table-simple.mx .pill{margin-right:2px}
-.dh-table-simple.mx td:first-child{min-width:9.5em}
-.mx-label{font-weight:600;color:var(--doc-ink);font-size:13.5px;margin:16px 0 -4px}
 .dh-table-simple td:first-child{color:var(--doc-ink);min-width:7em;max-width:34em}
 .dh-table-simple td{overflow-wrap:anywhere}
 .pill{display:inline-block;padding:0 8px;border-radius:100px;font-size:12px;background:var(--doc-accent-soft);color:var(--doc-accent);font-weight:600;white-space:nowrap}
@@ -447,22 +443,6 @@ table.ad-t{border-collapse:separate;border-spacing:0;width:max-content;min-width
 
   <div class="dh-panel" data-panel="batch">
     <h2>批量规则与验收</h2>
-    <div class="req-block"><h3>批量判定逻辑</h3><div class="dh-prose"><p>同一批勾选的订单状态可能各不相同。点击批量按钮后，系统先按下表逐单判定能否执行：<strong>执行</strong>的订单进入确认弹窗，<strong>过滤</strong>的订单不处理、只计入过滤数量。本期只增加批量入口，订单执行后的状态流转、资金处理均沿用现有单条操作，不在本需求范围内。</p></div><div class="dh-flow">
-      <div class="flow-diagram">
-        <div class="flow-step">点击批量按钮</div><div class="flow-arrow">→</div>
-        <div class="flow-step">按下表逐单判定<span class="sub">执行 / 过滤</span></div><div class="flow-arrow">→</div>
-        <div class="flow-step">弹窗确认<span class="sub">只列出将执行的订单</span></div><div class="flow-arrow">→</div>
-        <div class="flow-step">后端逐单执行<span class="sub">重新校验状态与锁定人</span></div>
-      </div>
-      <div class="flow-branches">
-        <div class="flow-branch"><span class="cond">未勾选任何订单</span><span class="arr">→</span><span class="result bad">提示「未选择任何可修改项」，不执行</span></div>
-        <div class="flow-branch"><span class="cond">判定后全部为「过滤」</span><span class="arr">→</span><span class="result bad">提示该操作的适用范围，不弹窗</span></div>
-        <div class="flow-branch"><span class="cond">部分为「过滤」</span><span class="arr">→</span><span class="result neutral">提示「已过滤N个不符合条件的订单」，其余进入确认弹窗</span></div>
-        <div class="flow-branch"><span class="cond">执行全部成功</span><span class="arr">→</span><span class="result good">提示「操作成功，共处理N笔」</span></div>
-        <div class="flow-branch"><span class="cond">执行时部分失败</span><span class="arr">→</span><span class="result bad">弹出「批量处理结果」，失败订单保持原状态并保留勾选</span></div>
-      </div>
-      <div class="cap">流程图：一次批量操作从点击到出结果的判定顺序（点击放大）</div>
-    </div><div class="mx-label">一审 / 二审页签</div><div class="tbl-wrap"><table class="dh-table-simple mx"><thead><tr><th>勾选时的订单状态</th><th>批量锁定</th><th>批量解锁</th><th>批量审核通过</th><th>批量审核不通过</th></tr></thead><tbody><tr><td>待审核（未锁定）</td><td><span class="pill">执行</span></td><td><span class="pill keep">过滤</span></td><td><span class="pill keep">过滤</span></td><td><span class="pill keep">过滤</span></td></tr><tr><td>审核中（本人锁定）</td><td><span class="pill keep">过滤</span></td><td><span class="pill">执行</span></td><td><span class="pill">执行</span></td><td><span class="pill">执行</span></td></tr><tr><td>审核中（他人锁定）</td><td><span class="pill keep">过滤</span></td><td><span class="pill">执行</span></td><td><span class="pill keep">过滤</span></td><td><span class="pill keep">过滤</span></td></tr></tbody></table></div><div class="mx-label">待出款页签</div><div class="tbl-wrap"><table class="dh-table-simple mx"><thead><tr><th>勾选时的订单状态</th><th>批量锁定</th><th>批量解锁</th><th>批量代付出款</th><th>批量出款完成</th><th>批量出款取消</th><th>批量驳回重审</th></tr></thead><tbody><tr><td>待出款（未锁定）</td><td><span class="pill">执行</span></td><td><span class="pill keep">过滤</span></td><td><span class="pill keep">过滤</span></td><td><span class="pill keep">过滤</span></td><td><span class="pill keep">过滤</span></td><td><span class="pill keep">过滤</span></td></tr><tr><td>出款中（本人锁定）</td><td><span class="pill keep">过滤</span></td><td><span class="pill">执行</span></td><td><span class="pill">执行</span></td><td><span class="pill">执行</span></td><td><span class="pill">执行</span></td><td><span class="pill">执行</span></td></tr><tr><td>出款中（他人锁定）</td><td><span class="pill keep">过滤</span></td><td><span class="pill">执行</span></td><td><span class="pill keep">过滤</span></td><td><span class="pill keep">过滤</span></td><td><span class="pill keep">过滤</span></td><td><span class="pill keep">过滤</span></td></tr><tr><td>代付出款中</td><td>不可勾选</td><td>不可勾选</td><td>不可勾选</td><td>不可勾选</td><td>不可勾选</td><td>不可勾选</td></tr></tbody></table></div><div class="dh-prose"><p>判定依据是点击按钮时的订单状态与锁定人。确认后后端逐单执行时再校验一次：从勾选到确认之间被他人锁定、处理或状态已变的订单记为失败，不会按旧状态执行。</p></div><button class="proto-jump" data-goto="payout">在交互原型中试一下「待出款」批量操作</button></div>
     <div class="req-block"><h3>通用规则</h3>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>触发条件</th><th>系统反馈</th></tr></thead><tbody>
         <tr><td>未勾选任何订单，点击任一批量按钮</td><td>错误提示「未选择任何可修改项」，不执行</td></tr>
@@ -547,7 +527,7 @@ function seed(){return [
  {id:2,tab:'first',mid:'26894081',phone:'11912311111',name:'-',ord:'5432334508021383168',amt:200,wt:'即时提款',acct:'PHONE',card:'333******566',time:'2026-09-28 04:40:12',locker:ME},
  {id:3,tab:'first',mid:'64262531',phone:'11962222238',name:'-',ord:'5432318890327998464',amt:30,wt:'即时提款',acct:'CPF',card:'021******45',time:'2026-09-28 04:18:59',locker:'bxaj001'},
  {id:4,tab:'first',mid:'80740712',phone:'11912365488',name:'-',ord:'5401911571014737920',amt:150,wt:'即时提款',acct:'CPF',card:'123******01',time:'2026-09-28 03:23:57',locker:null},
- {id:5,tab:'first',mid:'12628249',phone:'11922223336',name:'-',ord:'5428834968668217344',amt:9,wt:'预约提款',acct:'PHONE',card:'444******44',time:'2026-09-28 02:43:09',locker:ME},
+ {id:5,tab:'first',mid:'12628249',phone:'11922223336',name:'-',ord:'5428834968668217344',amt:9,wt:'预约提款',acct:'PHONE',card:'444******44',time:'2026-09-28 02:43:09',locker:null},
  {id:6,tab:'second',mid:'92727351',phone:'11966662222',name:'-',ord:'5428765527636975616',amt:120,wt:'即时提款',acct:'PHONE',card:'113******44',time:'2026-09-27 23:35:44',locker:null},
  {id:7,tab:'second',mid:'85350920',phone:'11955553333',name:'-',ord:'5424193310023372800',amt:300,wt:'即时提款',acct:'CPF',card:'907******12',time:'2026-09-27 22:28:41',locker:ME},
  {id:8,tab:'second',mid:'66739292',phone:'11977774444',name:'-',ord:'5424237618492399616',amt:500,wt:'即时提款',acct:'CPF',card:'338******70',time:'2026-09-27 21:23:05',locker:'bxduoduo01'},
