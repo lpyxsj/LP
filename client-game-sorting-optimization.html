@@ -394,7 +394,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     <button class="sub-btn" data-sub="front" type="button" id="subFront">前台效果 <span class="dot">有更新</span></button>
   </nav>
   <div class="proto-intro">
-    <div class="grow" id="introText">在后台置顶场馆、置顶热门游戏，或在「厂商管理 → 场馆游戏排序」里置顶场馆内游戏，然后点右下角「查看前台效果」，就能看到首页、场馆页、侧边菜单、搜索页的结果，有变化的位置会闪烁。数据为测试站示例数据。</div>
+    <div class="grow" id="introText">在后台置顶场馆、置顶热门游戏，或在「厂商管理 → 场馆游戏排序」里置顶场馆内游戏，然后点右下角「查看前台效果」，就能看到首页、场馆页、侧边菜单、搜索页的结果，有变化的位置会闪烁。点击橙色「本期调整 / 本期新增」标记可查看改了什么。数据为测试站示例数据。</div>
     <label class="doc-check" for="markToggle"><input type="checkbox" id="markToggle" checked> 显示本期改动与置顶标注</label>
     <button class="doc-btn" id="resetDemo" type="button">重置演示数据</button>
   </div>
@@ -407,7 +407,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
       </div>
       <div class="bk-tabs" role="tablist">
         <button class="bk-tab active" data-bk="venue" type="button">厂商管理</button>
-        <button class="bk-tab" data-bk="game" type="button">热门游戏排序</button>
+        <button class="bk-tab" data-bk="game" type="button">热门游戏排序<span class="mk" data-tip="rename">本期更名</span></button>
       </div>
       <div class="bk-body">
         <!-- 厂商管理 -->
@@ -430,7 +430,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
               <button class="bk-btn primary" type="button" id="btnAlignV">对齐平台排序</button>
             </div>
             <div class="bk-table-wrap"><table class="bk-table wide">
-              <thead><tr><th>H5展示顺序</th><th>场馆名称</th><th>场馆类型</th><th>场馆状态</th><th>排序(热门游戏数量)</th><th>排序类型<span class="bk-th-tip" title="置顶：从第1位起连续排在最前；自动排序：按热门游戏数量从多到少">?</span></th><th>置顶位置(点击修改)</th><th>是否置顶(点击修改)</th><th>入场余额限制</th><th>最后操作人</th><th>最后操作时间</th><th>操作</th></tr></thead>
+              <thead><tr><th>H5展示顺序<span class="mk" data-tip="h5">本期调整</span></th><th>场馆名称</th><th>场馆类型</th><th>场馆状态</th><th>排序(热门游戏数量)</th><th>排序类型<span class="bk-th-tip" title="置顶：从第1位起连续排在最前；自动排序：按热门游戏数量从多到少">?</span></th><th>置顶位置(点击修改)<span class="mk" data-tip="pos">本期调整</span></th><th>是否置顶(点击修改)<span class="mk" data-tip="pin">本期调整</span></th><th>入场余额限制</th><th>最后操作人</th><th>最后操作时间</th><th>操作</th></tr></thead>
               <tbody id="venueBody"></tbody>
             </table></div>
             <div class="bk-pager"><span id="venueTotal"></span><span class="pg">1</span><span>50 条/页</span></div>
@@ -449,9 +449,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
           </div>
           <div class="bk-card">
             <div class="impact zB"><span class="zchip"><b>B</b>热门游戏排序</span><span class="txt">本页的置顶与顺序就是前台热门顺序，改动后影响：<em>首页热门区、侧边菜单热门、搜索页「热门」、场馆页「热门」页签</em>；不影响场馆区内的游戏顺序</span><button class="bk-btn sm go" type="button" data-hl="B">在前台查看 B →</button></div>
-            <div class="bk-toolbar"><span class="info">本页顺序即前台热门顺序<span class="mk">本期调整</span></span><button class="bk-btn primary" type="button" id="btnAlignG">对齐平台排序</button></div>
+            <div class="bk-toolbar"><span class="info">本页顺序即前台热门顺序<span class="mk" data-tip="hotorder">本期调整</span></span><button class="bk-btn primary" type="button" id="btnAlignG">对齐平台排序</button></div>
             <div class="bk-table-wrap"><table class="bk-table mid">
-              <thead><tr><th>序号</th><th>地区</th><th>商户</th><th>平台</th><th>游戏名称</th><th>排序类型</th><th>置顶位置(点击修改)</th><th>是否置顶(点击修改)</th></tr></thead>
+              <thead><tr><th>序号</th><th>地区</th><th>商户</th><th>平台</th><th>游戏名称</th><th>排序类型</th><th>置顶位置(点击修改)<span class="mk" data-tip="pos">本期调整</span></th><th>是否置顶(点击修改)<span class="mk" data-tip="pin">本期调整</span></th></tr></thead>
               <tbody id="gameBody"></tbody>
             </table></div>
             <div class="bk-pager"><span id="gameTotal"></span><span class="pg">1</span><span>50 条/页</span></div>
@@ -506,7 +506,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
         <p>本期统一置顶规则，并把游戏排序拆成「热门游戏」和「场馆内游戏」两层，前台每个版块都有对应的后台设置。</p>
       </div>
     </div>
-<div class="req-block"><h2>功能结构图</h2><div class="dh-mind"><div class="mm"><div class="mm-root">客户端游戏排序优化</div><div class="mm-branches"><div class="mm-b"><div class="mm-node zA"><span class="zchip mini zA"><b>A</b></span>场馆排序</div><div class="mm-leaves"><span class="mm-leaf">后台：厂商管理</span><span class="mm-leaf">置顶 / 置顶位置 / 取消置顶<span class="tag-new">本期调整</span></span><span class="mm-leaf">自动排序：热门游戏数量</span><span class="mm-leaf">前台：Tab 行、场馆区块先后、侧边菜单、场馆页左侧</span></div></div><div class="mm-b"><div class="mm-node zB"><span class="zchip mini zB"><b>B</b></span>热门游戏排序</div><div class="mm-leaves"><span class="mm-leaf">后台：热门游戏排序</span><span class="mm-leaf">置顶 / 置顶位置 / 取消置顶<span class="tag-new">本期调整</span></span><span class="mm-leaf">自动排序：热门值</span><span class="mm-leaf">前台：热门区、侧边菜单热门、搜索页热门、场馆页「热门」</span></div></div><div class="mm-b"><div class="mm-node zC"><span class="zchip mini zC"><b>C</b></span>场馆内游戏排序</div><div class="mm-leaves"><span class="mm-leaf">后台：厂商管理 → 场馆游戏排序<span class="tag-new">本期新增</span></span><span class="mm-leaf">每个场馆单独队列</span><span class="mm-leaf">自动排序：热门值在场馆内的先后</span><span class="mm-leaf">前台：场馆区块内游戏、场馆页「全部」</span></div></div><div class="mm-b"><div class="mm-node">统一置顶规则</div><div class="mm-leaves"><span class="mm-leaf">置顶区从第 1 位连续<span class="tag-new">本期调整</span></span><span class="mm-leaf">新增置顶放末尾<span class="tag-new">本期调整</span></span><span class="mm-leaf">改位置为插入，其余顺移<span class="tag-new">本期调整</span></span><span class="mm-leaf">取消置顶后续前移</span><span class="mm-leaf">不限置顶数量</span></div></div><div class="mm-b"><div class="mm-node">上线数据处理</div><div class="mm-leaves"><span class="mm-leaf">场馆置顶按原顺序压缩为 1–N</span><span class="mm-leaf">原置顶保留为热门置顶</span><span class="mm-leaf">已关闭游戏的置顶取消</span><span class="mm-leaf">场馆内置顶初始为空</span></div></div></div></div><div class="cap">功能结构图：本需求的三类排序与统一规则（只表示组成关系，非流程；点击放大）</div></div></div>
+<div class="req-block"><h2>功能结构图</h2><div class="dh-mind"><div class="mm"><div class="mm-root">客户端游戏排序优化</div><div class="mm-branches"><div class="mm-b"><div class="mm-node zA"><span class="zchip mini zA"><b>A</b></span>场馆排序</div><div class="mm-leaves"><span class="mm-leaf">后台：厂商管理</span><span class="mm-leaf">置顶 / 置顶位置 / 取消置顶<span class="tag-new" data-tip="mmA">本期调整</span></span><span class="mm-leaf">自动排序：热门游戏数量</span><span class="mm-leaf">前台：Tab 行、场馆区块先后、侧边菜单、场馆页左侧</span></div></div><div class="mm-b"><div class="mm-node zB"><span class="zchip mini zB"><b>B</b></span>热门游戏排序</div><div class="mm-leaves"><span class="mm-leaf">后台：热门游戏排序</span><span class="mm-leaf">置顶 / 置顶位置 / 取消置顶<span class="tag-new" data-tip="mmB">本期调整</span></span><span class="mm-leaf">自动排序：热门值</span><span class="mm-leaf">前台：热门区、侧边菜单热门、搜索页热门、场馆页「热门」</span></div></div><div class="mm-b"><div class="mm-node zC"><span class="zchip mini zC"><b>C</b></span>场馆内游戏排序</div><div class="mm-leaves"><span class="mm-leaf">后台：厂商管理 → 场馆游戏排序<span class="tag-new" data-tip="cnew">本期新增</span></span><span class="mm-leaf">每个场馆单独队列</span><span class="mm-leaf">自动排序：热门值在场馆内的先后</span><span class="mm-leaf">前台：场馆区块内游戏、场馆页「全部」</span></div></div><div class="mm-b"><div class="mm-node">统一置顶规则</div><div class="mm-leaves"><span class="mm-leaf">置顶区从第 1 位连续<span class="tag-new" data-tip="cont">本期调整</span></span><span class="mm-leaf">新增置顶放末尾<span class="tag-new" data-tip="end">本期调整</span></span><span class="mm-leaf">改位置为插入，其余顺移<span class="tag-new" data-tip="insert">本期调整</span></span><span class="mm-leaf">取消置顶后续前移</span><span class="mm-leaf">不限置顶数量</span></div></div><div class="mm-b"><div class="mm-node">上线数据处理</div><div class="mm-leaves"><span class="mm-leaf">场馆置顶按原顺序压缩为 1–N</span><span class="mm-leaf">原置顶保留为热门置顶</span><span class="mm-leaf">已关闭游戏的置顶取消</span><span class="mm-leaf">场馆内置顶初始为空</span></div></div></div></div><div class="cap">功能结构图：本需求的三类排序与统一规则（只表示组成关系，非流程；点击放大）</div></div></div>
 
     <div class="req-block"><h2>数据来源与前台去向</h2><div class="dh-mind"><div class="mm"><div class="mm-root">游戏热门值<br><small>总控 · 游戏配置总控「有效注单」</small><br><small>对齐平台排序同步到本站</small></div><div class="mm-branches"><div class="mm-b"><div class="mm-node zB"><span class="zchip mini zB"><b>B</b></span>热门游戏排序</div><div class="mm-leaves"><span class="mm-leaf">自然排序：全站按热门值</span><span class="mm-leaf">置顶：热门游戏排序页</span><span class="mm-leaf">前台：首页热门区</span><span class="mm-leaf">前台：侧边菜单热门</span><span class="mm-leaf">前台：搜索页「热门」</span><span class="mm-leaf">前台：场馆页「热门」</span></div></div><div class="mm-b"><div class="mm-node zC"><span class="zchip mini zC"><b>C</b></span>场馆内游戏排序</div><div class="mm-leaves"><span class="mm-leaf">自然排序：本场馆按热门值</span><span class="mm-leaf">置顶：厂商管理 → 场馆游戏排序</span><span class="mm-leaf">前台：首页场馆区块内游戏</span><span class="mm-leaf">前台：场馆页「全部」</span></div></div><div class="mm-b"><div class="mm-node zA"><span class="zchip mini zA"><b>A</b></span>场馆排序</div><div class="mm-leaves"><span class="mm-leaf">自然排序：热门前 N 名的场馆游戏数</span><span class="mm-leaf">置顶：厂商管理</span><span class="mm-leaf">前台：首页场馆 Tab</span><span class="mm-leaf">前台：场馆区块先后</span><span class="mm-leaf">前台：侧边菜单场馆列表</span><span class="mm-leaf">前台：场馆页左侧</span></div></div></div></div><div class="cap">数据来源 → 后台置顶 → 前台位置（点击放大）</div></div></div>
     <div class="req-block">
@@ -549,7 +549,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
       <div class="dh-callout">不受本期影响：最近、收藏（按会员自己的记录）、返水页场馆列表、搜索关键词结果。</div>
     </div>
     <div class="req-block">
-      <h2>统一的置顶规则</h2>
+      <h2>统一的置顶规则<span class="tag-new" data-tip="unified">本期调整</span></h2>
       <div class="dh-prose"><p>场馆置顶、热门游戏置顶、场馆内游戏置顶使用同一套规则，只是作用范围不同：</p><ol>
         <li>置顶区从第 1 位起连续排列，不出现空位；自动排序项从第 N+1 位开始（N = 置顶数量）。</li>
         <li>新增置顶放在置顶区末尾（第 N+1 位）。</li>
@@ -566,9 +566,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
         <div class="cap">示意图：三类排序共同的列表结构（非流程）</div>
       </div>
     </div>
-<div class="req-block"><h2>名称调整<span class="tag-new">本期调整</span></h2><div class="dh-prose"><p>后台名称与三类排序一一对应：厂商管理（场馆排序）、热门游戏排序、场馆游戏排序。页面功能不变。</p></div><div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>位置</th><th>原名称</th><th>新名称</th><th>说明</th></tr></thead><tbody><tr><td><b>商户游戏管理 · 二级菜单</b></td><td>游戏排名</td><td>热门游戏排序</td><td>菜单、页签、面包屑、角色权限中的菜单名同步更名</td></tr><tr><td><b>厂商管理 · 操作列按钮</b></td><td>—（本期新增）</td><td>场馆游戏排序</td><td>弹窗标题「场馆游戏排序 - {场馆名称}」</td></tr><tr><td><b>游戏管理 · 列表列名</b></td><td>顺序</td><td>热门排名</td><td>取值不变：游戏在热门游戏排序中的位次</td></tr><tr><td><b>总控对应菜单与字段</b></td><td>同上</td><td>同上</td><td>总控如有同名菜单 / 列名，同步更名</td></tr></tbody></table></div></div>
+<div class="req-block"><h2>名称调整<span class="tag-new" data-tip="rentbl">本期调整</span></h2><div class="dh-prose"><p>后台名称与三类排序一一对应：厂商管理（场馆排序）、热门游戏排序、场馆游戏排序。页面功能不变。</p></div><div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>位置</th><th>原名称</th><th>新名称</th><th>说明</th></tr></thead><tbody><tr><td><b>商户游戏管理 · 二级菜单</b></td><td>游戏排名</td><td>热门游戏排序</td><td>菜单、页签、面包屑、角色权限中的菜单名同步更名</td></tr><tr><td><b>厂商管理 · 操作列按钮</b></td><td>—（本期新增）</td><td>场馆游戏排序</td><td>弹窗标题「场馆游戏排序 - {场馆名称}」</td></tr><tr><td><b>游戏管理 · 列表列名</b></td><td>顺序</td><td>热门排名</td><td>取值不变：游戏在热门游戏排序中的位次</td></tr><tr><td><b>总控对应菜单与字段</b></td><td>同上</td><td>同上</td><td>总控如有同名菜单 / 列名，同步更名</td></tr></tbody></table></div></div>
     <div class="req-block">
-      <h2>上线时的历史数据处理</h2>
+      <h2>上线时的历史数据处理<span class="tag-new" data-tip="hist">本期新增</span></h2>
       <div class="tbl-wrap"><table class="dh-table-simple">
         <thead><tr><th>数据</th><th>处理方式</th></tr></thead>
         <tbody>
@@ -583,7 +583,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   <!-- 1 场馆排序 -->
   <div class="dh-panel" data-panel="venue">
     <button class="proto-jump" data-goto="venue" type="button">在交互原型中查看「厂商管理」 →</button>
-<div class="req-block"><h2>功能结构图</h2><div class="dh-mind"><div class="mm"><div class="mm-root zA">厂商管理</div><div class="mm-branches"><div class="mm-b"><div class="mm-node">搜索区</div><div class="mm-leaves"><span class="mm-leaf">场馆名称</span><span class="mm-leaf">场馆状态</span><span class="mm-leaf">场馆类型</span><span class="mm-leaf">重置 / 查询</span></div></div><div class="mm-b"><div class="mm-node">工具栏</div><div class="mm-leaves"><span class="mm-leaf">真人扣费配置</span><span class="mm-leaf">场馆排序规则设置</span><span class="mm-leaf">对齐平台排序</span></div></div><div class="mm-b"><div class="mm-node">列表字段</div><div class="mm-leaves"><span class="mm-leaf">H5展示顺序<span class="tag-new">本期调整</span></span><span class="mm-leaf">场馆名称 / 类型 / 状态</span><span class="mm-leaf">排序(热门游戏数量)</span><span class="mm-leaf">排序类型</span><span class="mm-leaf">置顶位置(点击修改)<span class="tag-new">本期调整</span></span><span class="mm-leaf">是否置顶(点击修改)<span class="tag-new">本期调整</span></span><span class="mm-leaf">入场余额限制</span><span class="mm-leaf">最后操作人 / 时间</span></div></div><div class="mm-b"><div class="mm-node">操作列</div><div class="mm-leaves"><span class="mm-leaf">编辑</span><span class="mm-leaf">场馆游戏排序<span class="tag-new">本期新增</span></span><span class="mm-leaf">维护</span><span class="mm-leaf">关闭 / 开启</span></div></div><div class="mm-b"><div class="mm-node">排序规则</div><div class="mm-leaves"><span class="mm-leaf">置顶区 1–N 连续<span class="tag-new">本期调整</span></span><span class="mm-leaf">自动区按热门游戏数量</span><span class="mm-leaf">关闭的场馆保留置顶</span></div></div><div class="mm-b"><div class="mm-node zA"><span class="zchip mini zA"><b>A</b></span>影响前台</div><div class="mm-leaves"><span class="mm-leaf">首页场馆 Tab 行</span><span class="mm-leaf">首页场馆区块先后</span><span class="mm-leaf">侧边菜单场馆列表</span><span class="mm-leaf">场馆页左侧厂商列表</span></div></div></div></div><div class="cap">功能结构图：厂商管理（场馆排序）的页面组成（非流程；点击放大）</div></div></div>
+<div class="req-block"><h2>功能结构图</h2><div class="dh-mind"><div class="mm"><div class="mm-root zA">厂商管理</div><div class="mm-branches"><div class="mm-b"><div class="mm-node">搜索区</div><div class="mm-leaves"><span class="mm-leaf">场馆名称</span><span class="mm-leaf">场馆状态</span><span class="mm-leaf">场馆类型</span><span class="mm-leaf">重置 / 查询</span></div></div><div class="mm-b"><div class="mm-node">工具栏</div><div class="mm-leaves"><span class="mm-leaf">真人扣费配置</span><span class="mm-leaf">场馆排序规则设置</span><span class="mm-leaf">对齐平台排序</span></div></div><div class="mm-b"><div class="mm-node">列表字段</div><div class="mm-leaves"><span class="mm-leaf">H5展示顺序<span class="tag-new" data-tip="h5">本期调整</span></span><span class="mm-leaf">场馆名称 / 类型 / 状态</span><span class="mm-leaf">排序(热门游戏数量)</span><span class="mm-leaf">排序类型</span><span class="mm-leaf">置顶位置(点击修改)<span class="tag-new" data-tip="pos">本期调整</span></span><span class="mm-leaf">是否置顶(点击修改)<span class="tag-new" data-tip="pin">本期调整</span></span><span class="mm-leaf">入场余额限制</span><span class="mm-leaf">最后操作人 / 时间</span></div></div><div class="mm-b"><div class="mm-node">操作列</div><div class="mm-leaves"><span class="mm-leaf">编辑</span><span class="mm-leaf">场馆游戏排序<span class="tag-new" data-tip="vbtn">本期新增</span></span><span class="mm-leaf">维护</span><span class="mm-leaf">关闭 / 开启</span></div></div><div class="mm-b"><div class="mm-node">排序规则</div><div class="mm-leaves"><span class="mm-leaf">置顶区 1–N 连续<span class="tag-new" data-tip="cont">本期调整</span></span><span class="mm-leaf">自动区按热门游戏数量</span><span class="mm-leaf">关闭的场馆保留置顶</span></div></div><div class="mm-b"><div class="mm-node zA"><span class="zchip mini zA"><b>A</b></span>影响前台</div><div class="mm-leaves"><span class="mm-leaf">首页场馆 Tab 行</span><span class="mm-leaf">首页场馆区块先后</span><span class="mm-leaf">侧边菜单场馆列表</span><span class="mm-leaf">场馆页左侧厂商列表</span></div></div></div></div><div class="cap">功能结构图：厂商管理（场馆排序）的页面组成（非流程；点击放大）</div></div></div>
 
     <div class="req-block">
       <h2>后台配置</h2>
@@ -591,18 +591,18 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
       <div class="tbl-wrap"><table class="dh-table-simple">
         <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
         <tbody>
-          <tr><td><b>H5展示顺序</b><span class="tag-new">本期调整</span></td><td>从 1 连续编号；置顶场馆占 1 到 N，自动排序场馆从 N+1 起。</td><td>按规则计算，不可直接编辑</td><td>前台按此顺序展示开启的场馆。</td></tr>
-          <tr><td><b>是否置顶（点击修改）</b><span class="tag-new">本期调整</span></td><td>自动排序显示「置顶」，置顶显示「取消置顶」。</td><td>自动排序</td><td>置顶后放在置顶区末尾；取消后回到自动排序区。</td></tr>
-          <tr><td><b>置顶位置（点击修改）</b><span class="tag-new">本期调整</span></td><td>自动排序显示「-」；置顶显示「位置N」，点击弹出「置顶位置修改」，下拉为位置1 到 位置N（N = 当前置顶场馆数）。</td><td>-</td><td>插入到所选位置，原位置及之后的置顶场馆依次后移。</td></tr>
-          <tr><td><b>操作 · 场馆游戏排序</b><span class="tag-new">本期新增</span></td><td>每行新增「场馆游戏排序」按钮，打开该场馆的游戏列表，用于场馆内游戏置顶，见「场馆内游戏排序」模块。</td><td>—</td><td>决定该场馆在首页场馆区和场馆页「全部」中的游戏顺序。</td></tr>
-          <tr><td><b>排序(热门游戏数量)</b></td><td>该场馆在热门游戏排序前 N 名中的游戏数量（N 在「场馆排序规则设置」中配置，默认 100）。热门游戏置顶计入，场馆内游戏置顶不计入。</td><td>按规则计算</td><td>自动排序区按此数量从多到少排列。</td></tr>
+          <tr><td><b>H5展示顺序</b><span class="tag-new" data-tip="h5">本期调整</span></td><td>从 1 连续编号；置顶场馆占 1 到 N，自动排序场馆从 N+1 起。</td><td>按规则计算，不可直接编辑</td><td>前台按此顺序展示开启的场馆。</td></tr>
+          <tr><td><b>是否置顶（点击修改）</b><span class="tag-new" data-tip="pin">本期调整</span></td><td>自动排序显示「置顶」，置顶显示「取消置顶」。</td><td>自动排序</td><td>置顶后放在置顶区末尾；取消后回到自动排序区。</td></tr>
+          <tr><td><b>置顶位置（点击修改）</b><span class="tag-new" data-tip="pos">本期调整</span></td><td>自动排序显示「-」；置顶显示「位置N」，点击弹出「置顶位置修改」，下拉为位置1 到 位置N（N = 当前置顶场馆数）。</td><td>-</td><td>插入到所选位置，原位置及之后的置顶场馆依次后移。</td></tr>
+          <tr><td><b>操作 · 场馆游戏排序</b><span class="tag-new" data-tip="vbtn">本期新增</span></td><td>每行新增「场馆游戏排序」按钮，打开该场馆的游戏列表，用于场馆内游戏置顶，见「场馆内游戏排序」模块。</td><td>—</td><td>决定该场馆在首页场馆区和场馆页「全部」中的游戏顺序。</td></tr>
+          <tr><td><b>排序(热门游戏数量)</b><span class="tag-new" data-tip="hotcnt">本期调整</span></td><td>该场馆在热门游戏排序前 N 名中的游戏数量（N 在「场馆排序规则设置」中配置，默认 100）。热门游戏置顶计入，场馆内游戏置顶不计入。</td><td>按规则计算</td><td>自动排序区按此数量从多到少排列。</td></tr>
         </tbody>
       </table></div>
       <h3>排序规则</h3>
       <div class="dh-prose"><ol>
-        <li>置顶区按置顶位置从小到大排在最前，位置从 1 开始连续编号。</li>
+        <li>置顶区按置顶位置从小到大排在最前，位置从 1 开始连续编号。<span class="tag-new" data-tip="cont">本期调整</span></li>
         <li>自动排序区按热门游戏数量从多到少；数量相同按场馆排序值从小到大；仍相同按场馆 ID 从小到大。</li>
-        <li>需要完全手动排序时，将全部场馆置顶并调整置顶位置即可；只置顶部分场馆时，其余场馆按自动排序接在后面。</li>
+        <li>需要完全手动排序时，将全部场馆置顶并调整置顶位置即可；只置顶部分场馆时，其余场馆按自动排序接在后面。<span class="tag-new" data-tip="manual">本期调整</span></li>
         <li>关闭的场馆保留置顶状态与位置，后台列表照常显示；前台不展示，其后的场馆依次补位，重新开启后按原位置展示。</li>
         <li>真人扣费配置、对齐平台排序、编辑、维护、关闭、开启等其余功能沿用现有逻辑。</li>
       </ol></div>
@@ -671,27 +671,27 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   <!-- 2 热门游戏排序 -->
   <div class="dh-panel" data-panel="hot">
     <button class="proto-jump" data-goto="game" type="button">在交互原型中查看「热门游戏排序」 →</button>
-<div class="req-block"><h2>功能结构图</h2><div class="dh-mind"><div class="mm"><div class="mm-root zB">热门游戏排序</div><div class="mm-branches"><div class="mm-b"><div class="mm-node">搜索区</div><div class="mm-leaves"><span class="mm-leaf">地区</span><span class="mm-leaf">商户号</span><span class="mm-leaf">平台</span><span class="mm-leaf">游戏名称</span><span class="mm-leaf">重置 / 查询</span></div></div><div class="mm-b"><div class="mm-node">工具栏</div><div class="mm-leaves"><span class="mm-leaf">对齐平台排序</span></div></div><div class="mm-b"><div class="mm-node">列表字段</div><div class="mm-leaves"><span class="mm-leaf">序号</span><span class="mm-leaf">地区 / 商户 / 平台</span><span class="mm-leaf">游戏名称</span><span class="mm-leaf">排序类型</span><span class="mm-leaf">置顶位置(点击修改)<span class="tag-new">本期调整</span></span><span class="mm-leaf">是否置顶(点击修改)<span class="tag-new">本期调整</span></span></div></div><div class="mm-b"><div class="mm-node">排序规则</div><div class="mm-leaves"><span class="mm-leaf">全站一个队列</span><span class="mm-leaf">置顶区 1–N 连续<span class="tag-new">本期调整</span></span><span class="mm-leaf">自动区按热门值</span><span class="mm-leaf">关闭的游戏取消置顶</span><span class="mm-leaf">计入场馆热门游戏数量</span></div></div><div class="mm-b"><div class="mm-node zB"><span class="zchip mini zB"><b>B</b></span>影响前台</div><div class="mm-leaves"><span class="mm-leaf">首页热门区</span><span class="mm-leaf">侧边菜单热门</span><span class="mm-leaf">搜索页「热门」</span><span class="mm-leaf">场馆页「热门」页签</span></div></div></div></div><div class="cap">功能结构图：热门游戏排序页的页面组成（非流程；点击放大）</div></div></div>
+<div class="req-block"><h2>功能结构图</h2><div class="dh-mind"><div class="mm"><div class="mm-root zB">热门游戏排序</div><div class="mm-branches"><div class="mm-b"><div class="mm-node">搜索区</div><div class="mm-leaves"><span class="mm-leaf">地区</span><span class="mm-leaf">商户号</span><span class="mm-leaf">平台</span><span class="mm-leaf">游戏名称</span><span class="mm-leaf">重置 / 查询</span></div></div><div class="mm-b"><div class="mm-node">工具栏</div><div class="mm-leaves"><span class="mm-leaf">对齐平台排序</span></div></div><div class="mm-b"><div class="mm-node">列表字段</div><div class="mm-leaves"><span class="mm-leaf">序号</span><span class="mm-leaf">地区 / 商户 / 平台</span><span class="mm-leaf">游戏名称</span><span class="mm-leaf">排序类型</span><span class="mm-leaf">置顶位置(点击修改)<span class="tag-new" data-tip="pos">本期调整</span></span><span class="mm-leaf">是否置顶(点击修改)<span class="tag-new" data-tip="pin">本期调整</span></span></div></div><div class="mm-b"><div class="mm-node">排序规则</div><div class="mm-leaves"><span class="mm-leaf">全站一个队列</span><span class="mm-leaf">置顶区 1–N 连续<span class="tag-new" data-tip="cont">本期调整</span></span><span class="mm-leaf">自动区按热门值</span><span class="mm-leaf">关闭的游戏取消置顶</span><span class="mm-leaf">计入场馆热门游戏数量</span></div></div><div class="mm-b"><div class="mm-node zB"><span class="zchip mini zB"><b>B</b></span>影响前台</div><div class="mm-leaves"><span class="mm-leaf">首页热门区</span><span class="mm-leaf">侧边菜单热门</span><span class="mm-leaf">搜索页「热门」</span><span class="mm-leaf">场馆页「热门」页签</span></div></div></div></div><div class="cap">功能结构图：热门游戏排序页的页面组成（非流程；点击放大）</div></div></div>
 
     <div class="req-block">
       <h2>后台配置</h2>
-      <div class="dh-prose"><p>页面：商户游戏管理 → 热门游戏排序（原「游戏排名」，本期更名，页面与字段沿用现有）。本页顺序即前台热门游戏顺序，全站一个队列，不区分场馆。列表收录全部游戏，含已关闭的游戏（已关闭游戏不能置顶，前台不展示）；同一游戏接入多个平台时分行展示，置顶互不影响，前台热门区不去重，由运营自行配置。</p></div>
+      <div class="dh-prose"><p>页面：商户游戏管理 → 热门游戏排序（原「游戏排名」，本期更名，页面与字段沿用现有）。本页顺序即前台热门游戏顺序，全站一个队列，不区分场馆。列表收录全部游戏，含已关闭的游戏（已关闭游戏不能置顶，前台不展示）；同一游戏接入多个平台时分行展示，置顶互不影响，前台热门区不去重，由运营自行配置。<span class="tag-new" data-tip="hotscope">本期调整</span></p></div>
       <div class="tbl-wrap"><table class="dh-table-simple">
         <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
         <tbody>
-          <tr><td><b>是否置顶（点击修改）</b><span class="tag-new">本期调整</span></td><td>自动排序显示「置顶」，置顶显示「取消置顶」。</td><td>自动排序</td><td>置顶后放在热门置顶区末尾；取消后回到自动排序区。</td></tr>
-          <tr><td><b>置顶位置（点击修改）</b><span class="tag-new">本期调整</span></td><td>自动排序显示「-」；置顶显示「位置N」，下拉为位置1 到 位置N（N = 全站热门置顶数量）。</td><td>-</td><td>插入到所选位置，原位置及之后的置顶游戏依次后移。</td></tr>
-          <tr><td><b>列表顺序</b><span class="tag-new">本期调整</span></td><td>置顶游戏按置顶位置排在最前，其余按热门值从高到低。</td><td>—</td><td>前台热门区、侧边菜单热门、搜索页热门、场馆页「热门」按此顺序展示。</td></tr>
+          <tr><td><b>是否置顶（点击修改）</b><span class="tag-new" data-tip="pin">本期调整</span></td><td>自动排序显示「置顶」，置顶显示「取消置顶」。</td><td>自动排序</td><td>置顶后放在热门置顶区末尾；取消后回到自动排序区。</td></tr>
+          <tr><td><b>置顶位置（点击修改）</b><span class="tag-new" data-tip="pos">本期调整</span></td><td>自动排序显示「-」；置顶显示「位置N」，下拉为位置1 到 位置N（N = 全站热门置顶数量）。</td><td>-</td><td>插入到所选位置，原位置及之后的置顶游戏依次后移。</td></tr>
+          <tr><td><b>列表顺序</b><span class="tag-new" data-tip="hotorder">本期调整</span></td><td>置顶游戏按置顶位置排在最前，其余按热门值从高到低。</td><td>—</td><td>前台热门区、侧边菜单热门、搜索页热门、场馆页「热门」按此顺序展示。</td></tr>
           <tr><td><b>序号</b></td><td>按当前筛选结果从 1 编号；未筛选时即热门位次。</td><td>—</td><td>仅用于后台查看。置顶位置按全站计算，与筛选条件无关。</td></tr>
         </tbody>
       </table></div>
       <h3>排序规则</h3>
       <div class="dh-prose"><ol>
-        <li>置顶区按置顶位置从小到大排在最前，位置从 1 开始连续编号。</li>
-        <li>自动排序区按热门值从高到低；热门值相同时按游戏上线时间，新的在前。「对齐平台排序」只刷新自动排序区，置顶游戏及其位置不变。</li>
-        <li>热门游戏置顶只影响热门相关版块，不改变首页场馆区和场馆页「全部」的游戏顺序。</li>
-        <li>热门游戏置顶计入场馆的「热门游戏数量」，可能带动场馆自动排序变化。</li>
-        <li>游戏被关闭时，热门置顶自动取消，其后的置顶游戏依次前移；维护中的游戏可以置顶，前台显示「维护中」。</li>
+        <li>置顶区按置顶位置从小到大排在最前，位置从 1 开始连续编号。<span class="tag-new" data-tip="cont">本期调整</span></li>
+        <li>自动排序区按热门值从高到低；热门值相同时按游戏上线时间，新的在前<span class="tag-new" data-tip="tie">本期调整</span>。「对齐平台排序」只刷新自动排序区，置顶游戏及其位置不变。</li>
+        <li>热门游戏置顶只影响热门相关版块，不改变首页场馆区和场馆页「全部」的游戏顺序。<span class="tag-new" data-tip="hotonly">本期调整</span></li>
+        <li>热门游戏置顶计入场馆的「热门游戏数量」，可能带动场馆自动排序变化。<span class="tag-new" data-tip="hotcntpin">本期调整</span></li>
+        <li>游戏被关闭时，热门置顶自动取消，其后的置顶游戏依次前移；维护中的游戏可以置顶，前台显示「维护中」。<span class="tag-new" data-tip="close">本期调整</span></li>
       </ol></div>
       <div class="dh-callout">置顶、修改位置、取消置顶的弹窗文案与分支同「场馆排序」模块的三张流程图，对象换成游戏，名称显示为「中文名(英文名)」。</div>
     </div>
@@ -715,10 +715,10 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   <!-- 3 场馆内游戏排序 -->
   <div class="dh-panel" data-panel="vgame">
     <button class="proto-jump" data-goto="venue" type="button">在交互原型中查看「厂商管理 → 场馆游戏排序」 →</button>
-<div class="req-block"><h2>功能结构图</h2><div class="dh-mind"><div class="mm"><div class="mm-root zC">场馆游戏排序弹窗</div><div class="mm-branches"><div class="mm-b"><div class="mm-node">入口</div><div class="mm-leaves"><span class="mm-leaf">厂商管理 → 操作列「场馆游戏排序」<span class="tag-new">本期新增</span></span></div></div><div class="mm-b"><div class="mm-node">筛选</div><div class="mm-leaves"><span class="mm-leaf">游戏名称</span><span class="mm-leaf">查询 / 重置</span></div></div><div class="mm-b"><div class="mm-node">列表字段</div><div class="mm-leaves"><span class="mm-leaf">序号</span><span class="mm-leaf">游戏名称</span><span class="mm-leaf">所属平台</span><span class="mm-leaf">游戏状态</span><span class="mm-leaf">排序类型</span><span class="mm-leaf">置顶位置(点击修改)</span><span class="mm-leaf">是否置顶(点击修改)</span></div></div><div class="mm-b"><div class="mm-node">排序规则</div><div class="mm-leaves"><span class="mm-leaf">每个场馆单独队列</span><span class="mm-leaf">含并入的 My 系列游戏</span><span class="mm-leaf">置顶区 1–N 连续</span><span class="mm-leaf">自动区按热门值</span><span class="mm-leaf">不计入热门游戏数量</span></div></div><div class="mm-b"><div class="mm-node zC"><span class="zchip mini zC"><b>C</b></span>影响前台</div><div class="mm-leaves"><span class="mm-leaf">首页该场馆区块内的游戏</span><span class="mm-leaf">场馆页「全部」页签</span></div></div></div></div><div class="cap">功能结构图：场馆内游戏排序弹窗的组成（非流程；点击放大）</div></div></div>
+<div class="req-block"><h2>功能结构图</h2><div class="dh-mind"><div class="mm"><div class="mm-root zC">场馆游戏排序弹窗</div><div class="mm-branches"><div class="mm-b"><div class="mm-node">入口</div><div class="mm-leaves"><span class="mm-leaf">厂商管理 → 操作列「场馆游戏排序」<span class="tag-new" data-tip="cnew">本期新增</span></span></div></div><div class="mm-b"><div class="mm-node">筛选</div><div class="mm-leaves"><span class="mm-leaf">游戏名称</span><span class="mm-leaf">查询 / 重置</span></div></div><div class="mm-b"><div class="mm-node">列表字段</div><div class="mm-leaves"><span class="mm-leaf">序号</span><span class="mm-leaf">游戏名称</span><span class="mm-leaf">所属平台</span><span class="mm-leaf">游戏状态</span><span class="mm-leaf">排序类型</span><span class="mm-leaf">置顶位置(点击修改)</span><span class="mm-leaf">是否置顶(点击修改)</span></div></div><div class="mm-b"><div class="mm-node">排序规则</div><div class="mm-leaves"><span class="mm-leaf">每个场馆单独队列</span><span class="mm-leaf">含并入的 My 系列游戏</span><span class="mm-leaf">置顶区 1–N 连续</span><span class="mm-leaf">自动区按热门值</span><span class="mm-leaf">不计入热门游戏数量</span></div></div><div class="mm-b"><div class="mm-node zC"><span class="zchip mini zC"><b>C</b></span>影响前台</div><div class="mm-leaves"><span class="mm-leaf">首页该场馆区块内的游戏</span><span class="mm-leaf">场馆页「全部」页签</span></div></div></div></div><div class="cap">功能结构图：场馆内游戏排序弹窗的组成（非流程；点击放大）</div></div></div>
 
     <div class="req-block">
-      <h2>后台配置<span class="tag-new">本期新增</span></h2>
+      <h2>后台配置<span class="tag-new" data-tip="cnew">本期新增</span></h2>
       <div class="dh-prose"><p>入口：商户游戏管理 → 厂商管理 → 操作列「场馆游戏排序」。点击后弹出「场馆游戏排序 - {场馆名称}」，列出该场馆在前台展示的全部游戏。每个场馆单独一个置顶队列，互不影响。</p></div>
       <div class="tbl-wrap"><table class="dh-table-simple">
         <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
@@ -730,10 +730,10 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
           <tr><td><b>关闭</b></td><td>弹窗右上角关闭，或底部「关闭」。</td><td>—</td><td>每次置顶操作确认后即保存，无需再点保存。</td></tr>
         </tbody>
       </table></div>
-      <h3>排序规则</h3>
+      <h3>排序规则<span class="tag-new" data-tip="csave">本期新增</span></h3>
       <div class="dh-prose"><ol>
         <li>置顶区按置顶位置从小到大排在最前，位置从 1 开始连续编号。</li>
-        <li>自动排序区按游戏热门值从高到低（与热门游戏排序同一数据源，只取本场馆游戏）；热门值相同时按游戏上线时间，新的在前。</li>
+        <li>自动排序区按游戏热门值从高到低（与热门游戏排序同一数据源，只取本场馆游戏）；热门值相同时按游戏上线时间，新的在前。<span class="tag-new" data-tip="cauto">本期调整</span></li>
         <li>场馆内置顶只影响该场馆的首页场馆区和场馆页「全部」，不影响热门相关版块，也不计入场馆的热门游戏数量。</li>
         <li>游戏被关闭时，场馆内置顶自动取消，其后的置顶游戏依次前移；维护中的游戏可以置顶。</li>
       </ol></div>
@@ -766,7 +766,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   <!-- 4 前台展示 -->
   <div class="dh-panel" data-panel="front">
     <button class="proto-jump" data-goto="front" type="button">在交互原型中查看前台效果 →</button>
-<div class="req-block"><h2>功能结构图</h2><div class="dh-mind"><div class="mm"><div class="mm-root">前台</div><div class="mm-branches"><div class="mm-b"><div class="mm-node">首页</div><div class="mm-leaves"><span class="mm-leaf"><span class="zchip mini zA"><b>A</b></span>场馆 Tab 行</span><span class="mm-leaf"><span class="zchip mini zB"><b>B</b></span>热门区<span class="tag-new">本期调整</span></span><span class="mm-leaf"><span class="zchip mini zA"><b>A</b></span>场馆区块先后</span><span class="mm-leaf"><span class="zchip mini zC"><b>C</b></span>区块内游戏<span class="tag-new">本期调整</span></span></div></div><div class="mm-b"><div class="mm-node">场馆页</div><div class="mm-leaves"><span class="mm-leaf"><span class="zchip mini zA"><b>A</b></span>左侧厂商列表</span><span class="mm-leaf"><span class="zchip mini zC"><b>C</b></span>「全部」页签<span class="tag-new">本期调整</span></span><span class="mm-leaf"><span class="zchip mini zB"><b>B</b></span>「热门」页签<span class="tag-new">本期调整</span></span></div></div><div class="mm-b"><div class="mm-node">侧边菜单</div><div class="mm-leaves"><span class="mm-leaf"><span class="zchip mini zA"><b>A</b></span>场馆列表</span><span class="mm-leaf"><span class="zchip mini zB"><b>B</b></span>热门 · 精选游戏<span class="tag-new">本期调整</span></span></div></div><div class="mm-b"><div class="mm-node">搜索页</div><div class="mm-leaves"><span class="mm-leaf"><span class="zchip mini zB"><b>B</b></span>「热门」页签<span class="tag-new">本期调整</span></span></div></div><div class="mm-b"><div class="mm-node">不受影响</div><div class="mm-leaves"><span class="mm-leaf">最近 / 收藏</span><span class="mm-leaf">返水页场馆列表</span><span class="mm-leaf">搜索关键词结果</span></div></div></div></div><div class="cap">功能结构图：前台各版块与三类排序的对应（非流程；点击放大）</div></div></div>
+<div class="req-block"><h2>功能结构图</h2><div class="dh-mind"><div class="mm"><div class="mm-root">前台</div><div class="mm-branches"><div class="mm-b"><div class="mm-node">首页</div><div class="mm-leaves"><span class="mm-leaf"><span class="zchip mini zA"><b>A</b></span>场馆 Tab 行</span><span class="mm-leaf"><span class="zchip mini zB"><b>B</b></span>热门区<span class="tag-new" data-tip="fhot">本期调整</span></span><span class="mm-leaf"><span class="zchip mini zA"><b>A</b></span>场馆区块先后</span><span class="mm-leaf"><span class="zchip mini zC"><b>C</b></span>区块内游戏<span class="tag-new" data-tip="fvenue">本期调整</span></span></div></div><div class="mm-b"><div class="mm-node">场馆页</div><div class="mm-leaves"><span class="mm-leaf"><span class="zchip mini zA"><b>A</b></span>左侧厂商列表</span><span class="mm-leaf"><span class="zchip mini zC"><b>C</b></span>「全部」页签<span class="tag-new" data-tip="fvenue">本期调整</span></span><span class="mm-leaf"><span class="zchip mini zB"><b>B</b></span>「热门」页签<span class="tag-new" data-tip="fhot">本期调整</span></span></div></div><div class="mm-b"><div class="mm-node">侧边菜单</div><div class="mm-leaves"><span class="mm-leaf"><span class="zchip mini zA"><b>A</b></span>场馆列表</span><span class="mm-leaf"><span class="zchip mini zB"><b>B</b></span>热门 · 精选游戏<span class="tag-new" data-tip="fside">本期调整</span></span></div></div><div class="mm-b"><div class="mm-node">搜索页</div><div class="mm-leaves"><span class="mm-leaf"><span class="zchip mini zB"><b>B</b></span>「热门」页签<span class="tag-new" data-tip="fhot">本期调整</span></span></div></div><div class="mm-b"><div class="mm-node">不受影响</div><div class="mm-leaves"><span class="mm-leaf">最近 / 收藏</span><span class="mm-leaf">返水页场馆列表</span><span class="mm-leaf">搜索关键词结果</span></div></div></div></div><div class="cap">功能结构图：前台各版块与三类排序的对应（非流程；点击放大）</div></div></div>
 
     <div class="req-block">
       <h2>前台展示</h2>
@@ -775,11 +775,11 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
         <thead><tr><th>前台位置</th><th>顺序来源</th><th>展示规则</th></tr></thead>
         <tbody>
           <tr><td><b>首页场馆 Tab 行</b></td><td>场馆排序</td><td>「热门」固定第一，其后为开启的场馆；关闭的场馆不展示。</td></tr>
-          <tr><td><b>首页热门区</b><span class="tag-new">本期调整</span></td><td>热门游戏排序</td><td>取前 100 个开启或维护中的游戏（所属场馆关闭的除外），首屏展示前 16 个，其余「展示更多」。</td></tr>
-          <tr><td><b>首页各场馆区</b><span class="tag-new">本期调整</span></td><td>区块先后：场馆排序；区内游戏：场馆内游戏排序</td><td>不去重，原厂商版与 My 系列版各自展示。</td></tr>
-          <tr><td><b>侧边菜单</b><span class="tag-new">本期调整</span></td><td>场馆列表：场馆排序；热门：热门游戏排序</td><td>热门展示前 5 个。</td></tr>
-          <tr><td><b>场馆页</b><span class="tag-new">本期调整</span></td><td>切换条：场馆排序；「全部」：场馆内游戏排序；「热门」：热门游戏排序中属于本场馆的游戏</td><td>不去重；「热门」沿用现有展示方式。</td></tr>
-          <tr><td><b>搜索页「热门」</b><span class="tag-new">本期调整</span></td><td>热门游戏排序</td><td>完整热门列表，沿用现有展示方式。</td></tr>
+          <tr><td><b>首页热门区</b><span class="tag-new" data-tip="fhot">本期调整</span></td><td>热门游戏排序</td><td>取前 100 个开启或维护中的游戏（所属场馆关闭的除外），首屏展示前 16 个，其余「展示更多」。</td></tr>
+          <tr><td><b>首页各场馆区</b><span class="tag-new" data-tip="fvenue">本期调整</span></td><td>区块先后：场馆排序；区内游戏：场馆内游戏排序</td><td>不去重，原厂商版与 My 系列版各自展示。<span class="tag-new" data-tip="fvenue">本期调整</span></td></tr>
+          <tr><td><b>侧边菜单</b><span class="tag-new" data-tip="fside">本期调整</span></td><td>场馆列表：场馆排序；热门：热门游戏排序</td><td>热门展示前 5 个。</td></tr>
+          <tr><td><b>场馆页</b><span class="tag-new" data-tip="fpage">本期调整</span></td><td>切换条：场馆排序；「全部」：场馆内游戏排序；「热门」：热门游戏排序中属于本场馆的游戏</td><td>不去重；「热门」沿用现有展示方式。<span class="tag-new" data-tip="fpage">本期调整</span></td></tr>
+          <tr><td><b>搜索页「热门」</b><span class="tag-new" data-tip="fhot">本期调整</span></td><td>热门游戏排序</td><td>完整热门列表，沿用现有展示方式。</td></tr>
           <tr><td><b>维护中的游戏</b></td><td>—</td><td>照常占位，卡片显示「维护中」遮罩。</td></tr>
         </tbody>
       </table></div>
@@ -856,7 +856,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
 <!-- 后台弹窗 -->
 <div class="modal-mask" id="mVGames"><div class="modal-box lg" role="dialog" aria-modal="true" aria-labelledby="vgTitle">
-  <div class="modal-hd"><span id="vgTitle">场馆游戏排序</span><span class="mk">本期新增</span><button class="x" data-close="mVGames" type="button" aria-label="关闭">×</button></div>
+  <div class="modal-hd"><span id="vgTitle">场馆游戏排序</span><span class="mk" data-tip="cmodal">本期新增</span><button class="x" data-close="mVGames" type="button" aria-label="关闭">×</button></div>
   <div class="modal-bd">
     <div class="bk-form" style="margin-bottom:12px">
       <div class="bk-field"><label for="vgName">游戏名称</label><input class="bk-input" id="vgName" placeholder="请输入"></div>
@@ -879,7 +879,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   <div class="modal-hd">置顶位置修改<button class="x" data-close="mPos" type="button" aria-label="关闭">×</button></div>
   <div class="modal-bd">
     <div class="m-row"><label for="posSel"><span class="req">*</span>置顶位置</label><div class="ctl"><select class="bk-select" id="posSel"></select>
-      <div class="m-tip">提示：可选位置1 至当前置顶数量；选择后插入到该位置，原位置及之后的置顶项依次后移一位。<span class="mk">本期调整</span></div></div></div>
+      <div class="m-tip">提示：可选位置1 至当前置顶数量；选择后插入到该位置，原位置及之后的置顶项依次后移一位。<span class="mk" data-tip="pos">本期调整</span></div></div></div>
   </div>
   <div class="modal-ft"><button class="bk-btn" data-close="mPos" type="button">取 消</button><button class="bk-btn primary" id="posOk" type="button">确 认</button></div>
 </div></div>
@@ -971,12 +971,12 @@ function renderVenues(){
     if(!pinned)sepDone=true;
     rows+='<tr class="'+(pinned?'row-pin ':'')+(S.flashB['v'+v.id]?'row-flash':'')+'"><td>'+v._order+'</td><td>'+esc(v.name)+'</td><td>'+v.type+'</td><td>'+stTag(v)+'</td><td>'+v._hc+'</td><td>'+(pinned?'置顶':'自动排序')+'</td>'+
       pinCells('v',v.id,v.pin)+'<td>0.00</td><td>zune01</td><td>2026-10-22 14:02:11 (UTC-3)</td>'+
-      '<td><div class="bk-ops"><button class="bk-btn primary sm" type="button" data-act="noop">编 辑</button><button class="bk-btn primary sm" type="button" data-act="vgames" data-id="'+v.id+'">场馆游戏排序<span class="mk">新</span></button>'+
+      '<td><div class="bk-ops"><button class="bk-btn primary sm" type="button" data-act="noop">编 辑</button><button class="bk-btn primary sm" type="button" data-act="vgames" data-id="'+v.id+'">场馆游戏排序<span class="mk" data-tip="vbtn">新</span></button>'+
       stOps(v)+'</div></td></tr>';
   });
   $('venueBody').innerHTML=rows||'<tr><td colspan="12" class="bk-empty">暂无数据</td></tr>';
   $('venueTotal').textContent='共 '+shown.length+' 条数据';
-  $('vPinInfo').innerHTML='已置顶 '+np+' 个场馆，从第 1 位起连续排列<span class="mk">本期调整</span>';
+  $('vPinInfo').innerHTML='已置顶 '+np+' 个场馆，从第 1 位起连续排列<span class="mk" data-tip="pinfo">本期调整</span>';
 }
 function platOptions(){var seen={},o='<option value="">全部</option>';S.games.forEach(function(g){if(!seen[g.plat]){seen[g.plat]=1;o+='<option>'+esc(g.plat)+'</option>';}});$('gPlat').innerHTML=o;}
 function matchName(g,q){q=q.toLowerCase();return !q||g.cn.toLowerCase().indexOf(q)>-1||g.en.toLowerCase().indexOf(q)>-1;}
@@ -985,7 +985,7 @@ function renderGames(){
   list.forEach(function(g,i){var pinned=g.hpin!=null;
     if(!pinned&&!sepDone&&np>0&&!f.plat&&!f.name)rows+='<tr class="bk-sep"><td colspan="8"></td></tr>';
     if(!pinned)sepDone=true;
-    rows+='<tr class="'+(pinned?'row-pin ':'')+(S.flashB['h'+g.id]?'row-flash':'')+'"><td>'+(i+1)+'</td><td>巴西站-测试</td><td>888</td><td>'+esc(g.plat)+'</td><td style="text-align:left">'+esc(g.cn)+'('+esc(g.en)+')</td><td>'+(pinned?'置顶':'自动排序')+'</td>'+(g.st==='off'?'<td>-</td><td><span class="bk-tag red">已关闭</span></td>':pinCells('h',g.id,g.hpin))+'</tr>';});
+    rows+='<tr class="'+(pinned?'row-pin ':'')+(S.flashB['h'+g.id]?'row-flash':'')+'"><td>'+(i+1)+'</td><td>巴西站-测试</td><td>888</td><td>'+esc(g.plat)+'</td><td style="text-align:left">'+esc(g.cn)+'('+esc(g.en)+')</td><td>'+(pinned?'置顶':'自动排序')+'</td>'+(g.st==='off'?'<td>-</td><td><span class="bk-tag red">已关闭</span><span class="mk" data-tip="closedrow">本期调整</span></td>':pinCells('h',g.id,g.hpin))+'</tr>';});
   $('gameBody').innerHTML=rows||'<tr><td colspan="8" class="bk-empty">暂无数据</td></tr>';
   $('gameTotal').textContent='共 '+list.length+' 条数据';
 }
@@ -1188,4 +1188,29 @@ document.addEventListener('keydown',function(e){if(e.key!=='Escape')return;lb.cl
 
 platOptions();renderAll();
 })();
-</script>
+</script><style id="tipCss">
+[data-tip]{cursor:pointer;}
+[data-tip]:hover{filter:brightness(1.12);text-decoration:underline dotted;}
+#chgTip{position:fixed;z-index:9999;max-width:340px;width:calc(100vw - 32px);box-sizing:border-box;background:#1f2433;color:#eef1f7;border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.65;box-shadow:0 8px 28px rgba(0,0,0,.28);display:none;text-align:left;}
+#chgTip .tt{font-weight:600;font-size:13px;margin-bottom:6px;display:flex;align-items:center;gap:8px;padding-right:18px;}
+#chgTip .tt i{font-style:normal;font-size:11px;padding:1px 6px;border-radius:3px;background:#ff8a00;color:#fff;font-weight:500;white-space:nowrap;}
+#chgTip .tt i.n{background:#19be6b;}#chgTip .tt i.r{background:#2d8cf0;}
+#chgTip p{margin:0 0 4px;white-space:pre-wrap;}
+#chgTip p b{color:#ffcf70;font-weight:500;}
+#chgTip .x{position:absolute;right:8px;top:6px;cursor:pointer;color:#9aa3b5;font-size:16px;line-height:1;background:none;border:0;padding:2px;}
+</style>
+<div id="chgTip" role="dialog"><button class="x" aria-label="关闭">×</button><div class="tt"></div><div class="bd"></div></div>
+<script>(function(){var TIPS={"rename": ["菜单更名", "原名「游戏排名」，本期更名为「热门游戏排序」；菜单、页签、面包屑、角色权限、总控同名菜单同步更名。功能入口不变。"], "h5": ["H5展示顺序 · 编号规则", "原：场馆新置顶最早只能落在第 5 位，前排被自动排序场馆占着，编号有空位。\n现：从 1 连续编号，置顶场馆占 1–N，自动排序从 N+1 起。"], "hotcnt": ["热门游戏数量 · 统计口径", "原：统计「游戏排名」前 N 名里属于该场馆的游戏数。\n现：统计方式不变，只明确：热门置顶（B）计入，场馆内置顶（C，本期新增）不计入，所以 C 的操作不会带动场馆顺序变化。"], "pos": ["置顶位置 · 改位置方式", "原：下拉不连续，场馆只能选 1–4 和已占用位置，游戏只能选 1–9 和已占用位置；选已占用位置时两者互换。\n现：下拉为位置1–位置N（N=当前置顶数），默认选中当前位置；改位置为插入，其余置顶依次顺移。"], "pin": ["是否置顶 · 新置顶落位", "原：新置顶取「第 5 位（场馆）/ 第 10 位（游戏）」与「最后一个置顶的下一位」中较靠后者。\n现：新置顶直接放在置顶区末尾（第 N+1 位）；取消置顶后，其后的置顶依次前移补位。"], "hotorder": ["列表顺序 = 前台热门顺序", "原：后台把置顶游戏全部堆在列表最前，与置顶位置及前台实际顺序不一致。\n现：置顶按位置排在最前，其余按热门值从高到低，后台顺序就是前台热门区顺序。"], "unified": ["统一置顶规则", "原：场馆、游戏两套起跑线（第 5 / 第 10 位），下拉不连续，改位置为互换。\n现：三类排序共用一套规则——从第 1 位连续、新增放末尾、改位置为插入、取消后续前移、不限数量。"], "cont": ["置顶区 1–N 连续", "原：场馆置顶从第 5 位起、游戏置顶从第 10 位起，前排被自动排序项占着，位置号有空位。\n现：置顶区从第 1 位起连续编号，任何时候都不出现空位。"], "end": ["新增放末尾", "原：取「第 5/10 位」与「最后一个置顶的下一位」中较靠后者。\n现：放在置顶区末尾（第 N+1 位），自动排序项整体后移一位。"], "insert": ["改位置为插入", "原：选已占用位置时两者互换。\n现：插入到所选位置，区间内其余置顶依次顺移，不是互换。"], "rentbl": ["名称调整", "本期 3 处改名：二级菜单「游戏排名」→「热门游戏排序」；厂商管理新增按钮「场馆游戏排序」；游戏管理列名「顺序」→「热门排名」。角色权限与总控同步。"], "hist": ["上线时的历史数据处理", "本期新增。上线时：场馆置顶按原位置重新编号为 1–N（如 1、4、5、6、7 → 1–5）；原「游戏排名」置顶转为热门置顶并按原顺序编号，已关闭游戏的置顶取消；场馆内置顶初始为空。"], "vbtn": ["场馆游戏排序（新增入口）", "本期新增。原来场馆内游戏顺序只能跟随全站排名，运营无法单独调整某个场馆。\n现：厂商管理每行新增「场馆游戏排序」按钮，打开该场馆自己的游戏排序弹窗。"], "manual": ["完全手动排序的做法", "补充说明（现网没有手填排序值）。需要完全手动排场馆时，把全部场馆置顶再调位置即可；只置顶部分时，其余按自动排序接在后面。"], "tie": ["热门值相同时的排序", "原：未定义，热门值相同时顺序不固定，刷新可能变化。\n现：按游戏上线时间，新的在前；热门游戏排序与场馆内游戏排序用同一条规则。"], "hotscope": ["热门列表收录范围", "原：已关闭的游戏仍占着置顶位置。\n现：已关闭游戏保留在列表，显示「已关闭」、不能置顶、前台不展示。同一游戏多平台分行展示、置顶互不影响，前台不去重。"], "hotonly": ["热门置顶的影响范围", "原：游戏只有一个全站队列，同时决定首页热门区和各场馆区的顺序。\n现：热门置顶只影响热门相关版块；首页场馆区和场馆页「全部」改由场馆内游戏排序控制。"], "hotcntpin": ["热门置顶计入热门游戏数量", "明确口径：热门置顶的游戏计入所属场馆「热门游戏数量」（即使原本在前 N 名之外），可能带动场馆自动排序变化。"], "close": ["游戏关闭时的置顶处理", "原：已关闭的游戏仍占着置顶位置。\n现：游戏关闭时热门置顶与场馆内置顶自动取消，其后置顶依次前移；维护中的游戏仍可置顶，前台显示「维护中」。"], "closedrow": ["已关闭游戏", "原：已关闭游戏仍可占置顶位置。\n现：保留在列表并显示「已关闭」，不显示置顶操作，不参与前台展示和热门游戏数量统计。"], "cnew": ["场馆内游戏排序（新增）", "本期新增。每个场馆单独一个游戏队列，可单独置顶；决定首页场馆区块内和场馆页「全部」的游戏顺序，不影响热门区。"], "cauto": ["场馆内自动排序", "本期新增队列的自动排序规则：按游戏热门值从高到低，只取本场馆游戏（与热门游戏排序同一数据源）；热门值相同时按上线时间，新的在前。"], "cmodal": ["场馆游戏排序弹窗", "本期新增。列出该场馆前台展示的全部游戏（含并入的 My 系列），可置顶、改位置、取消置顶；每次确认即保存。"], "csave": ["排序规则", "本期新增弹窗内的置顶规则，与场馆、热门排序同一套：1–N 连续、新增放末尾、改位置为插入、取消后续前移。"], "fhot": ["前台热门相关版块", "原：热门区按全站排名自然顺序，没有按游戏置顶展示。\n现：首页热门区、侧边菜单热门、搜索页「热门」、场馆页「热门」页签读取热门游戏排序（含置顶）。"], "fvenue": ["前台场馆区块 / 场馆页「全部」", "原：场馆区内游戏跟随全站排名，没有单独置顶。\n现：区块先后读场馆排序；区内游戏和场馆页「全部」读场馆内游戏排序（含置顶）；不去重。"], "ftab": ["前台场馆列表", "顺序来源仍是场馆排序，随本期置顶规则调整：置顶场馆从第 1 位起连续，紧跟「热门」。"], "fside": ["侧边菜单", "场馆列表读场馆排序；热门读热门游戏排序（含置顶），展示前 5 个。"], "fpage": ["前台场馆页", "原：「全部」按全站排名，没有场馆内置顶。\n现：左侧厂商切换条读场馆排序；「全部」页签读场馆内游戏排序；「热门」页签读热门游戏排序中属于本场馆的游戏。不去重。"], "pinfo": ["置顶数量提示", "本期新增提示：显示当前已置顶数量，并说明从第 1 位起连续排列。"], "mmA": ["场馆排序 · 本期调整点", "置顶 / 置顶位置 / 取消置顶改为统一规则：1–N 连续、新增放末尾、改位置为插入、取消后续前移。"], "mmB": ["热门游戏排序 · 本期调整点", "菜单更名（原「游戏排名」）；置顶改为统一规则；列表顺序改为等于前台热门顺序；只影响热门版块。"]};
+var box=document.getElementById('chgTip');
+function esc(t){return t.replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+var cur=null;function place(){if(!cur)return;var r=cur.getBoundingClientRect(),w=box.offsetWidth,h=box.offsetHeight,vw=document.documentElement.clientWidth,vh=innerHeight;if(r.bottom<0||r.top>vh||!r.width){hide();return;}var x=Math.min(Math.max(16,r.left),vw-w-16),y=r.bottom+6;if(y+h>vh-8)y=Math.max(8,r.top-h-6);box.style.left=x+'px';box.style.top=y+'px';}
+function show(el){cur=el;var k=el.getAttribute('data-tip'),d=TIPS[k];if(!d)return;var lab=el.textContent.trim(),cls=lab.indexOf('新增')>-1?'n':(lab.indexOf('更名')>-1?'r':'');
+box.querySelector('.tt').innerHTML='<i class="'+cls+'">'+esc(lab)+'</i>'+esc(d[0]);
+box.querySelector('.bd').innerHTML=d[1].split('\n').map(function(l){var m=l.match(/^(原|现)：/);return '<p>'+(m?'<b>'+m[0]+'</b>'+esc(l.slice(2)):esc(l))+'</p>';}).join('');
+box.style.display='block';place();}
+function hide(){box.style.display='none';cur=null;}
+document.addEventListener('click',function(e){var el=e.target.closest&&e.target.closest('[data-tip]');
+if(el){e.preventDefault();e.stopPropagation();show(el);return;}
+if(e.target.closest&&e.target.closest('#chgTip')&&!e.target.closest('.x'))return;hide();},true);
+document.addEventListener('keydown',function(e){if(e.key==='Escape')hide();});
+addEventListener('scroll',place,true);addEventListener('resize',place);})();</script>
