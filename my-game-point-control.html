@@ -1,0 +1,1430 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>MY游戏点控管理</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* 布局：文档壳(暖纸色) + 左侧后台复刻窗口 + 右侧前台手机预览（可切换页面），后台操作后前台联动刷新 */
+:root{
+  color-scheme:light;
+  --doc-paper:#faf8f4;--doc-paper-raised:#ffffff;--doc-ink:#211f1a;--doc-ink-soft:#5c584e;--doc-ink-faint:#8b8677;
+  --doc-line:#e4ded1;--doc-line-soft:#eee9de;--doc-accent:#a8481f;--doc-accent-soft:#f4e2d3;
+  --doc-teal:#0d6d66;--doc-teal-soft:#dcefec;--doc-p0:#b3261e;--doc-p1:#a8481f;--doc-p1-soft:#f4e2d3;--doc-p2:#6b6a5f;
+  --doc-status-done-fg:#0d6d66;--doc-status-done-bg:#dcefec;--doc-status-open-fg:#8a7f5f;--doc-status-open-bg:#f1ecdc;
+  --shadow-card:0 1px 2px rgba(33,31,26,.06),0 4px 14px rgba(33,31,26,.06);
+  --f-serif:'Source Serif 4',Georgia,'Songti SC',serif;
+  --f-sans:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  --f-mono:'IBM Plex Mono',Consolas,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  color-scheme:dark;--doc-paper:#18160f;--doc-paper-raised:#221f17;--doc-ink:#f1ece0;--doc-ink-soft:#c2bba8;--doc-ink-faint:#8f8877;
+  --doc-line:#3b3627;--doc-line-soft:#2c2919;--doc-accent:#e2925e;--doc-accent-soft:#3c2a1a;--doc-teal:#63c2b8;--doc-teal-soft:#183430;
+  --doc-p0:#f2766d;--doc-p1:#e2925e;--doc-p1-soft:#3c2a1a;--doc-p2:#a8a693;
+  --doc-status-done-fg:#63c2b8;--doc-status-done-bg:#183430;--doc-status-open-fg:#cfc29a;--doc-status-open-bg:#2e2a1c;
+  --shadow-card:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.35);}}
+:root[data-theme="dark"]{
+  color-scheme:dark;--doc-paper:#18160f;--doc-paper-raised:#221f17;--doc-ink:#f1ece0;--doc-ink-soft:#c2bba8;--doc-ink-faint:#8f8877;
+  --doc-line:#3b3627;--doc-line-soft:#2c2919;--doc-accent:#e2925e;--doc-accent-soft:#3c2a1a;--doc-teal:#63c2b8;--doc-teal-soft:#183430;
+  --doc-p0:#f2766d;--doc-p1:#e2925e;--doc-p1-soft:#3c2a1a;--doc-p2:#a8a693;
+  --doc-status-done-fg:#63c2b8;--doc-status-done-bg:#183430;--doc-status-open-fg:#cfc29a;--doc-status-open-bg:#2e2a1c;
+  --shadow-card:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.35);}
+
+*{box-sizing:border-box;}
+body{margin:0;background:var(--doc-paper);color:var(--doc-ink);font-family:var(--f-sans);font-size:14.5px;line-height:1.6;}
+h1,h2,h3{font-family:var(--f-serif);font-weight:600;text-wrap:balance;margin:0;}
+.mono{font-family:var(--f-mono);}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--doc-paper-raised);}
+
+.dh-header{background:var(--doc-paper-raised);border-bottom:1px solid var(--doc-line);}
+.dh-header-inner,.dh-navbar-inner{max-width:1360px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));}
+.dh-header-inner{padding-block:22px 16px;}
+.dh-header h1{font-size:26px;letter-spacing:.01em;}
+.dh-meta{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:6px;font-size:12.5px;color:var(--doc-ink-faint);}
+.dh-meta b{color:var(--doc-ink-soft);font-weight:500;}
+.dh-navbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--doc-paper-raised);border-bottom:1px solid var(--doc-line);}
+.dh-primary{display:flex;gap:4px;overflow-x:auto;}
+.dh-primary-btn{appearance:none;border:0;background:none;padding:12px 16px 10px;font:inherit;font-weight:600;color:var(--doc-ink-soft);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;}
+.dh-primary-btn small{font-weight:400;color:var(--doc-ink-faint);margin-left:6px;font-size:12px;}
+.dh-primary-btn.active{color:var(--doc-ink);border-bottom-color:var(--doc-accent);}
+.dh-primary-btn:focus-visible,.dh-tab:focus-visible,.proto-jump:focus-visible,.sub-btn:focus-visible,.fab:focus-visible{outline:2px solid var(--doc-teal);outline-offset:2px;}
+.dh-wrap{max-width:1360px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));padding-block:20px 64px;}
+.dh-primary-panel{display:none;}
+.dh-primary-panel.active{display:block;}
+.dh-tabs{position:sticky;top:calc(env(safe-area-inset-top,0px) + 47px);z-index:20;display:flex;gap:2px;overflow-x:auto;background:var(--doc-paper);border-bottom:1px solid var(--doc-line);margin-bottom:22px;}
+.dh-tab{appearance:none;border:0;background:none;font:inherit;font-size:14px;padding:10px 14px;color:var(--doc-ink-soft);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;}
+.dh-tab .n{font-family:var(--f-mono);color:var(--doc-accent);margin-right:6px;font-size:12px;}
+.dh-tab.active{color:var(--doc-ink);border-bottom-color:var(--doc-accent);font-weight:600;}
+.dh-panel{display:none;}
+.dh-panel.active{display:block;}
+
+.dh-prose{max-width:92ch;color:var(--doc-ink-soft);}
+.dh-prose p{margin:0 0 10px;}
+.dh-prose strong{color:var(--doc-ink);}
+.dh-prose ul,.dh-prose ol{margin:0 0 10px;padding-left:1.4em;}
+.dh-prose li{margin-bottom:4px;}
+.req-block{max-width:1200px;margin:0 0 30px;}
+.req-block h2{font-size:22px;margin-bottom:12px;}
+.req-block h3{font-size:17px;margin:22px 0 10px;}
+.dh-callout{max-width:1200px;border-left:3px solid var(--doc-teal);background:var(--doc-paper-raised);padding:10px 14px;margin:12px 0;font-size:13.5px;color:var(--doc-ink-soft);border-radius:0 6px 6px 0;}
+.dh-callout.warn{border-left-color:var(--doc-p1);}
+.tag-new{display:inline-block;font-size:11px;background:var(--doc-accent);color:#fff;border-radius:3px;padding:0 5px;margin-left:6px;vertical-align:1px;font-weight:500;white-space:nowrap;}
+.tbl-wrap{overflow-x:auto;max-width:1200px;margin:10px 0 16px;}
+.dh-table-simple{width:100%;max-width:1200px;min-width:560px;border-collapse:separate;border-spacing:0;background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:8px;overflow:hidden;font-size:13.5px;box-shadow:var(--shadow-card);}
+.dh-table-simple th,.dh-table-simple td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--doc-line-soft);overflow-wrap:anywhere;}
+.dh-table-simple th{background:var(--doc-line-soft);font-weight:600;color:var(--doc-ink);}
+.dh-table-simple tr:last-child td{border-bottom:0;}
+.dh-table-simple td:first-child,.dh-table-simple th:first-child{min-width:7em;max-width:34em;}
+.dh-table-simple td{color:var(--doc-ink-soft);}
+.dh-table-simple td b{color:var(--doc-ink);}
+
+.dh-flow{max-width:1200px;background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:8px;padding:14px;margin:12px 0 16px;box-shadow:var(--shadow-card);cursor:zoom-in;}
+.flow-diagram{display:flex;flex-wrap:wrap;align-items:center;gap:2px;}
+.flow-step{background:var(--doc-paper);border:1px solid var(--doc-line);border-radius:6px;padding:8px 12px;font-size:12.5px;line-height:1.45;text-align:center;max-width:220px;color:var(--doc-ink);}
+.flow-step .sub{display:block;font-size:11px;color:var(--doc-ink-faint);margin-top:2px;}
+.flow-arrow{color:var(--doc-ink-faint);font-size:15px;padding:0 4px;}
+.flow-branches{display:flex;flex-direction:column;gap:7px;margin-top:10px;padding-left:10px;border-left:2px solid var(--doc-line);}
+.flow-branch{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;color:var(--doc-ink-soft);}
+.flow-branch .arr{color:var(--doc-ink-faint);}
+.flow-branch .result{font-weight:600;padding:2px 10px;border-radius:100px;font-size:12px;}
+.flow-branch .result.good{color:var(--doc-status-done-fg);background:var(--doc-status-done-bg);}
+.flow-branch .result.bad{color:var(--doc-p1);background:var(--doc-p1-soft);}
+.flow-branch .result.neutral{color:var(--doc-ink-soft);background:var(--doc-line-soft);}
+.cap{font-size:12px;color:var(--doc-ink-faint);margin-top:10px;}
+.dh-illustration{margin:14px 0;max-width:1200px;}
+.illus-list{display:flex;flex-wrap:wrap;align-items:center;gap:6px 0;}
+.illus-item{background:var(--doc-paper);border:1px solid var(--doc-line);border-radius:6px;padding:8px 14px;font-size:12.5px;color:var(--doc-ink-soft);white-space:nowrap;}
+.illus-item.new{border-color:var(--doc-accent);color:var(--doc-accent);background:var(--doc-accent-soft);font-weight:600;}
+.illus-item .tag{display:inline-block;margin-left:6px;font-size:10px;background:var(--doc-accent);color:#fff;border-radius:3px;padding:0 4px;vertical-align:1px;}
+.illus-sep{width:16px;height:1px;background:var(--doc-line);margin:0 2px;flex:none;}
+.illus-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;max-width:1200px;margin:14px 0;}
+.illus-col{background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:8px;padding:12px;box-shadow:var(--shadow-card);min-width:0;}
+.illus-col h4{margin:0 0 8px;font-family:var(--f-serif);font-size:15px;}
+.illus-col .illus-item{display:block;white-space:normal;margin-bottom:6px;}
+.illus-col .who{font-size:12px;color:var(--doc-ink-faint);margin-top:6px;}
+.proto-jump{display:inline-flex;align-items:center;gap:6px;appearance:none;border:1px solid var(--doc-teal);color:var(--doc-teal);background:var(--doc-teal-soft);border-radius:100px;padding:5px 14px;font:inherit;font-size:13px;cursor:pointer;margin:4px 0 14px;}
+.dh-lightbox{position:fixed;inset:0;background:rgba(20,18,12,.72);display:none;align-items:center;justify-content:center;z-index:300;padding:32px;}
+.dh-lightbox.open{display:flex;}
+.dh-lightbox-body .dh-flow{max-width:min(92vw,920px);max-height:calc(100vh - 64px);overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.4);cursor:default;}
+.dh-lightbox-body .dh-flow .flow-step{font-size:16px;padding:12px 18px;max-width:260px;}
+.dh-lightbox-body .dh-flow .flow-arrow{font-size:20px;}
+.dh-lightbox-body .dh-flow .flow-branch{font-size:15px;}
+
+
+/* 功能结构图（脑图）：根节点 → 分支 → 末级，只表示组成关系，不画箭头 */
+.dh-mind{max-width:1200px;background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:8px;padding:16px;margin:12px 0 16px;box-shadow:var(--shadow-card);cursor:zoom-in;}
+.mm{display:flex;align-items:center;overflow-x:auto;padding:4px 2px;}
+.mm-root{flex:none;background:var(--doc-ink);color:var(--doc-paper);padding:10px 16px;border-radius:8px;font-weight:600;font-size:14.5px;position:relative;margin-right:26px;font-family:var(--f-serif);}
+.mm-root.zA,.mm-root.zB,.mm-root.zC{background:var(--zc);color:var(--zt);}
+.mm-root::after{content:"";position:absolute;right:-26px;top:50%;width:26px;border-top:1.5px solid var(--doc-ink-faint);}
+.mm-branches{display:flex;flex-direction:column;}
+.mm-b{position:relative;display:flex;align-items:center;padding:6px 0 6px 22px;}
+.mm-b::before{content:"";position:absolute;left:0;top:50%;width:22px;border-top:1.5px solid var(--doc-ink-faint);}
+.mm-b::after{content:"";position:absolute;left:0;top:0;bottom:0;border-left:1.5px solid var(--doc-ink-faint);}
+.mm-b:first-child::after{top:50%;}
+.mm-b:last-child::after{bottom:50%;}
+.mm-b:only-child::after{display:none;}
+.mm-node{flex:none;min-width:96px;border:1.5px solid var(--doc-line);border-radius:6px;padding:5px 10px;background:var(--doc-paper);font-weight:600;font-size:13px;color:var(--doc-ink);position:relative;margin-right:20px;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;}
+.mm-node.zA,.mm-node.zB,.mm-node.zC{border-color:var(--zc);}
+.mm-node::after{content:"";position:absolute;right:-21px;top:50%;width:20px;border-top:1.5px solid var(--doc-line);}
+.mm-leaves{display:flex;flex-direction:column;}
+.mm-leaf{position:relative;display:inline-flex;align-items:center;gap:5px;padding:3px 0 3px 16px;font-size:12.5px;color:var(--doc-ink-soft);white-space:nowrap;}
+.mm-leaf::before{content:"";position:absolute;left:0;top:50%;width:12px;border-top:1px solid var(--doc-line);}
+.mm-leaf::after{content:"";position:absolute;left:0;top:0;bottom:0;border-left:1px solid var(--doc-line);}
+.mm-leaf:first-child::after{top:50%;}
+.mm-leaf:last-child::after{bottom:50%;}
+.mm-leaf:only-child::after{display:none;}
+.mm-leaf .tag-new{margin-left:2px;}
+.dh-lightbox-body .dh-mind{max-width:min(94vw,1300px);max-height:calc(100vh - 64px);overflow:auto;cursor:default;font-size:115%;}
+.dh-lightbox-body .mm-leaf{font-size:14px;}
+.dh-lightbox-body .mm-node{font-size:15px;}
+/* ===== 交互原型区 ===== */
+.proto-intro{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-bottom:14px;font-size:13px;color:var(--doc-ink-soft);}
+.proto-intro .grow{flex:1 1 320px;min-width:0;}
+.doc-btn{appearance:none;border:1px solid var(--doc-line);background:var(--doc-paper-raised);color:var(--doc-ink);border-radius:6px;padding:5px 12px;font:inherit;font-size:13px;cursor:pointer;}
+.doc-btn:hover{border-color:var(--doc-accent);color:var(--doc-accent);}
+.doc-check{display:inline-flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;}
+/* 后台复刻令牌：与弹窗、Toast 共用（红线第7条） */
+.proto-window,.modal-mask,.bk-toast{
+  --primary:#1890ff;--primary-active:#096dd9;--danger:#ff4d4f;--border:#d9d9d9;--split:#f0f0f0;--th-bg:#fafafa;
+  --text-primary:rgba(0,0,0,.85);--text-secondary:rgba(0,0,0,.45);--layout-bg:#f0f2f5;--disabled-bg:#f5f5f5;--disabled-text:rgba(0,0,0,.25);
+  --tag-green-fg:#389e0d;--tag-green-bg:#f6ffed;--tag-green-bd:#b7eb8f;--tag-red-fg:#cf1322;--tag-red-bg:#fff1f0;--tag-red-bd:#ffa39e;
+  --tag-gold-fg:#d48806;--tag-gold-bg:#fffbe6;--tag-gold-bd:#ffe58f;--warn:#faad14;--success:#52c41a;--white:#fff;--note:#a8481f;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","PingFang SC","Microsoft YaHei",sans-serif;
+  color-scheme:light;
+}
+.proto-window{border:1px solid var(--doc-line);border-radius:10px;overflow:hidden;box-shadow:0 2px 4px rgba(33,31,26,.08),0 12px 32px rgba(33,31,26,.10);background:var(--layout-bg);color:var(--text-primary);font-size:14px;line-height:1.5715;min-width:0;}
+.bk-top{display:flex;align-items:center;gap:12px;background:var(--white);height:48px;padding:0 16px;border-bottom:1px solid var(--split);}
+.bk-crumb{color:var(--text-secondary);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bk-crumb b{color:var(--text-primary);font-weight:400;}
+.bk-top .sp{flex:1;}
+.bk-user{font-size:13px;color:var(--text-primary);white-space:nowrap;}
+.bk-tabs{display:flex;gap:4px;background:var(--white);padding:6px 12px 0;border-bottom:1px solid var(--split);overflow-x:auto;}
+.bk-tab{appearance:none;border:1px solid var(--split);border-bottom:0;background:var(--th-bg);padding:3px 14px;font:inherit;font-size:13px;color:var(--text-primary);cursor:pointer;border-radius:2px 2px 0 0;white-space:nowrap;}
+.bk-tab.active{background:var(--primary);color:var(--white);border-color:var(--primary);}
+.bk-body{padding:12px;}
+.bk-view{display:none;}
+.bk-view.active{display:block;}
+.bk-card{background:var(--white);border-radius:2px;padding:16px;margin-bottom:12px;}
+.bk-form{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;}
+.bk-field{display:flex;align-items:center;gap:8px;min-width:0;}
+.bk-field label{white-space:nowrap;}
+.bk-input,.bk-select{height:32px;border:1px solid var(--border);border-radius:2px;padding:4px 11px;font:inherit;font-size:14px;color:var(--text-primary);background:var(--white);width:170px;max-width:100%;}
+.bk-input:focus,.bk-select:focus{outline:0;border-color:var(--primary);box-shadow:0 0 0 2px rgba(24,144,255,.2);}
+.bk-actions{margin-left:auto;display:flex;gap:8px;}
+.bk-btn{height:32px;padding:4px 15px;border-radius:2px;border:1px solid var(--border);background:var(--white);color:var(--text-primary);font:inherit;font-size:14px;cursor:pointer;white-space:nowrap;line-height:1.5715;position:relative;}
+.bk-btn:hover{border-color:var(--primary);color:var(--primary);}
+.bk-btn.primary{background:var(--primary);border-color:var(--primary);color:var(--white);}
+.bk-btn.primary:hover{background:#40a9ff;border-color:#40a9ff;color:var(--white);}
+.bk-btn.sm{height:24px;padding:0 7px;font-size:13px;line-height:22px;}
+.bk-btn.danger{background:var(--danger);border-color:var(--danger);color:var(--white);}
+.bk-btn.danger:hover{background:#ff7875;border-color:#ff7875;color:var(--white);}
+.bk-btn.warn{background:var(--warn);border-color:var(--warn);color:var(--white);}
+.bk-btn.ok{background:var(--success);border-color:var(--success);color:var(--white);}
+.bk-btn:focus-visible{outline:2px solid var(--primary-active);outline-offset:1px;}
+.bk-toolbar{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:8px;margin-bottom:12px;}
+.bk-toolbar .info{margin-right:auto;font-size:13px;color:var(--text-secondary);}
+.bk-table-wrap{overflow-x:auto;}
+.bk-table{width:100%;border-collapse:collapse;font-size:13.5px;}
+.bk-table.wide{min-width:1240px;}
+.bk-table.mid{min-width:820px;}
+.bk-table th{background:var(--th-bg);font-weight:500;text-align:center;padding:10px 8px;border-bottom:1px solid var(--split);white-space:nowrap;}
+.bk-table td{text-align:center;padding:8px;border-bottom:1px solid var(--split);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.bk-table tr.row-pin td{background:#f7fbff;}
+.bk-table tr.row-flash td{animation:rowflash 1.6s ease-out;}
+@keyframes rowflash{0%{background:#fff7d6;}100%{background:transparent;}}
+.bk-tag{display:inline-block;font-size:12px;line-height:20px;padding:0 7px;border-radius:2px;border:1px solid;}
+.bk-tag.green{color:var(--tag-green-fg);background:var(--tag-green-bg);border-color:var(--tag-green-bd);}
+.bk-tag.red{color:var(--tag-red-fg);background:var(--tag-red-bg);border-color:var(--tag-red-bd);}
+.bk-tag.gold{color:var(--tag-gold-fg);background:var(--tag-gold-bg);border-color:var(--tag-gold-bd);}
+.bk-ops{display:flex;gap:6px;justify-content:center;}
+.bk-pager{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:12px;font-size:13px;color:var(--text-primary);}
+.bk-pager .pg{display:inline-block;min-width:24px;height:24px;line-height:22px;text-align:center;border:1px solid var(--primary);color:var(--primary);border-radius:2px;}
+.bk-th-tip{display:inline-block;width:14px;height:14px;border:1px solid var(--text-secondary);border-radius:50%;font-size:10px;line-height:12px;color:var(--text-secondary);margin-left:4px;vertical-align:1px;cursor:help;}
+.bk-empty{padding:28px;color:var(--text-secondary);text-align:center;}
+.bk-sep td{padding:0;border-bottom:2px dashed #91d5ff;}
+
+/* 本期改动标注（原型标注，可关闭） */
+.mk{display:inline-block;font-size:10px;line-height:14px;background:var(--note);color:#fff;border-radius:3px;padding:0 4px;margin-left:4px;vertical-align:1px;font-weight:500;white-space:nowrap;}
+.hide-marks .mk{display:none;}
+.hide-marks .pin{display:none;}
+
+/* 弹窗 */
+.modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:150;padding:16px;}
+.modal-mask.top{z-index:170;}
+.modal-mask.open{display:flex;}
+.modal-box{background:var(--white);border-radius:2px;width:520px;max-width:100%;max-height:calc(100vh - 32px);display:flex;flex-direction:column;box-shadow:0 3px 6px -4px rgba(0,0,0,.12),0 6px 16px rgba(0,0,0,.08),0 9px 28px 8px rgba(0,0,0,.05);color:var(--text-primary);font-size:14px;}
+.modal-box.sm{width:420px;}
+.modal-box.lg{width:980px;}
+.modal-hd{display:flex;align-items:center;padding:16px 24px;border-bottom:1px solid var(--split);font-weight:500;font-size:16px;flex:none;}
+.modal-hd .x{margin-left:auto;appearance:none;border:0;background:none;font-size:18px;color:var(--text-secondary);cursor:pointer;line-height:1;}
+.modal-bd{padding:20px 24px;overflow:auto;min-height:0;}
+.modal-ft{display:flex;justify-content:flex-end;gap:8px;padding:10px 16px;border-top:1px solid var(--split);flex:none;}
+.confirm-bd{display:flex;gap:12px;padding:28px 28px 20px;}
+.confirm-ic{flex:none;width:22px;height:22px;border-radius:50%;background:var(--warn);color:var(--white);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;}
+.confirm-title{font-weight:500;font-size:16px;margin-bottom:6px;}
+.confirm-ft{display:flex;justify-content:flex-end;gap:8px;padding:0 24px 22px;}
+.m-row{display:flex;align-items:flex-start;gap:10px;}
+.m-row label{white-space:nowrap;line-height:32px;}
+.m-row label .req{color:#ff4d4f;margin-right:4px;}
+.m-row .ctl{flex:1;min-width:0;}
+.m-row .ctl .bk-select,.m-row .ctl .bk-input{width:100%;}
+.m-tip{color:#ff4d4f;font-size:13px;margin-top:8px;line-height:1.6;}
+.bk-toast{position:fixed;top:calc(24px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:#fff;color:rgba(0,0,0,.85);box-shadow:0 6px 16px rgba(0,0,0,.12);border-radius:2px;padding:9px 16px;font-size:14px;z-index:320;display:none;align-items:center;gap:8px;}
+.bk-toast.open{display:flex;}
+.bk-toast .ok{width:16px;height:16px;border-radius:50%;background:#52c41a;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;}
+
+@media (max-width:560px){.bk-actions{margin-left:0;}.dh-header h1{font-size:22px;}}
+
+/* ===== 本需求补充组件（沿用后台 Ant Design 令牌） ===== */
+.bk-tag.blue{color:#096dd9;background:#e6f7ff;border-color:#91d5ff;}
+.bk-tag.gray{color:rgba(0,0,0,.45);background:#fafafa;border-color:#d9d9d9;}
+.bk-select.sm{width:110px;}
+.bk-range{display:inline-flex;align-items:center;gap:6px;height:32px;border:1px solid var(--border);border-radius:2px;background:var(--white);padding:0 8px;}
+.bk-range input{border:0;outline:0;font:inherit;font-size:14px;color:var(--text-primary);background:transparent;width:132px;}
+.bk-range .to{color:var(--text-secondary);}
+.bk-combo{display:inline-flex;}
+.bk-combo .bk-select{width:100px;border-radius:2px 0 0 2px;}
+.bk-combo .bk-input{width:170px;border-left:0;border-radius:0 2px 2px 0;}
+.bk-link{color:var(--primary);cursor:pointer;}
+.bk-link.danger{color:var(--danger);}
+.bk-mem{display:flex;flex-direction:column;align-items:center;line-height:1.35;}
+.bk-mem small{color:var(--text-secondary);font-size:12px;}
+.bk-table td.wrap{white-space:normal;min-width:110px;max-width:180px;text-align:left;color:var(--text-secondary);}
+.amt-pos{color:#389e0d;}
+.amt-neg{color:#cf1322;}
+.muted{color:var(--text-secondary);}
+.chk{width:14px;height:14px;accent-color:var(--primary);cursor:pointer;vertical-align:middle;}
+.bk-foot{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-top:12px;font-size:13px;}
+.bk-foot .bk-pager{margin:0 0 0 auto;flex-wrap:wrap;}
+.bk-pager .pg{cursor:pointer;border-color:var(--border);color:var(--text-primary);}
+.bk-pager .pg.on{border-color:var(--primary);color:var(--primary);}
+.bk-pager .jump{width:46px;height:24px;border:1px solid var(--border);border-radius:2px;text-align:center;font:inherit;font-size:12px;}
+.bk-pager select{height:24px;border:1px solid var(--border);border-radius:2px;font:inherit;font-size:12px;}
+.bk-btn[disabled]{background:var(--disabled-bg);border-color:var(--border);color:var(--disabled-text);cursor:not-allowed;}
+.bk-btn.ghost{color:var(--primary);border-color:var(--primary);}
+.bk-btn.ghost-danger{color:var(--danger);border-color:var(--danger);}
+.bk-btn.ghost-danger:hover{background:#fff1f0;}
+.m-form{display:flex;flex-direction:column;gap:18px;}
+.m-form .m-row label{flex:0 0 84px;text-align:right;}
+#autoModal .m-form .m-row label{flex-basis:150px;}
+.m-help{color:var(--text-secondary);font-size:12.5px;margin-top:6px;line-height:1.6;}
+.m-tip.hide{display:none;}
+.unit{margin-left:8px;color:var(--text-secondary);}
+textarea.bk-input{height:auto;min-height:64px;resize:vertical;width:100%;line-height:1.5;}
+.cnt{text-align:right;font-size:12px;color:var(--text-secondary);margin-top:4px;}
+.radio-group{display:flex;flex-wrap:wrap;gap:8px 20px;padding-top:5px;}
+.radio{display:inline-flex;align-items:center;gap:6px;cursor:pointer;user-select:none;}
+.radio .r{width:16px;height:16px;border-radius:50%;border:1px solid var(--border);background:var(--white);position:relative;flex:none;}
+.radio.on .r{border-color:var(--primary);}
+.radio.on .r::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--primary);}
+.script-box{border:1px solid var(--border);border-radius:2px;padding:8px 12px;display:flex;flex-direction:column;gap:8px;}
+.script-box .sid{color:var(--text-secondary);font-family:var(--f-mono);font-size:12px;}
+.check-group{display:flex;flex-wrap:wrap;gap:8px 16px;padding:8px 10px;border:1px solid var(--split);border-radius:2px;background:var(--th-bg);}
+.check-group label{display:inline-flex;align-items:center;gap:5px;cursor:pointer;line-height:1.6;}
+.verify-box{margin-top:8px;font-size:13px;line-height:1.7;background:var(--th-bg);border:1px solid var(--split);border-radius:2px;padding:8px 10px;display:none;}
+.verify-box.show{display:block;}
+.verify-box .bad{color:var(--danger);}
+.verify-box .warnc{color:#d46b08;}
+.verify-box .ok{color:#389e0d;}
+.switch{width:44px;height:22px;border-radius:11px;background:rgba(0,0,0,.25);position:relative;cursor:pointer;display:inline-block;vertical-align:middle;transition:background .2s;}
+.switch::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 2px 4px rgba(0,35,11,.2);}
+.switch.on{background:var(--primary);}
+.switch.on::after{left:24px;}
+.auto-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:20px;}
+.stop-box{border:1px dashed #ffccc7;background:#fff1f0;border-radius:2px;padding:12px 14px;align-self:start;}
+.stop-box .t{font-weight:600;color:#cf1322;margin-bottom:8px;}
+.stop-box .n{color:#cf1322;font-size:12.5px;margin-top:8px;line-height:1.6;}
+.last-op{font-size:12.5px;color:var(--text-secondary);margin-top:14px;}
+.res-sum{display:flex;gap:24px;margin-bottom:12px;}
+.res-sum b{font-size:18px;margin-left:4px;}
+.res-sum .s b{color:#389e0d;}
+.res-sum .f b{color:var(--danger);}
+table.mini{width:100%;border-collapse:collapse;font-size:13px;}
+table.mini th,table.mini td{border-bottom:1px solid var(--split);padding:7px 8px;text-align:left;}
+table.mini th{background:var(--th-bg);font-weight:500;}
+.confirm-text b{color:var(--danger);font-weight:600;}
+.bk-toast.warn .ok{background:var(--warn);}
+@media (max-width:760px){
+  .auto-grid{grid-template-columns:1fr;}
+  .m-form .m-row{flex-direction:column;gap:4px;}
+  .m-form .m-row label{flex:none;text-align:left;line-height:1.5;}
+  .m-form .m-row .ctl{width:100%;}
+}
+</style></head><body>
+<header class="dh-header"><div class="dh-header-inner">
+  <h1>MY游戏点控管理</h1>
+  <div class="dh-meta"><span>模块：<b>商户游戏管理 · MY游戏点控管理</b></span><span>更新日期：<b>2026-10-28</b></span></div>
+</div></header>
+<nav class="dh-navbar" id="dhNavbar"><div class="dh-navbar-inner dh-primary" id="dhPrimary">
+  <button class="dh-primary-btn active" data-primary="proto" type="button">交互原型 <small>点控列表、新增点控、自动点控均可操作</small></button>
+  <button class="dh-primary-btn" data-primary="docs" type="button">需求文档 <small>功能说明、规则与验收</small></button>
+</div></nav>
+
+<div class="dh-wrap"><main class="dh-main">
+
+<!-- ================= 交互原型 ================= -->
+<section class="dh-primary-panel active" data-primary-panel="proto" id="protoSec">
+  <div class="proto-intro">
+    <div class="grow">在「商户游戏管理」下新增菜单。列表默认只看执行中的点控；点「+ 新增点控」下发送分 / 杀分，点「自动点控」设置新注册会员自动点控与清理旧数据。数据为示例，操作只影响本页；演示规则：以 9 开头的会员ID视为不存在，以 8 开头的视为试玩会员。</div>
+    <label class="doc-check" for="markToggle"><input type="checkbox" id="markToggle" checked> 显示本期新增标注</label>
+    <button class="doc-btn" id="resetDemo" type="button">重置演示数据</button>
+  </div>
+  <div class="proto-window" id="protoWindow">
+    <div class="bk-top">
+      <span class="bk-crumb">商户游戏管理 / <b>MY游戏点控管理</b></span>
+      <span class="sp"></span>
+      <span class="bk-user">巴西站-测试</span>
+    </div>
+    <div class="bk-tabs" role="tablist">
+      <button class="bk-tab active" type="button">MY游戏点控管理<span class="mk">本期新增</span></button>
+    </div>
+    <div class="bk-body">
+      <div class="bk-card">
+        <div class="bk-form">
+          <div class="bk-field"><label>申请时间</label><span class="bk-range"><input type="date" id="fFrom" aria-label="开始日期"><span class="to">至</span><input type="date" id="fTo" aria-label="结束日期"></span></div>
+          <div class="bk-field"><span class="bk-combo"><select class="bk-select" id="fIdType" aria-label="查询维度"><option value="id">会员ID</option><option value="acc">会员账号</option></select><input class="bk-input" id="fKey" placeholder="请输入"></span></div>
+          <div class="bk-field"><label for="fType">点控类型</label><select class="bk-select sm" id="fType"><option value="">全部</option><option value="give">送分</option><option value="kill">杀分</option></select></div>
+          <div class="bk-field"><label for="fScript">剧本</label><select class="bk-select" id="fScript"><option value="">全部</option><option value="604">快送（604）</option><option value="603">正常送-通用（603）</option><option value="602">慢送-通用（602）</option><option value="601">快杀（601）</option><option value="600">正常杀-通用（600）</option><option value="599">慢杀-通用（599）</option></select></div>
+          <div class="bk-field"><label for="fStatus">状态</label><select class="bk-select sm" id="fStatus"><option value="">全部</option><option value="run" selected>执行中</option><option value="end">已结束</option></select></div>
+          <div class="bk-field"><label for="fSrc">来源</label><select class="bk-select sm" id="fSrc"><option value="">全部</option><option value="manual">手动新增</option><option value="auto">自动点控</option></select></div>
+          <div class="bk-actions"><button class="bk-btn" id="btnReset" type="button">重 置</button><button class="bk-btn primary" id="btnQuery" type="button">查 询</button></div>
+        </div>
+      </div>
+      <div class="bk-card">
+        <div class="bk-toolbar">
+          <span class="info" id="runInfo"></span>
+          <button class="bk-btn" id="btnRefresh" type="button" title="获取最新的进行中金额与状态">刷 新</button>
+          <button class="bk-btn ghost" id="btnAuto" type="button">自动点控</button>
+          <button class="bk-btn primary" id="btnAdd" type="button">+ 新增点控</button>
+        </div>
+        <div class="bk-table-wrap"><table class="bk-table wide" style="min-width:1500px;">
+          <thead><tr>
+            <th style="width:40px;"><input type="checkbox" class="chk" id="chkAllHead" aria-label="全选本页"></th>
+            <th>会员ID / 账号</th><th>点控类型</th><th>剧本</th>
+            <th>默认货币<span class="bk-th-tip" title="平台默认计算货币，金额均按该币种计算和展示">?</span></th>
+            <th>目标金额</th>
+            <th>进行中金额<span class="bk-th-tip" title="剧本已完成的金额：正数为会员赢，负数为会员输。送分超过 +目标金额、杀分低于 -目标金额时点控结束">?</span></th>
+            <th>状态</th><th>结束原因</th><th>来源</th><th>申请时间</th><th>备注</th><th>操作人</th><th>最后操作时间</th><th>操作</th>
+          </tr></thead>
+          <tbody id="ctrlBody"></tbody>
+        </table></div>
+        <div class="bk-foot">
+          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="chk" id="chkAllFoot">选择全部</label>
+          <select class="bk-select" id="batchSel" style="width:130px;height:28px;padding:0 8px;" aria-label="批量操作"><option value="">批量操作</option><option value="stop">批量终止</option></select>
+          <span class="muted">已选择 <b id="selCount" style="color:var(--text-primary);">0</b> 条记录</span>
+          <div class="bk-pager" id="pager"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+  <!-- ============================ 需求文档 ============================ -->
+  <section class="dh-primary-panel" data-primary-panel="docs">
+    <nav class="dh-tabs" id="dhTabs">
+      <button class="dh-tab active" data-tab="overview" type="button"><span class="n">0</span>总览</button>
+      <button class="dh-tab" data-tab="list" type="button"><span class="n">1</span>点控列表</button>
+      <button class="dh-tab" data-tab="add" type="button"><span class="n">2</span>新增点控</button>
+      <button class="dh-tab" data-tab="auto" type="button"><span class="n">3</span>自动点控</button>
+      <button class="dh-tab" data-tab="qa" type="button"><span class="n">4</span>验收与开发测试</button>
+    </nav>
+
+    <!-- ===== 0 总览 ===== -->
+    <div class="dh-panel active" data-panel="overview">
+      <div class="req-block">
+        <h2>背景</h2>
+        <div class="dh-prose">
+          <p>商户后台目前无法对单个会员做输赢控制。MY 游戏提供会员点控能力：对指定会员下发<strong>送分</strong>或<strong>杀分</strong>任务，会员在 MY 系列游戏中按所选剧本输赢，累计到目标金额后点控自动结束。点控对 MY 系列<strong>全部厂商统一生效</strong>，不区分厂商与游戏。</p>
+          <p>本期在「商户游戏管理」下新增菜单「MY游戏点控管理」，提供点控记录查看、手动新增（单个或批量）、终止，以及新注册会员自动点控。</p>
+        </div>
+      </div>
+      <div class="req-block">
+        <h2>菜单位置</h2>
+        <div class="dh-illustration">
+          <div class="illus-list">
+            <div class="illus-item">厂商管理</div><span class="illus-sep"></span>
+            <div class="illus-item">游戏管理</div><span class="illus-sep"></span>
+            <div class="illus-item">游戏排名</div><span class="illus-sep"></span>
+            <div class="illus-item new">MY游戏点控管理<span class="tag">本期新增</span></div>
+          </div>
+          <div class="cap">示意图：「商户游戏管理」下的子菜单顺序，新菜单排在最后</div>
+        </div>
+      </div>
+      <div class="req-block">
+        <h2>基本概念</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>概念</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td><b>送分</b></td><td>让会员赢分。进行中金额（会员累计赢，正数）<strong>超过</strong> +目标金额时，点控结束</td></tr>
+            <tr><td><b>杀分</b></td><td>让会员输分。进行中金额以负数展示（会员累计输），<strong>低于</strong> -目标金额时，点控结束</td></tr>
+            <tr><td><b>剧本</b></td><td>控制输赢节奏。送分：快送（604）、正常送-通用（603）、慢送-通用（602）；杀分：快杀（601）、正常杀-通用（600）、慢杀-通用（599）。剧本名称后统一附带 ID，便于定位问题</td></tr>
+            <tr><td><b>目标金额</b></td><td>本次点控要送出或杀掉的金额，按平台默认货币计，0.01 ~ 100,000.00</td></tr>
+            <tr><td><b>进行中金额</b></td><td>剧本已完成的金额，正数为会员赢、负数为会员输</td></tr>
+            <tr><td><b>状态</b></td><td>执行中 / 已结束。已结束包括四种结束原因：达成目标、手动终止、新点控覆盖、清理自动点控</td></tr>
+            <tr><td><b>唯一性</b></td><td>同一会员同一时间只有 <strong>1 条</strong>执行中的点控。对已有执行中点控的会员再次新增，原点控结束（结束原因「新点控覆盖」），按新设置重新开始</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div class="req-block">
+        <h2>整体业务流程</h2>
+        <div class="dh-flow">
+          <div class="flow-diagram">
+            <div class="flow-step">新增点控<span class="sub">手动新增 / 新注册会员自动点控</span></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">点控生效，状态「执行中」</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">会员在 MY 系列游戏中按剧本输赢</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">进行中金额持续累计</div>
+          </div>
+          <div class="flow-branches">
+            <div class="flow-branch"><span class="cond">送分：进行中金额超过 +目标金额；杀分：低于 -目标金额</span><span class="arr">→</span><span class="result good">已结束 · 达成目标</span></div>
+            <div class="flow-branch"><span class="cond">运营点击「终止」/ 批量终止</span><span class="arr">→</span><span class="result neutral">已结束 · 手动终止</span></div>
+            <div class="flow-branch"><span class="cond">对该会员再次新增点控（手动或批量）</span><span class="arr">→</span><span class="result neutral">原点控已结束 · 新点控覆盖；新点控执行中</span></div>
+            <div class="flow-branch"><span class="cond">自动点控中执行「清理旧数据」（仅来源为自动点控的）</span><span class="arr">→</span><span class="result neutral">已结束 · 清理自动点控</span></div>
+          </div>
+          <div class="cap">图：一条点控从创建到结束的完整过程</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 1 点控列表 ===== -->
+    <div class="dh-panel" data-panel="list">
+      <button type="button" class="proto-jump" data-goto="proto">在交互原型中查看「点控列表」 →</button>
+
+      <div class="req-block"><h2>功能结构图</h2><div class="dh-mind"><div class="mm">
+        <div class="mm-root">点控列表</div>
+        <div class="mm-branches">
+          <div class="mm-b"><div class="mm-node">入口</div><div class="mm-leaves"><span class="mm-leaf">商户游戏管理 › MY游戏点控管理</span></div></div>
+          <div class="mm-b"><div class="mm-node">筛选</div><div class="mm-leaves"><span class="mm-leaf">申请时间</span><span class="mm-leaf">会员ID / 会员账号</span><span class="mm-leaf">点控类型</span><span class="mm-leaf">剧本</span><span class="mm-leaf">状态（默认执行中）</span><span class="mm-leaf">来源</span></div></div>
+          <div class="mm-b"><div class="mm-node">列表字段</div><div class="mm-leaves"><span class="mm-leaf">会员ID / 账号</span><span class="mm-leaf">点控类型</span><span class="mm-leaf">剧本</span><span class="mm-leaf">默认货币</span><span class="mm-leaf">目标金额</span><span class="mm-leaf">进行中金额</span><span class="mm-leaf">状态</span><span class="mm-leaf">结束原因</span><span class="mm-leaf">来源</span><span class="mm-leaf">申请时间</span><span class="mm-leaf">备注</span><span class="mm-leaf">操作人</span><span class="mm-leaf">最后操作时间</span></div></div>
+          <div class="mm-b"><div class="mm-node">操作</div><div class="mm-leaves"><span class="mm-leaf">终止</span><span class="mm-leaf">批量终止</span><span class="mm-leaf">刷新</span><span class="mm-leaf">会员ID 打开会员详情</span></div></div>
+          <div class="mm-b"><div class="mm-node">工具栏入口</div><div class="mm-leaves"><span class="mm-leaf">+ 新增点控</span><span class="mm-leaf">自动点控</span></div></div>
+        </div>
+      </div><div class="cap">功能结构图：点控列表的组成</div></div></div>
+
+      <div class="req-block">
+        <h2>筛选项</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
+          <tbody>
+            <tr><td><b>申请时间</b></td><td>日期区间，按点控的申请时间筛选</td><td>空（不限）</td><td>只显示申请时间落在区间内的记录，含首尾两天</td></tr>
+            <tr><td><b>会员ID / 会员账号</b></td><td>下拉切换查询维度，右侧输入框输入内容</td><td>会员ID，输入框为空</td><td>模糊匹配所选维度</td></tr>
+            <tr><td><b>点控类型</b></td><td>全部 / 送分 / 杀分</td><td>全部</td><td>按类型筛选</td></tr>
+            <tr><td><b>剧本</b></td><td>全部 + 6 个剧本，格式「剧本名称（ID）」</td><td>全部</td><td>按剧本筛选</td></tr>
+            <tr><td><b>状态</b></td><td>全部 / 执行中 / 已结束</td><td><strong>执行中</strong></td><td>进入页面默认只看正在执行的点控；切到「全部」或「已结束」查看历史</td></tr>
+            <tr><td><b>来源</b></td><td>全部 / 手动新增 / 自动点控</td><td>全部</td><td>按点控的创建方式筛选</td></tr>
+            <tr><td><b>重置 / 查询</b></td><td>重置恢复全部默认值并重新查询；查询按当前条件刷新列表</td><td>—</td><td>查询后回到第 1 页</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
+        <h2>列表字段</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>字段</th><th>说明</th><th>展示规则</th></tr></thead>
+          <tbody>
+            <tr><td><b>勾选框</b></td><td>用于批量终止</td><td>表头勾选框 = 选中本页全部；底部「选择全部」= 选中当前筛选结果全部</td></tr>
+            <tr><td><b>会员ID / 账号</b></td><td>两行展示，上为会员ID，下为会员账号</td><td>会员ID 蓝色可点击，打开该会员的会员详情（现有页面）</td></tr>
+            <tr><td><b>点控类型</b></td><td>送分 / 杀分</td><td>送分绿色标签，杀分红色标签</td></tr>
+            <tr><td><b>剧本</b></td><td>新增时选择的剧本</td><td>「剧本名称（ID）」，如「快送（604）」</td></tr>
+            <tr><td><b>默认货币</b></td><td>平台默认计算货币</td><td>表头带「?」提示：金额均按该币种计算和展示</td></tr>
+            <tr><td><b>目标金额</b></td><td>新增时填写的金额</td><td>千分位，两位小数</td></tr>
+            <tr><td><b>进行中金额</b></td><td>剧本已完成的金额</td><td>两位小数；正数绿色带「+」，负数红色带「-」；表头「?」说明正负含义与结束条件</td></tr>
+            <tr><td><b>状态</b></td><td>执行中 / 已结束</td><td>执行中蓝色标签，已结束灰色标签</td></tr>
+            <tr><td><b>结束原因</b></td><td>达成目标 / 手动终止 / 新点控覆盖 / 清理自动点控</td><td>执行中的记录显示「-」</td></tr>
+            <tr><td><b>来源</b></td><td>手动新增 / 自动点控</td><td>自动点控为橙色标签</td></tr>
+            <tr><td><b>申请时间</b></td><td>点控创建时间</td><td>年月日时分秒，按后台时区展示</td></tr>
+            <tr><td><b>备注</b></td><td>新增时填写的操作备注</td><td>无备注显示「-」；超长换行展示</td></tr>
+            <tr><td><b>操作人</b></td><td>最后一次操作该记录的后台账号</td><td>自动点控创建的记录显示「系统」；被手动终止、清理后显示操作账号；被新点控覆盖后显示发起新点控的账号</td></tr>
+            <tr><td><b>最后操作时间</b></td><td>最后一次操作或状态变化的时间</td><td>年月日时分秒</td></tr>
+            <tr><td><b>操作</b></td><td>终止</td><td>仅执行中的记录显示「终止」；已结束显示「-」</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
+        <h2>终止点控</h2>
+        <div class="dh-flow">
+          <div class="flow-diagram">
+            <div class="flow-step">点击行内「终止」<span class="sub">或勾选后选「批量操作 › 批量终止」</span></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">弹出警告确认框</div>
+          </div>
+          <div class="flow-branches">
+            <div class="flow-branch"><span class="cond">点击「确定终止」</span><span class="arr">→</span><span class="result good">状态变为已结束 · 手动终止，操作人与最后操作时间更新</span></div>
+            <div class="flow-branch"><span class="cond">点击「取消」或关闭</span><span class="arr">→</span><span class="result neutral">不做任何变更</span></div>
+            <div class="flow-branch"><span class="cond">批量终止时未勾选任何记录</span><span class="arr">→</span><span class="result bad">提示「请先勾选记录」，不弹确认框</span></div>
+            <div class="flow-branch"><span class="cond">批量终止时勾选的记录都已结束</span><span class="arr">→</span><span class="result bad">提示「所选记录中没有执行中的点控」，不弹确认框</span></div>
+          </div>
+          <div class="cap">图：单条终止与批量终止</div>
+        </div>
+        <h3>触发条件与反馈</h3>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>触发条件</th><th>系统反馈</th></tr></thead>
+          <tbody>
+            <tr><td><b>点击执行中记录的「终止」</b></td><td>弹出警告：「确认终止会员 {会员ID} 的{送分/杀分}点控？终止后不可恢复，如需继续控制请重新新增点控。」</td></tr>
+            <tr><td><b>确认终止成功</b></td><td>提示「已终止 N 条点控」；该记录状态变为已结束，结束原因「手动终止」，操作人为当前账号，「终止」按钮消失</td></tr>
+            <tr><td><b>勾选多条（含已结束）后批量终止</b></td><td>警告文案「确认终止选中的 N 条执行中点控？」，N 只统计执行中的记录；已结束记录不受影响</td></tr>
+            <tr><td><b>批量终止未勾选</b></td><td>提示「请先勾选记录」</td></tr>
+            <tr><td><b>勾选的记录均已结束</b></td><td>提示「所选记录中没有执行中的点控」</td></tr>
+            <tr><td><b>终止的记录在提交时已自然结束</b></td><td>该记录保持「达成目标」，不改为手动终止；提示中的 N 只统计实际被终止的条数</td></tr>
+            <tr><td><b>点击工具栏「刷新」</b></td><td>列表获取最新的进行中金额与状态；已达成目标的记录变为已结束 · 达成目标</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
+        <h2>其他规则说明</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>规则项</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td><b>排序</b></td><td>按申请时间倒序，最新在最前</td></tr>
+            <tr><td><b>分页</b></td><td>每页 10 / 20 / 30 条，默认 10 条；支持页码切换与跳页</td></tr>
+            <tr><td><b>数据更新</b></td><td>进入页面、查询、刷新、新增与终止后，进行中金额与状态均为最新值</td></tr>
+            <tr><td><b>历史记录</b></td><td>所有点控记录（含已结束）完整保留，不删除，可按时间查询历史</td></tr>
+            <tr><td><b>时区</b></td><td>所有时间按后台时区展示</td></tr>
+            <tr><td><b>权限</b></td><td>菜单查看、新增点控、终止、自动点控设置纳入现有角色权限体系，按菜单与功能分配，不新增独立权限点</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ===== 2 新增点控 ===== -->
+    <div class="dh-panel" data-panel="add">
+      <button type="button" class="proto-jump" data-goto="proto" data-open="addModal">在交互原型中打开「新增点控」 →</button>
+
+      <div class="req-block"><h2>功能结构图</h2><div class="dh-mind"><div class="mm">
+        <div class="mm-root">新增点控</div>
+        <div class="mm-branches">
+          <div class="mm-b"><div class="mm-node">入口</div><div class="mm-leaves"><span class="mm-leaf">工具栏「+ 新增点控」</span></div></div>
+          <div class="mm-b"><div class="mm-node">选择会员</div><div class="mm-leaves"><span class="mm-leaf">自定义会员 + 校验会员</span><span class="mm-leaf">会员层级</span><span class="mm-leaf">VIP等级</span><span class="mm-leaf">代理ID（直属层）</span><span class="mm-leaf">代理ID（代理线）</span><span class="mm-leaf">单次上限 10,000 人</span></div></div>
+          <div class="mm-b"><div class="mm-node">点控设置</div><div class="mm-leaves"><span class="mm-leaf">点控类型</span><span class="mm-leaf">剧本（随类型联动）</span><span class="mm-leaf">目标金额</span><span class="mm-leaf">操作备注</span></div></div>
+          <div class="mm-b"><div class="mm-node">提交与反馈</div><div class="mm-leaves"><span class="mm-leaf">字段校验</span><span class="mm-leaf">已有执行中点控 → 覆盖确认</span><span class="mm-leaf">下发结果：成功 / 失败明细</span></div></div>
+        </div>
+      </div><div class="cap">功能结构图：新增点控的组成</div></div></div>
+
+      <div class="req-block">
+        <h2>字段说明</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
+          <tbody>
+            <tr><td><b>选择会员 *</b></td><td>单选五种方式：自定义会员 / 会员层级 / VIP等级 / 代理ID（直属层）/ 代理ID（代理线）</td><td>自定义会员</td><td>切换方式后下方输入区随之切换，其他方式已填内容不参与提交</td></tr>
+            <tr><td><b>自定义会员</b></td><td>文本框输入会员ID，多个用英文逗号隔开（兼容中文逗号、空格、换行）</td><td>空</td><td>重复ID自动去重，实时显示「已输入 N 个」；单次最多 10,000 个</td></tr>
+            <tr><td><b>校验会员</b></td><td>自定义会员下的按钮，提交前可主动校验</td><td>—</td><td>显示「共 N 个：有效 X 个；不存在 Y 个（红字列出ID）；试玩会员 W 个（不支持点控，红字列出ID）」；已有执行中点控的会员单独提示「其中 Z 个已有执行中的点控，提交后原点控将终止」</td></tr>
+            <tr><td><b>会员层级</b></td><td>多选，选项为系统已配置的会员层级，带「全选」</td><td>不选</td><td>选中层级下的全部会员；下方显示「已选会员：共 N 人」</td></tr>
+            <tr><td><b>VIP等级</b></td><td>多选，选项为系统已配置的 VIP 等级，带「全选」</td><td>不选</td><td>选中等级下的全部会员；显示已选人数</td></tr>
+            <tr><td><b>代理ID（直属层）</b></td><td>输入 1 个代理ID</td><td>空</td><td>选中该代理的直属下级会员，不含更下级；显示已选人数</td></tr>
+            <tr><td><b>代理ID（代理线）</b></td><td>输入 1 个代理ID</td><td>空</td><td>选中该代理整条代理线下的全部会员；显示已选人数</td></tr>
+            <tr><td><b>点控类型 *</b></td><td>单选：送分 / 杀分</td><td><strong>无默认值</strong></td><td>未选类型时剧本区显示「请先选择点控类型」</td></tr>
+            <tr><td><b>剧本 *</b></td><td>单选，随点控类型切换选项，格式「剧本名称（ID）」，如「快送（604）」</td><td>选类型后默认选中「正常送-通用（603）」或「正常杀-通用（600）」</td><td>切换类型时剧本重置为该类型的默认剧本</td></tr>
+            <tr><td><b>目标金额 *</b></td><td>输入框，右侧显示平台默认货币</td><td>空</td><td>0.01 ~ 100,000.00，最多两位小数</td></tr>
+            <tr><td><b>操作备注</b></td><td>文本框，选填</td><td>空</td><td>最多 100 字，带字数统计；展示在列表「备注」列</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
+        <h2>提交流程</h2>
+        <div class="dh-flow">
+          <div class="flow-diagram">
+            <div class="flow-step">填写后点击「确定」</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">字段校验<span class="sub">会员、类型、金额、人数上限</span></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">检查所选会员是否已有执行中点控</div>
+          </div>
+          <div class="flow-branches">
+            <div class="flow-branch"><span class="cond">字段校验不通过</span><span class="arr">→</span><span class="result bad">对应字段下方红字提示，弹窗保持打开</span></div>
+            <div class="flow-branch"><span class="cond">无会员已有执行中点控</span><span class="arr">→</span><span class="result good">直接下发，弹出「下发结果」</span></div>
+            <div class="flow-branch"><span class="cond">有会员已有执行中点控 → 点「继续提交」</span><span class="arr">→</span><span class="result good">原点控结束（新点控覆盖），下发新点控，弹出「下发结果」</span></div>
+            <div class="flow-branch"><span class="cond">有会员已有执行中点控 → 点「取消」</span><span class="arr">→</span><span class="result neutral">回到新增弹窗，已填内容保留，不下发</span></div>
+          </div>
+          <div class="flow-branches">
+            <div class="flow-branch"><span class="cond">下发结果：全部成功</span><span class="arr">→</span><span class="result good">显示提交 / 成功 / 失败人数，新记录以「执行中」出现在列表</span></div>
+            <div class="flow-branch"><span class="cond">下发结果：部分失败</span><span class="arr">→</span><span class="result bad">失败明细表列出会员ID与失败原因；成功的照常生效，失败的不产生记录</span></div>
+          </div>
+          <div class="cap">图：新增点控从提交到结果</div>
+        </div>
+        <h3>触发条件与反馈</h3>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>触发条件</th><th>系统反馈</th></tr></thead>
+          <tbody>
+            <tr><td><b>自定义会员未输入</b></td><td>红字「请输入会员ID」</td></tr>
+            <tr><td><b>会员层级 / VIP等级未勾选</b></td><td>红字「请选择会员层级」/「请选择VIP等级」</td></tr>
+            <tr><td><b>代理ID未输入</b></td><td>红字「请输入代理ID」</td></tr>
+            <tr><td><b>自定义会员去重后超过 10,000 个</b></td><td>红字「单次最多 10,000 个会员，当前 N 个，请分批提交」</td></tr>
+            <tr><td><b>层级 / VIP / 代理选中人数超过 10,000 人</b></td><td>人数提示变红「超过单次上限 10,000 人」；确定时红字「所选会员共 N 人，超过单次上限 10,000 人，请缩小范围后分批提交」</td></tr>
+            <tr><td><b>所选范围内没有会员（如代理无下级）</b></td><td>红字「所选范围内没有会员」</td></tr>
+            <tr><td><b>未选点控类型</b></td><td>红字「请选择点控类型」</td></tr>
+            <tr><td><b>目标金额为空</b></td><td>红字「请输入目标金额」，输入框标红</td></tr>
+            <tr><td><b>目标金额小于 0.01、大于 100,000.00 或超过两位小数</b></td><td>红字「请输入 0.01 ~ 100,000.00 之间的金额，最多两位小数」</td></tr>
+            <tr><td><b>点击「校验会员」</b></td><td>显示有效 / 不存在 / 已有执行中点控的数量与ID（各最多列出 20 个，超出显示「等」）</td></tr>
+            <tr><td><b>所选会员中有 N 个已有执行中点控</b></td><td>弹出提示「本次提交中有 N 个会员已有执行中的点控。继续提交后，这些会员的原点控将终止，并按本次设置重新开始。」</td></tr>
+            <tr><td><b>点击「确定」后</b></td><td>按钮置灰，防止重复提交，直到出现下发结果</td></tr>
+            <tr><td><b>输入的会员ID不存在</b></td><td>该会员计入失败，原因「会员不存在」</td></tr>
+            <tr><td><b>输入的会员为试玩会员</b></td><td>该会员计入失败，原因「试玩会员不支持点控」</td></tr>
+            <tr><td><b>会员还没有 MY 游戏账号</b></td><td>先创建游戏账号再下发；创建失败时该会员计入失败，原因「游戏账号创建失败」</td></tr>
+            <tr><td><b>单个会员下发失败</b></td><td>计入失败，原因显示 MY 游戏返回的失败原因</td></tr>
+            <tr><td><b>下发完成</b></td><td>弹出「下发结果」：提交 / 成功 / 失败人数 + 失败明细；点「我知道了」关闭，列表刷新到第 1 页</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
+        <h2>其他规则说明</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>规则项</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td><b>单次上限</b></td><td>每次提交最多 10,000 个会员，五种选择方式统一适用；超出需缩小范围分批提交</td></tr>
+            <tr><td><b>人数口径</b></td><td>层级、VIP、代理三种方式以点击「确定」时的实际会员名单为准；多选的层级或等级之间会员不重复计算；名单自动排除试玩会员</td></tr>
+            <tr><td><b>批量记录</b></td><td>一次提交多个会员时，每个会员各生成一条点控记录，目标金额、剧本、备注相同</td></tr>
+            <tr><td><b>来源与操作人</b></td><td>来源记为「手动新增」，操作人为当前后台账号</td></tr>
+            <tr><td><b>作用范围</b></td><td>点控对 MY 系列全部厂商统一生效，新增时不选择厂商或游戏</td></tr>
+            <tr><td><b>游戏账号</b></td><td>会员在 MY 游戏侧还没有游戏账号时，系统先为其创建游戏账号再下发点控；已有游戏账号的直接下发</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ===== 3 自动点控 ===== -->
+    <div class="dh-panel" data-panel="auto">
+      <button type="button" class="proto-jump" data-goto="proto" data-open="auto">在交互原型中打开「自动点控」 →</button>
+
+      <div class="req-block"><h2>功能结构图</h2><div class="dh-mind"><div class="mm">
+        <div class="mm-root">自动点控</div>
+        <div class="mm-branches">
+          <div class="mm-b"><div class="mm-node">入口</div><div class="mm-leaves"><span class="mm-leaf">工具栏「自动点控」</span></div></div>
+          <div class="mm-b"><div class="mm-node">配置</div><div class="mm-leaves"><span class="mm-leaf">新注册会员自动点控（开关）</span><span class="mm-leaf">点控类型</span><span class="mm-leaf">剧本</span><span class="mm-leaf">目标金额</span><span class="mm-leaf">最后操作人 / 时间</span></div></div>
+          <div class="mm-b"><div class="mm-node">清理旧数据</div><div class="mm-leaves"><span class="mm-leaf">显示执行中的自动点控数量</span><span class="mm-leaf">确认后终止全部执行中的自动点控</span></div></div>
+          <div class="mm-b"><div class="mm-node">生效结果</div><div class="mm-leaves"><span class="mm-leaf">新会员注册成功即生成点控</span><span class="mm-leaf">来源「自动点控」，操作人「系统」</span></div></div>
+        </div>
+      </div><div class="cap">功能结构图：自动点控的组成</div></div></div>
+
+      <div class="req-block">
+        <h2>字段说明</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
+          <tbody>
+            <tr><td><b>新注册会员自动点控 *</b></td><td>开关，旁边文字说明当前状态</td><td><strong>关闭</strong></td><td>开启：之后注册成功的新会员自动生成一条点控；关闭：不再自动生成</td></tr>
+            <tr><td><b>点控类型 *</b></td><td>单选：送分 / 杀分</td><td>无</td><td>自动生成的点控类型</td></tr>
+            <tr><td><b>剧本 *</b></td><td>随类型联动，同新增点控</td><td>选类型后默认「正常」剧本</td><td>自动生成的点控剧本</td></tr>
+            <tr><td><b>目标金额 *</b></td><td>同新增点控，0.01 ~ 100,000.00</td><td>空</td><td>自动生成的点控目标金额</td></tr>
+            <tr><td><b>最后操作人 / 时间</b></td><td>弹窗底部展示</td><td>—</td><td>每次保存配置后更新</td></tr>
+            <tr><td><b>清理旧数据</b></td><td>右侧红色区域，显示「当前执行中的自动点控：N 条」</td><td>—</td><td>终止所有来源为「自动点控」且执行中的记录，不可撤销</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
+        <h2>自动生成流程</h2>
+        <div class="dh-flow">
+          <div class="flow-diagram">
+            <div class="flow-step">新会员注册成功</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">检查「新注册会员自动点控」开关</div>
+          </div>
+          <div class="flow-branches">
+            <div class="flow-branch"><span class="cond">开关开启</span><span class="arr">→</span><span class="result good">先为该会员创建 MY 游戏账号，再按当前配置生成一条点控，执行中，来源「自动点控」，操作人「系统」</span></div>
+            <div class="flow-branch"><span class="cond">开关关闭</span><span class="arr">→</span><span class="result neutral">不生成点控</span></div>
+            <div class="flow-branch"><span class="cond">开关开启，但注册的是试玩账号</span><span class="arr">→</span><span class="result neutral">不生成点控</span></div>
+            <div class="flow-branch"><span class="cond">开关开启但游戏账号创建或点控生成失败</span><span class="arr">→</span><span class="result bad">不生成记录，不影响会员注册与正常游戏</span></div>
+          </div>
+          <div class="cap">图：新注册会员的自动点控</div>
+        </div>
+      </div>
+
+      <div class="req-block">
+        <h2>清理旧数据流程</h2>
+        <div class="dh-flow">
+          <div class="flow-diagram">
+            <div class="flow-step">点击「清理旧数据」</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">检查执行中的自动点控数量</div>
+          </div>
+          <div class="flow-branches">
+            <div class="flow-branch"><span class="cond">数量为 0</span><span class="arr">→</span><span class="result neutral">提示「当前没有执行中的自动点控」</span></div>
+            <div class="flow-branch"><span class="cond">数量 &gt; 0 → 确定清理</span><span class="arr">→</span><span class="result good">全部变为已结束 · 清理自动点控，提示「已清理，终止 N 条自动点控」</span></div>
+            <div class="flow-branch"><span class="cond">数量 &gt; 0 → 取消</span><span class="arr">→</span><span class="result neutral">不做任何变更</span></div>
+          </div>
+          <div class="cap">图：清理往期自动点控数据</div>
+        </div>
+        <h3>触发条件与反馈</h3>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>触发条件</th><th>系统反馈</th></tr></thead>
+          <tbody>
+            <tr><td><b>打开「自动点控」弹窗</b></td><td>回显当前已保存的配置、执行中的自动点控数量、最后操作人与时间</td></tr>
+            <tr><td><b>保存时未选点控类型</b></td><td>红字「请选择点控类型」</td></tr>
+            <tr><td><b>保存时目标金额为空或不合规</b></td><td>红字提示，规则同新增点控</td></tr>
+            <tr><td><b>开关开启并保存成功</b></td><td>提示「保存成功，之后注册的新会员将自动新增点控」</td></tr>
+            <tr><td><b>开关关闭并保存成功</b></td><td>提示「保存成功，自动点控已关闭」</td></tr>
+            <tr><td><b>点击「取消」或关闭</b></td><td>配置不变</td></tr>
+            <tr><td><b>点击「清理旧数据」且有执行中的自动点控</b></td><td>弹出警告「确认清理往期自动点控数据？将终止 N 条执行中的自动点控，操作不可逆。」</td></tr>
+            <tr><td><b>确定清理</b></td><td>对应记录变为已结束 · 清理自动点控，操作人为当前账号；弹窗内数量变为 0</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
+        <h2>其他规则说明</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>规则项</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td><b>生效时点</b></td><td>配置保存后立即生效，只作用于保存之后注册的会员，不追溯已注册会员</td></tr>
+            <tr><td><b>已生成的点控</b></td><td>修改配置或关闭开关不影响已生成的自动点控，它们按原设置继续执行</td></tr>
+            <tr><td><b>与手动点控的关系</b></td><td>自动点控执行中的会员再被手动新增点控时，自动点控结束（新点控覆盖）</td></tr>
+            <tr><td><b>清理范围</b></td><td>只终止来源为「自动点控」且执行中的记录；手动新增的点控和已结束的记录不受影响；记录本身保留</td></tr>
+            <tr><td><b>游戏账号</b></td><td>新会员注册成功后，先为其创建 MY 游戏账号，再生成自动点控</td></tr>
+            <tr><td><b>试玩账号</b></td><td>试玩账号注册不生成自动点控</td></tr>
+            <tr><td><b>保存校验</b></td><td>开关关闭时同样校验并保存类型、剧本、金额，便于下次直接开启</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ===== 4 验收与开发测试 ===== -->
+    <div class="dh-panel" data-panel="qa">
+      <div class="req-block">
+        <h2>范围</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>项目</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td><b>本期做</b></td><td>新增菜单「MY游戏点控管理」：点控列表（筛选、分页、刷新、终止、批量终止）、新增点控（五种选会员方式、批量下发、结果明细）、自动点控（新注册会员自动点控、清理旧数据）</td></tr>
+            <tr><td><b>本期不做</b></td><td>按单个厂商或游戏设置点控；修改执行中点控的金额或剧本（需终止后重新新增）；删除点控记录；导出</td></tr>
+            <tr><td><b>适用范围</b></td><td>全部商户后台；点控对 MY 系列全部厂商统一生效</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
+        <h2>用户与场景</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>项目</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td><b>使用角色</b></td><td>商户运营 / 风控人员，需「MY游戏点控管理」菜单权限；新增、终止、自动点控设置需对应功能权限</td></tr>
+            <tr><td><b>场景 1</b></td><td>对单个或一批会员送分（如回流、挽留）或杀分（如套利嫌疑），设置目标金额与节奏</td></tr>
+            <tr><td><b>场景 2</b></td><td>按会员层级、VIP 等级或代理线批量下发点控</td></tr>
+            <tr><td><b>场景 3</b></td><td>新会员注册后自动进入送分（养客）或杀分</td></tr>
+            <tr><td><b>场景 4</b></td><td>查看点控执行进度，提前终止；结束活动时一键清理全部自动点控</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
+        <h2>功能点清单</h2>
+        <div class="dh-prose"><ol>
+          <li><strong>F1【P0】菜单与列表</strong>：商户游戏管理下新增「MY游戏点控管理」；列表 15 列，按申请时间倒序，分页 10/20/30。</li>
+          <li><strong>F2【P0】筛选</strong>：申请时间、会员ID/账号、点控类型、剧本、状态（默认执行中）、来源；重置恢复默认。</li>
+          <li><strong>F3【P0】终止</strong>：执行中记录可终止，二次确认；成功后状态已结束、原因手动终止、更新操作人与时间。</li>
+          <li><strong>F4【P1】批量终止与刷新</strong>：勾选后批量终止，只处理执行中的记录；刷新获取最新进行中金额与状态。</li>
+          <li><strong>F5【P0】新增点控</strong>：自定义会员（含校验）/ 会员层级 / VIP等级 / 代理ID（直属层、代理线）；类型、剧本联动、目标金额、备注；单次最多 10,000 人；字段校验文案见「新增点控」。</li>
+          <li><strong>F6【P0】覆盖确认与下发结果</strong>：已有执行中点控的会员提交前提示将覆盖；提交后展示成功与失败明细；防重复提交。</li>
+          <li><strong>F7【P0】自动点控</strong>：开关（默认关闭）+ 类型、剧本、金额；保存后对之后注册的新会员自动生成点控，来源自动点控、操作人系统。</li>
+          <li><strong>F8【P1】清理旧数据</strong>：显示执行中的自动点控数量，确认后全部终止，原因清理自动点控。</li>
+        </ol></div>
+      </div>
+
+      <div class="req-block">
+        <h2>数据与埋点</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>项目</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td><b>新增埋点</b></td><td>无</td></tr>
+            <tr><td><b>需记录的数据</b></td><td>每条点控的会员、类型、剧本、目标金额、进行中金额、状态、结束原因、来源、申请时间、备注、操作人、最后操作时间；自动点控配置及其最后操作人、时间</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
+        <h2>依赖、影响与风险</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>项目</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td><b>依赖</b></td><td>MY 游戏点控接口（新增 / 取消 / 查询），进行中金额取接口返回的实际执行值；MY 游戏用户注册接口（为还没有游戏账号的会员创建账号）；现有会员详情、会员层级、VIP 等级、代理关系数据</td></tr>
+            <tr><td><b>影响</b></td><td>被点控会员在 MY 系列全部厂商的游戏输赢；前台无界面变化</td></tr>
+            <tr><td><b>风险：批量误操作</b></td><td>按层级、代理线批量杀分影响面大，提交前展示人数、覆盖提示与结果明细，供运营核对</td></tr>
+            <tr><td><b>风险：自动点控持续生效</b></td><td>开关开启期间每个新会员都会被点控，配置时需确认类型与金额；可通过关闭开关 + 清理旧数据停止</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
+        <h2>验收标准</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>编号</th><th>前置条件与操作</th><th>期望结果</th></tr></thead>
+          <tbody>
+            <tr><td><b>A1</b></td><td>有菜单权限的账号进入商户游戏管理</td><td>子菜单最后一项为「MY游戏点控管理」，点击打开列表</td></tr>
+            <tr><td><b>A2</b></td><td>首次进入列表</td><td>状态筛选默认「执行中」，只显示执行中记录，按申请时间倒序</td></tr>
+            <tr><td><b>A3</b></td><td>状态切为「全部」并查询</td><td>显示全部记录，已结束记录展示结束原因，操作列为「-」</td></tr>
+            <tr><td><b>A4</b></td><td>分别按申请时间、会员ID、会员账号、类型、剧本、来源筛选</td><td>结果符合条件；点「重置」恢复默认并重新查询</td></tr>
+            <tr><td><b>A5</b></td><td>点击会员ID</td><td>打开该会员的会员详情</td></tr>
+            <tr><td><b>A6</b></td><td>终止一条执行中记录并确认</td><td>提示「已终止 1 条点控」，状态已结束 · 手动终止，操作人与时间更新</td></tr>
+            <tr><td><b>A7</b></td><td>终止时点「取消」</td><td>记录不变</td></tr>
+            <tr><td><b>A8</b></td><td>勾选 3 条（2 条执行中、1 条已结束）后批量终止</td><td>确认框显示 2 条；确认后仅这 2 条结束</td></tr>
+            <tr><td><b>A9</b></td><td>未勾选直接批量终止 / 只勾选已结束记录批量终止</td><td>分别提示「请先勾选记录」/「所选记录中没有执行中的点控」</td></tr>
+            <tr><td><b>A10</b></td><td>执行中记录进行中金额已超过目标，点击刷新</td><td>状态变为已结束 · 达成目标</td></tr>
+            <tr><td><b>A11</b></td><td>新增：自定义会员输入 3 个有效ID + 1 个不存在ID，送分，正常送，100.00</td><td>结果：提交 4、成功 3、失败 1（会员不存在）；列表新增 3 条执行中记录，来源手动新增</td></tr>
+            <tr><td><b>A12</b></td><td>自定义会员输入重复ID</td><td>计数与提交按去重后计算</td></tr>
+            <tr><td><b>A13</b></td><td>点击「校验会员」</td><td>显示有效、不存在、已有执行中点控的数量与ID</td></tr>
+            <tr><td><b>A14</b></td><td>输入 10,001 个不重复ID后确定</td><td>红字「单次最多 10,000 个会员…」，不提交</td></tr>
+            <tr><td><b>A15</b></td><td>按层级 / VIP 勾选，人数 ≤ 10,000</td><td>显示已选人数，提交后每人一条记录</td></tr>
+            <tr><td><b>A16</b></td><td>按代理线选择，人数 &gt; 10,000</td><td>人数提示变红；确定时红字提示超上限，不提交</td></tr>
+            <tr><td><b>A17</b></td><td>代理ID（直属层）输入代理ID</td><td>只包含直属下级会员，不含更下级</td></tr>
+            <tr><td><b>A18</b></td><td>不选点控类型 / 金额为空 / 金额 0 / 100000.01 / 1.234</td><td>分别出现对应红字提示，不提交</td></tr>
+            <tr><td><b>A19</b></td><td>选择送分后切换为杀分</td><td>剧本选项变为快杀、正常杀-通用、慢杀-通用，默认正常杀-通用（600）</td></tr>
+            <tr><td><b>A20</b></td><td>对已有执行中点控的会员新增，点「继续提交」</td><td>原记录已结束 · 新点控覆盖；新记录执行中</td></tr>
+            <tr><td><b>A21</b></td><td>同上，点「取消」</td><td>回到新增弹窗，内容保留，不下发</td></tr>
+            <tr><td><b>A22</b></td><td>快速连续点击「确定」</td><td>只提交一次</td></tr>
+            <tr><td><b>A23</b></td><td>自动点控：开启，送分，正常送，50.00，保存；之后注册新会员</td><td>新会员出现一条执行中点控，来源自动点控，操作人系统，目标 50.00</td></tr>
+            <tr><td><b>A24</b></td><td>自动点控：关闭开关并保存，之后注册新会员</td><td>不生成点控；之前生成的自动点控继续执行</td></tr>
+            <tr><td><b>A25</b></td><td>修改自动点控金额并保存</td><td>只影响之后注册的会员；已生成的记录金额不变；最后操作人与时间更新</td></tr>
+            <tr><td><b>A26</b></td><td>有 N 条执行中自动点控，点击清理旧数据并确认</td><td>N 条变为已结束 · 清理自动点控；手动新增的执行中记录不受影响</td></tr>
+            <tr><td><b>A27</b></td><td>无执行中自动点控时点击清理旧数据</td><td>提示「当前没有执行中的自动点控」</td></tr>
+            <tr><td><b>A28</b></td><td>无新增 / 终止 / 自动点控功能权限的账号</td><td>按现有权限体系隐藏或禁用对应按钮</td></tr>
+            <tr><td><b>A29</b></td><td>点击「终止」后、确认前，该记录已达成目标自然结束，再点「确定终止」</td><td>该记录保持已结束 · 达成目标，不改为手动终止；提示中的 N 不计这条</td></tr>
+            <tr><td><b>A30</b></td><td>有执行中自动点控时点击清理旧数据，在确认框点「取消」</td><td>记录与数量均不变</td></tr>
+            <tr><td><b>A31</b></td><td>自动点控开启，新会员注册时点控生成失败</td><td>会员正常注册、正常游戏；不生成点控记录</td></tr>
+            <tr><td><b>A32</b></td><td>自动点控保存时不选点控类型 / 金额为空 / 金额不合规</td><td>分别出现对应红字提示，配置不保存</td></tr>
+            <tr><td><b>A33</b></td><td>新增：会员层级未勾选 / VIP等级未勾选 / 代理ID未填 / 代理下没有会员</td><td>分别红字「请选择会员层级」/「请选择VIP等级」/「请输入代理ID」/「所选范围内没有会员」，不提交</td></tr>
+            <tr><td><b>A34</b></td><td>新增时某个会员在 MY 游戏下发失败</td><td>该会员计入失败，失败明细显示 MY 游戏返回的原因；其他会员正常生效</td></tr>
+            <tr><td><b>A35</b></td><td>操作备注输入超过 100 字</td><td>最多只能输入 100 字，字数统计显示 100/100</td></tr>
+            <tr><td><b>A36</b></td><td>自定义会员输入 1 个试玩会员ID，点「校验会员」后提交</td><td>校验结果单独列出试玩会员；提交后该会员计入失败，原因「试玩会员不支持点控」</td></tr>
+            <tr><td><b>A37</b></td><td>按会员层级选择，层级内含试玩会员</td><td>已选人数与下发名单均不含试玩会员</td></tr>
+            <tr><td><b>A38</b></td><td>自动点控开启，注册一个试玩账号</td><td>不生成点控</td></tr>
+            <tr><td><b>A39</b></td><td>账号 A 创建的点控，被账号 B 新增点控覆盖</td><td>原记录已结束 · 新点控覆盖，操作人为 B，最后操作时间为覆盖时间</td></tr>
+            <tr><td><b>A40</b></td><td>对从未进入过 MY 游戏的会员新增点控</td><td>系统先创建游戏账号再下发，结果计入成功，列表出现执行中记录</td></tr>
+            <tr><td><b>A41</b></td><td>对已有 MY 游戏账号的会员新增点控</td><td>不重复注册，会员原游戏账号密码不变，正常下发</td></tr>
+            <tr><td><b>A42</b></td><td>新增点控时游戏账号创建失败</td><td>该会员计入失败，原因「游戏账号创建失败」；其他会员正常生效</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
+        <h2>需求完整性自查</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>检查项</th><th>结论</th></tr></thead>
+          <tbody>
+            <tr><td><b>权限</b></td><td>菜单与功能权限纳入现有角色权限体系</td></tr>
+            <tr><td><b>操作留痕</b></td><td>每条记录保留操作人与最后操作时间；自动点控配置保留最后操作人与时间</td></tr>
+            <tr><td><b>边界状态</b></td><td>空列表、全部已结束、超人数上限、会员不存在、已有执行中点控、提交时已自然结束均已定义</td></tr>
+            <tr><td><b>口径</b></td><td>金额按平台默认货币，两位小数；进行中金额正为赢、负为输；时间按后台时区</td></tr>
+            <tr><td><b>批量操作</b></td><td>批量新增上限 10,000 人并展示明细；批量终止只处理执行中记录</td></tr>
+            <tr><td><b>多语言</b></td><td>后台页面沿用现有后台语言机制，无前台文案</td></tr>
+            <tr><td><b>特殊模式</b></td><td>试玩会员不支持点控：自定义会员中的试玩ID计入失败；层级 / VIP / 代理名单自动排除；试玩账号注册不生成自动点控</td></tr>
+            <tr><td><b>生效范围</b></td><td>MY 系列全部厂商统一生效</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
+        <h2>开发测试重点说明</h2>
+        <div class="dh-prose"><ol>
+          <li><strong>下发前先建游戏账号。</strong>点控接口要求游戏账号已存在。下发前先查会员在 MY 游戏侧是否已有游戏账号：没有的先调用注册接口创建，再下发点控；已有的不得重复注册（重复注册会覆盖游戏账号密码）。手动新增与自动点控都适用。</li>
+          <li><strong>同一会员只有一条执行中点控。</strong>新增前必须识别已有执行中点控并提示覆盖；覆盖后原记录结束原因为「新点控覆盖」，不能同时存在两条执行中记录。</li>
+          <li><strong>结束原因要区分清楚。</strong>后台终止 = 手动终止；清理 = 清理自动点控；被新点控替换 = 新点控覆盖；其余结束 = 达成目标。终止时如记录已自然结束，保持达成目标。</li>
+          <li><strong>进行中金额正负号。</strong>送分为正（会员赢），杀分为负（会员输）；送分超过 +目标、杀分低于 -目标才结束，等于目标不结束。</li>
+          <li><strong>批量下发要部分成功。</strong>单个会员失败不影响其他会员，结果弹窗必须列出失败会员与原因。</li>
+          <li><strong>10,000 人上限对五种方式统一生效</strong>，层级/VIP/代理以点击确定时的实际名单计数并去重。</li>
+          <li><strong>自动点控不追溯。</strong>只对保存之后注册的会员生效；改配置不改已生成的记录；清理只动来源为自动点控且执行中的记录。</li>
+          <li><strong>状态默认筛选是「执行中」。</strong>测试历史数据时需切到「全部」或「已结束」。</li>
+          <li><strong>目标金额单位。</strong>后台按元输入（最多两位小数），调用接口时按分传整数（×100），范围 1 ~ 10,000,000 分；接口返回的进行中金额同样以分为单位，展示时 ÷100。</li>
+          <li><strong>结束原因由后台记录。</strong>取消点控和被新点控覆盖，接口侧都返回「已完成」，与达成目标无法区分；后台必须在终止、覆盖、清理时自行记录结束原因。</li>
+          <li><strong>点控记录以后台保存为准。</strong>查询接口不分页、最多返回最新 1,000 条；列表与历史记录用后台自己保存的数据，刷新时按会员查询并更新进行中金额与状态。</li>
+          <li><strong>新增接口不幂等。</strong>重复调用会创建新任务；批量下发逐个会员调用，超时或结果未知时不得自动重发，需查询核对后再判定成功或失败。</li>
+          <li><strong>时间与账号。</strong>接口返回时间为 UTC，列表按后台时区展示；接口按游戏账号名调用，需做会员与游戏账号的对应。</li>
+          <li><strong>菜单名称。</strong>菜单位置示意图为现网名称；若客户端游戏排序需求先上线，「游戏排名」显示为「热门游戏排序」，本菜单仍排在最后。</li>
+        </ol></div>
+      </div>
+    </div>
+  </section>
+
+</main></div>
+
+<!-- ================= 弹窗 ================= -->
+<div class="modal-mask" id="addModal"><div class="modal-box lg" role="dialog" aria-modal="true" style="width:780px;">
+  <div class="modal-hd">新增点控<button class="x" data-close="addModal" type="button" aria-label="关闭">×</button></div>
+  <div class="modal-bd"><div class="m-form">
+    <div class="m-row"><label><span class="req">*</span>选择会员</label><div class="ctl">
+      <div class="radio-group" id="modeGroup">
+        <span class="radio on" data-mode="custom"><span class="r"></span>自定义会员</span>
+        <span class="radio" data-mode="level"><span class="r"></span>会员层级</span>
+        <span class="radio" data-mode="vip"><span class="r"></span>VIP等级</span>
+        <span class="radio" data-mode="direct"><span class="r"></span>代理ID（直属层）</span>
+        <span class="radio" data-mode="line"><span class="r"></span>代理ID（代理线）</span>
+      </div>
+      <div class="mode-pane" data-pane="custom" style="margin-top:10px;">
+        <textarea class="bk-input" id="mIds" style="min-height:92px;" placeholder="请输入会员ID，多个会员ID用英文逗号隔开，单次最多 10,000 个"></textarea>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:6px;flex-wrap:wrap;">
+          <button class="bk-btn sm" id="btnVerify" type="button">校验会员</button>
+          <span class="m-help" style="margin:0;">已输入 <b id="idCount">0</b> 个（重复ID自动去重）</span>
+        </div>
+        <div class="verify-box" id="verifyBox"></div>
+      </div>
+      <div class="mode-pane" data-pane="level" style="margin-top:10px;display:none;">
+        <div class="check-group" data-group="level">
+          <label><input type="checkbox" class="chk" data-all="1">全选</label>
+          <label><input type="checkbox" class="chk" value="默认层级" data-n="3200">默认层级</label>
+          <label><input type="checkbox" class="chk" value="层级一" data-n="1260">层级一</label>
+          <label><input type="checkbox" class="chk" value="层级二" data-n="940">层级二</label>
+          <label><input type="checkbox" class="chk" value="层级三" data-n="610">层级三</label>
+          <label><input type="checkbox" class="chk" value="层级四" data-n="350">层级四</label>
+          <label><input type="checkbox" class="chk" value="层级五" data-n="120">层级五</label>
+          <label><input type="checkbox" class="chk" value="层级六" data-n="45">层级六</label>
+        </div>
+        <div class="m-help">选项为系统已配置的会员层级，可多选。</div>
+      </div>
+      <div class="mode-pane" data-pane="vip" style="margin-top:10px;display:none;">
+        <div class="check-group" data-group="vip">
+          <label><input type="checkbox" class="chk" data-all="1">全选</label>
+          <label><input type="checkbox" class="chk" value="VIP0" data-n="8600">VIP0</label>
+          <label><input type="checkbox" class="chk" value="VIP1" data-n="2400">VIP1</label>
+          <label><input type="checkbox" class="chk" value="VIP2" data-n="1100">VIP2</label>
+          <label><input type="checkbox" class="chk" value="VIP3" data-n="520">VIP3</label>
+          <label><input type="checkbox" class="chk" value="VIP4" data-n="230">VIP4</label>
+          <label><input type="checkbox" class="chk" value="VIP5" data-n="96">VIP5</label>
+          <label><input type="checkbox" class="chk" value="VIP6" data-n="40">VIP6</label>
+        </div>
+        <div class="m-help">选项为系统已配置的 VIP 等级，可多选。</div>
+      </div>
+      <div class="mode-pane" data-pane="direct" style="margin-top:10px;display:none;">
+        <input class="bk-input" id="mAgentDirect" style="width:260px;" placeholder="请输入代理ID">
+        <div class="m-help">选中该代理的直属下级会员（不含更下级）。示例：输入任意代理ID，示意直属会员 36 人。</div>
+      </div>
+      <div class="mode-pane" data-pane="line" style="margin-top:10px;display:none;">
+        <input class="bk-input" id="mAgentLine" style="width:260px;" placeholder="请输入代理ID">
+        <div class="m-help">选中该代理整条代理线下的全部会员。示例：输入任意代理ID，示意代理线会员 12,480 人（用于演示超出单次上限）。</div>
+      </div>
+      <div class="m-help" id="grpCount" style="display:none;"></div>
+      <div class="m-tip hide" id="errMember"></div>
+    </div></div>
+    <div class="m-row"><label><span class="req">*</span>点控类型</label><div class="ctl">
+      <div class="radio-group" id="typeGroup">
+        <span class="radio" data-type="give"><span class="r"></span>送分</span>
+        <span class="radio" data-type="kill"><span class="r"></span>杀分</span>
+      </div>
+      <div class="m-tip hide" id="errType">请选择点控类型</div>
+    </div></div>
+    <div class="m-row"><label><span class="req">*</span>剧本</label><div class="ctl"><div class="script-box" id="scriptBox"></div></div></div>
+    <div class="m-row"><label for="mAmt"><span class="req">*</span>目标金额</label><div class="ctl">
+      <input class="bk-input" id="mAmt" style="width:200px;" placeholder="请输入"><span class="unit">BRL</span>
+      <div class="m-help">支持 0.01 ~ 100,000.00，最多两位小数</div>
+      <div class="m-tip hide" id="errAmt"></div>
+    </div></div>
+    <div class="m-row"><label for="mRemark">操作备注</label><div class="ctl">
+      <textarea class="bk-input" id="mRemark" maxlength="100" placeholder="请输入后台备注，选填"></textarea>
+      <div class="cnt"><span id="remarkCount">0</span>/100</div>
+    </div></div>
+  </div></div>
+  <div class="modal-ft"><button class="bk-btn" data-close="addModal" type="button">取 消</button><button class="bk-btn primary" id="addConfirm" type="button">确 定</button></div>
+</div></div>
+
+<div class="modal-mask" id="autoModal"><div class="modal-box lg" role="dialog" aria-modal="true" style="width:820px;">
+  <div class="modal-hd">自动点控<button class="x" data-close="autoModal" type="button" aria-label="关闭">×</button></div>
+  <div class="modal-bd">
+    <div class="auto-grid">
+      <div class="m-form">
+        <div class="m-row"><label><span class="req">*</span>新注册会员自动点控</label><div class="ctl" style="padding-top:5px;">
+          <span class="switch" id="aSwitch" role="switch" aria-label="新注册会员自动点控"></span>
+          <div class="m-help" id="aSwitchText"></div>
+        </div></div>
+        <div class="m-row"><label><span class="req">*</span>点控类型</label><div class="ctl">
+          <div class="radio-group" id="aTypeGroup">
+            <span class="radio" data-type="give"><span class="r"></span>送分</span>
+            <span class="radio" data-type="kill"><span class="r"></span>杀分</span>
+          </div>
+          <div class="m-tip hide" id="aErrType">请选择点控类型</div>
+        </div></div>
+        <div class="m-row"><label><span class="req">*</span>剧本</label><div class="ctl"><div class="script-box" id="aScriptBox"></div></div></div>
+        <div class="m-row"><label for="aAmt"><span class="req">*</span>目标金额</label><div class="ctl">
+          <input class="bk-input" id="aAmt" style="width:180px;" placeholder="请输入"><span class="unit">BRL</span>
+          <div class="m-help">支持 0.01 ~ 100,000.00，最多两位小数</div>
+          <div class="m-tip hide" id="aErrAmt"></div>
+        </div></div>
+      </div>
+      <div class="stop-box">
+        <div class="t">清理旧数据</div>
+        <div>当前执行中的自动点控：<b id="autoRunCount">0</b> 条</div>
+        <div style="margin-top:10px;"><button class="bk-btn danger" id="btnClean" type="button">清理旧数据</button></div>
+        <div class="n">终止全部来源为「自动点控」且执行中的记录，手动新增的点控和已结束的记录不受影响，操作不可逆。</div>
+      </div>
+    </div>
+    <div class="last-op" id="autoLastOp"></div>
+  </div>
+  <div class="modal-ft"><button class="bk-btn" data-close="autoModal" type="button">取 消</button><button class="bk-btn primary" id="autoConfirm" type="button">确 定</button></div>
+</div></div>
+
+<div class="modal-mask top" id="resModal"><div class="modal-box" role="dialog" aria-modal="true">
+  <div class="modal-hd">下发结果<button class="x" data-close="resModal" type="button" aria-label="关闭">×</button></div>
+  <div class="modal-bd">
+    <div class="res-sum"><span>提交<b id="resAll">0</b></span><span class="s">成功<b id="resOk">0</b></span><span class="f">失败<b id="resFail">0</b></span></div>
+    <div id="resFailWrap"><table class="mini"><thead><tr><th>会员ID</th><th>失败原因</th></tr></thead><tbody id="resFailBody"></tbody></table></div>
+    <div class="m-help" id="resNote" style="margin-top:10px;"></div>
+  </div>
+  <div class="modal-ft"><button class="bk-btn primary" data-close="resModal" type="button">我知道了</button></div>
+</div></div>
+
+<div class="modal-mask top" id="mConfirm"><div class="modal-box sm" role="dialog" aria-modal="true">
+  <div class="confirm-bd"><div class="confirm-ic">!</div><div><div class="confirm-title" id="cTitle">提示</div><div class="confirm-text" id="cText"></div></div></div>
+  <div class="confirm-ft"><button class="bk-btn" id="cCancel" type="button">取 消</button><button class="bk-btn primary" id="cOk" type="button">确 定</button></div>
+</div></div>
+
+<div class="bk-toast" id="toast"><span class="ok">✓</span><span id="toastText">操作成功</span></div>
+<div class="dh-lightbox" id="dhLightbox"><div class="dh-lightbox-body" id="dhLightboxBody"></div></div>
+<script>
+(function(){
+  function $(id){ return document.getElementById(id); }
+  var SCRIPTS = {
+    give:[{id:'604',name:'快送'},{id:'603',name:'正常送-通用'},{id:'602',name:'慢送-通用'}],
+    kill:[{id:'601',name:'快杀'},{id:'600',name:'正常杀-通用'},{id:'599',name:'慢杀-通用'}]
+  };
+  var SNAME = {};
+  ['give','kill'].forEach(function(t){ SCRIPTS[t].forEach(function(s){ SNAME[s.id]=s.name; }); });
+  var MAX_MEMBERS = 10000, ME = 'zune01';
+
+  var SEED = [
+    ['3075459862','lucas88','give','603',200,86.4,'run','','manual','2026-10-28 00:42:10','活跃回流会员','zune01','2026-10-28 00:42:10'],
+    ['3421690056','mariaz','kill','600',500,-212.35,'run','','manual','2026-10-27 23:15:37','','zune01','2026-10-27 23:15:37'],
+    ['3979813868','pedro_01','give','603',50,12.6,'run','','auto','2026-10-27 22:08:51','','系统','2026-10-27 22:08:51'],
+    ['3348004197','ana2026','give','603',50,31.2,'run','','auto','2026-10-27 21:40:02','','系统','2026-10-27 21:40:02'],
+    ['3308658180','joao777','kill','601',1000,-640,'run','','manual','2026-10-27 20:11:45','套利嫌疑','ops_li','2026-10-27 20:11:45'],
+    ['3934740434','bia_s','give','604',100,100.85,'end','达成目标','manual','2026-10-27 18:02:19','','zune01','2026-10-27 19:26:44'],
+    ['3079953051','rafa10','kill','599',300,-120.5,'end','手动终止','manual','2026-10-27 16:30:00','','ops_li','2026-10-27 19:05:41'],
+    ['3901453109','carla_m','give','602',80,20.1,'end','新点控覆盖','auto','2026-10-27 15:12:33','','zune01','2026-10-27 17:48:20'],
+    ['3901453109','carla_m','kill','600',150,-44.7,'run','','manual','2026-10-27 17:48:20','','zune01','2026-10-27 17:48:20'],
+    ['3066458713','tiago_r','give','603',50,8.3,'end','清理自动点控','auto','2026-10-26 12:20:11','','zune01','2026-10-27 10:00:05'],
+    ['3873977635','gabi_br','kill','600',2000,-2003.4,'end','达成目标','manual','2026-10-26 09:40:58','','ops_li','2026-10-26 15:07:12'],
+    ['3797573550','nando9','give','604',30,4.2,'run','','auto','2026-10-25 21:33:14','','系统','2026-10-25 21:33:14'],
+    ['3155503975','luiza_p','give','602',60,60.3,'end','达成目标','manual','2026-10-25 14:22:09','','zune01','2026-10-25 20:51:30']
+  ];
+  var rows, seq, autoCfg, selected, page, pageSize;
+  function seed(){
+    rows = SEED.map(function(a,i){ return {key:'k'+i,id:a[0],acc:a[1],type:a[2],script:a[3],target:a[4],actual:a[5],status:a[6],reason:a[7],src:a[8],apply:a[9],remark:a[10],op:a[11],optime:a[12]}; });
+    seq = rows.length; selected = {}; page = 1; pageSize = 10;
+    autoCfg = {on:false,type:'give',script:'603',amt:'50.00',op:'zune01',time:'2026-10-27 15:02:40'};
+  }
+  seed();
+
+  function pad(n){ return (n<10?'0':'')+n; }
+  function nowStr(){ var d = new Date(Date.now()-3*3600*1000); return d.getUTCFullYear()+'-'+pad(d.getUTCMonth()+1)+'-'+pad(d.getUTCDate())+' '+pad(d.getUTCHours())+':'+pad(d.getUTCMinutes())+':'+pad(d.getUTCSeconds()); }
+  function money(v){ return Number(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function signed(v){ var s = money(Math.abs(v)); return v>0 ? '+'+s : (v<0 ? '-'+s : '0.00'); }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function show(el, on){ el.classList.toggle('hide', !on); }
+
+  var toastTimer;
+  function toast(msg, warn){
+    $('toastText').textContent = msg;
+    $('toast').classList.toggle('warn', !!warn);
+    $('toast').querySelector('.ok').textContent = warn ? '!' : '✓';
+    $('toast').classList.add('open');
+    clearTimeout(toastTimer); toastTimer = setTimeout(function(){ $('toast').classList.remove('open'); }, 2600);
+  }
+  function openM(id){ $(id).classList.add('open'); }
+  function closeM(id){ $(id).classList.remove('open'); }
+  document.querySelectorAll('[data-close]').forEach(function(b){ b.addEventListener('click', function(){ closeM(b.getAttribute('data-close')); }); });
+  document.querySelectorAll('.modal-mask').forEach(function(m){ m.addEventListener('click', function(e){ if(e.target === m) closeM(m.id); }); });
+
+  // 通用确认框
+  var cCb = null;
+  function confirmBox(title, html, okText, danger, cb){
+    $('cTitle').textContent = title; $('cText').innerHTML = html;
+    $('cOk').textContent = okText; $('cOk').className = 'bk-btn ' + (danger ? 'danger' : 'primary');
+    cCb = cb; openM('mConfirm');
+  }
+  $('cOk').addEventListener('click', function(){ closeM('mConfirm'); if(cCb) cCb(); });
+  $('cCancel').addEventListener('click', function(){ closeM('mConfirm'); });
+
+  // ---------- 列表 ----------
+  var filtered = [], applied = {};
+  function readFilters(){
+    applied = {from:$('fFrom').value, to:$('fTo').value, idType:$('fIdType').value, key:$('fKey').value.trim(), type:$('fType').value, script:$('fScript').value, status:$('fStatus').value, src:$('fSrc').value};
+  }
+  function match(r){
+    var d = r.apply.slice(0,10);
+    if(applied.from && d < applied.from) return false;
+    if(applied.to && d > applied.to) return false;
+    if(applied.key && (applied.idType==='acc' ? r.acc : r.id).indexOf(applied.key) === -1) return false;
+    if(applied.type && r.type !== applied.type) return false;
+    if(applied.script && r.script !== applied.script) return false;
+    if(applied.status && r.status !== applied.status) return false;
+    if(applied.src && r.src !== applied.src) return false;
+    return true;
+  }
+  function render(){
+    filtered = rows.filter(match).sort(function(a,b){ return a.apply < b.apply ? 1 : (a.apply > b.apply ? -1 : 0); });
+    var pages = Math.max(1, Math.ceil(filtered.length/pageSize));
+    if(page > pages) page = pages;
+    var slice = filtered.slice((page-1)*pageSize, page*pageSize);
+    $('ctrlBody').innerHTML = !slice.length ? '<tr><td colspan="15" class="bk-empty">暂无数据</td></tr>' : slice.map(function(r){
+      var typeTag = r.type==='give' ? '<span class="bk-tag green">送分</span>' : '<span class="bk-tag red">杀分</span>';
+      var st = r.status==='run' ? '<span class="bk-tag blue">执行中</span>' : '<span class="bk-tag gray">已结束</span>';
+      var src = r.src==='auto' ? '<span class="bk-tag gold">自动点控</span>' : '<span class="bk-tag gray">手动新增</span>';
+      var act = r.actual===0 ? '0.00' : '<span class="'+(r.actual>0?'amt-pos':'amt-neg')+'">'+signed(r.actual)+'</span>';
+      return '<tr><td><input type="checkbox" class="chk row-chk" data-key="'+r.key+'"'+(selected[r.key]?' checked':'')+' aria-label="选择该行"></td>'+
+        '<td><div class="bk-mem"><span class="bk-link" data-mem="'+r.id+'">'+r.id+'</span><small>'+esc(r.acc)+'</small></div></td>'+
+        '<td>'+typeTag+'</td><td>'+SNAME[r.script]+'（'+r.script+'）</td><td>BRL</td><td>'+money(r.target)+'</td><td>'+act+'</td>'+
+        '<td>'+st+'</td><td>'+(r.reason||'<span class="muted">-</span>')+'</td><td>'+src+'</td><td>'+r.apply+'</td>'+
+        '<td class="wrap">'+(r.remark?esc(r.remark):'-')+'</td><td>'+r.op+'</td><td>'+r.optime+'</td>'+
+        '<td>'+(r.status==='run'?'<span class="bk-link danger" data-stop="'+r.key+'">终止</span>':'<span class="muted">-</span>')+'</td></tr>';
+    }).join('');
+    var runN = rows.filter(function(r){ return r.status==='run'; }).length;
+    $('runInfo').textContent = '当前执行中的点控共 '+runN+' 条';
+    renderPager(pages); syncChecks();
+  }
+  function renderPager(pages){
+    var h = '<span>共 '+filtered.length+' 条记录</span><select id="pageSize" aria-label="每页条数">'+[10,20,30].map(function(n){ return '<option value="'+n+'"'+(n===pageSize?' selected':'')+'>'+n+'条/页</option>'; }).join('')+'</select>';
+    h += '<span class="pg" data-pg="prev">‹</span>';
+    for(var i=1;i<=pages;i++) h += '<span class="pg'+(i===page?' on':'')+'" data-pg="'+i+'">'+i+'</span>';
+    h += '<span class="pg" data-pg="next">›</span><span>跳至</span><input class="jump" id="pageJump" value="'+page+'" aria-label="跳至页码"><span>页</span>';
+    $('pager').innerHTML = h;
+    $('pager').querySelectorAll('[data-pg]').forEach(function(el){ el.addEventListener('click', function(){
+      var v = el.getAttribute('data-pg');
+      page = v==='prev' ? Math.max(1,page-1) : v==='next' ? Math.min(pages,page+1) : +v; render();
+    }); });
+    $('pageSize').addEventListener('change', function(e){ pageSize = +e.target.value; page = 1; render(); });
+    $('pageJump').addEventListener('keydown', function(e){ if(e.key==='Enter'){ var n = parseInt(e.target.value,10); if(n>=1 && n<=pages){ page=n; render(); } } });
+  }
+  function selKeys(){ return Object.keys(selected).filter(function(k){ return selected[k]; }); }
+  function syncChecks(){
+    $('selCount').textContent = selKeys().length;
+    var boxes = $('ctrlBody').querySelectorAll('.row-chk');
+    $('chkAllHead').checked = boxes.length > 0 && Array.prototype.every.call(boxes, function(c){ return c.checked; });
+    $('chkAllFoot').checked = filtered.length > 0 && filtered.every(function(r){ return selected[r.key]; });
+  }
+  $('ctrlBody').addEventListener('change', function(e){ if(e.target.classList.contains('row-chk')){ selected[e.target.getAttribute('data-key')] = e.target.checked; syncChecks(); } });
+  $('ctrlBody').addEventListener('click', function(e){
+    var t = e.target;
+    if(t.hasAttribute('data-stop')) askStop([t.getAttribute('data-stop')]);
+    if(t.hasAttribute('data-mem')) toast('打开会员 '+t.getAttribute('data-mem')+' 的会员详情（现有页面）');
+  });
+  $('chkAllHead').addEventListener('change', function(e){ $('ctrlBody').querySelectorAll('.row-chk').forEach(function(c){ selected[c.getAttribute('data-key')] = e.target.checked; }); render(); });
+  $('chkAllFoot').addEventListener('change', function(e){ filtered.forEach(function(r){ selected[r.key] = e.target.checked; }); render(); });
+  $('btnQuery').addEventListener('click', function(){ readFilters(); page = 1; render(); });
+  function resetFilters(){
+    ['fFrom','fTo','fKey'].forEach(function(id){ $(id).value=''; });
+    $('fIdType').value='id'; $('fType').value=''; $('fScript').value=''; $('fStatus').value='run'; $('fSrc').value='';
+    readFilters(); page = 1;
+  }
+  $('btnReset').addEventListener('click', function(){ resetFilters(); render(); });
+  $('btnRefresh').addEventListener('click', function(){
+    var done = 0, t = nowStr();
+    rows.forEach(function(r){
+      if(r.status!=='run') return;
+      var step = r.target*(0.12+Math.random()*0.25);
+      if(r.type==='give'){ r.actual = +(r.actual+step).toFixed(2); if(r.actual > r.target){ r.status='end'; r.reason='达成目标'; r.optime=t; done++; } }
+      else { r.actual = +(r.actual-step).toFixed(2); if(r.actual < -r.target){ r.status='end'; r.reason='达成目标'; r.optime=t; done++; } }
+    });
+    render(); toast(done ? '已刷新，'+done+' 条点控达成目标已结束' : '已刷新为最新数据');
+  });
+
+  // ---------- 终止 ----------
+  function askStop(keys){
+    var r = rows.filter(function(x){ return x.key===keys[0]; })[0];
+    var html = keys.length===1
+      ? '确认终止会员 <b>'+r.id+'</b> 的'+(r.type==='give'?'送分':'杀分')+'点控？<br>终止后不可恢复，如需继续控制请重新新增点控。'
+      : '确认终止选中的 <b>'+keys.length+'</b> 条执行中点控？<br>终止后不可恢复，已结束的记录不受影响。';
+    confirmBox('警告', html, '确定终止', true, function(){
+      var t = nowStr(), n = 0;
+      rows.forEach(function(x){ if(keys.indexOf(x.key)>-1 && x.status==='run'){ x.status='end'; x.reason='手动终止'; x.op=ME; x.optime=t; selected[x.key]=false; n++; } });
+      render(); toast('已终止 '+n+' 条点控');
+    });
+  }
+  $('batchSel').addEventListener('change', function(e){
+    var v = e.target.value; e.target.value = '';
+    if(v!=='stop') return;
+    var keys = selKeys();
+    if(!keys.length){ toast('请先勾选记录', true); return; }
+    var run = keys.filter(function(k){ return rows.some(function(r){ return r.key===k && r.status==='run'; }); });
+    if(!run.length){ toast('所选记录中没有执行中的点控', true); return; }
+    askStop(run);
+  });
+
+  // ---------- 单选 / 剧本 ----------
+  function radioGroup(el, attr, cb){
+    el.querySelectorAll('.radio').forEach(function(r){ r.addEventListener('click', function(){
+      el.querySelectorAll('.radio').forEach(function(x){ x.classList.toggle('on', x===r); }); cb(r.getAttribute(attr));
+    }); });
+  }
+  function setRadio(el, attr, val){ el.querySelectorAll('.radio').forEach(function(x){ x.classList.toggle('on', x.getAttribute(attr)===val); }); }
+  function renderScripts(box, type, current){
+    if(!type){ box.innerHTML = '<span class="muted">请先选择点控类型</span>'; box.removeAttribute('data-cur'); return; }
+    var cur = SCRIPTS[type].some(function(s){ return s.id===current; }) ? current : SCRIPTS[type][1].id;
+    box.innerHTML = SCRIPTS[type].map(function(s){ return '<span class="radio'+(s.id===cur?' on':'')+'" data-sid="'+s.id+'"><span class="r"></span>'+s.name+'<span class="sid">（'+s.id+'）</span></span>'; }).join('');
+    box.setAttribute('data-cur', cur);
+    box.querySelectorAll('.radio').forEach(function(r){ r.addEventListener('click', function(){
+      box.querySelectorAll('.radio').forEach(function(x){ x.classList.toggle('on', x===r); }); box.setAttribute('data-cur', r.getAttribute('data-sid'));
+    }); });
+  }
+  var amtReg = /^\d+(\.\d{1,2})?$/;
+  function checkAmt(v){
+    if(!v) return '请输入目标金额';
+    var n = parseFloat(v);
+    if(!amtReg.test(v) || n < 0.01 || n > 100000) return '请输入 0.01 ~ 100,000.00 之间的金额，最多两位小数';
+    return '';
+  }
+  function amtCheck(inputId, tipId){
+    var el = $(inputId), err = checkAmt(el.value.trim());
+    $(tipId).textContent = err; show($(tipId), !!err);
+    el.style.borderColor = err ? 'var(--danger)' : '';
+    return !err;
+  }
+
+  // ---------- 新增点控 ----------
+  var addState = {mode:'custom', type:''};
+  radioGroup($('modeGroup'), 'data-mode', function(m){
+    addState.mode = m;
+    document.querySelectorAll('#addModal .mode-pane').forEach(function(p){ p.style.display = p.getAttribute('data-pane')===m ? '' : 'none'; });
+    show($('errMember'), false); updateGroupCount();
+  });
+  radioGroup($('typeGroup'), 'data-type', function(t){ addState.type = t; show($('errType'), false); renderScripts($('scriptBox'), t, $('scriptBox').getAttribute('data-cur')); });
+  function parseIds(){ var seen={}, list=[]; $('mIds').value.split(/[,，\s]+/).forEach(function(s){ s=s.trim(); if(s && !seen[s]){ seen[s]=1; list.push(s); } }); return list; }
+  $('mIds').addEventListener('input', function(){ $('idCount').textContent = parseIds().length; $('verifyBox').classList.remove('show'); show($('errMember'), false); });
+  function classify(ids){
+    var run = {}; rows.forEach(function(r){ if(r.status==='run') run[r.id]=1; });
+    var ok=[], bad=[], busy=[], trial=[];
+    ids.forEach(function(id){ if(!/^\d{10}$/.test(id) || id.charAt(0)==='9') bad.push(id); else if(id.charAt(0)==='8') trial.push(id); else { ok.push(id); if(run[id]) busy.push(id); } });
+    return {ok:ok, bad:bad, busy:busy, trial:trial};
+  }
+  $('btnVerify').addEventListener('click', function(){
+    var ids = parseIds();
+    if(!ids.length){ $('errMember').textContent='请输入会员ID'; show($('errMember'), true); return; }
+    var c = classify(ids);
+    $('verifyBox').innerHTML = '共 '+ids.length+' 个会员：<span class="ok">有效 '+c.ok.length+' 个</span>'+
+      (c.bad.length ? '；<span class="bad">不存在 '+c.bad.length+' 个：'+c.bad.slice(0,20).join('、')+(c.bad.length>20?' 等':'')+'</span>' : '')+
+      (c.trial.length ? '；<span class="bad">试玩会员 '+c.trial.length+' 个（不支持点控）：'+c.trial.slice(0,20).join('、')+(c.trial.length>20?' 等':'')+'</span>' : '')+
+      (c.busy.length ? '<br><span class="warnc">其中 '+c.busy.length+' 个已有执行中的点控：'+c.busy.slice(0,20).join('、')+(c.busy.length>20?' 等':'')+'，提交后原点控将终止</span>' : '');
+    $('verifyBox').classList.add('show');
+  });
+  document.querySelectorAll('#addModal .check-group').forEach(function(g){
+    g.addEventListener('change', function(e){
+      if(e.target.getAttribute('data-all')) g.querySelectorAll('input[value]').forEach(function(c){ c.checked = e.target.checked; });
+      else g.querySelector('[data-all]').checked = Array.prototype.every.call(g.querySelectorAll('input[value]'), function(c){ return c.checked; });
+      show($('errMember'), false); updateGroupCount();
+    });
+  });
+  ['mAgentDirect','mAgentLine'].forEach(function(id){ $(id).addEventListener('input', function(){ show($('errMember'), false); updateGroupCount(); }); });
+  function groupTotal(){
+    var m = addState.mode;
+    if(m==='level' || m==='vip'){ var n=0; document.querySelectorAll('#addModal [data-group="'+m+'"] input[value]:checked').forEach(function(c){ n += +c.getAttribute('data-n'); }); return n; }
+    if(m==='direct') return $('mAgentDirect').value.trim() ? 36 : 0;
+    if(m==='line') return $('mAgentLine').value.trim() ? 12480 : 0;
+    return 0;
+  }
+  function updateGroupCount(){
+    var g = $('grpCount');
+    if(addState.mode==='custom'){ g.style.display='none'; return; }
+    var n = groupTotal(); g.style.display='';
+    g.innerHTML = '已选会员：共 <b>'+n.toLocaleString('en-US')+'</b> 人'+(n>MAX_MEMBERS ? '<span style="color:var(--danger);">，超过单次上限 10,000 人</span>' : '');
+  }
+  $('mRemark').addEventListener('input', function(){ $('remarkCount').textContent = $('mRemark').value.length; });
+  $('mAmt').addEventListener('input', function(){ show($('errAmt'), false); $('mAmt').style.borderColor=''; });
+
+  function resetAdd(){
+    addState = {mode:'custom', type:''};
+    setRadio($('modeGroup'),'data-mode','custom');
+    document.querySelectorAll('#addModal .mode-pane').forEach(function(p){ p.style.display = p.getAttribute('data-pane')==='custom' ? '' : 'none'; });
+    setRadio($('typeGroup'),'data-type','');
+    $('mIds').value=''; $('idCount').textContent='0'; $('verifyBox').classList.remove('show');
+    document.querySelectorAll('#addModal .check-group input').forEach(function(c){ c.checked=false; });
+    $('mAgentDirect').value=''; $('mAgentLine').value=''; $('grpCount').style.display='none';
+    renderScripts($('scriptBox'), '');
+    $('mAmt').value=''; $('mAmt').style.borderColor=''; $('mRemark').value=''; $('remarkCount').textContent='0';
+    ['errMember','errType','errAmt'].forEach(function(id){ show($(id), false); });
+    $('addConfirm').disabled = false;
+  }
+  $('btnAdd').addEventListener('click', function(){ resetAdd(); openM('addModal'); });
+
+  var pending = null;
+  $('addConfirm').addEventListener('click', function(){
+    var ok = true, ids = [], groupN = 0, em = $('errMember');
+    if(addState.mode==='custom'){
+      ids = parseIds();
+      if(!ids.length){ em.textContent='请输入会员ID'; ok=false; }
+      else if(ids.length > MAX_MEMBERS){ em.textContent='单次最多 10,000 个会员，当前 '+ids.length.toLocaleString('en-US')+' 个，请分批提交'; ok=false; }
+    } else {
+      groupN = groupTotal();
+      if(!groupN){ em.textContent = {level:'请选择会员层级',vip:'请选择VIP等级',direct:'请输入代理ID',line:'请输入代理ID'}[addState.mode]; ok=false; }
+      else if(groupN > MAX_MEMBERS){ em.textContent='所选会员共 '+groupN.toLocaleString('en-US')+' 人，超过单次上限 10,000 人，请缩小范围后分批提交'; ok=false; }
+    }
+    show(em, !ok);
+    if(!addState.type){ show($('errType'), true); ok=false; }
+    if(!amtCheck('mAmt','errAmt')) ok=false;
+    if(!ok) return;
+    pending = {mode:addState.mode, ids:ids, groupN:groupN, type:addState.type, script:$('scriptBox').getAttribute('data-cur'), amt:parseFloat($('mAmt').value), remark:$('mRemark').value.trim()};
+    var busyN;
+    if(pending.mode==='custom') busyN = classify(ids).busy.length;
+    else {
+      var runIds = rows.filter(function(r){ return r.status==='run'; }).map(function(r){ return r.id; });
+      pending.sample = runIds.slice(0,1);
+      while(pending.sample.length < 3) pending.sample.push(String(3600000000+Math.floor(Math.random()*399999999)));
+      busyN = runIds.length ? 1 : 0;
+    }
+    if(busyN) confirmBox('提示', '本次提交中有 <b>'+busyN+'</b> 个会员已有执行中的点控。<br>继续提交后，这些会员的原点控将终止，并按本次设置重新开始。', '继续提交', false, submitAdd);
+    else submitAdd();
+  });
+  function submitAdd(){
+    $('addConfirm').disabled = true;
+    var p = pending, t = nowStr(), okIds, fail = [];
+    if(p.mode==='custom'){ var c = classify(p.ids); okIds = c.ok; fail = c.bad.map(function(id){ return {id:id, why:'会员不存在'}; }).concat(c.trial.map(function(id){ return {id:id, why:'试玩会员不支持点控'}; })); }
+    else okIds = p.sample.slice();
+    okIds.forEach(function(id){
+      rows.forEach(function(r){ if(r.id===id && r.status==='run'){ r.status='end'; r.reason='新点控覆盖'; r.op=ME; r.optime=t; } });
+      var ex = rows.filter(function(r){ return r.id===id; })[0];
+      rows.push({key:'k'+(seq++), id:id, acc: ex ? ex.acc : 'user'+id.slice(-4), type:p.type, script:p.script, target:p.amt, actual:0, status:'run', reason:'', src:'manual', apply:t, remark:p.remark, op:ME, optime:t});
+    });
+    var total = p.mode==='custom' ? p.ids.length : p.groupN, okN = p.mode==='custom' ? okIds.length : p.groupN;
+    $('resAll').textContent = total.toLocaleString('en-US'); $('resOk').textContent = okN.toLocaleString('en-US'); $('resFail').textContent = fail.length;
+    $('resFailWrap').style.display = fail.length ? '' : 'none';
+    $('resFailBody').innerHTML = fail.map(function(f){ return '<tr><td>'+esc(f.id)+'</td><td style="color:var(--danger);">'+f.why+'</td></tr>'; }).join('');
+    $('resNote').textContent = p.mode==='custom' ? '成功的会员已出现在列表中，状态为「执行中」。' : '成功的会员已出现在列表中，状态为「执行中」（原型仅插入 3 条示意记录）。';
+    closeM('addModal'); openM('resModal');
+    readFilters(); page = 1; render();
+  }
+
+  // ---------- 自动点控 ----------
+  var aState = {};
+  function paintSwitch(){
+    $('aSwitch').classList.toggle('on', aState.on);
+    $('aSwitchText').textContent = aState.on ? '已开启：新会员注册成功后自动新增一条点控' : '已关闭：新会员不自动新增点控';
+  }
+  $('aSwitch').addEventListener('click', function(){ aState.on = !aState.on; paintSwitch(); });
+  radioGroup($('aTypeGroup'), 'data-type', function(t){ aState.type = t; show($('aErrType'), false); renderScripts($('aScriptBox'), t, $('aScriptBox').getAttribute('data-cur')); });
+  $('aAmt').addEventListener('input', function(){ show($('aErrAmt'), false); $('aAmt').style.borderColor=''; });
+  function autoRunN(){ return rows.filter(function(r){ return r.src==='auto' && r.status==='run'; }).length; }
+  $('btnAuto').addEventListener('click', function(){
+    aState = {on:autoCfg.on, type:autoCfg.type}; paintSwitch();
+    setRadio($('aTypeGroup'),'data-type',autoCfg.type);
+    renderScripts($('aScriptBox'), autoCfg.type, autoCfg.script);
+    $('aAmt').value = autoCfg.amt; $('aAmt').style.borderColor=''; show($('aErrAmt'), false); show($('aErrType'), false);
+    $('autoRunCount').textContent = autoRunN();
+    $('autoLastOp').textContent = '最后操作人：'+autoCfg.op+'　最后操作时间：'+autoCfg.time;
+    openM('autoModal');
+  });
+  $('autoConfirm').addEventListener('click', function(){
+    var ok = true;
+    if(!aState.type){ show($('aErrType'), true); ok=false; }
+    if(!amtCheck('aAmt','aErrAmt')) ok=false;
+    if(!ok) return;
+    autoCfg = {on:aState.on, type:aState.type, script:$('aScriptBox').getAttribute('data-cur'), amt:parseFloat($('aAmt').value).toFixed(2), op:ME, time:nowStr()};
+    closeM('autoModal');
+    toast(autoCfg.on ? '保存成功，之后注册的新会员将自动新增点控' : '保存成功，自动点控已关闭');
+  });
+  $('btnClean').addEventListener('click', function(){
+    var n = autoRunN();
+    if(!n){ toast('当前没有执行中的自动点控', true); return; }
+    confirmBox('警告', '确认清理往期自动点控数据？<br>将终止 <b>'+n+'</b> 条执行中的自动点控，操作不可逆。', '确定清理', true, function(){
+      var t = nowStr(), k = 0;
+      rows.forEach(function(r){ if(r.src==='auto' && r.status==='run'){ r.status='end'; r.reason='清理自动点控'; r.op=ME; r.optime=t; k++; } });
+      $('autoRunCount').textContent = 0; render(); toast('已清理，终止 '+k+' 条自动点控');
+    });
+  });
+
+  // ---------- 标注开关 / 重置 ----------
+  $('markToggle').addEventListener('change', function(){ $('protoSec').classList.toggle('hide-marks', !this.checked); });
+  $('resetDemo').addEventListener('click', function(){ seed(); resetFilters(); render(); toast('已重置演示数据'); });
+
+  readFilters(); render();
+})();
+(function(){
+  var primBtns = document.querySelectorAll('.dh-primary-btn');
+  function showPrimary(name){
+    primBtns.forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-primary') === name); });
+    document.querySelectorAll('.dh-primary-panel').forEach(function(p){ p.classList.toggle('active', p.getAttribute('data-primary-panel') === name); });
+    window.scrollTo(0,0);
+  }
+  primBtns.forEach(function(b){ b.addEventListener('click', function(){ showPrimary(b.getAttribute('data-primary')); }); });
+
+  var tabs = document.querySelectorAll('.dh-tab');
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){
+      var name = t.getAttribute('data-tab');
+      tabs.forEach(function(x){ x.classList.toggle('active', x === t); });
+      document.querySelectorAll('.dh-panel').forEach(function(p){ p.classList.toggle('active', p.getAttribute('data-panel') === name); });
+      var nav = document.getElementById('dhTabs');
+      var top = nav.getBoundingClientRect().top + window.scrollY - 70;
+      if(window.scrollY > top) window.scrollTo(0, top);
+    });
+  });
+
+  document.querySelectorAll('.proto-jump').forEach(function(b){
+    b.addEventListener('click', function(){
+      showPrimary('proto');
+      var o = b.getAttribute('data-open');
+      if(o === 'addModal') document.getElementById('btnAdd').click();
+      if(o === 'auto') document.getElementById('btnAuto').click();
+    });
+  });
+
+  var lb = document.getElementById('dhLightbox'), lbBody = document.getElementById('dhLightboxBody');
+  document.querySelectorAll('.dh-flow, .dh-mind').forEach(function(el){
+    el.addEventListener('click', function(e){
+      e.stopPropagation();
+      lbBody.innerHTML = '';
+      lbBody.appendChild(el.cloneNode(true));
+      lb.classList.add('open');
+    });
+  });
+  lb.addEventListener('click', function(){ lb.classList.remove('open'); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') lb.classList.remove('open'); });
+})();
+</script></body></html>
