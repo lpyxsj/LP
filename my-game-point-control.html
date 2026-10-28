@@ -143,7 +143,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .doc-btn:hover{border-color:var(--doc-accent);color:var(--doc-accent);}
 .doc-check{display:inline-flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;}
 /* 后台复刻令牌：与弹窗、Toast 共用（红线第7条） */
-.proto-window,.modal-mask,.bk-toast{
+.proto-window,.modal-mask,.bk-toast,.bk-tip{
   --primary:#1890ff;--primary-active:#096dd9;--danger:#ff4d4f;--border:#d9d9d9;--split:#f0f0f0;--th-bg:#fafafa;
   --text-primary:rgba(0,0,0,.85);--text-secondary:rgba(0,0,0,.45);--layout-bg:#f0f2f5;--disabled-bg:#f5f5f5;--disabled-text:rgba(0,0,0,.25);
   --tag-green-fg:#389e0d;--tag-green-bg:#f6ffed;--tag-green-bd:#b7eb8f;--tag-red-fg:#cf1322;--tag-red-bg:#fff1f0;--tag-red-bd:#ffa39e;
@@ -198,7 +198,11 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .bk-ops{display:flex;gap:6px;justify-content:center;}
 .bk-pager{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:12px;font-size:13px;color:var(--text-primary);}
 .bk-pager .pg{display:inline-block;min-width:24px;height:24px;line-height:22px;text-align:center;border:1px solid var(--primary);color:var(--primary);border-radius:2px;}
-.bk-th-tip{display:inline-block;width:14px;height:14px;border:1px solid var(--text-secondary);border-radius:50%;font-size:10px;line-height:12px;color:var(--text-secondary);margin-left:4px;vertical-align:1px;cursor:help;}
+.bk-th-tip{display:inline-block;width:14px;height:14px;border:1px solid var(--text-secondary);border-radius:50%;font-size:10px;line-height:12px;color:var(--text-secondary);margin-left:4px;vertical-align:1px;cursor:pointer;user-select:none;}
+.bk-th-tip:hover,.bk-th-tip.on{border-color:var(--primary);color:var(--primary);}
+.bk-th-tip:focus-visible{outline:2px solid var(--primary-active);outline-offset:1px;}
+.bk-tip{position:fixed;z-index:330;max-width:280px;background:rgba(0,0,0,.85);color:#fff;font-size:12px;font-weight:400;line-height:1.6;padding:6px 8px;border-radius:2px;box-shadow:0 3px 6px -4px rgba(0,0,0,.12),0 6px 16px rgba(0,0,0,.08);display:none;pointer-events:none;text-align:left;white-space:normal;}
+.bk-tip.open{display:block;}
 .bk-empty{padding:28px;color:var(--text-secondary);text-align:center;}
 .bk-sep td{padding:0;border-bottom:2px dashed #91d5ff;}
 
@@ -360,9 +364,9 @@ table.mini th{background:var(--th-bg);font-weight:500;}
           <thead><tr>
             <th style="width:40px;"><input type="checkbox" class="chk" id="chkAllHead" aria-label="全选本页"></th>
             <th>会员ID / 账号</th><th>点控类型</th><th>剧本</th>
-            <th>默认货币<span class="bk-th-tip" title="平台默认计算货币，金额均按该币种计算和展示">?</span></th>
+            <th>默认货币<span class="bk-th-tip" data-tip="平台默认计算货币，金额均按该币种计算和展示" tabindex="0" role="button" aria-label="默认货币说明">?</span></th>
             <th>目标金额</th>
-            <th>进行中金额<span class="bk-th-tip" title="剧本已完成的金额：正数为会员赢，负数为会员输。送分超过 +目标金额、杀分低于 -目标金额时点控结束">?</span></th>
+            <th>进行中金额<span class="bk-th-tip" data-tip="剧本已完成的金额：正数为会员赢，负数为会员输。送分超过 +目标金额、杀分低于 -目标金额时点控结束" tabindex="0" role="button" aria-label="进行中金额说明">?</span></th>
             <th>状态</th><th>结束原因</th><th>来源</th><th>申请时间</th><th>备注</th><th>操作人</th><th>最后操作时间</th><th>操作</th>
           </tr></thead>
           <tbody id="ctrlBody"></tbody>
@@ -488,9 +492,9 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>会员ID / 账号</b></td><td>两行展示，上为会员ID，下为会员账号</td><td>会员ID 蓝色可点击，打开该会员的会员详情（现有页面）</td></tr>
             <tr><td><b>点控类型</b></td><td>送分 / 杀分</td><td>送分绿色标签，杀分红色标签</td></tr>
             <tr><td><b>剧本</b></td><td>新增时选择的剧本</td><td>「剧本名称（ID）」，如「快送（604）」</td></tr>
-            <tr><td><b>默认货币</b></td><td>平台默认计算货币</td><td>表头带「?」提示：金额均按该币种计算和展示</td></tr>
+            <tr><td><b>默认货币</b></td><td>平台默认计算货币</td><td>表头带「?」，鼠标悬停或点击显示：平台默认计算货币，金额均按该币种计算和展示</td></tr>
             <tr><td><b>目标金额</b></td><td>新增时填写的金额</td><td>千分位，两位小数</td></tr>
-            <tr><td><b>进行中金额</b></td><td>剧本已完成的金额</td><td>两位小数；正数绿色带「+」，负数红色带「-」；表头「?」说明正负含义与结束条件</td></tr>
+            <tr><td><b>进行中金额</b></td><td>剧本已完成的金额</td><td>两位小数；正数绿色带「+」，负数红色带「-」；表头「?」鼠标悬停或点击显示正负含义与结束条件</td></tr>
             <tr><td><b>状态</b></td><td>执行中 / 已结束</td><td>执行中蓝色标签，已结束灰色标签</td></tr>
             <tr><td><b>结束原因</b></td><td>达成目标 / 手动终止 / 新点控覆盖 / 清理自动点控</td><td>执行中的记录显示「-」</td></tr>
             <tr><td><b>来源</b></td><td>手动新增 / 自动点控</td><td>自动点控为橙色标签</td></tr>
@@ -1028,6 +1032,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
   <div class="confirm-ft"><button class="bk-btn" id="cCancel" type="button">取 消</button><button class="bk-btn primary" id="cOk" type="button">确 定</button></div>
 </div></div>
 
+<div class="bk-tip" id="bkTip" role="tooltip"></div>
 <div class="bk-toast" id="toast"><span class="ok">✓</span><span id="toastText">操作成功</span></div>
 <div class="dh-lightbox" id="dhLightbox"><div class="dh-lightbox-body" id="dhLightboxBody"></div></div>
 <script>
@@ -1382,6 +1387,30 @@ table.mini th{background:var(--th-bg);font-weight:500;}
   // ---------- 标注开关 / 重置 ----------
   $('markToggle').addEventListener('change', function(){ $('protoSec').classList.toggle('hide-marks', !this.checked); });
   $('resetDemo').addEventListener('click', function(){ seed(); resetFilters(); render(); toast('已重置演示数据'); });
+
+  // ---------- 表头「?」提示：悬停或点击显示，点击其他位置关闭 ----------
+  var tipEl = $('bkTip'), tipFor = null;
+  function placeTip(el){
+    tipEl.textContent = el.getAttribute('data-tip'); tipEl.classList.add('open');
+    var r = el.getBoundingClientRect(), w = tipEl.offsetWidth, h = tipEl.offsetHeight;
+    var left = Math.min(Math.max(8, r.left + r.width/2 - w/2), window.innerWidth - w - 8);
+    var top = r.top - h - 8 < 8 ? r.bottom + 8 : r.top - h - 8;
+    tipEl.style.left = left + 'px'; tipEl.style.top = top + 'px';
+  }
+  function hideTip(){ tipEl.classList.remove('open'); if(tipFor) tipFor.classList.remove('on'); tipFor = null; }
+  document.querySelectorAll('.bk-th-tip[data-tip]').forEach(function(el){
+    el.addEventListener('mouseenter', function(){ if(!tipFor) placeTip(el); });
+    el.addEventListener('mouseleave', function(){ if(!tipFor) tipEl.classList.remove('open'); });
+    el.addEventListener('click', function(e){
+      e.stopPropagation();
+      if(tipFor === el){ hideTip(); return; }
+      hideTip(); tipFor = el; el.classList.add('on'); placeTip(el);
+    });
+    el.addEventListener('keydown', function(e){ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); el.click(); } if(e.key==='Escape') hideTip(); });
+  });
+  document.addEventListener('click', hideTip);
+  window.addEventListener('scroll', hideTip, true);
+  window.addEventListener('resize', hideTip);
 
   readFilters(); render();
 })();
