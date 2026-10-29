@@ -1,0 +1,832 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>充值通道会员层级控制</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* 文档壳:暖色纸感令牌;复刻区:Ant Design Vue 后台令牌 */
+:root{
+  --doc-paper:#faf8f4;--doc-paper-raised:#ffffff;--doc-ink:#211f1a;--doc-ink-soft:#5c584e;--doc-ink-faint:#8b8677;
+  --doc-line:#e4ded1;--doc-line-soft:#eee9de;--doc-accent:#a8481f;--doc-accent-soft:#f4e2d3;--doc-teal:#0d6d66;--doc-teal-soft:#dcefec;
+  --doc-p1:#a8481f;--doc-p1-soft:#f6e1d4;--doc-status-done-fg:#0d6d66;--doc-status-done-bg:#dcefec;--doc-status-open-fg:#8a7f5f;--doc-status-open-bg:#f1ecdc;
+  --shadow-card:0 1px 2px rgba(33,31,26,.06),0 4px 14px rgba(33,31,26,.06);
+  --f-serif:'Source Serif 4',Georgia,'Songti SC',serif;--f-sans:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;--f-mono:'IBM Plex Mono',Consolas,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --doc-paper:#18160f;--doc-paper-raised:#221f17;--doc-ink:#f1ece0;--doc-ink-soft:#c2bba8;--doc-ink-faint:#8f8877;--doc-line:#3b3627;--doc-line-soft:#2c2919;
+  --doc-accent:#e2925e;--doc-accent-soft:#3c2a1a;--doc-teal:#63c2b8;--doc-teal-soft:#183430;--doc-p1:#e2925e;--doc-p1-soft:#3c2a1a;
+  --doc-status-done-fg:#63c2b8;--doc-status-done-bg:#183430;--doc-status-open-fg:#cfc29a;--doc-status-open-bg:#2e2a1b;
+  --shadow-card:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.35);color-scheme:dark}}
+:root[data-theme="dark"]{
+  --doc-paper:#18160f;--doc-paper-raised:#221f17;--doc-ink:#f1ece0;--doc-ink-soft:#c2bba8;--doc-ink-faint:#8f8877;--doc-line:#3b3627;--doc-line-soft:#2c2919;
+  --doc-accent:#e2925e;--doc-accent-soft:#3c2a1a;--doc-teal:#63c2b8;--doc-teal-soft:#183430;--doc-p1:#e2925e;--doc-p1-soft:#3c2a1a;
+  --doc-status-done-fg:#63c2b8;--doc-status-done-bg:#183430;--doc-status-open-fg:#cfc29a;--doc-status-open-bg:#2e2a1b;
+  --shadow-card:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.35);color-scheme:dark}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--doc-paper);color:var(--doc-ink);font-family:var(--f-sans);font-size:14.5px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--doc-paper-raised)}
+h1,h2,h3{font-family:var(--f-serif);font-weight:600;text-wrap:balance;color:var(--doc-ink)}
+.mono{font-family:var(--f-mono)}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--doc-teal);outline-offset:2px}
+
+/* 页头 */
+.dh-header{max-width:1360px;margin:0 auto;padding-block:28px 14px}
+.dh-header h1{font-size:30px;margin:0 0 8px;letter-spacing:.01em}
+.dh-meta{display:flex;flex-wrap:wrap;gap:6px 20px;color:var(--doc-ink-faint);font-size:13px}
+.dh-meta b{color:var(--doc-ink-soft);font-weight:500}
+.dh-navbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--doc-paper-raised);border-top:1px solid var(--doc-line);border-bottom:1px solid var(--doc-line);
+  margin-left:calc(-1 * max(16px,env(safe-area-inset-left,0px)));margin-right:calc(-1 * max(16px,env(safe-area-inset-right,0px)))}
+.dh-navbar-inner{max-width:1360px;margin:0 auto;display:flex;gap:4px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));overflow-x:auto}
+.dh-primary-btn{background:none;border:0;border-bottom:2px solid transparent;padding:12px 16px 10px;color:var(--doc-ink-soft);font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap;text-align:left}
+.dh-primary-btn small{display:block;font-size:11.5px;font-weight:400;color:var(--doc-ink-faint)}
+.dh-primary-btn.active{color:var(--doc-accent);border-bottom-color:var(--doc-accent)}
+.dh-wrap{max-width:1360px;margin:0 auto;padding-block:20px 64px}
+.dh-primary-panel{display:none}.dh-primary-panel.active{display:block}
+
+/* 需求文档二级 tab */
+.dh-tabs{position:sticky;top:calc(env(safe-area-inset-top,0px) + 62px);z-index:30;background:var(--doc-paper);display:flex;gap:2px;overflow-x:auto;border-bottom:1px solid var(--doc-line);margin-bottom:22px;padding-top:4px}
+.dh-tab{background:none;border:0;border-bottom:2px solid transparent;padding:10px 14px;color:var(--doc-ink-soft);font-size:14px;cursor:pointer;white-space:nowrap}
+.dh-tab .n{font-family:var(--f-mono);color:var(--doc-accent);margin-right:6px;font-size:12px}
+.dh-tab.active{color:var(--doc-ink);border-bottom-color:var(--doc-accent);font-weight:600}
+.dh-panel{display:none}.dh-panel.active{display:block}
+.dh-panel>h2{font-size:23px;margin:4px 0 14px}
+
+.req-block{max-width:1200px;margin:0 0 30px}
+.req-block h3{font-size:18px;margin:0 0 10px;padding-bottom:6px;border-bottom:1px solid var(--doc-line-soft)}
+.dh-prose{max-width:92ch;color:var(--doc-ink-soft)}
+.dh-prose p{margin:0 0 10px}.dh-prose strong{color:var(--doc-ink)}
+.dh-prose ol,.dh-prose ul{margin:0 0 10px;padding-left:22px}.dh-prose li{margin-bottom:6px}
+.dh-callout{max-width:1200px;border-left:3px solid var(--doc-teal);background:var(--doc-paper-raised);padding:10px 14px;margin:12px 0;color:var(--doc-ink-soft);font-size:13.5px;box-shadow:var(--shadow-card);border-radius:0 6px 6px 0}
+.dh-callout.warn{border-left-color:var(--doc-p1)}
+.dh-callout strong{color:var(--doc-ink)}
+
+.tbl-wrap{overflow-x:auto;max-width:1200px;margin:10px 0 14px}
+.dh-table-simple{width:100%;min-width:560px;border-collapse:separate;border-spacing:0;background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:8px;overflow:hidden;font-size:13.5px;box-shadow:var(--shadow-card)}
+.dh-table-simple th,.dh-table-simple td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--doc-line-soft);overflow-wrap:anywhere}
+.dh-table-simple th{background:var(--doc-line-soft);font-weight:600;color:var(--doc-ink)}
+.dh-table-simple td{color:var(--doc-ink-soft)}
+.dh-table-simple tr:last-child td{border-bottom:0}
+.dh-table-simple td:first-child,.dh-table-simple th:first-child{min-width:7em;max-width:34em;color:var(--doc-ink)}
+.dh-table-simple .code{font-family:var(--f-mono);font-size:12.5px;color:var(--doc-accent);white-space:nowrap}
+.tag-new{display:inline-block;margin-left:6px;font-size:10.5px;background:var(--doc-accent);color:#fff;border-radius:3px;padding:0 5px;line-height:17px;vertical-align:1px;font-family:var(--f-sans);font-weight:500}
+
+/* 流程图 */
+.dh-flow{max-width:1200px;background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:8px;padding:16px 16px 12px;margin:12px 0 16px;box-shadow:var(--shadow-card);cursor:zoom-in}
+.flow-diagram{display:flex;flex-wrap:wrap;align-items:center;gap:2px}
+.flow-step{background:var(--doc-paper);border:1px solid var(--doc-line);border-radius:6px;padding:8px 12px;font-size:12.5px;line-height:1.45;text-align:center;max-width:200px;color:var(--doc-ink)}
+.flow-step .sub{display:block;font-size:11px;color:var(--doc-ink-faint);margin-top:2px}
+.flow-arrow{color:var(--doc-ink-faint);font-size:15px;padding:0 4px}
+.flow-branches{display:flex;flex-direction:column;gap:7px;margin-top:10px;padding-left:10px;border-left:2px solid var(--doc-line)}
+.flow-branches.first{margin-top:0;margin-bottom:12px}
+.flow-branch{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;color:var(--doc-ink-soft)}
+.flow-branch .cond{color:var(--doc-ink)}
+.flow-branch .arr{color:var(--doc-ink-faint)}
+.flow-branch .result{font-weight:600;padding:2px 10px;border-radius:100px;font-size:12px}
+.flow-branch .result.good{color:var(--doc-status-done-fg);background:var(--doc-status-done-bg)}
+.flow-branch .result.bad{color:var(--doc-p1);background:var(--doc-p1-soft)}
+.flow-branch .result.neutral{color:var(--doc-ink-soft);background:var(--doc-line-soft)}
+.cap{font-size:12px;color:var(--doc-ink-faint);margin-top:10px}
+.dh-flow .cap::before,.dh-mind .cap::before{content:"🔍 "}
+
+/* 示意图 */
+.dh-illustration{margin:14px 0;max-width:1200px;overflow-x:auto}
+.illus-list{display:flex;flex-wrap:wrap;align-items:center;gap:6px 0}
+.illus-item{background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:6px;padding:8px 14px;font-size:12.5px;color:var(--doc-ink-soft);white-space:nowrap}
+.illus-item.new{border-color:var(--doc-accent);color:var(--doc-accent);background:var(--doc-accent-soft);font-weight:600}
+.illus-item .tag{display:inline-block;margin-left:6px;font-size:10px;background:var(--doc-accent);color:#fff;border-radius:3px;padding:0 4px;vertical-align:1px}
+.illus-sep{width:16px;height:1px;background:var(--doc-line);margin:0 2px;flex:none}
+
+/* 功能结构图 */
+.dh-mind{max-width:1200px;background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:8px;padding:18px 16px 12px;margin:6px 0 22px;box-shadow:var(--shadow-card);cursor:zoom-in;overflow-x:auto}
+.mm{display:flex;align-items:center}
+.mm-root{background:var(--doc-accent);color:#fff;padding:10px 16px;border-radius:6px;font-weight:600;white-space:nowrap;font-size:14px}
+.mm-branches{display:flex;flex-direction:column;gap:10px;margin-left:28px;position:relative;padding-left:18px;border-left:1px solid var(--doc-line)}
+.mm-branches::before{content:"";position:absolute;left:-29px;top:50%;width:28px;border-top:1px solid var(--doc-line)}
+.mm-b{display:flex;align-items:center;gap:12px;position:relative}
+.mm-b::before{content:"";position:absolute;left:-18px;top:50%;width:18px;border-top:1px solid var(--doc-line)}
+.mm-node{border:1px solid var(--doc-accent);color:var(--doc-accent);background:var(--doc-accent-soft);border-radius:6px;padding:5px 12px;font-weight:600;white-space:nowrap;font-size:13px;min-width:84px;text-align:center}
+.mm-leaves{display:flex;flex-wrap:wrap;gap:6px}
+.mm-leaf{border:1px solid var(--doc-line);background:var(--doc-paper);border-radius:4px;padding:4px 10px;font-size:12.5px;color:var(--doc-ink-soft)}
+@media (max-width:720px){
+  .mm{flex-direction:column;align-items:flex-start;gap:12px}
+  .mm-branches{margin-left:10px}.mm-branches::before{display:none}
+  .mm-b{flex-direction:column;align-items:flex-start;gap:6px}
+}
+
+/* lightbox */
+.dh-lightbox{position:fixed;inset:0;z-index:200;background:rgba(20,18,12,.72);display:none;align-items:center;justify-content:center;padding:32px max(16px,env(safe-area-inset-left,0px))}
+.dh-lightbox.open{display:flex}
+.dh-lightbox-body .dh-flow,.dh-lightbox-body .dh-mind{max-width:min(94vw,1300px);max-height:calc(100vh - 64px);overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.4);cursor:zoom-out;margin:0}
+.dh-lightbox-body .dh-flow .flow-step{font-size:16px;padding:12px 18px;max-width:260px}
+.dh-lightbox-body .dh-flow .flow-arrow{font-size:20px}
+.dh-lightbox-body .dh-flow .flow-branch{font-size:15px}
+.dh-lightbox-body .mm-leaf{font-size:15px}.dh-lightbox-body .mm-node{font-size:15px}
+
+.proto-jump{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--doc-teal);color:var(--doc-teal);background:var(--doc-teal-soft);border-radius:100px;padding:5px 14px;font-size:13px;cursor:pointer;margin:2px 0 14px}
+
+/* 规则演示 */
+.sim{max-width:1200px;background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:8px;padding:16px;box-shadow:var(--shadow-card);margin:12px 0 18px}
+.sim-row{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end;margin-bottom:14px}
+.sim-row label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--doc-ink-faint)}
+.sim-row select{font:inherit;font-size:13.5px;padding:6px 8px;border:1px solid var(--doc-line);border-radius:6px;background:var(--doc-paper);color:var(--doc-ink);min-width:150px;max-width:100%}
+.sim-out{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.sim-card{border:1px solid var(--doc-line);border-radius:6px;padding:10px 12px;background:var(--doc-paper);min-width:0}
+.sim-card .nm{font-weight:600;color:var(--doc-ink);font-size:13.5px}
+.sim-card .st{display:inline-block;margin-top:6px;font-size:12px;font-weight:600;padding:1px 10px;border-radius:100px}
+.sim-card .st.ok{color:var(--doc-status-done-fg);background:var(--doc-status-done-bg)}
+.sim-card .st.no{color:var(--doc-p1);background:var(--doc-p1-soft)}
+.sim-card .why{font-size:12px;color:var(--doc-ink-faint);margin-top:4px}
+
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;font-size:13px;color:var(--doc-ink-soft);margin:0 0 12px}
+.legend .lg-sw{display:inline-block;width:14px;height:14px;border-left:3px solid #fa8c16;background:#fff7e6;vertical-align:-2px;margin-right:6px}
+.proto-scroll{overflow-x:auto;border-radius:10px}
+
+/* ================= 复刻区 ================= */
+.proto-window,.pw-layer{
+  --primary:#1890ff;--primary-hover:#40a9ff;--primary-active:#096dd9;--primary-soft:#e6f7ff;--danger:#ff4d4f;--success:#52c41a;
+  --border:#d9d9d9;--split:#f0f0f0;--th-bg:#fafafa;--page-bg:#f0f2f5;--text-primary:rgba(0,0,0,.85);--text-secondary:rgba(0,0,0,.45);--text-ph:#bfbfbf;
+  --disabled-bg:#f5f5f5;--disabled-text:rgba(0,0,0,.25);--sider:#001529;--sider-sub:#000c17;--sider-text:rgba(255,255,255,.65);
+  --mark:#fa8c16;--mark-bg:#fff7e6;
+  color-scheme:light;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","PingFang SC","Microsoft YaHei",sans-serif;font-size:14px;color:var(--text-primary);line-height:1.5715}
+.proto-window{min-width:1240px;border:1px solid var(--doc-line);border-radius:10px;overflow:hidden;box-shadow:0 2px 4px rgba(33,31,26,.08),0 12px 32px rgba(33,31,26,.10);background:var(--page-bg);display:flex;height:820px;position:relative}
+.sider{width:210px;flex:none;background:var(--sider);color:var(--sider-text);overflow-y:auto}
+.logo{height:48px;display:flex;align-items:center;gap:10px;padding:0 14px;color:#fff;font-weight:600;font-size:16px}
+.logo .badge{width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#5d7fa8,#1f3550);border:2px solid #c9a74e;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#fff;letter-spacing:.02em}
+.menu{list-style:none;margin:0;padding:0}
+.mi>.mt{height:42px;display:flex;align-items:center;gap:8px;padding:0 16px 0 14px;cursor:pointer;font-size:14px}
+.mi>.mt:hover{color:#fff}
+.mi>.mt .ic{width:14px;height:14px;opacity:.85;flex:none}
+.mi>.mt .ar{margin-left:auto;font-size:10px;transition:transform .2s}
+.mi.open>.mt{color:#fff}.mi.open>.mt .ar{transform:rotate(180deg)}
+.mi .subs{list-style:none;margin:0;padding:0;background:var(--sider-sub);display:none}
+.mi.open .subs{display:block}
+.subs li{height:42px;line-height:42px;padding-left:34px;font-size:14px;cursor:default}
+.subs li.cur{background:var(--primary);color:#fff;cursor:pointer}
+.mainc{flex:1;min-width:0;display:flex;flex-direction:column}
+.phdr{height:48px;background:#fff;display:flex;align-items:center;padding:0 16px;gap:12px;box-shadow:0 1px 4px rgba(0,21,41,.08);flex:none}
+.phdr .crumb{color:var(--text-secondary);font-size:14px}.phdr .crumb b{color:var(--text-secondary);font-weight:400}
+.phdr .right{margin-left:auto;display:flex;align-items:center;gap:18px;color:var(--text-secondary);font-size:13px}
+.phdr .user{color:var(--text-primary);font-size:15px}
+.phdr .av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#8fb98a,#c8a46b)}
+.ptabs{height:32px;background:#fff;border-bottom:1px solid var(--split);display:flex;align-items:flex-end;padding:0 6px;flex:none}
+.ptabs span{background:var(--primary);color:#fff;font-size:12px;padding:3px 12px;border-radius:2px 2px 0 0}
+.pcont{flex:1;overflow:auto;padding:14px 14px 18px}
+.card{background:#fff;border-radius:2px;padding:0 16px 16px}
+.itabs{display:flex;gap:2px;padding-top:14px;border-bottom:1px solid var(--split);margin-bottom:18px}
+.itabs button{background:#fafafa;border:1px solid var(--split);border-bottom:0;padding:7px 14px;font-size:14px;color:var(--text-primary);cursor:pointer;border-radius:2px 2px 0 0}
+.itabs button.on{background:#fff;color:var(--primary);margin-bottom:-1px;border-bottom:1px solid #fff}
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start}
+.f-in,.f-sel{height:32px;border:1px solid var(--border);border-radius:2px;padding:0 11px;font-size:14px;color:var(--text-primary);background:#fff;font-family:inherit}
+.f-in::placeholder{color:var(--text-ph)}
+.f-range{display:flex;align-items:center;height:32px;border:1px solid var(--border);border-radius:2px;padding:0 11px;color:var(--text-ph);gap:12px;width:372px;font-size:14px;white-space:nowrap}
+.f-range .cal{margin-left:auto}
+.tz{color:var(--danger);font-size:12px;margin-top:4px}
+.f-btns{margin-left:auto;display:flex;gap:8px}
+.btn{height:32px;padding:0 15px;border-radius:2px;border:1px solid var(--border);background:#fff;color:var(--text-primary);font-size:14px;cursor:pointer;font-family:inherit;white-space:nowrap}
+.btn.pri{background:var(--primary);border-color:var(--primary);color:#fff}
+.btn.pri:hover{background:var(--primary-hover);border-color:var(--primary-hover)}
+.btn.sm{height:24px;padding:0 7px;font-size:13px}
+.toolbar{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin:28px 0 10px}
+.toolbar .icons{display:flex;gap:12px;margin-left:10px;color:var(--text-primary);font-size:16px}
+.tblbox{overflow-x:auto;border:1px solid var(--split)}
+table.dt{border-collapse:collapse;width:max-content;min-width:100%;font-size:14px}
+table.dt th{background:var(--th-bg);font-weight:500;padding:12px 8px;border-bottom:1px solid var(--split);border-right:1px solid var(--split);text-align:center;white-space:nowrap}
+table.dt td{padding:12px 8px;border-bottom:1px solid var(--split);border-right:1px solid var(--split);text-align:center;vertical-align:middle}
+table.dt td.wrap{white-space:normal;max-width:84px;word-break:break-all;line-height:1.55;font-size:13px}
+table.dt td.op{position:sticky;right:0;background:#fff;box-shadow:-4px 0 6px rgba(0,0,0,.04)}
+table.dt th.op{position:sticky;right:0;z-index:1}
+table.dt .lnk{color:var(--primary);white-space:nowrap}
+table.dt th.mk{background:var(--mark-bg);box-shadow:inset 3px 0 0 var(--mark)}
+table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
+.mk-tag{display:inline-block;font-size:10px;line-height:15px;padding:0 4px;border-radius:2px;background:var(--mark);color:#fff;margin-left:4px;vertical-align:1px;font-weight:400}
+.st-tag{display:inline-block;font-size:12px;padding:0 7px;line-height:20px;border-radius:2px;border:1px solid #b7eb8f;background:#f6ffed;color:#52c41a}
+.st-tag.off{border-color:#ffccc7;background:#fff2f0;color:var(--danger)}
+.no{color:var(--danger)}
+.pager{display:flex;justify-content:flex-end;align-items:center;gap:10px;margin-top:14px;font-size:14px}
+.pager .pg{width:24px;height:24px;line-height:22px;text-align:center;border:1px solid var(--primary);background:var(--primary);color:#fff;border-radius:2px;font-size:13px}
+.pager .sz{border:1px solid var(--border);padding:1px 8px;border-radius:2px;font-size:13px}
+.placeholder{padding:60px 0;text-align:center;color:var(--text-secondary)}
+
+/* 抽屉 */
+.pw-mask{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;display:none}
+.pw-mask.open{display:block}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(1180px,100vw);background:#fff;z-index:101;transform:translateX(100%);transition:transform .25s ease;display:flex;flex-direction:column;box-shadow:-6px 0 16px rgba(0,0,0,.08)}
+.drawer.open{transform:none}
+.dr-hd{height:55px;flex:none;display:flex;align-items:center;gap:14px;padding:0 24px;padding-top:env(safe-area-inset-top,0px);border-bottom:1px solid var(--split);font-size:16px;font-weight:500}
+.dr-hd .x{background:none;border:0;font-size:18px;color:var(--text-secondary);cursor:pointer;padding:0}
+.dr-bd{flex:1;overflow:auto;padding:14px 24px 20px 0}
+.dr-ft{flex:none;border-top:1px solid var(--split);padding:10px 24px;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));display:flex;justify-content:flex-end;gap:8px}
+.frm{display:grid;grid-template-columns:1fr 1fr;column-gap:16px;min-width:900px}
+.fi{display:flex;align-items:flex-start;margin-bottom:12px;min-width:0}
+.fi.full{grid-column:1 / -1}
+.fi>label{flex:none;width:140px;text-align:right;padding-right:8px;line-height:32px;color:var(--text-primary);white-space:nowrap}
+.fi>label .req{color:var(--danger);margin-right:4px;font-family:SimSun,sans-serif}
+.fi>label .info{display:inline-block;width:13px;height:13px;border:1px solid var(--text-secondary);border-radius:50%;font-size:9px;line-height:11px;text-align:center;color:var(--text-secondary);margin-left:4px;vertical-align:1px;cursor:help;font-style:normal}
+.fc{flex:1;min-width:0}
+.fc input[type=text],.fc select,.fc textarea{width:100%;height:32px;border:1px solid var(--border);border-radius:2px;padding:4px 11px;font-size:14px;font-family:inherit;color:var(--text-primary);background:#fff}
+.fc input[type=text]::placeholder,.fc textarea::placeholder{color:var(--text-ph)}
+.fc input[type=text]:focus,.fc select:focus,.fc textarea:focus{outline:0;border-color:var(--primary-hover);box-shadow:0 0 0 2px rgba(24,144,255,.2)}
+.fc input:disabled{background:var(--disabled-bg);color:var(--disabled-text)}
+.fc select.ph{color:var(--text-ph)}
+.fc textarea{height:auto;min-height:102px;resize:vertical;line-height:1.5}
+.suffix{display:flex}.suffix input{border-radius:2px 0 0 2px!important}
+.suffix span{border:1px solid var(--border);border-left:0;background:#fafafa;padding:0 11px;line-height:30px;border-radius:0 2px 2px 0}
+.err{color:var(--danger);font-size:14px;line-height:1.5;min-height:0;display:none}
+.fi.has-err .err{display:block}
+.fi.has-err input[type=text],.fi.has-err select{border-color:var(--danger)}
+.extra{color:var(--danger);font-size:13px;margin-top:2px}
+.cnt{text-align:right;color:var(--text-secondary);font-size:13px}
+.cbg{display:flex;flex-wrap:wrap;gap:3px 0;padding-top:5px}
+.cb{display:inline-flex;align-items:center;gap:8px;margin-right:14px;cursor:pointer;line-height:22px;user-select:none;white-space:nowrap}
+.cb .bx{width:16px;height:16px;border:1px solid var(--border);border-radius:2px;background:#fff;position:relative;flex:none}
+.cb.on .bx{background:var(--primary);border-color:var(--primary)}
+.cb.on .bx::after{content:"";position:absolute;left:4.5px;top:1.5px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.cb.half .bx::after{content:"";position:absolute;left:3px;top:3px;width:8px;height:8px;background:var(--primary)}
+.cb:hover .bx{border-color:var(--primary)}
+.cbg.vip .cb{min-width:62px;margin-right:10px}
+.tier-note{color:var(--text-secondary);font-size:12px;margin-top:4px}
+.tier-all{padding-top:5px;margin-bottom:6px}
+.fi.mk{background:var(--mark-bg);box-shadow:inset 3px 0 0 var(--mark);padding:8px 0;border-radius:2px}
+.fi.mk>label{padding-left:8px}
+.sw{display:inline-flex;align-items:center;height:22px;min-width:44px;border-radius:100px;background:rgba(0,0,0,.25);color:#fff;font-size:12px;cursor:pointer;position:relative;padding:0 7px 0 25px;margin-top:5px;border:0;font-family:inherit}
+.sw::before{content:"";position:absolute;left:2px;top:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s}
+.sw.on{background:var(--primary);padding:0 25px 0 7px}
+.sw.on::before{left:calc(100% - 20px)}
+.tipbox{position:fixed;z-index:120;background:rgba(0,0,0,.75);color:#fff;font-size:13px;padding:6px 8px;border-radius:2px;pointer-events:none;display:none;max-width:280px}
+.toast{position:fixed;left:50%;top:calc(24px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:130;background:var(--doc-paper-raised);color:var(--doc-ink);border:1px solid var(--doc-line);border-left:3px solid var(--doc-teal);box-shadow:var(--shadow-card);padding:9px 14px;border-radius:6px;font-family:var(--f-sans);font-size:13.5px;display:none;max-width:calc(100vw - 32px)}
+.toast a{color:var(--doc-teal);cursor:pointer;margin-left:8px;text-decoration:underline}
+@media (prefers-reduced-motion:reduce){.drawer,.sw::before,.mi>.mt .ar{transition:none}}
+</style>
+
+<header class="dh-header">
+  <h1>充值通道会员层级控制</h1>
+  <div class="dh-meta"><span>模块:<b>商户财务配置 / 支付管理 / 支付通道管理</b></span><span>产品经理:<b>Zuno</b></span><span>更新日期:<b class="mono">2026-10-29</b></span></div>
+</header>
+<nav class="dh-navbar" id="dhNavbar">
+  <div class="dh-navbar-inner dh-primary" id="dhPrimary">
+    <button class="dh-primary-btn active" data-primary="proto" type="button">交互原型 <small>后台复刻,可点击操作</small></button>
+    <button class="dh-primary-btn" data-primary="docs" type="button">需求文档 <small>规则、流程、验收与测试重点</small></button>
+  </div>
+</nav>
+
+<div class="dh-wrap"><main class="dh-main">
+
+<!-- ========== 交互原型 ========== -->
+<section class="dh-primary-panel active" data-primary-panel="proto">
+  <div class="legend">
+    <span><i class="lg-sw"></i>橙色标记 = 本期新增(添加/修改页「会员层级」、列表「会员层级」列)</span>
+    <span>可操作:点「添加」或行内「编辑」打开表单;勾选层级、点「确认」写回列表。查询、重置、通道排序、工具栏图标为静态展示。</span>
+  </div>
+  <div class="proto-scroll">
+  <div class="proto-window" id="pw">
+    <aside class="sider">
+      <div class="logo"><span class="badge">TEST</span>DD.GG</div>
+      <ul class="menu" id="menu"></ul>
+    </aside>
+    <div class="mainc">
+      <div class="phdr">
+        <span style="font-size:16px;color:var(--text-primary)">☰</span>
+        <span class="crumb">商户财务配置 ∨ / <b>支付管理</b></span>
+        <div class="right"><span id="clock" class="mono" style="font-family:inherit">2026-10-27 03:05:00 (巴西雷亚尔:UTC-3)</span><span class="user">zune01</span><span>⤓</span><span>🔔︎</span><span>📖︎</span><span class="av"></span></div>
+      </div>
+      <div class="ptabs"><span>支付管理</span></div>
+      <div class="pcont"><div class="card">
+        <div class="itabs" id="itabs">
+          <button type="button" data-it="a">三方平台管理</button>
+          <button type="button" data-it="b" class="on">支付通道管理</button>
+          <button type="button" data-it="c">支付成功率</button>
+          <button type="button" data-it="d">支付通道日志</button>
+        </div>
+        <div id="itB">
+          <div class="filters">
+            <div><div class="f-range"><span>最近操作时间(开始)</span><span>→</span><span>最近操作时间(结束)</span><span class="cal">📅︎</span></div><div class="tz">当前时间为 UTC-3 时区</div></div>
+            <input class="f-in" style="width:156px" placeholder="请输入通道名称" aria-label="通道名称" id="fName">
+            <select class="f-sel" style="width:156px;color:var(--text-ph)" aria-label="支付方式" id="fPay"><option>请选择支付方式</option></select>
+            <select class="f-sel" style="width:156px;color:var(--text-ph)" aria-label="三方平台" id="fPlat"><option>请选择三方平台</option></select>
+            <select class="f-sel" style="width:156px" aria-label="状态" id="fSt"><option>启用</option><option>禁用</option></select>
+            <div class="f-btns"><button class="btn" type="button">重 置</button><button class="btn pri" type="button">查 询</button></div>
+          </div>
+          <div class="toolbar"><button class="btn pri" type="button" id="btnAdd">添 加</button><button class="btn" type="button">通道排序</button><span class="icons"><span>⟳</span><span>⊤</span><span>⚙︎</span></span></div>
+          <div class="tblbox"><table class="dt" id="dt"><thead><tr id="dtHead"></tr></thead><tbody id="dtBody"></tbody></table></div>
+          <div class="pager"><span id="total">共 3 条数据</span><span class="pg">1</span><span class="sz">50 条/页 ∨</span></div>
+        </div>
+        <div id="itOther" class="placeholder" hidden>该标签页本期无变更,不在本原型复刻范围内。</div>
+      </div></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ========== 需求文档 ========== -->
+<section class="dh-primary-panel" data-primary-panel="docs">
+  <nav class="dh-tabs" id="dhTabs">
+    <button class="dh-tab active" data-tab="overview" type="button"><span class="n">0</span>总览</button>
+    <button class="dh-tab" data-tab="form" type="button"><span class="n">1</span>添加与修改</button>
+    <button class="dh-tab" data-tab="list" type="button"><span class="n">2</span>列表展示</button>
+    <button class="dh-tab" data-tab="client" type="button"><span class="n">3</span>客户端通道展示规则</button>
+    <button class="dh-tab" data-tab="qa" type="button"><span class="n">4</span>验收与开发测试</button>
+  </nav>
+
+  <!-- 0 总览 -->
+  <div class="dh-panel active" data-panel="overview">
+    <h2>总览</h2>
+    <div class="req-block">
+      <h3>背景</h3>
+      <div class="dh-prose">
+        <p>支付通道目前只能按<strong>会员等级</strong>(VIP0–VIP35)和<strong>排除会员标签</strong>控制哪些会员能在客户端充值页看到该通道,无法按<strong>会员层级</strong>控制。会员层级包含系统层级(如白银会员、黄金会员)和自定义层级(如黑名单、套利会员),运营需要按层级给不同会员开放不同的充值通道,例如只给高价值层级开放费率更低的通道,或不给套利层级开放某个通道。</p>
+        <p><strong>目标</strong>:在支付通道的添加、修改页增加「会员层级」配置,客户端充值页只向所属层级被勾选的会员展示该通道;列表增加「会员层级」列,运营能直接看出每个通道的层级范围。</p>
+      </div>
+    </div>
+    <div class="req-block">
+      <h3>本期改动</h3>
+      <div class="tbl-wrap"><table class="dh-table-simple">
+        <thead><tr><th>位置</th><th>改动</th></tr></thead>
+        <tbody>
+          <tr><td>支付通道管理 › 添加 / 修改</td><td>新增必填字段「会员层级」,首行「全部层级」,下方列出商户全部层级;交互与福利中心活动的「参与层级」一致。</td></tr>
+          <tr><td>支付通道管理 › 列表</td><td>新增「会员层级」列,显示「全部层级」或「部分层级」。</td></tr>
+          <tr><td>客户端充值页</td><td>通道展示条件增加「会员所属层级在该通道的会员层级范围内」。页面样式不变。</td></tr>
+          <tr><td>历史通道</td><td>上线时统一设为「全部层级」,客户端可见范围与上线前一致。</td></tr>
+        </tbody>
+      </table></div>
+      <div class="dh-illustration">
+        <div class="illus-list">
+          <div class="illus-item">会员等级</div><span class="illus-sep"></span>
+          <div class="illus-item new">会员层级<span class="tag">本期新增</span></div><span class="illus-sep"></span>
+          <div class="illus-item">排除会员标签</div>
+        </div>
+        <div class="cap">示意图:表单字段与列表列中三项会员范围配置的排列位置,表单与列表顺序相同</div>
+      </div>
+    </div>
+    <div class="req-block">
+      <h3>整体判定</h3>
+      <div class="dh-prose"><p>会员能看到某个启用中的通道,需要同时满足三个条件。三者是「并且」关系,任一不满足即不展示。详细流程见「客户端通道展示规则」。</p></div>
+      <div class="dh-flow">
+        <div class="flow-diagram">
+          <div class="flow-step">会员等级在勾选范围内<span class="sub">现有规则</span></div><div class="flow-arrow">+</div>
+          <div class="flow-step">所属层级在勾选范围内<span class="sub">本期新增</span></div><div class="flow-arrow">+</div>
+          <div class="flow-step">未命中排除会员标签<span class="sub">现有规则</span></div><div class="flow-arrow">→</div>
+          <div class="flow-step">客户端充值页展示该通道</div>
+        </div>
+        <div class="cap">图:通道对单个会员可见的三个条件(点击放大)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1 添加与修改 -->
+  <div class="dh-panel" data-panel="form">
+    <h2>添加与修改</h2>
+    <div class="dh-mind"><div class="mm">
+      <div class="mm-root">会员层级配置</div>
+      <div class="mm-branches">
+        <div class="mm-b"><div class="mm-node">入口</div><div class="mm-leaves"><span class="mm-leaf">支付通道管理 › 添加</span><span class="mm-leaf">支付通道管理 › 编辑(抽屉标题「修改」)</span></div></div>
+        <div class="mm-b"><div class="mm-node">字段</div><div class="mm-leaves"><span class="mm-leaf">会员层级(必填)<span class="tag-new">本期新增</span></span><span class="mm-leaf">全部层级<span class="tag-new">本期新增</span></span><span class="mm-leaf">层级选项:会员层级 + 自定义层级</span><span class="mm-leaf">注释文案</span></div></div>
+        <div class="mm-b"><div class="mm-node">交互</div><div class="mm-leaves"><span class="mm-leaf">全部层级全选 / 全不选</span><span class="mm-leaf">部分勾选显示半选</span><span class="mm-leaf">逐项勾满自动勾上全部层级</span></div></div>
+        <div class="mm-b"><div class="mm-node">规则</div><div class="mm-leaves"><span class="mm-leaf">至少勾选一项</span><span class="mm-leaf">全部层级含后续新增层级</span><span class="mm-leaf">添加默认全部层级</span><span class="mm-leaf">历史通道默认全部层级</span><span class="mm-leaf">保存后立即生效</span></div></div>
+      </div>
+    </div><div class="cap">功能结构图(点击放大)</div></div>
+    <button class="proto-jump" type="button" data-goto="add">在交互原型中打开「添加」</button>
+
+    <div class="req-block">
+      <h3>后台配置</h3>
+      <div class="dh-prose">
+        <p>在「会员等级」与「排除会员标签」之间新增「会员层级」,整行展示。字段第一行是「全部层级」复选框,下方平铺当前商户的全部层级,即「会员管理 › 会员层级」中的会员层级与自定义层级,选项和顺序与福利中心活动的「参与层级」一致。字段下方注释:<strong>注:未勾选的层级会员,客户端不显示该充值通道。</strong></p>
+      </div>
+      <div class="tbl-wrap"><table class="dh-table-simple">
+        <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
+        <tbody>
+          <tr><td>会员层级 <span class="tag-new">本期新增</span></td><td>多选复选框,必填,至少勾选一个层级。选项为当前商户全部会员层级与自定义层级。</td><td>添加:全部层级勾选<br>修改:回显已保存的配置</td><td>只有所属层级被勾选的会员,才可能在客户端充值页看到该通道(还需同时满足会员等级、排除会员标签)。</td></tr>
+          <tr><td>全部层级 <span class="tag-new">本期新增</span></td><td>复选框,位于层级列表首行,控制全选与全不选。</td><td>添加:勾选</td><td>勾选时保存为「全部层级」:当前所有层级可见,之后新建的层级也自动可见。未勾选时保存为勾选的具体层级。</td></tr>
+        </tbody>
+      </table></div>
+      <div class="dh-prose"><p>以下为现有字段,本期不改,列出用于理解与新字段的组合关系:</p></div>
+      <div class="tbl-wrap"><table class="dh-table-simple">
+        <thead><tr><th>字段</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>会员等级(必填)</td><td>VIP0–VIP35 多选;右侧「全部VIP等级」复选框控制全选,部分勾选时显示半选。未勾选时提示「请选择会员等级」。</td></tr>
+          <tr><td>排除会员标签</td><td>按会员标签多选;被勾选标签对应的会员,客户端不显示该通道。</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="req-block">
+      <h3>交互与校验</h3>
+      <div class="tbl-wrap"><table class="dh-table-simple">
+        <thead><tr><th>触发条件</th><th>系统反馈</th></tr></thead>
+        <tbody>
+          <tr><td>打开「添加」</td><td>「全部层级」勾选,下方所有层级勾选。</td></tr>
+          <tr><td>打开「修改」,通道保存为全部层级(含上线前的历史通道)</td><td>「全部层级」勾选,所有层级勾选,包括该通道保存之后新建的层级。</td></tr>
+          <tr><td>打开「修改」,通道保存为部分层级</td><td>只勾选已保存的层级;「全部层级」显示半选。保存之后新建的层级显示为未勾选。</td></tr>
+          <tr><td>勾选「全部层级」</td><td>下方所有层级变为勾选。</td></tr>
+          <tr><td>取消勾选「全部层级」</td><td>下方所有层级取消勾选。</td></tr>
+          <tr><td>全部勾选状态下取消任意一个层级</td><td>「全部层级」变为半选。</td></tr>
+          <tr><td>逐个把所有层级都勾上</td><td>「全部层级」自动变为勾选,保存时按「全部层级」保存。</td></tr>
+          <tr><td>一个层级都没勾,点击「确认」</td><td>字段下方红字提示「请选择会员层级」,不保存,抽屉保持打开。</td></tr>
+          <tr><td>校验通过,点击「确认」</td><td>保存成功,抽屉关闭,列表「会员层级」列、「最近操作时间」「最近操作人」更新;配置立即生效。</td></tr>
+          <tr><td>点击「取消」或关闭抽屉</td><td>不保存,列表不变。</td></tr>
+        </tbody>
+      </table></div>
+      <div class="dh-flow">
+        <div class="flow-diagram">
+          <div class="flow-step">打开添加 / 修改</div><div class="flow-arrow">→</div>
+          <div class="flow-step">勾选会员层级</div><div class="flow-arrow">→</div>
+          <div class="flow-step">点击「确认」</div><div class="flow-arrow">→</div>
+          <div class="flow-step">校验必填项</div>
+        </div>
+        <div class="flow-branches">
+          <div class="flow-branch"><span class="cond">会员层级一个未选</span><span class="arr">→</span><span class="result bad">提示「请选择会员层级」,不保存</span></div>
+          <div class="flow-branch"><span class="cond">其他必填项未填</span><span class="arr">→</span><span class="result bad">对应字段红字提示,不保存</span></div>
+          <div class="flow-branch"><span class="cond">「全部层级」为勾选</span><span class="arr">→</span><span class="result good">保存为全部层级,列表显示「全部层级」,立即生效</span></div>
+          <div class="flow-branch"><span class="cond">「全部层级」为半选</span><span class="arr">→</span><span class="result good">保存所选层级,列表显示「部分层级」,立即生效</span></div>
+          <div class="flow-branch"><span class="cond">点击「取消」/ 关闭</span><span class="arr">→</span><span class="result neutral">不保存,配置不变</span></div>
+        </div>
+        <div class="cap">图:保存会员层级配置的流程(点击放大)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 列表 -->
+  <div class="dh-panel" data-panel="list">
+    <h2>列表展示</h2>
+    <div class="dh-mind"><div class="mm">
+      <div class="mm-root">列表「会员层级」列</div>
+      <div class="mm-branches">
+        <div class="mm-b"><div class="mm-node">位置</div><div class="mm-leaves"><span class="mm-leaf">「会员等级」与「排除会员标签」之间<span class="tag-new">本期新增</span></span></div></div>
+        <div class="mm-b"><div class="mm-node">取值</div><div class="mm-leaves"><span class="mm-leaf">全部层级</span><span class="mm-leaf">部分层级</span></div></div>
+        <div class="mm-b"><div class="mm-node">更新</div><div class="mm-leaves"><span class="mm-leaf">添加 / 修改保存后刷新</span><span class="mm-leaf">计入最近操作时间、最近操作人</span></div></div>
+      </div>
+    </div><div class="cap">功能结构图(点击放大)</div></div>
+    <button class="proto-jump" type="button" data-goto="list">在交互原型中查看列表</button>
+    <div class="req-block">
+      <h3>列字段</h3>
+      <div class="tbl-wrap"><table class="dh-table-simple">
+        <thead><tr><th>字段</th><th>取值</th><th>示例</th></tr></thead>
+        <tbody><tr><td>会员层级 <span class="tag-new">本期新增</span></td><td>通道保存为全部层级时显示「全部层级」;保存为部分层级时显示「部分层级」。</td><td>全部层级</td></tr></tbody>
+      </table></div>
+      <div class="dh-prose">
+        <ol>
+          <li>列位置在「会员等级」之后、「排除会员标签」之前,与表单字段顺序一致。</li>
+          <li>页面列设置(工具栏齿轮)中同步出现该列,可与其他列一样显示或隐藏。</li>
+          <li>筛选栏不新增层级筛选项,查询、重置、通道排序逻辑不变。</li>
+          <li>上线后历史通道该列均显示「全部层级」。</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 客户端 -->
+  <div class="dh-panel" data-panel="client">
+    <h2>客户端通道展示规则</h2>
+    <div class="dh-mind"><div class="mm">
+      <div class="mm-root">充值页通道过滤</div>
+      <div class="mm-branches">
+        <div class="mm-b"><div class="mm-node">判断依据</div><div class="mm-leaves"><span class="mm-leaf">会员当前所属层级<span class="tag-new">本期新增</span></span><span class="mm-leaf">会员等级</span><span class="mm-leaf">会员标签</span><span class="mm-leaf">通道状态</span></div></div>
+        <div class="mm-b"><div class="mm-node">层级变化</div><div class="mm-leaves"><span class="mm-leaf">新建层级</span><span class="mm-leaf">删除层级</span><span class="mm-leaf">会员调整层级</span></div></div>
+        <div class="mm-b"><div class="mm-node">前台表现</div><div class="mm-leaves"><span class="mm-leaf">样式不变</span><span class="mm-leaf">只增减可见通道</span><span class="mm-leaf">支付方式照常显示</span><span class="mm-leaf">无可用通道沿用现有展示</span></div></div>
+      </div>
+    </div><div class="cap">功能结构图(点击放大)</div></div>
+    <div class="req-block">
+      <h3>判定流程</h3>
+      <div class="dh-prose"><p>前提:每个会员任意时刻只属于一个层级(会员层级或自定义层级之一),以「会员管理 › 会员层级」中的归属为准;层级被删除后,原属该层级的会员按「会员管理 › 会员层级」现有规则调整归属,之后按调整后的层级判断。会员每次打开充值页、加载充值通道列表时,按当时的通道配置和会员当时的层级逐个判断。</p></div>
+      <div class="dh-flow">
+        <div class="flow-diagram">
+          <div class="flow-step">会员打开充值页</div><div class="flow-arrow">→</div>
+          <div class="flow-step">读取启用中的通道</div><div class="flow-arrow">→</div>
+          <div class="flow-step">逐个通道判断<span class="sub">按以下条件</span></div>
+        </div>
+        <div class="flow-branches">
+          <div class="flow-branch"><span class="cond">会员等级不在通道「会员等级」勾选范围内</span><span class="arr">→</span><span class="result bad">不展示该通道</span></div>
+          <div class="flow-branch"><span class="cond">会员所属层级不在通道「会员层级」范围内</span><span class="arr">→</span><span class="result bad">不展示该通道</span></div>
+          <div class="flow-branch"><span class="cond">会员命中通道「排除会员标签」中任一标签</span><span class="arr">→</span><span class="result bad">不展示该通道</span></div>
+          <div class="flow-branch"><span class="cond">三项都满足</span><span class="arr">→</span><span class="result good">展示该通道(充值上限等现有规则照常生效)</span></div>
+          <div class="flow-branch"><span class="cond">某支付方式下的通道全部不展示</span><span class="arr">→</span><span class="result neutral">该支付方式照常显示,沿用客户端现有「无可用通道」的展示</span></div>
+          <div class="flow-branch"><span class="cond">所有通道都不展示</span><span class="arr">→</span><span class="result neutral">沿用客户端现有「无可用通道」的展示</span></div>
+        </div>
+        <div class="cap">图:客户端充值页逐个通道的展示判定(点击放大)</div>
+      </div>
+    </div>
+    <div class="req-block">
+      <h3>触发条件与反馈</h3>
+      <div class="tbl-wrap"><table class="dh-table-simple">
+        <thead><tr><th>触发条件</th><th>系统反馈</th></tr></thead>
+        <tbody>
+          <tr><td>通道为全部层级,会员等级在范围内,未命中排除标签</td><td>展示该通道。</td></tr>
+          <tr><td>通道为部分层级,会员所属层级已勾选,其余条件满足</td><td>展示该通道。</td></tr>
+          <tr><td>通道为部分层级,会员所属层级未勾选</td><td>不展示该通道,即使会员等级在范围内。</td></tr>
+          <tr><td>会员所属层级已勾选,但会员等级未勾选或命中排除标签</td><td>不展示该通道(现有规则)。</td></tr>
+          <tr><td>运营保存了新的层级配置</td><td>立即生效:会员下次打开充值页或重新加载通道列表时按新配置展示。</td></tr>
+          <tr><td>会员被调整到其他层级(如加入黑名单)</td><td>会员下次加载通道列表时按新层级判断。</td></tr>
+          <tr><td>商户新建一个层级</td><td>全部层级的通道对该层级会员可见;部分层级的通道不包含该层级,对该层级会员不可见,需要运营在修改页勾选。</td></tr>
+          <tr><td>商户删除一个层级</td><td>该层级从所有通道的层级配置中移除;修改页不再显示该层级。原属该层级的会员按会员层级现有规则调整归属后,按新层级判断通道是否展示。</td></tr>
+          <tr><td>部分层级通道勾选的层级全部被删除</td><td>该通道对任何会员都不展示;修改页「会员层级」为空,需重新勾选后才能保存。</td></tr>
+          <tr><td>某支付方式下的通道对该会员全部因层级不展示</td><td>该支付方式照常显示,不因层级隐藏;该支付方式下沿用客户端现有「无可用通道」的展示。</td></tr>
+          <tr><td>通道状态为禁用</td><td>不展示(现有规则),与层级配置无关。</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="req-block">
+      <h3>规则演示</h3>
+      <div class="dh-prose"><p>选择一个会员的等级、层级和标签,下方按交互原型中三个通道的<strong>当前配置</strong>计算是否可见。可先在交互原型里修改某个通道的会员层级,再回来查看结果。</p></div>
+      <div class="sim">
+        <div class="sim-row">
+          <label for="simVip">会员等级<select id="simVip"></select></label>
+          <label for="simTier">所属层级<select id="simTier"></select></label>
+          <label for="simTag">会员标签<select id="simTag"></select></label>
+        </div>
+        <div class="sim-out" id="simOut"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 验收与开发测试 -->
+  <div class="dh-panel" data-panel="qa">
+    <h2>验收与开发测试</h2>
+    <div class="req-block"><h3>范围</h3>
+      <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>项目</th><th>说明</th></tr></thead><tbody>
+        <tr><td>本期做</td><td>支付通道添加 / 修改页新增「会员层级」;列表新增「会员层级」列;客户端充值通道按会员所属层级过滤;历史通道初始化为全部层级;操作留痕。</td></tr>
+        <tr><td>本期不做</td><td>列表层级筛选;客户端充值页样式改动;代付、提现通道的层级控制;会员层级本身的配置规则。</td></tr>
+        <tr><td>适用范围</td><td>使用本产品的全部商户与站点;仅作用于「支付管理 › 支付通道管理」下的充值通道;层级选项为各商户自己的会员层级与自定义层级。</td></tr>
+      </tbody></table></div></div>
+    <div class="req-block"><h3>用户与场景</h3>
+      <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>项目</th><th>说明</th></tr></thead><tbody>
+        <tr><td>后台运营 / 财务</td><td>拥有「商户财务配置 › 支付管理」菜单权限即可配置,不新增权限点;只读角色可在列表看到「会员层级」列。</td></tr>
+        <tr><td>会员</td><td>在客户端充值页只看到对自己层级开放的通道。</td></tr>
+        <tr><td>场景一</td><td>低费率通道只开放给黄金、铂金、钻石会员。</td></tr>
+        <tr><td>场景二</td><td>某通道不对「套利会员」「黑名单」开放,其余层级均可见。</td></tr>
+      </tbody></table></div></div>
+    <div class="req-block"><h3>功能点清单</h3><div class="dh-prose"><ol>
+      <li><strong>F1【P0】添加 / 修改页新增「会员层级」</strong>:位于会员等级与排除会员标签之间,首行「全部层级」,下方列出商户全部层级,带注释文案;添加默认全部层级,修改回显已保存配置。</li>
+      <li><strong>F2【P0】全部层级联动</strong>:勾选全选、取消全不选;部分勾选显示半选;逐项勾满自动勾上全部层级。</li>
+      <li><strong>F3【P0】必填校验</strong>:未勾选任何层级点击「确认」,字段下方提示「请选择会员层级」,不保存。</li>
+      <li><strong>F4【P0】全部层级动态包含新层级</strong>:保存为全部层级的通道,对之后新建的层级同样可见;部分层级的通道不自动包含新层级。</li>
+      <li><strong>F5【P0】列表新增「会员层级」列</strong>:显示「全部层级」或「部分层级」,保存后刷新。</li>
+      <li><strong>F6【P0】客户端按层级过滤通道</strong>:会员所属层级不在通道层级范围内时不展示该通道,与会员等级、排除标签同时生效。</li>
+      <li><strong>F7【P0】历史通道初始化</strong>:上线时所有已有通道设为全部层级。</li>
+      <li><strong>F8【P1】操作留痕</strong>:修改会员层级更新最近操作时间与最近操作人,「支付通道日志」按现有方式记录会员层级的变更。</li>
+    </ol></div></div>
+    <div class="req-block"><h3>数据与埋点</h3>
+      <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>项目</th><th>说明</th></tr></thead><tbody>
+        <tr><td>埋点</td><td>不新增埋点。</td></tr>
+        <tr><td>通道数据</td><td>新增「是否全部层级」与「所选层级」两项;全部层级时不依赖所选层级列表。</td></tr>
+        <tr><td>会员数据</td><td>使用会员当前所属层级,不新增会员字段。</td></tr>
+      </tbody></table></div></div>
+    <div class="req-block"><h3>依赖、影响与风险</h3>
+      <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>项目</th><th>说明</th></tr></thead><tbody>
+        <tr><td>上游</td><td>「会员管理 › 会员层级」中的会员层级、自定义层级及会员归属。</td></tr>
+        <tr><td>下游</td><td>客户端充值页通道列表(H5、PWA、APP 等所有端)。</td></tr>
+        <tr><td>风险:新建层级后无可用通道</td><td>如果所有通道都是部分层级,新建层级的会员将看不到任何充值通道。运营新建层级后需检查通道配置。</td></tr>
+        <tr><td>风险:删除层级后通道无人可见</td><td>部分层级通道勾选的层级全部被删除后,该通道对所有会员不可见。</td></tr>
+        <tr><td>风险:误把层级与等级混淆</td><td>会员等级(VIP)与会员层级是两套独立配置,需同时满足,配置时注意不要只改其一。</td></tr>
+      </tbody></table></div></div>
+    <div class="req-block"><h3>验收标准</h3>
+      <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>编号</th><th>前置条件与操作</th><th>期望结果</th></tr></thead><tbody>
+        <tr><td>A1</td><td>打开支付通道管理「添加」</td><td>「会员层级」位于会员等级与排除会员标签之间,有必填星号;首行「全部层级」;下方列出商户全部会员层级与自定义层级,顺序与活动「参与层级」一致;显示注释文案。</td></tr>
+        <tr><td>A2</td><td>打开「添加」不做操作</td><td>「全部层级」及所有层级默认勾选。</td></tr>
+        <tr><td>A3</td><td>取消勾选「全部层级」</td><td>所有层级取消勾选。</td></tr>
+        <tr><td>A4</td><td>勾选「全部层级」</td><td>所有层级勾选。</td></tr>
+        <tr><td>A5</td><td>全部勾选状态下取消一个层级</td><td>「全部层级」显示半选。</td></tr>
+        <tr><td>A6</td><td>全不选后逐个勾满所有层级</td><td>「全部层级」自动变为勾选,保存后列表显示「全部层级」。</td></tr>
+        <tr><td>A7</td><td>不勾任何层级,点击「确认」</td><td>提示「请选择会员层级」,不保存,抽屉不关闭。</td></tr>
+        <tr><td>A8</td><td>勾选部分层级,填写其他必填项后确认</td><td>保存成功;列表「会员层级」显示「部分层级」;最近操作时间、最近操作人更新。</td></tr>
+        <tr><td>A9</td><td>对部分层级通道点击「编辑」</td><td>抽屉标题「修改」,只勾选已保存的层级,「全部层级」半选。</td></tr>
+        <tr><td>A10</td><td>上线后打开任一历史通道「修改」</td><td>「全部层级」及所有层级勾选;列表显示「全部层级」;客户端可见范围与上线前一致。</td></tr>
+        <tr><td>A11</td><td>通道为部分层级且勾选「黄金会员」;黄金会员会员(等级在范围内、无排除标签)打开充值页</td><td>能看到该通道。</td></tr>
+        <tr><td>A12</td><td>同上通道;白银会员会员打开充值页</td><td>看不到该通道。</td></tr>
+        <tr><td>A13</td><td>会员层级已勾选,但会员等级未勾选</td><td>看不到该通道。</td></tr>
+        <tr><td>A14</td><td>会员层级已勾选,会员命中排除标签</td><td>看不到该通道。</td></tr>
+        <tr><td>A15</td><td>修改某通道层级并保存,会员重新打开充值页</td><td>按新配置展示,无需重新登录。</td></tr>
+        <tr><td>A16</td><td>把会员调整到未勾选的层级,会员重新打开充值页</td><td>看不到该通道。</td></tr>
+        <tr><td>A17</td><td>新建一个层级,把会员调整到该层级</td><td>全部层级通道可见;部分层级通道不可见;部分层级通道的修改页中新层级为未勾选。</td></tr>
+        <tr><td>A18</td><td>删除一个已被部分层级通道勾选的层级</td><td>修改页不再显示该层级,其余勾选不变;原属该层级的会员按调整后的层级判断通道是否展示。</td></tr>
+        <tr><td>A19</td><td>部分层级通道勾选的层级全部被删除</td><td>该通道对所有会员不展示;修改页会员层级为空,不勾选无法保存。</td></tr>
+        <tr><td>A20</td><td>会员所有可用通道都因层级被过滤</td><td>客户端沿用现有「无可用通道」展示。</td></tr>
+        <tr><td>A21</td><td>通道状态为禁用,层级包含该会员</td><td>不展示该通道。</td></tr>
+        <tr><td>A22</td><td>修改会员层级后查看「支付通道日志」</td><td>有本次会员层级变更的记录,记录方式与其他字段一致。</td></tr>
+        <tr><td>A23</td><td>打开「添加」或「修改」,改动会员层级后点击「取消」或关闭抽屉</td><td>不保存;列表与通道配置不变,最近操作时间、最近操作人不变;再次打开「修改」显示原配置。</td></tr>
+        <tr><td>A24</td><td>某支付方式下的通道均为部分层级且都未勾选会员所属层级,会员打开充值页</td><td>该支付方式照常显示;选择后沿用现有「无可用通道」展示;其他支付方式不受影响。</td></tr>
+      </tbody></table></div></div>
+    <div class="req-block"><h3>需求完整性自查</h3>
+      <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>检查项</th><th>结论</th></tr></thead><tbody>
+        <tr><td>权限</td><td>沿用「支付管理」菜单权限,不新增权限点。</td></tr>
+        <tr><td>操作留痕</td><td>更新最近操作时间、最近操作人;支付通道日志记录变更。</td></tr>
+        <tr><td>边界状态</td><td>全选、半选、全不选、新建层级、删除层级、层级被删空、会员换层级均已定义。</td></tr>
+        <tr><td>口径</td><td>以会员当前所属层级为准;一个会员只属于一个层级。</td></tr>
+        <tr><td>批量操作</td><td>无批量配置,逐个通道配置。</td></tr>
+        <tr><td>多语言</td><td>后台为中文;层级名称按商户配置原样显示;客户端无新增文案。</td></tr>
+        <tr><td>特殊模式</td><td>试玩、未登录状态不涉及充值通道,不受影响。</td></tr>
+        <tr><td>生效范围</td><td>保存后立即生效,作用于该商户全部客户端。</td></tr>
+      </tbody></table></div></div>
+    <div class="req-block"><h3>开发测试重点说明</h3><div class="dh-prose"><ol>
+      <li><strong>「全部层级」要存成状态,不能存成当时的层级列表。</strong>否则之后新建的层级不会被包含,与规则不符。逐项勾满后保存同样按全部层级存。</li>
+      <li><strong>三个条件是「并且」关系。</strong>会员等级、会员层级、排除会员标签任一不满足即不展示,不能用层级覆盖等级判断。</li>
+      <li><strong>层级判断用会员当前所属层级。</strong>会员层级与自定义层级都在同一个选项列表里,会员只会命中其中一个。</li>
+      <li><strong>删除层级后要同步清理通道配置。</strong>修改页不能出现已删除的层级;层级被删空的部分层级通道对所有人不可见。</li>
+      <li><strong>历史通道初始化为全部层级。</strong>上线后抽查历史通道,客户端可见范围应与上线前完全一致。</li>
+      <li><strong>列表只显示「全部层级 / 部分层级」。</strong>具体层级在修改页查看。</li>
+      <li><strong>层级只过滤通道,不过滤支付方式。</strong>某支付方式下的通道对会员全部被过滤时,支付方式仍要显示,不能顺带隐藏。</li>
+    </ol></div></div>
+  </div>
+</section>
+</main></div>
+
+<div class="dh-lightbox" id="dhLightbox"><div class="dh-lightbox-body" id="dhLightboxBody"></div></div>
+
+<!-- 复刻浮层:与 .proto-window 共用令牌 -->
+<div class="pw-layer">
+  <div class="pw-mask" id="mask"></div>
+  <aside class="drawer" id="drawer" aria-label="通道表单">
+    <div class="dr-hd"><button class="x" type="button" id="drX" aria-label="关闭">✕</button><span id="drTitle">添加</span></div>
+    <div class="dr-bd"><div class="frm" id="frm"></div></div>
+    <div class="dr-ft"><button class="btn" type="button" id="drCancel">取 消</button><button class="btn pri" type="button" id="drOk">确 认</button></div>
+  </aside>
+  <div class="tipbox" id="tipbox"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+var VIPS=[];for(var i=0;i<=35;i++)VIPS.push('VIP'+i);
+var TIERS=['默认层级','长期活动dddddddddddddddd','白银会员','人工补单层级','人工存入层级','黄金会员','vega测试层级','铂金会员','钻石会员','啦啦啦啦','中中中中','黑名单','无优惠','无佣金','套利会员','33','1234','PM测试','小雪层级','anson层级','闪闪闪删除','VIP','子账号日志测试222-1','QA提现验收1010'];
+var TAGS=['不返水拉啊','小红人儿111','资深玩家','水军','黑名单','热门'];
+var PLATS=['U2CPAY代付 / 100100','U2CPAY支付 / 100100','NewGPay / 3004723','bestpay代付 / 2744860477','bestpay支付 / 2744860477'];
+var PAYS=['YDPay / RMB','加密货币 / USDT','OKPay / USD','bestpay / pix_bestpay','支付宝 / 测试','U2CPAY / pixⅡ','银联 / UnionPay','数字人民币 / test日志','NewGPay / NewGPay'];
+var UNITS=['元-整数','元-两位小数','角-整数','角-一位小数','分','厘'];
+var CH=[
+ {sort:'5',no:'PIX_QRCODE',name:'U2CPAY代收',plat:'U2CPAY支付',pay:'U2CPAY / pixⅡ',unit:'分',rate:'1',min:'3',max:'88888',fixed:'5,50,100,1000,5000,10000,31111',limit:'1000000000000000000',limitList:'88888',vips:VIPS.slice(),tags:[],tierAll:true,tiers:TIERS.slice(),desc:'',tip:'😊Estilo de vida e uma vivência pautada pela moda — ou, talvez, um gesto com as palmas das mãos unida',anyAmt:true,on:true,real:false,cnt:'44',amt:'6105',time:'2026-10-25 11:55:00 (UTC-3)',op:'bxduoduo01'},
+ {sort:'10',no:'<三方通道号（无）>',name:'NewGPay代收',plat:'NewGPay',pay:'NewGPay / NewGPay',unit:'元-整数',rate:'2',min:'1',max:'500000',fixed:'10,20,50,100,1000,5000,10000,30000,490000',limit:'10000000000000000000',limitList:'500000',vips:VIPS.slice(),tags:[],tierAll:true,tiers:TIERS.slice(),desc:'',tip:'',anyAmt:true,on:true,real:false,cnt:'25',amt:'658',time:'2026-10-27 02:17:18 (UTC-3)',op:'bxduoduo01'},
+ {sort:'',no:'TX_BAR_001',name:'bestpay',plat:'bestpay支付',pay:'bestpay / pix_bestpay',unit:'元-整数',rate:'1',min:'1',max:'1000000',fixed:'5,20,50,100,1000,5000,10000,30000,490000',limit:'1000000000000000000',limitList:'1000000',vips:VIPS.slice(),tags:[],tierAll:true,tiers:TIERS.slice(),desc:'',tip:'帆帆帆帆',anyAmt:true,on:true,real:false,cnt:'686',amt:'364786',time:'2026-10-26 05:22:15 (UTC-3)',op:'bxduoduo01'}
+];
+function $(id){return document.getElementById(id)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+
+/* ---------- primary / tabs ---------- */
+function showPrimary(k){document.querySelectorAll('.dh-primary-btn').forEach(function(b){b.classList.toggle('active',b.dataset.primary===k)});document.querySelectorAll('.dh-primary-panel').forEach(function(p){p.classList.toggle('active',p.dataset.primaryPanel===k)})}
+document.querySelectorAll('.dh-primary-btn').forEach(function(b){b.addEventListener('click',function(){showPrimary(b.dataset.primary);window.scrollTo(0,0)})});
+document.querySelectorAll('.dh-tab').forEach(function(t){t.addEventListener('click',function(){document.querySelectorAll('.dh-tab').forEach(function(x){x.classList.toggle('active',x===t)});document.querySelectorAll('.dh-panel').forEach(function(p){p.classList.toggle('active',p.dataset.panel===t.dataset.tab)});if(t.dataset.tab==='client')renderSim();})});
+document.querySelectorAll('.proto-jump').forEach(function(b){b.addEventListener('click',function(){showPrimary('proto');window.scrollTo(0,0);if(b.dataset.goto==='add')setTimeout(function(){openDrawer(-1)},200)})});
+
+/* ---------- lightbox ---------- */
+var lb=$('dhLightbox'),lbb=$('dhLightboxBody');
+document.querySelectorAll('.dh-flow,.dh-mind').forEach(function(f){f.addEventListener('click',function(e){e.stopPropagation();lbb.innerHTML='';lbb.appendChild(f.cloneNode(true));lb.classList.add('open')})});
+lb.addEventListener('click',function(){lb.classList.remove('open')});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){lb.classList.remove('open');closeDrawer()}});
+
+/* ---------- 侧边栏 ---------- */
+var MENU=[['平台概况'],['系统管理'],['商户游戏管理'],['会员管理',['账变记录','会员列表','会员层级','会员详情','会员财务管理','会员注册记录','会员登录信息','会员标签配置','会员信息变更记录','会员标签变更记录','用户回访']],['商户财务管理'],['报表查询'],['代理中心(无限极差)'],['商户财务配置',['支付管理','支付方式管理','支付方式排序','充值返现设置','代付商户管理','提现管理']],['消息管理'],['福利中心',['推荐好友领彩金','VIP管理','活动列表(新)','活动统计','优惠统计','兑换码']],['运营相关'],['推广渠道管理'],['返水管理']];
+var ICON='<svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2.5" y="2.5" width="11" height="11" rx="2"/></svg>';
+$('menu').innerHTML=MENU.map(function(m,i){return '<li class="mi'+(m[0]==='商户财务配置'?' open':'')+'" data-i="'+i+'"><div class="mt">'+ICON+'<span>'+m[0]+'</span><span class="ar">∨</span></div>'+(m[1]?'<ul class="subs">'+m[1].map(function(s){return '<li'+(s==='支付管理'?' class="cur"':'')+'>'+s+'</li>'}).join('')+'</ul>':'')+'</li>'}).join('');
+document.querySelectorAll('.mi>.mt').forEach(function(t){t.addEventListener('click',function(){var li=t.parentNode;if(!li.querySelector('.subs'))return;var was=li.classList.contains('open');document.querySelectorAll('.mi').forEach(function(x){x.classList.remove('open')});if(!was)li.classList.add('open')})});
+
+/* 时钟 UTC-3 */
+function pad(n){return n<10?'0'+n:n}
+function tick(){var d=new Date(Date.now()-3*3600e3);$('clock').textContent=d.getUTCFullYear()+'-'+pad(d.getUTCMonth()+1)+'-'+pad(d.getUTCDate())+' '+pad(d.getUTCHours())+':'+pad(d.getUTCMinutes())+':'+pad(d.getUTCSeconds())+' (巴西雷亚尔:UTC-3)'}
+tick();setInterval(tick,1000);
+function nowStr(){var d=new Date(Date.now()-3*3600e3);return d.getUTCFullYear()+'-'+pad(d.getUTCMonth()+1)+'-'+pad(d.getUTCDate())+' '+pad(d.getUTCHours())+':'+pad(d.getUTCMinutes())+':'+pad(d.getUTCSeconds())+' (UTC-3)'}
+
+/* 内部 tabs */
+document.querySelectorAll('#itabs button').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('#itabs button').forEach(function(x){x.classList.toggle('on',x===b)});var isB=b.dataset.it==='b';$('itB').hidden=!isB;$('itOther').hidden=isB})});
+PAYS.forEach(function(p){$('fPay').insertAdjacentHTML('beforeend','<option>'+esc(p)+'</option>')});
+PLATS.forEach(function(p){$('fPlat').insertAdjacentHTML('beforeend','<option>'+esc(p.split(' / ')[0])+'</option>')});
+
+/* ---------- 列表 ---------- */
+var COLS=['排序','三方通道号/通道名称/三方平台','状态','是否需要实名','通道说明','支付方式/存款方式','货币单位','费率 / 最小 / 最大 / 固定金额','会员等级','会员层级','排除会员标签','充值金额上限','充值次数','充值金额','金额类型','温馨提示文案','最近操作时间','最近操作人','操作'];
+$('dtHead').innerHTML=COLS.map(function(c){if(c==='会员层级')return '<th class="mk">会员层级<span class="mk-tag">本期新增</span></th>';return '<th'+(c==='操作'?' class="op"':'')+'>'+c+'</th>'}).join('');
+function renderTable(){
+  $('dtBody').innerHTML=CH.map(function(c,i){
+    return '<tr>'+
+    '<td>'+esc(c.sort)+'</td>'+
+    '<td><span class="lnk">'+esc(c.no||'<三方通道号（无）>')+' / '+esc(c.name)+' / '+esc(c.plat)+'</span></td>'+
+    '<td><span class="st-tag'+(c.on?'':' off')+'">'+(c.on?'启用':'禁用')+'</span></td>'+
+    '<td class="no">'+(c.real?'是':'否')+'</td>'+
+    '<td style="min-width:120px">'+esc(c.desc)+'</td>'+
+    '<td style="white-space:nowrap">'+esc(c.pay)+'</td>'+
+    '<td>'+esc(c.unit)+'</td>'+
+    '<td style="white-space:nowrap">'+esc(c.rate)+'% / '+esc(c.min)+' ~ '+esc(c.max)+' /<br>['+esc(c.fixed)+']</td>'+
+    '<td class="wrap">'+esc(c.vips.join(','))+'</td>'+
+    '<td class="mk" style="white-space:nowrap">'+(c.tierAll?'全部层级':'部分层级')+'</td>'+
+    '<td>'+(c.tags.length?esc(c.tags.join(',')):'-')+'</td>'+
+    '<td>'+esc(c.limitList)+'</td>'+
+    '<td>'+esc(c.cnt)+'</td><td>'+esc(c.amt)+'</td>'+
+    '<td>'+(c.anyAmt?'任意':'固定')+'</td>'+
+    '<td class="wrap" style="max-width:160px">'+esc(c.tip)+'</td>'+
+    '<td style="white-space:nowrap">'+esc(c.time)+'</td>'+
+    '<td>'+esc(c.op)+'</td>'+
+    '<td class="op"><button class="btn pri sm" type="button" data-edit="'+i+'">编 辑</button></td></tr>';
+  }).join('');
+  $('total').textContent='共 '+CH.length+' 条数据';
+  document.querySelectorAll('[data-edit]').forEach(function(b){b.addEventListener('click',function(){openDrawer(+b.dataset.edit)})});
+}
+renderTable();
+$('btnAdd').addEventListener('click',function(){openDrawer(-1)});
+
+/* ---------- 抽屉表单 ---------- */
+var cur=-1,st=null;
+function lab(t,req,extra){return '<label>'+(req?'<span class="req">*</span>':'')+t+(extra||'')+'</label>'}
+function sel(id,opts,val){return '<select id="'+id+'" class="'+(val?'':'ph')+'"><option value="">请选择</option>'+opts.map(function(o){return '<option'+(o===val?' selected':'')+'>'+esc(o)+'</option>'}).join('')+'</select>'}
+function inp(id,val,dis){return '<input type="text" id="'+id+'" placeholder="请输入" value="'+esc(val)+'"'+(dis?' disabled':'')+'>'}
+function cbs(name,list,sel,cls){return '<div class="cbg '+(cls||'')+'" data-g="'+name+'">'+list.map(function(v){return '<span class="cb'+(sel.indexOf(v)>-1?' on':'')+'" role="checkbox" tabindex="0" data-v="'+esc(v)+'"><span class="bx"></span>'+esc(v)+'</span>'}).join('')+'</div>'}
+function fi(key,label,req,body,cls,err){return '<div class="fi '+(cls||'')+'" data-k="'+key+'">'+label+'<div class="fc">'+body+(err?'<div class="err">'+err+'</div>':'')+'</div></div>'}
+function platOpt(name){for(var i=0;i<PLATS.length;i++)if(PLATS[i].split(' / ')[0]===name)return PLATS[i];return ''}
+
+function openDrawer(idx){
+  cur=idx;var c=idx>=0?CH[idx]:null;
+  st={vips:c?c.vips.slice():[],tags:c?c.tags.slice():[],tiers:c?(c.tierAll?TIERS.slice():c.tiers.slice()):TIERS.slice(),anyAmt:c?c.anyAmt:true,on:c?c.on:false,real:c?c.real:false};
+  $('drTitle').textContent=c?'修改':'添加';
+  var h='';
+  h+=c?fi('plat',lab('平台名称'),false,inp('fPlatN',c.plat,true)):fi('plat',lab('三方平台',true),true,sel('fPlatS',PLATS,''),'','请选择三方平台');
+  h+=fi('no',lab('三方通道号'),false,inp('fNo',c?c.no:''));
+  h+=fi('name',lab('通道名称',true),true,inp('fNm',c?c.name:''),'','请输入通道名称');
+  h+=fi('pay',lab('支付方式',true),true,sel('fPayS',PAYS,c?c.pay:''),'','请选择支付方式');
+  h+=fi('rate',lab('费率',true),true,'<div class="suffix">'+inp('fRate',c?c.rate:'')+'<span>%</span></div>','','请输入费率');
+  h+=fi('unit',lab('货币单位',true),true,sel('fUnit',UNITS,c?c.unit:''),'','请选择货币单位');
+  h+=fi('min',lab('最小金额',true),true,inp('fMin',c?c.min:''),'','请输入最小金额');
+  h+=fi('max',lab('最大金额',true),true,inp('fMax',c?c.max:''),'','请输入最大金额');
+  h+=fi('fixed',lab('固定金额',true),true,inp('fFix',c?c.fixed:''),'','请输入固定金额');
+  h+=fi('limit',lab('充值上限金额',true),true,inp('fLim',c?c.limit:'')+(c&&c.limit?'<div class="extra">当充值金额达到 '+esc(c.limit)+' 时候，通道将自动隐藏</div>':''),'','请输入充值上限金额');
+  h+=fi('vips',lab('会员等级',true),true,cbs('vips',VIPS,st.vips,'vip'),'','请选择会员等级');
+  h+=fi('vipAll',lab('全部VIP等级'),false,'<div class="cbg"><span class="cb" role="checkbox" tabindex="0" id="vipAll"><span class="bx"></span></span></div>');
+  h+=fi('tiers',lab('会员层级',true),true,'<div class="tier-all"><span class="cb" role="checkbox" tabindex="0" id="tierAll"><span class="bx"></span>全部层级</span></div>'+cbs('tiers',TIERS,st.tiers)+'<div class="tier-note">注:未勾选的层级会员,客户端不显示该充值通道。</div>','full mk','请选择会员层级');
+  h+=fi('tags',lab('排除会员标签',false,'<i class="info" data-tip="被勾选的标签对应的会员客户端不显示充值通道">i</i>'),false,cbs('tags',TAGS,st.tags),'full');
+  h+=fi('desc',lab('通道说明'),false,'<textarea id="fDesc" maxlength="100" placeholder="通道费率:&#10;通道币种:&#10;单 位:&#10;通道金额范围:&#10;固定金额:">'+esc(c?c.desc:'')+'</textarea><div class="cnt"><span id="cDesc">0</span> / 100</div>','full');
+  h+=fi('tip',lab('客户端文案'),false,'<textarea id="fTip" maxlength="300" placeholder="请输入客户端充值温馨提示文案">'+esc(c?c.tip:'')+'</textarea><div class="cnt"><span id="cTip">0</span> / 300</div>','full');
+  h+=fi('amt',lab('金额类型'),false,'<button type="button" class="sw" id="swAmt"></button>');
+  h+=fi('on',lab('状态',true),false,'<button type="button" class="sw" id="swOn"></button>');
+  h+=fi('real',lab('通道是否需要实名',true),false,'<button type="button" class="sw" id="swReal"></button>');
+  $('frm').innerHTML=h;
+  bindForm();
+  $('mask').classList.add('open');$('drawer').classList.add('open');
+  $('drawer').querySelector('.dr-bd').scrollTop=0;
+}
+function closeDrawer(){$('mask').classList.remove('open');$('drawer').classList.remove('open')}
+$('mask').addEventListener('click',closeDrawer);$('drX').addEventListener('click',closeDrawer);$('drCancel').addEventListener('click',closeDrawer);
+
+function syncAll(allId,group,full){
+  var el=$(allId),n=st[group].length;
+  el.classList.toggle('on',n===full.length);el.classList.toggle('half',n>0&&n<full.length);
+  document.querySelectorAll('[data-g="'+group+'"] .cb').forEach(function(c){c.classList.toggle('on',st[group].indexOf(c.dataset.v)>-1)});
+}
+function bindForm(){
+  function toggleIn(group,v){var a=st[group],k=a.indexOf(v);if(k>-1)a.splice(k,1);else a.push(v)}
+  document.querySelectorAll('#frm .cbg[data-g] .cb').forEach(function(cb){
+    function act(){var g=cb.parentNode.dataset.g;toggleIn(g,cb.dataset.v);if(g==='vips')syncAll('vipAll','vips',VIPS);else if(g==='tiers')syncAll('tierAll','tiers',TIERS);else cb.classList.toggle('on');clearErr(g)}
+    cb.addEventListener('click',act);cb.addEventListener('keydown',function(e){if(e.key===' '||e.key==='Enter'){e.preventDefault();act()}});
+  });
+  [['vipAll','vips',VIPS],['tierAll','tiers',TIERS]].forEach(function(p){
+    var el=$(p[0]);function act(){st[p[1]]=st[p[1]].length===p[2].length?[]:p[2].slice();syncAll(p[0],p[1],p[2]);clearErr(p[1])}
+    el.addEventListener('click',act);el.addEventListener('keydown',function(e){if(e.key===' '||e.key==='Enter'){e.preventDefault();act()}});
+    syncAll(p[0],p[1],p[2]);
+  });
+  function sw(id,key,on,off){var b=$(id);function r(){b.classList.toggle('on',st[key]);b.textContent=st[key]?on:off}r();b.addEventListener('click',function(){st[key]=!st[key];r()})}
+  sw('swAmt','anyAmt','任意','固定');sw('swOn','on','启用','禁用');sw('swReal','real','是','否');
+  [['fDesc','cDesc'],['fTip','cTip']].forEach(function(p){var t=$(p[0]);function r(){$(p[1]).textContent=t.value.length}r();t.addEventListener('input',r)});
+  document.querySelectorAll('#frm select').forEach(function(s){s.addEventListener('change',function(){s.classList.toggle('ph',!s.value);s.closest('.fi').classList.remove('has-err')})});
+  document.querySelectorAll('#frm input[type=text]').forEach(function(s){s.addEventListener('input',function(){s.closest('.fi').classList.remove('has-err')})});
+  var tip=$('tipbox');document.querySelectorAll('#frm [data-tip]').forEach(function(i){i.addEventListener('mouseenter',function(){var r=i.getBoundingClientRect();tip.textContent=i.dataset.tip;tip.style.display='block';tip.style.left=Math.max(8,r.left-60)+'px';tip.style.top=(r.top-36)+'px'});i.addEventListener('mouseleave',function(){tip.style.display='none'})});
+}
+function clearErr(k){var f=document.querySelector('#frm .fi[data-k="'+k+'"]');if(f)f.classList.remove('has-err')}
+function val(id){var e=$(id);return e?e.value.trim():''}
+
+$('drOk').addEventListener('click',function(){
+  var bad=[];
+  function need(k,v){var f=document.querySelector('#frm .fi[data-k="'+k+'"]');var miss=!v;f.classList.toggle('has-err',miss);if(miss)bad.push(f)}
+  if(cur<0)need('plat',val('fPlatS'));
+  need('name',val('fNm'));need('pay',val('fPayS'));need('rate',val('fRate'));need('unit',val('fUnit'));need('min',val('fMin'));need('max',val('fMax'));need('fixed',val('fFix'));need('limit',val('fLim'));
+  need('vips',st.vips.length);need('tiers',st.tiers.length);
+  if(bad.length){bad[0].scrollIntoView({block:'center',behavior:'smooth'});return}
+  var c=cur>=0?CH[cur]:{sort:'',cnt:'0',amt:'0',plat:val('fPlatS').split(' / ')[0]};
+  var oldLimit=c.limit;
+  c.no=val('fNo');c.name=val('fNm');c.pay=val('fPayS');c.rate=val('fRate');c.unit=val('fUnit');c.min=val('fMin');c.max=val('fMax');c.fixed=val('fFix');c.limit=val('fLim');
+  if(cur<0||oldLimit!==c.limit)c.limitList=c.limit;
+  c.vips=VIPS.filter(function(v){return st.vips.indexOf(v)>-1});c.tags=TAGS.filter(function(v){return st.tags.indexOf(v)>-1});
+  c.tierAll=st.tiers.length===TIERS.length;c.tiers=TIERS.filter(function(v){return st.tiers.indexOf(v)>-1});
+  c.desc=val('fDesc');c.tip=val('fTip');c.anyAmt=st.anyAmt;c.on=st.on;c.real=st.real;c.time=nowStr();c.op='zune01';
+  var row=cur;if(cur<0){CH.push(c);row=CH.length-1}
+  closeDrawer();renderTable();renderSim();
+  var tr=$('dtBody').children[row];if(tr){var td=tr.querySelector('td.mk');td.style.transition='background .3s';td.style.background='#ffe7ba';setTimeout(function(){td.style.background=''},1600)}
+  toast('原型演示:已写回列表,会员层级显示为「'+(c.tierAll?'全部层级':'部分层级')+'」。<a id="toSim">查看客户端可见结果</a>');
+});
+var tt;function toast(html){var t=$('toast');t.innerHTML=html;t.style.display='block';clearTimeout(tt);tt=setTimeout(function(){t.style.display='none'},4200);var a=$('toSim');if(a)a.addEventListener('click',function(){t.style.display='none';showPrimary('docs');document.querySelector('.dh-tab[data-tab="client"]').click();window.scrollTo(0,0)})}
+
+/* ---------- 规则演示 ---------- */
+function fillSel(id,list,first){var s=$(id);s.innerHTML=(first?'<option value="">'+first+'</option>':'')+list.map(function(v){return '<option>'+esc(v)+'</option>'}).join('')}
+fillSel('simVip',VIPS);fillSel('simTier',TIERS);fillSel('simTag',TAGS,'无标签');
+$('simVip').value='VIP3';$('simTier').value='黄金会员';
+['simVip','simTier','simTag'].forEach(function(id){$(id).addEventListener('change',renderSim)});
+function renderSim(){
+  var v=$('simVip').value,t=$('simTier').value,g=$('simTag').value;
+  $('simOut').innerHTML=CH.map(function(c){
+    var why='',ok=true;
+    if(!c.on){ok=false;why='通道已禁用'}
+    else if(c.vips.indexOf(v)<0){ok=false;why='会员等级 '+v+' 未勾选'}
+    else if(!c.tierAll&&c.tiers.indexOf(t)<0){ok=false;why='层级「'+t+'」未勾选(部分层级)'}
+    else if(g&&c.tags.indexOf(g)>-1){ok=false;why='命中排除标签「'+g+'」'}
+    else why='等级、层级('+(c.tierAll?'全部层级':'部分层级')+')、标签均满足';
+    return '<div class="sim-card"><div class="nm">'+esc(c.name)+' · '+esc(c.plat)+'</div><span class="st '+(ok?'ok':'no')+'">'+(ok?'展示':'不展示')+'</span><div class="why">'+esc(why)+'</div></div>';
+  }).join('');
+}
+renderSim();
+})();
+</script>
+
+</body></html>
