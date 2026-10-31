@@ -200,6 +200,7 @@ table.dt th.op{position:sticky;right:0;z-index:1}
 table.dt .lnk{color:var(--primary);white-space:nowrap}
 table.dt th.mk{background:var(--mark-bg);box-shadow:inset 3px 0 0 var(--mark)}
 table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
+.th-tip{display:inline-block;width:14px;height:14px;border:1px solid var(--text-secondary);border-radius:50%;font-size:10px;line-height:12px;text-align:center;color:var(--text-secondary);margin-left:4px;vertical-align:1px;cursor:pointer;font-style:normal;font-weight:400}
 .mk-tag{display:inline-block;font-size:10px;line-height:15px;padding:0 4px;border-radius:2px;background:var(--mark);color:#fff;margin-left:4px;vertical-align:1px;font-weight:400}
 .st-tag{display:inline-block;font-size:12px;padding:0 7px;line-height:20px;border-radius:2px;border:1px solid #b7eb8f;background:#f6ffed;color:#52c41a}
 .st-tag.off{border-color:#ffccc7;background:#fff2f0;color:var(--danger)}
@@ -262,7 +263,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
 
 <header class="dh-header">
   <h1>充值通道会员层级控制</h1>
-  <div class="dh-meta"><span>模块:<b>商户财务配置 / 支付管理 / 支付通道管理</b></span><span>产品经理:<b>Zuno</b></span><span>更新日期:<b class="mono">2026-10-29</b></span></div>
+  <div class="dh-meta"><span>模块:<b>商户财务配置 / 支付管理 / 支付通道管理</b></span><span>产品经理:<b>Zuno</b></span><span>更新日期:<b class="mono">2026-10-31</b></span></div>
 </header>
 <nav class="dh-navbar" id="dhNavbar">
   <div class="dh-navbar-inner dh-primary" id="dhPrimary">
@@ -391,7 +392,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
     <div class="req-block">
       <h3>后台配置</h3>
       <div class="dh-prose">
-        <p>在「会员等级」与「排除会员标签」之间新增「会员层级」,整行展示。字段第一行是「全部层级」复选框,下方平铺当前商户的全部层级,即「会员管理 › 会员层级」中的会员层级与自定义层级,选项和顺序与福利中心活动的「参与层级」一致。字段下方注释:<strong>注:未勾选的层级会员,客户端不显示该充值通道。</strong></p>
+        <p>在「会员等级」与「排除会员标签」之间新增「会员层级」,整行展示。字段第一行是「全部层级」复选框,下方平铺当前商户的全部层级,即「会员管理 › 会员层级」中的会员层级与自定义层级,选项和顺序与福利中心活动的「参与层级」一致。字段下方注释:<strong>注:未勾选的层级会员,客户端不显示该充值通道。</strong>字段标题后带提示图标,鼠标悬停显示「未勾选的层级会员,客户端不显示该充值通道」,样式与「排除会员标签」的提示一致。</p>
       </div>
       <div class="tbl-wrap"><table class="dh-table-simple">
         <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
@@ -467,6 +468,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
       <div class="dh-prose">
         <ol>
           <li>列位置在「会员等级」之后、「排除会员标签」之前,与表单字段顺序一致。</li>
+          <li>表头带「?」提示图标,鼠标悬停或点击显示:「全部层级:所有层级会员可见,含之后新建的层级;部分层级:仅勾选的层级会员可见,具体层级在修改页查看。」</li>
           <li>页面列设置(工具栏齿轮)中同步出现该列,可与其他列一样显示或隐藏。</li>
           <li>筛选栏不新增层级筛选项,查询、重置、通道排序逻辑不变。</li>
           <li>上线后历史通道该列均显示「全部层级」。</li>
@@ -581,7 +583,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
       </tbody></table></div></div>
     <div class="req-block"><h3>验收标准</h3>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>编号</th><th>前置条件与操作</th><th>期望结果</th></tr></thead><tbody>
-        <tr><td>A1</td><td>打开支付通道管理「添加」</td><td>「会员层级」位于会员等级与排除会员标签之间,有必填星号;首行「全部层级」;下方列出商户全部会员层级与自定义层级,顺序与活动「参与层级」一致;显示注释文案。</td></tr>
+        <tr><td>A1</td><td>打开支付通道管理「添加」</td><td>「会员层级」位于会员等级与排除会员标签之间,有必填星号;首行「全部层级」;下方列出商户全部会员层级与自定义层级,顺序与活动「参与层级」一致;显示注释文案;标题后提示图标悬停显示提示文案。</td></tr>
         <tr><td>A2</td><td>打开「添加」不做操作</td><td>「全部层级」及所有层级默认勾选。</td></tr>
         <tr><td>A3</td><td>取消勾选「全部层级」</td><td>所有层级取消勾选。</td></tr>
         <tr><td>A4</td><td>勾选「全部层级」</td><td>所有层级勾选。</td></tr>
@@ -605,6 +607,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
         <tr><td>A22</td><td>修改会员层级后查看「支付通道日志」</td><td>有本次会员层级变更的记录,记录方式与其他字段一致。</td></tr>
         <tr><td>A23</td><td>打开「添加」或「修改」,改动会员层级后点击「取消」或关闭抽屉</td><td>不保存;列表与通道配置不变,最近操作时间、最近操作人不变;再次打开「修改」显示原配置。</td></tr>
         <tr><td>A24</td><td>某支付方式下的通道均为部分层级且都未勾选会员所属层级,会员打开充值页</td><td>该支付方式照常显示;选择后沿用现有「无可用通道」展示;其他支付方式不受影响。</td></tr>
+        <tr><td>A25</td><td>在列表「会员层级」表头悬停或点击「?」</td><td>显示全部层级与部分层级的含义说明;移开鼠标或点击页面其他位置后关闭。</td></tr>
       </tbody></table></div></div>
     <div class="req-block"><h3>需求完整性自查</h3>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>检查项</th><th>结论</th></tr></thead><tbody>
@@ -691,7 +694,13 @@ PLATS.forEach(function(p){$('fPlat').insertAdjacentHTML('beforeend','<option>'+e
 
 /* ---------- 列表 ---------- */
 var COLS=['排序','三方通道号/通道名称/三方平台','状态','是否需要实名','通道说明','支付方式/存款方式','货币单位','费率 / 最小 / 最大 / 固定金额','会员等级','会员层级','排除会员标签','充值金额上限','充值次数','充值金额','金额类型','温馨提示文案','最近操作时间','最近操作人','操作'];
-$('dtHead').innerHTML=COLS.map(function(c){if(c==='会员层级')return '<th class="mk">会员层级<span class="mk-tag">本期新增</span></th>';return '<th'+(c==='操作'?' class="op"':'')+'>'+c+'</th>'}).join('');
+$('dtHead').innerHTML=COLS.map(function(c){if(c==='会员层级')return '<th class="mk">会员层级<i class="th-tip" tabindex="0" data-tip="全部层级:所有层级会员可见,含之后新建的层级;部分层级:仅勾选的层级会员可见,具体层级在修改页查看。">?</i><span class="mk-tag">本期新增</span></th>';return '<th'+(c==='操作'?' class="op"':'')+'>'+c+'</th>'}).join('');
+(function(){var tip=$('tipbox'),el=document.querySelector('#dtHead .th-tip');
+  function show(){var r=el.getBoundingClientRect();tip.textContent=el.dataset.tip;tip.style.display='block';tip.style.left=Math.max(8,r.left-120)+'px';tip.style.top=(r.bottom+6)+'px'}
+  function hide(){tip.style.display='none'}
+  el.addEventListener('mouseenter',show);el.addEventListener('mouseleave',hide);
+  el.addEventListener('click',function(e){e.stopPropagation();tip.style.display==='block'?hide():show()});
+  document.addEventListener('click',hide);document.querySelector('.tblbox').addEventListener('scroll',hide);})();
 function renderTable(){
   $('dtBody').innerHTML=CH.map(function(c,i){
     return '<tr>'+
@@ -746,7 +755,7 @@ function openDrawer(idx){
   h+=fi('limit',lab('充值上限金额',true),true,inp('fLim',c?c.limit:'')+(c&&c.limit?'<div class="extra">当充值金额达到 '+esc(c.limit)+' 时候，通道将自动隐藏</div>':''),'','请输入充值上限金额');
   h+=fi('vips',lab('会员等级',true),true,cbs('vips',VIPS,st.vips,'vip'),'','请选择会员等级');
   h+=fi('vipAll',lab('全部VIP等级'),false,'<div class="cbg"><span class="cb" role="checkbox" tabindex="0" id="vipAll"><span class="bx"></span></span></div>');
-  h+=fi('tiers',lab('会员层级',true),true,'<div class="tier-all"><span class="cb" role="checkbox" tabindex="0" id="tierAll"><span class="bx"></span>全部层级</span></div>'+cbs('tiers',TIERS,st.tiers)+'<div class="tier-note">注:未勾选的层级会员,客户端不显示该充值通道。</div>','full mk','请选择会员层级');
+  h+=fi('tiers',lab('会员层级',true,'<i class="info" data-tip="未勾选的层级会员,客户端不显示该充值通道">i</i>'),true,'<div class="tier-all"><span class="cb" role="checkbox" tabindex="0" id="tierAll"><span class="bx"></span>全部层级</span></div>'+cbs('tiers',TIERS,st.tiers)+'<div class="tier-note">注:未勾选的层级会员,客户端不显示该充值通道。</div>','full mk','请选择会员层级');
   h+=fi('tags',lab('排除会员标签',false,'<i class="info" data-tip="被勾选的标签对应的会员客户端不显示充值通道">i</i>'),false,cbs('tags',TAGS,st.tags),'full');
   h+=fi('desc',lab('通道说明'),false,'<textarea id="fDesc" maxlength="100" placeholder="通道费率:&#10;通道币种:&#10;单 位:&#10;通道金额范围:&#10;固定金额:">'+esc(c?c.desc:'')+'</textarea><div class="cnt"><span id="cDesc">0</span> / 100</div>','full');
   h+=fi('tip',lab('客户端文案'),false,'<textarea id="fTip" maxlength="300" placeholder="请输入客户端充值温馨提示文案">'+esc(c?c.tip:'')+'</textarea><div class="cnt"><span id="cTip">0</span> / 300</div>','full');
