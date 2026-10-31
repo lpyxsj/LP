@@ -298,6 +298,12 @@ textarea.bk-input{height:auto;min-height:64px;resize:vertical;width:100%;line-he
 .stop-box .t{font-weight:600;color:#cf1322;margin-bottom:8px;}
 .stop-box .n{color:#cf1322;font-size:12.5px;margin-top:8px;line-height:1.6;}
 .last-op{font-size:12.5px;color:var(--text-secondary);margin-top:14px;}
+.bk-task{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:8px 12px;margin-bottom:12px;border:1px solid #91d5ff;background:#e6f7ff;border-radius:2px;font-size:13px;color:var(--text-primary);}
+.bk-task.done{border-color:#b7eb8f;background:#f6ffed;}
+.bk-task .bar{flex:0 0 160px;height:6px;background:#d9d9d9;border-radius:3px;overflow:hidden;}
+.bk-task .bar i{display:block;height:100%;background:var(--primary);transition:width .2s;}
+.bk-task .lk{color:var(--primary);cursor:pointer;background:none;border:0;padding:0;font:inherit;}
+.bk-task .x{margin-left:auto;color:var(--text-secondary);cursor:pointer;background:none;border:0;font-size:16px;line-height:1;}
 .res-sum{display:flex;gap:24px;margin-bottom:12px;}
 .res-sum b{font-size:18px;margin-left:4px;}
 .res-sum .s b{color:#389e0d;}
@@ -316,7 +322,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
 </style></head><body>
 <header class="dh-header"><div class="dh-header-inner">
   <h1>MY游戏点控管理</h1>
-  <div class="dh-meta"><span>模块：<b>商户游戏管理 · MY游戏点控管理</b></span><span>更新日期：<b>2026-10-28</b></span></div>
+  <div class="dh-meta"><span>模块：<b>商户游戏管理 · MY游戏点控管理</b></span><span>更新日期：<b>2026-10-31</b></span></div>
 </div></header>
 <nav class="dh-navbar" id="dhNavbar"><div class="dh-navbar-inner dh-primary" id="dhPrimary">
   <button class="dh-primary-btn active" data-primary="proto" type="button">交互原型 <small>点控列表、新增点控、自动点控均可操作</small></button>
@@ -328,7 +334,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
 <!-- ================= 交互原型 ================= -->
 <section class="dh-primary-panel active" data-primary-panel="proto" id="protoSec">
   <div class="proto-intro">
-    <div class="grow">在「商户游戏管理」下新增菜单。列表默认只看执行中的点控；点「+ 新增点控」下发送分 / 杀分，点「自动点控」设置新注册会员自动点控与清理旧数据。数据为示例，操作只影响本页；演示规则：以 9 开头的会员ID视为不存在，以 8 开头的视为试玩会员。</div>
+    <div class="grow">在「商户游戏管理」下新增菜单。列表默认只看执行中的点控；点「+ 新增点控」下发送分 / 杀分，点「自动点控」设置新注册会员自动点控与清理旧数据。数据为示例，操作只影响本页；演示规则：以 9 开头的会员ID视为不存在，以 8 开头的视为试玩会员，以 7 开头的视为下发超时，以 6 开头的视为没有游戏账号。</div>
     <label class="doc-check" for="markToggle"><input type="checkbox" id="markToggle" checked> 显示本期新增标注</label>
     <button class="doc-btn" id="resetDemo" type="button">重置演示数据</button>
   </div>
@@ -354,6 +360,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
         </div>
       </div>
       <div class="bk-card">
+        <div class="bk-task hide" id="taskBar" role="status"></div>
         <div class="bk-toolbar">
           <span class="info" id="runInfo"></span>
           <button class="bk-btn" id="btnRefresh" type="button" title="获取最新的进行中金额与状态">刷 新</button>
@@ -494,7 +501,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>剧本</b></td><td>新增时选择的剧本</td><td>「剧本名称（ID）」，如「快送（604）」</td></tr>
             <tr><td><b>默认货币</b></td><td>平台默认计算货币</td><td>表头带「?」，鼠标悬停或点击显示：平台默认计算货币，金额均按该币种计算和展示</td></tr>
             <tr><td><b>目标金额</b></td><td>新增时填写的金额</td><td>千分位，两位小数</td></tr>
-            <tr><td><b>进行中金额</b></td><td>剧本已完成的金额</td><td>两位小数；正数绿色带「+」，负数红色带「-」；表头「?」鼠标悬停或点击显示正负含义与结束条件</td></tr>
+            <tr><td><b>进行中金额</b></td><td>剧本已完成的金额</td><td>两位小数；正数绿色带「+」，负数红色带「-」；表头「?」鼠标悬停或点击显示正负含义与结束条件；已结束的记录保留结束时的值，不再更新</td></tr>
             <tr><td><b>状态</b></td><td>执行中 / 已结束</td><td>执行中蓝色标签，已结束灰色标签</td></tr>
             <tr><td><b>结束原因</b></td><td>达成目标 / 手动终止 / 新点控覆盖 / 清理自动点控</td><td>执行中的记录显示「-」</td></tr>
             <tr><td><b>来源</b></td><td>手动新增 / 自动点控</td><td>自动点控为橙色标签</td></tr>
@@ -549,6 +556,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>历史记录</b></td><td>所有点控记录（含已结束）完整保留，不删除，可按时间查询历史</td></tr>
             <tr><td><b>时区</b></td><td>所有时间按后台时区展示</td></tr>
             <tr><td><b>权限</b></td><td>菜单查看、新增点控、终止、自动点控设置纳入现有角色权限体系，按菜单与功能分配，不新增独立权限点</td></tr>
+            <tr><td><b>操作日志</b></td><td>新增点控、终止、批量终止、清理旧数据、保存自动点控配置均写入现有后台操作日志</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -564,7 +572,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
           <div class="mm-b"><div class="mm-node">入口</div><div class="mm-leaves"><span class="mm-leaf">工具栏「+ 新增点控」</span></div></div>
           <div class="mm-b"><div class="mm-node">选择会员</div><div class="mm-leaves"><span class="mm-leaf">自定义会员 + 校验会员</span><span class="mm-leaf">会员层级</span><span class="mm-leaf">VIP等级</span><span class="mm-leaf">代理ID（直属层）</span><span class="mm-leaf">代理ID（代理线）</span><span class="mm-leaf">单次上限 10,000 人</span></div></div>
           <div class="mm-b"><div class="mm-node">点控设置</div><div class="mm-leaves"><span class="mm-leaf">点控类型</span><span class="mm-leaf">剧本（随类型联动）</span><span class="mm-leaf">目标金额</span><span class="mm-leaf">操作备注</span></div></div>
-          <div class="mm-b"><div class="mm-node">提交与反馈</div><div class="mm-leaves"><span class="mm-leaf">字段校验</span><span class="mm-leaf">已有执行中点控 → 覆盖确认</span><span class="mm-leaf">下发结果：成功 / 失败明细</span></div></div>
+          <div class="mm-b"><div class="mm-node">提交与反馈</div><div class="mm-leaves"><span class="mm-leaf">字段校验</span><span class="mm-leaf">已有执行中点控 → 覆盖确认</span><span class="mm-leaf">后台下发，列表上方显示进度</span><span class="mm-leaf">下发结果：成功 / 失败明细、复制失败会员ID</span></div></div>
         </div>
       </div><div class="cap">功能结构图：新增点控的组成</div></div></div>
 
@@ -578,8 +586,8 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>校验会员</b></td><td>自定义会员下的按钮，提交前可主动校验</td><td>—</td><td>显示「共 N 个：有效 X 个；不存在 Y 个（红字列出ID）；试玩会员 W 个（不支持点控，红字列出ID）」；已有执行中点控的会员单独提示「其中 Z 个已有执行中的点控，提交后原点控将终止」</td></tr>
             <tr><td><b>会员层级</b></td><td>多选，选项为系统已配置的会员层级，带「全选」</td><td>不选</td><td>选中层级下的全部会员；下方显示「已选会员：共 N 人」</td></tr>
             <tr><td><b>VIP等级</b></td><td>多选，选项为系统已配置的 VIP 等级，带「全选」</td><td>不选</td><td>选中等级下的全部会员；显示已选人数</td></tr>
-            <tr><td><b>代理ID（直属层）</b></td><td>输入 1 个代理ID</td><td>空</td><td>选中该代理的直属下级会员，不含更下级；显示已选人数</td></tr>
-            <tr><td><b>代理ID（代理线）</b></td><td>输入 1 个代理ID</td><td>空</td><td>选中该代理整条代理线下的全部会员；显示已选人数</td></tr>
+            <tr><td><b>代理ID（直属层）</b></td><td>输入 1 个代理ID</td><td>空</td><td>选中该代理的直属下级会员，不含代理本人和更下级；显示已选人数</td></tr>
+            <tr><td><b>代理ID（代理线）</b></td><td>输入 1 个代理ID</td><td>空</td><td>选中该代理整条代理线下的全部会员，不含代理本人；显示已选人数</td></tr>
             <tr><td><b>点控类型 *</b></td><td>单选：送分 / 杀分</td><td><strong>无默认值</strong></td><td>未选类型时剧本区显示「请先选择点控类型」</td></tr>
             <tr><td><b>剧本 *</b></td><td>单选，随点控类型切换选项，格式「剧本名称（ID）」，如「快送（604）」</td><td>选类型后默认选中「正常送-通用（603）」或「正常杀-通用（600）」</td><td>切换类型时剧本重置为该类型的默认剧本</td></tr>
             <tr><td><b>目标金额 *</b></td><td>输入框，右侧显示平台默认货币</td><td>空</td><td>0.01 ~ 100,000.00，最多两位小数</td></tr>
@@ -600,13 +608,13 @@ table.mini th{background:var(--th-bg);font-weight:500;}
           </div>
           <div class="flow-branches">
             <div class="flow-branch"><span class="cond">字段校验不通过</span><span class="arr">→</span><span class="result bad">对应字段下方红字提示，弹窗保持打开</span></div>
-            <div class="flow-branch"><span class="cond">无会员已有执行中点控</span><span class="arr">→</span><span class="result good">直接下发，弹出「下发结果」</span></div>
-            <div class="flow-branch"><span class="cond">有会员已有执行中点控 → 点「继续提交」</span><span class="arr">→</span><span class="result good">原点控结束（新点控覆盖），下发新点控，弹出「下发结果」</span></div>
+            <div class="flow-branch"><span class="cond">无会员已有执行中点控</span><span class="arr">→</span><span class="result good">关闭弹窗，后台逐个会员下发，列表上方显示下发进度</span></div>
+            <div class="flow-branch"><span class="cond">有会员已有执行中点控 → 点「继续提交」</span><span class="arr">→</span><span class="result good">关闭弹窗，后台下发；新点控下发成功后原点控结束（新点控覆盖）</span></div>
             <div class="flow-branch"><span class="cond">有会员已有执行中点控 → 点「取消」</span><span class="arr">→</span><span class="result neutral">回到新增弹窗，已填内容保留，不下发</span></div>
           </div>
           <div class="flow-branches">
-            <div class="flow-branch"><span class="cond">下发结果：全部成功</span><span class="arr">→</span><span class="result good">显示提交 / 成功 / 失败人数，新记录以「执行中」出现在列表</span></div>
-            <div class="flow-branch"><span class="cond">下发结果：部分失败</span><span class="arr">→</span><span class="result bad">失败明细表列出会员ID与失败原因；成功的照常生效，失败的不产生记录</span></div>
+            <div class="flow-branch"><span class="cond">下发完成：全部成功</span><span class="arr">→</span><span class="result good">进度条显示提交 / 成功 / 失败人数，点「查看结果」打开下发结果；新记录以「执行中」出现在列表</span></div>
+            <div class="flow-branch"><span class="cond">下发完成：部分失败</span><span class="arr">→</span><span class="result bad">下发结果列出失败会员与原因，可复制失败会员ID；成功的照常生效，失败的不产生记录，原有执行中点控保持不变</span></div>
           </div>
           <div class="cap">图：新增点控从提交到结果</div>
         </div>
@@ -623,14 +631,19 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>未选点控类型</b></td><td>红字「请选择点控类型」</td></tr>
             <tr><td><b>目标金额为空</b></td><td>红字「请输入目标金额」，输入框标红</td></tr>
             <tr><td><b>目标金额小于 0.01、大于 100,000.00 或超过两位小数</b></td><td>红字「请输入 0.01 ~ 100,000.00 之间的金额，最多两位小数」</td></tr>
-            <tr><td><b>点击「校验会员」</b></td><td>显示有效 / 不存在 / 已有执行中点控的数量与ID（各最多列出 20 个，超出显示「等」）</td></tr>
+            <tr><td><b>点击「校验会员」</b></td><td>显示有效 / 不存在 / 试玩会员 / 已有执行中点控的数量与ID（各最多列出 20 个，超出显示「等」）</td></tr>
             <tr><td><b>所选会员中有 N 个已有执行中点控</b></td><td>弹出提示「本次提交中有 N 个会员已有执行中的点控。继续提交后，这些会员的原点控将终止，并按本次设置重新开始。」</td></tr>
-            <tr><td><b>点击「确定」后</b></td><td>按钮置灰，防止重复提交，直到出现下发结果</td></tr>
+            <tr><td><b>点击「确定」后</b></td><td>按钮置灰防止重复提交；校验通过后关闭弹窗，提示「已提交，正在下发 N 个会员」，列表上方显示「下发中：已处理 X / N」</td></tr>
+            <tr><td><b>下发中</b></td><td>「+ 新增点控」置灰，鼠标悬停提示「上一批正在下发，完成后可再次提交」；查询、终止等其他操作不受影响；离开页面不影响下发</td></tr>
+            <tr><td><b>下发完成</b></td><td>进度条变为「下发完成：提交 N，成功 X，失败 Y」+「查看结果」，列表刷新到第 1 页；点进度条右侧「×」关闭进度条</td></tr>
+            <tr><td><b>点击「查看结果」</b></td><td>弹出「下发结果」：提交 / 成功 / 失败人数 + 失败明细；有失败时显示「复制失败会员ID」；点「我知道了」关闭</td></tr>
+            <tr><td><b>点击「复制失败会员ID」</b></td><td>失败会员ID用英文逗号连接复制到剪贴板，提示「已复制 N 个会员ID」，可直接粘贴到自定义会员重新提交</td></tr>
             <tr><td><b>输入的会员ID不存在</b></td><td>该会员计入失败，原因「会员不存在」</td></tr>
             <tr><td><b>输入的会员为试玩会员</b></td><td>该会员计入失败，原因「试玩会员不支持点控」</td></tr>
-            <tr><td><b>会员还没有 MY 游戏账号</b></td><td>先创建游戏账号再下发；创建失败时该会员计入失败，原因「游戏账号创建失败」</td></tr>
+            <tr><td><b>会员在 MY 游戏侧没有游戏账号</b></td><td>该会员计入失败，原因「游戏账号不存在」</td></tr>
+            <tr><td><b>单个会员下发超时、结果未知</b></td><td>计入失败，原因「下发超时」，不自动重发</td></tr>
             <tr><td><b>单个会员下发失败</b></td><td>计入失败，原因显示 MY 游戏返回的失败原因</td></tr>
-            <tr><td><b>下发完成</b></td><td>弹出「下发结果」：提交 / 成功 / 失败人数 + 失败明细；点「我知道了」关闭，列表刷新到第 1 页</td></tr>
+            <tr><td><b>已有执行中点控的会员，新点控下发失败</b></td><td>该会员计入失败；原点控保持执行中，不结束</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -641,11 +654,14 @@ table.mini th{background:var(--th-bg);font-weight:500;}
           <thead><tr><th>规则项</th><th>说明</th></tr></thead>
           <tbody>
             <tr><td><b>单次上限</b></td><td>每次提交最多 10,000 个会员，五种选择方式统一适用；超出需缩小范围分批提交</td></tr>
-            <tr><td><b>人数口径</b></td><td>层级、VIP、代理三种方式以点击「确定」时的实际会员名单为准；多选的层级或等级之间会员不重复计算；名单自动排除试玩会员</td></tr>
+            <tr><td><b>人数口径</b></td><td>层级、VIP、代理三种方式以点击「确定」时的实际会员名单为准；多选的层级或等级之间会员不重复计算；名单自动排除试玩会员；代理两种方式均不含代理本人</td></tr>
+            <tr><td><b>会员状态</b></td><td>冻结、禁用的会员不拦截，正常下发</td></tr>
+            <tr><td><b>下发方式</b></td><td>提交后由后台逐个会员下发，无需停留在页面；列表上方只显示当前账号最近一次下发任务的进度与结果</td></tr>
+            <tr><td><b>覆盖顺序</b></td><td>新点控下发成功后，原点控才结束（新点控覆盖）；下发失败时原点控保持执行中</td></tr>
             <tr><td><b>批量记录</b></td><td>一次提交多个会员时，每个会员各生成一条点控记录，目标金额、剧本、备注相同</td></tr>
             <tr><td><b>来源与操作人</b></td><td>来源记为「手动新增」，操作人为当前后台账号</td></tr>
             <tr><td><b>作用范围</b></td><td>点控对 MY 系列全部厂商统一生效，新增时不选择厂商或游戏</td></tr>
-            <tr><td><b>游戏账号</b></td><td>会员在 MY 游戏侧还没有游戏账号时，系统先为其创建游戏账号再下发点控；已有游戏账号的直接下发</td></tr>
+            <tr><td><b>游戏账号</b></td><td>会员注册时已同步创建 MY 游戏账号，下发时不再创建；在 MY 游戏侧没有游戏账号的会员计入失败</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -684,15 +700,15 @@ table.mini th{background:var(--th-bg);font-weight:500;}
         <h2>自动生成流程</h2>
         <div class="dh-flow">
           <div class="flow-diagram">
-            <div class="flow-step">新会员注册成功</div>
+            <div class="flow-step">新会员注册成功<span class="sub">任一注册渠道，同步创建 MY 游戏账号</span></div>
             <div class="flow-arrow">→</div>
             <div class="flow-step">检查「新注册会员自动点控」开关</div>
           </div>
           <div class="flow-branches">
-            <div class="flow-branch"><span class="cond">开关开启</span><span class="arr">→</span><span class="result good">先为该会员创建 MY 游戏账号，再按当前配置生成一条点控，执行中，来源「自动点控」，操作人「系统」</span></div>
+            <div class="flow-branch"><span class="cond">开关开启</span><span class="arr">→</span><span class="result good">MY 游戏账号创建成功后，按当前配置生成一条点控，执行中，来源「自动点控」，操作人「系统」</span></div>
             <div class="flow-branch"><span class="cond">开关关闭</span><span class="arr">→</span><span class="result neutral">不生成点控</span></div>
             <div class="flow-branch"><span class="cond">开关开启，但注册的是试玩账号</span><span class="arr">→</span><span class="result neutral">不生成点控</span></div>
-            <div class="flow-branch"><span class="cond">开关开启但游戏账号创建或点控生成失败</span><span class="arr">→</span><span class="result bad">不生成记录，不影响会员注册与正常游戏</span></div>
+            <div class="flow-branch"><span class="cond">开关开启但游戏账号创建或点控生成失败</span><span class="arr">→</span><span class="result bad">不生成记录，写入系统日志；不影响会员注册与正常游戏</span></div>
           </div>
           <div class="cap">图：新注册会员的自动点控</div>
         </div>
@@ -738,7 +754,9 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>已生成的点控</b></td><td>修改配置或关闭开关不影响已生成的自动点控，它们按原设置继续执行</td></tr>
             <tr><td><b>与手动点控的关系</b></td><td>自动点控执行中的会员再被手动新增点控时，自动点控结束（新点控覆盖）</td></tr>
             <tr><td><b>清理范围</b></td><td>只终止来源为「自动点控」且执行中的记录；手动新增的点控和已结束的记录不受影响；记录本身保留</td></tr>
-            <tr><td><b>游戏账号</b></td><td>新会员注册成功后，先为其创建 MY 游戏账号，再生成自动点控</td></tr>
+            <tr><td><b>触发范围</b></td><td>所有渠道注册成功的正式会员：前台注册、推广链接注册、后台添加会员、代理开户</td></tr>
+            <tr><td><b>游戏账号</b></td><td>会员注册时同步创建 MY 游戏账号；游戏账号创建成功后才生成自动点控，创建失败不生成</td></tr>
+            <tr><td><b>失败记录</b></td><td>自动点控生成失败写入系统日志（会员ID、时间、失败原因），供排查</td></tr>
             <tr><td><b>试玩账号</b></td><td>试玩账号注册不生成自动点控</td></tr>
             <tr><td><b>保存校验</b></td><td>开关关闭时同样校验并保存类型、剧本、金额，便于下次直接开启</td></tr>
           </tbody>
@@ -782,7 +800,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
           <li><strong>F3【P0】终止</strong>：执行中记录可终止，二次确认；成功后状态已结束、原因手动终止、更新操作人与时间。</li>
           <li><strong>F4【P1】批量终止与刷新</strong>：勾选后批量终止，只处理执行中的记录；刷新获取最新进行中金额与状态。</li>
           <li><strong>F5【P0】新增点控</strong>：自定义会员（含校验）/ 会员层级 / VIP等级 / 代理ID（直属层、代理线）；类型、剧本联动、目标金额、备注；单次最多 10,000 人；字段校验文案见「新增点控」。</li>
-          <li><strong>F6【P0】覆盖确认与下发结果</strong>：已有执行中点控的会员提交前提示将覆盖；提交后展示成功与失败明细；防重复提交。</li>
+          <li><strong>F6【P0】覆盖确认与下发结果</strong>：已有执行中点控的会员提交前提示将覆盖；提交后后台下发并显示进度，完成后展示成功与失败明细，可复制失败会员ID；防重复提交。</li>
           <li><strong>F7【P0】自动点控</strong>：开关（默认关闭）+ 类型、剧本、金额；保存后对之后注册的新会员自动生成点控，来源自动点控、操作人系统。</li>
           <li><strong>F8【P1】清理旧数据</strong>：显示执行中的自动点控数量，确认后全部终止，原因清理自动点控。</li>
         </ol></div>
@@ -804,7 +822,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>项目</th><th>说明</th></tr></thead>
           <tbody>
-            <tr><td><b>依赖</b></td><td>MY 游戏点控接口（新增 / 取消 / 查询），进行中金额取接口返回的实际执行值；MY 游戏用户注册接口（为还没有游戏账号的会员创建账号）；现有会员详情、会员层级、VIP 等级、代理关系数据</td></tr>
+            <tr><td><b>依赖</b></td><td>MY 游戏点控接口（新增 / 取消 / 查询），进行中金额取接口返回的实际执行值；会员注册时同步创建的 MY 游戏账号；现有会员详情、会员层级、VIP 等级、代理关系数据</td></tr>
             <tr><td><b>影响</b></td><td>被点控会员在 MY 系列全部厂商的游戏输赢；前台无界面变化</td></tr>
             <tr><td><b>风险：批量误操作</b></td><td>按层级、代理线批量杀分影响面大，提交前展示人数、覆盖提示与结果明细，供运营核对</td></tr>
             <tr><td><b>风险：自动点控持续生效</b></td><td>开关开启期间每个新会员都会被点控，配置时需确认类型与金额；可通过关闭开关 + 清理旧数据停止</td></tr>
@@ -827,13 +845,13 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>A8</b></td><td>勾选 3 条（2 条执行中、1 条已结束）后批量终止</td><td>确认框显示 2 条；确认后仅这 2 条结束</td></tr>
             <tr><td><b>A9</b></td><td>未勾选直接批量终止 / 只勾选已结束记录批量终止</td><td>分别提示「请先勾选记录」/「所选记录中没有执行中的点控」</td></tr>
             <tr><td><b>A10</b></td><td>执行中记录进行中金额已超过目标，点击刷新</td><td>状态变为已结束 · 达成目标</td></tr>
-            <tr><td><b>A11</b></td><td>新增：自定义会员输入 3 个有效ID + 1 个不存在ID，送分，正常送，100.00</td><td>结果：提交 4、成功 3、失败 1（会员不存在）；列表新增 3 条执行中记录，来源手动新增</td></tr>
+            <tr><td><b>A11</b></td><td>新增：自定义会员输入 3 个有效ID + 1 个不存在ID，送分，正常送，100.00</td><td>弹窗关闭，列表上方显示下发进度；完成后点「查看结果」：提交 4、成功 3、失败 1（会员不存在）；列表新增 3 条执行中记录，来源手动新增</td></tr>
             <tr><td><b>A12</b></td><td>自定义会员输入重复ID</td><td>计数与提交按去重后计算</td></tr>
-            <tr><td><b>A13</b></td><td>点击「校验会员」</td><td>显示有效、不存在、已有执行中点控的数量与ID</td></tr>
+            <tr><td><b>A13</b></td><td>点击「校验会员」</td><td>显示有效、不存在、试玩会员、已有执行中点控的数量与ID</td></tr>
             <tr><td><b>A14</b></td><td>输入 10,001 个不重复ID后确定</td><td>红字「单次最多 10,000 个会员…」，不提交</td></tr>
             <tr><td><b>A15</b></td><td>按层级 / VIP 勾选，人数 ≤ 10,000</td><td>显示已选人数，提交后每人一条记录</td></tr>
             <tr><td><b>A16</b></td><td>按代理线选择，人数 &gt; 10,000</td><td>人数提示变红；确定时红字提示超上限，不提交</td></tr>
-            <tr><td><b>A17</b></td><td>代理ID（直属层）输入代理ID</td><td>只包含直属下级会员，不含更下级</td></tr>
+            <tr><td><b>A17</b></td><td>代理ID（直属层）输入代理ID</td><td>只包含直属下级会员，不含代理本人和更下级；代理线方式同样不含代理本人</td></tr>
             <tr><td><b>A18</b></td><td>不选点控类型 / 金额为空 / 金额 0 / 100000.01 / 1.234</td><td>分别出现对应红字提示，不提交</td></tr>
             <tr><td><b>A19</b></td><td>选择送分后切换为杀分</td><td>剧本选项变为快杀、正常杀-通用、慢杀-通用，默认正常杀-通用（600）</td></tr>
             <tr><td><b>A20</b></td><td>对已有执行中点控的会员新增，点「继续提交」</td><td>原记录已结束 · 新点控覆盖；新记录执行中</td></tr>
@@ -847,7 +865,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>A28</b></td><td>无新增 / 终止 / 自动点控功能权限的账号</td><td>按现有权限体系隐藏或禁用对应按钮</td></tr>
             <tr><td><b>A29</b></td><td>点击「终止」后、确认前，该记录已达成目标自然结束，再点「确定终止」</td><td>该记录保持已结束 · 达成目标，不改为手动终止；提示中的 N 不计这条</td></tr>
             <tr><td><b>A30</b></td><td>有执行中自动点控时点击清理旧数据，在确认框点「取消」</td><td>记录与数量均不变</td></tr>
-            <tr><td><b>A31</b></td><td>自动点控开启，新会员注册时点控生成失败</td><td>会员正常注册、正常游戏；不生成点控记录</td></tr>
+            <tr><td><b>A31</b></td><td>自动点控开启，新会员注册时 MY 游戏账号创建失败或点控生成失败</td><td>会员正常注册、正常游戏；不生成点控记录；系统日志记录会员ID、时间与失败原因</td></tr>
             <tr><td><b>A32</b></td><td>自动点控保存时不选点控类型 / 金额为空 / 金额不合规</td><td>分别出现对应红字提示，配置不保存</td></tr>
             <tr><td><b>A33</b></td><td>新增：会员层级未勾选 / VIP等级未勾选 / 代理ID未填 / 代理下没有会员</td><td>分别红字「请选择会员层级」/「请选择VIP等级」/「请输入代理ID」/「所选范围内没有会员」，不提交</td></tr>
             <tr><td><b>A34</b></td><td>新增时某个会员在 MY 游戏下发失败</td><td>该会员计入失败，失败明细显示 MY 游戏返回的原因；其他会员正常生效</td></tr>
@@ -856,9 +874,16 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>A37</b></td><td>按会员层级选择，层级内含试玩会员</td><td>已选人数与下发名单均不含试玩会员</td></tr>
             <tr><td><b>A38</b></td><td>自动点控开启，注册一个试玩账号</td><td>不生成点控</td></tr>
             <tr><td><b>A39</b></td><td>账号 A 创建的点控，被账号 B 新增点控覆盖</td><td>原记录已结束 · 新点控覆盖，操作人为 B，最后操作时间为覆盖时间</td></tr>
-            <tr><td><b>A40</b></td><td>对从未进入过 MY 游戏的会员新增点控</td><td>系统先创建游戏账号再下发，结果计入成功，列表出现执行中记录</td></tr>
-            <tr><td><b>A41</b></td><td>对已有 MY 游戏账号的会员新增点控</td><td>不重复注册，会员原游戏账号密码不变，正常下发</td></tr>
-            <tr><td><b>A42</b></td><td>新增点控时游戏账号创建失败</td><td>该会员计入失败，原因「游戏账号创建失败」；其他会员正常生效</td></tr>
+            <tr><td><b>A40</b></td><td>对在 MY 游戏侧没有游戏账号的会员新增点控</td><td>该会员计入失败，原因「游戏账号不存在」；不创建游戏账号；其他会员正常生效</td></tr>
+            <tr><td><b>A41</b></td><td>新增时某个会员下发超时</td><td>该会员计入失败，原因「下发超时」；不自动重发，不生成记录</td></tr>
+            <tr><td><b>A42</b></td><td>对已有执行中点控的会员新增，新点控下发失败</td><td>该会员计入失败；原点控保持执行中，结束原因、操作人不变</td></tr>
+            <tr><td><b>A43</b></td><td>提交新增点控</td><td>弹窗关闭，提示「已提交，正在下发 N 个会员」；列表上方显示「下发中：已处理 X / N」；完成后显示汇总与「查看结果」，列表刷新到第 1 页</td></tr>
+            <tr><td><b>A44</b></td><td>下发中查看「+ 新增点控」；下发中离开页面再回来</td><td>按钮置灰，悬停提示「上一批正在下发，完成后可再次提交」；离开页面不影响下发，回来后仍显示进度或结果</td></tr>
+            <tr><td><b>A45</b></td><td>下发结果有失败会员，点「复制失败会员ID」</td><td>失败会员ID以英文逗号连接复制到剪贴板，提示「已复制 N 个会员ID」</td></tr>
+            <tr><td><b>A46</b></td><td>对冻结、禁用的会员新增点控</td><td>正常下发，计入成功</td></tr>
+            <tr><td><b>A47</b></td><td>自动点控开启，分别通过前台注册、推广链接、后台添加会员、代理开户注册新会员</td><td>每个新会员都生成一条执行中的自动点控</td></tr>
+            <tr><td><b>A48</b></td><td>新增点控、终止、批量终止、清理旧数据、保存自动点控配置</td><td>后台操作日志均有对应记录</td></tr>
+            <tr><td><b>A49</b></td><td>已结束的记录点击刷新</td><td>进行中金额保持结束时的值，不再变化</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -869,8 +894,8 @@ table.mini th{background:var(--th-bg);font-weight:500;}
           <thead><tr><th>检查项</th><th>结论</th></tr></thead>
           <tbody>
             <tr><td><b>权限</b></td><td>菜单与功能权限纳入现有角色权限体系</td></tr>
-            <tr><td><b>操作留痕</b></td><td>每条记录保留操作人与最后操作时间；自动点控配置保留最后操作人与时间</td></tr>
-            <tr><td><b>边界状态</b></td><td>空列表、全部已结束、超人数上限、会员不存在、已有执行中点控、提交时已自然结束均已定义</td></tr>
+            <tr><td><b>操作留痕</b></td><td>每条记录保留操作人与最后操作时间；自动点控配置保留最后操作人与时间；新增、终止、清理、保存配置写入后台操作日志；自动点控生成失败写入系统日志</td></tr>
+            <tr><td><b>边界状态</b></td><td>空列表、全部已结束、超人数上限、会员不存在、没有游戏账号、下发超时、覆盖时新点控下发失败、已有执行中点控、提交时已自然结束均已定义</td></tr>
             <tr><td><b>口径</b></td><td>金额按平台默认货币，两位小数；进行中金额正为赢、负为输；时间按后台时区</td></tr>
             <tr><td><b>批量操作</b></td><td>批量新增上限 10,000 人并展示明细；批量终止只处理执行中记录</td></tr>
             <tr><td><b>多语言</b></td><td>后台页面沿用现有后台语言机制，无前台文案</td></tr>
@@ -883,18 +908,18 @@ table.mini th{background:var(--th-bg);font-weight:500;}
       <div class="req-block">
         <h2>开发测试重点说明</h2>
         <div class="dh-prose"><ol>
-          <li><strong>下发前先建游戏账号。</strong>点控接口要求游戏账号已存在。下发前先查会员在 MY 游戏侧是否已有游戏账号：没有的先调用注册接口创建，再下发点控；已有的不得重复注册（重复注册会覆盖游戏账号密码）。手动新增与自动点控都适用。</li>
-          <li><strong>同一会员只有一条执行中点控。</strong>新增前必须识别已有执行中点控并提示覆盖；覆盖后原记录结束原因为「新点控覆盖」，不能同时存在两条执行中记录。</li>
+          <li><strong>游戏账号随注册创建。</strong>点控接口要求游戏账号已存在。会员注册时已同步创建 MY 游戏账号，点控下发不再创建账号；下发时游戏账号不存在的会员计入失败，原因「游戏账号不存在」。自动点控须在 MY 游戏账号创建成功后再生成，账号创建失败则不生成，并写入系统日志。</li>
+          <li><strong>同一会员只有一条执行中点控。</strong>新增前必须识别已有执行中点控并提示覆盖；新点控下发成功后再将原记录结束（原因「新点控覆盖」），下发失败时原记录保持执行中，不能同时存在两条执行中记录。待确认：MY 接口新增时是否自动结束该游戏账号的原任务，如不会，需先调用取消接口。</li>
           <li><strong>结束原因要区分清楚。</strong>后台终止 = 手动终止；清理 = 清理自动点控；被新点控替换 = 新点控覆盖；其余结束 = 达成目标。终止时如记录已自然结束，保持达成目标。</li>
           <li><strong>进行中金额正负号。</strong>送分为正（会员赢），杀分为负（会员输）；送分超过 +目标、杀分低于 -目标才结束，等于目标不结束。</li>
-          <li><strong>批量下发要部分成功。</strong>单个会员失败不影响其他会员，结果弹窗必须列出失败会员与原因。</li>
+          <li><strong>批量下发异步执行、部分成功。</strong>提交后由后台逐个会员下发，页面显示进度，离开页面不中断；单个会员失败不影响其他会员，结果弹窗必须列出失败会员与原因。</li>
           <li><strong>10,000 人上限对五种方式统一生效</strong>，层级/VIP/代理以点击确定时的实际名单计数并去重。</li>
           <li><strong>自动点控不追溯。</strong>只对保存之后注册的会员生效；改配置不改已生成的记录；清理只动来源为自动点控且执行中的记录。</li>
           <li><strong>状态默认筛选是「执行中」。</strong>测试历史数据时需切到「全部」或「已结束」。</li>
           <li><strong>目标金额单位。</strong>后台按元输入（最多两位小数），调用接口时按分传整数（×100），范围 1 ~ 10,000,000 分；接口返回的进行中金额同样以分为单位，展示时 ÷100。</li>
           <li><strong>结束原因由后台记录。</strong>取消点控和被新点控覆盖，接口侧都返回「已完成」，与达成目标无法区分；后台必须在终止、覆盖、清理时自行记录结束原因。</li>
           <li><strong>点控记录以后台保存为准。</strong>查询接口不分页、最多返回最新 1,000 条；列表与历史记录用后台自己保存的数据，刷新时按会员查询并更新进行中金额与状态。</li>
-          <li><strong>新增接口不幂等。</strong>重复调用会创建新任务；批量下发逐个会员调用，超时或结果未知时不得自动重发，需查询核对后再判定成功或失败。</li>
+          <li><strong>新增接口不幂等。</strong>重复调用会创建新任务；超时或结果未知的会员一律计入失败（原因「下发超时」），不得自动重发。</li>
           <li><strong>时间与账号。</strong>接口返回时间为 UTC，列表按后台时区展示；接口按游戏账号名调用，需做会员与游戏账号的对应。</li>
           <li><strong>菜单名称。</strong>菜单位置示意图为现网名称；若客户端游戏排序需求先上线，「游戏排名」显示为「热门游戏排序」，本菜单仍排在最后。</li>
         </ol></div>
@@ -1024,7 +1049,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
     <div id="resFailWrap"><table class="mini"><thead><tr><th>会员ID</th><th>失败原因</th></tr></thead><tbody id="resFailBody"></tbody></table></div>
     <div class="m-help" id="resNote" style="margin-top:10px;"></div>
   </div>
-  <div class="modal-ft"><button class="bk-btn primary" data-close="resModal" type="button">我知道了</button></div>
+  <div class="modal-ft"><button class="bk-btn" id="btnCopyFail" type="button">复制失败会员ID</button><button class="bk-btn primary" data-close="resModal" type="button">我知道了</button></div>
 </div></div>
 
 <div class="modal-mask top" id="mConfirm"><div class="modal-box sm" role="dialog" aria-modal="true">
@@ -1246,15 +1271,21 @@ table.mini th{background:var(--th-bg);font-weight:500;}
   $('mIds').addEventListener('input', function(){ $('idCount').textContent = parseIds().length; $('verifyBox').classList.remove('show'); show($('errMember'), false); });
   function classify(ids){
     var run = {}; rows.forEach(function(r){ if(r.status==='run') run[r.id]=1; });
-    var ok=[], bad=[], busy=[], trial=[];
-    ids.forEach(function(id){ if(!/^\d{10}$/.test(id) || id.charAt(0)==='9') bad.push(id); else if(id.charAt(0)==='8') trial.push(id); else { ok.push(id); if(run[id]) busy.push(id); } });
-    return {ok:ok, bad:bad, busy:busy, trial:trial};
+    var ok=[], bad=[], busy=[], trial=[], timeout=[], noacct=[];
+    ids.forEach(function(id){
+      if(!/^\d{10}$/.test(id) || id.charAt(0)==='9') bad.push(id);
+      else if(id.charAt(0)==='8') trial.push(id);
+      else { ok.push(id); if(run[id]) busy.push(id); }
+    });
+    // 校验阶段看不出超时、没有游戏账号，下发时才计入失败
+    ok = ok.filter(function(id){ var c = id.charAt(0); if(c==='7'){ timeout.push(id); return false; } if(c==='6'){ noacct.push(id); return false; } return true; });
+    return {ok:ok, bad:bad, busy:busy, trial:trial, timeout:timeout, noacct:noacct};
   }
   $('btnVerify').addEventListener('click', function(){
     var ids = parseIds();
     if(!ids.length){ $('errMember').textContent='请输入会员ID'; show($('errMember'), true); return; }
     var c = classify(ids);
-    $('verifyBox').innerHTML = '共 '+ids.length+' 个会员：<span class="ok">有效 '+c.ok.length+' 个</span>'+
+    $('verifyBox').innerHTML = '共 '+ids.length+' 个会员：<span class="ok">有效 '+(c.ok.length+c.timeout.length+c.noacct.length)+' 个</span>'+
       (c.bad.length ? '；<span class="bad">不存在 '+c.bad.length+' 个：'+c.bad.slice(0,20).join('、')+(c.bad.length>20?' 等':'')+'</span>' : '')+
       (c.trial.length ? '；<span class="bad">试玩会员 '+c.trial.length+' 个（不支持点控）：'+c.trial.slice(0,20).join('、')+(c.trial.length>20?' 等':'')+'</span>' : '')+
       (c.busy.length ? '<br><span class="warnc">其中 '+c.busy.length+' 个已有执行中的点控：'+c.busy.slice(0,20).join('、')+(c.busy.length>20?' 等':'')+'，提交后原点控将终止</span>' : '');
@@ -1327,23 +1358,71 @@ table.mini th{background:var(--th-bg);font-weight:500;}
     if(busyN) confirmBox('提示', '本次提交中有 <b>'+busyN+'</b> 个会员已有执行中的点控。<br>继续提交后，这些会员的原点控将终止，并按本次设置重新开始。', '继续提交', false, submitAdd);
     else submitAdd();
   });
+  // ---------- 后台下发任务（进度条 + 下发结果） ----------
+  var task = null, taskTimer = null;
+  function paintTask(){
+    var bar = $('taskBar');
+    if(!task){ show(bar, false); $('btnAdd').disabled = false; $('btnAdd').title = ''; return; }
+    show(bar, true);
+    bar.classList.toggle('done', !task.running);
+    $('btnAdd').disabled = task.running;
+    $('btnAdd').title = task.running ? '上一批正在下发，完成后可再次提交' : '';
+    var f = function(n){ return n.toLocaleString('en-US'); };
+    bar.innerHTML = task.running
+      ? '<span>下发中：已处理 <b>'+f(task.done)+'</b> / '+f(task.total)+'</span><span class="bar"><i style="width:'+Math.round(task.done/task.total*100)+'%"></i></span>'
+      : '<span>下发完成：提交 <b>'+f(task.total)+'</b>，成功 <b style="color:#389e0d;">'+f(task.okN)+'</b>，失败 <b style="color:var(--danger);">'+f(task.fail.length)+'</b></span><button class="lk" id="taskView" type="button">查看结果</button><button class="x" id="taskClose" type="button" aria-label="关闭">×</button>';
+    if(!task.running){
+      $('taskView').addEventListener('click', openResult);
+      $('taskClose').addEventListener('click', function(){ task = null; paintTask(); });
+    }
+  }
+  function openResult(){
+    var fail = task.fail;
+    $('resAll').textContent = task.total.toLocaleString('en-US'); $('resOk').textContent = task.okN.toLocaleString('en-US'); $('resFail').textContent = fail.length;
+    $('resFailWrap').style.display = fail.length ? '' : 'none';
+    show($('btnCopyFail'), fail.length > 0);
+    $('resFailBody').innerHTML = fail.map(function(f){ return '<tr><td>'+esc(f.id)+'</td><td style="color:var(--danger);">'+f.why+'</td></tr>'; }).join('');
+    $('resNote').textContent = task.mode==='custom' ? '成功的会员已出现在列表中，状态为「执行中」。' : '成功的会员已出现在列表中，状态为「执行中」（原型仅插入 3 条示意记录）。';
+    openM('resModal');
+  }
+  $('btnCopyFail').addEventListener('click', function(){
+    var text = task.fail.map(function(f){ return f.id; }).join(','), n = task.fail.length;
+    var done = function(){ toast('已复制 '+n+' 个会员ID'); };
+    var fallback = function(){ var ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); done(); };
+    try{ navigator.clipboard.writeText(text).then(done, fallback); }catch(e){ fallback(); }
+  });
+
   function submitAdd(){
     $('addConfirm').disabled = true;
-    var p = pending, t = nowStr(), okIds, fail = [];
-    if(p.mode==='custom'){ var c = classify(p.ids); okIds = c.ok; fail = c.bad.map(function(id){ return {id:id, why:'会员不存在'}; }).concat(c.trial.map(function(id){ return {id:id, why:'试玩会员不支持点控'}; })); }
+    var p = pending, okIds, fail = [];
+    if(p.mode==='custom'){
+      var c = classify(p.ids); okIds = c.ok;
+      fail = c.bad.map(function(id){ return {id:id, why:'会员不存在'}; })
+        .concat(c.trial.map(function(id){ return {id:id, why:'试玩会员不支持点控'}; }))
+        .concat(c.noacct.map(function(id){ return {id:id, why:'游戏账号不存在'}; }))
+        .concat(c.timeout.map(function(id){ return {id:id, why:'下发超时'}; }));
+    }
     else okIds = p.sample.slice();
-    okIds.forEach(function(id){
-      rows.forEach(function(r){ if(r.id===id && r.status==='run'){ r.status='end'; r.reason='新点控覆盖'; r.op=ME; r.optime=t; } });
-      var ex = rows.filter(function(r){ return r.id===id; })[0];
-      rows.push({key:'k'+(seq++), id:id, acc: ex ? ex.acc : 'user'+id.slice(-4), type:p.type, script:p.script, target:p.amt, actual:0, status:'run', reason:'', src:'manual', apply:t, remark:p.remark, op:ME, optime:t});
-    });
-    var total = p.mode==='custom' ? p.ids.length : p.groupN, okN = p.mode==='custom' ? okIds.length : p.groupN;
-    $('resAll').textContent = total.toLocaleString('en-US'); $('resOk').textContent = okN.toLocaleString('en-US'); $('resFail').textContent = fail.length;
-    $('resFailWrap').style.display = fail.length ? '' : 'none';
-    $('resFailBody').innerHTML = fail.map(function(f){ return '<tr><td>'+esc(f.id)+'</td><td style="color:var(--danger);">'+f.why+'</td></tr>'; }).join('');
-    $('resNote').textContent = p.mode==='custom' ? '成功的会员已出现在列表中，状态为「执行中」。' : '成功的会员已出现在列表中，状态为「执行中」（原型仅插入 3 条示意记录）。';
-    closeM('addModal'); openM('resModal');
-    readFilters(); page = 1; render();
+    var total = p.mode==='custom' ? p.ids.length : p.groupN;
+    task = {running:true, mode:p.mode, total:total, done:0, okN: p.mode==='custom' ? okIds.length : p.groupN - fail.length, fail:fail};
+    closeM('addModal');
+    toast('已提交，正在下发 '+total.toLocaleString('en-US')+' 个会员');
+    paintTask();
+    // 演示：约 3 秒内逐步处理完成；成功后才结束原点控（新点控覆盖），失败的会员原点控保持执行中
+    clearInterval(taskTimer);
+    taskTimer = setInterval(function(){
+      task.done = Math.min(task.total, task.done + Math.max(1, Math.ceil(task.total/12)));
+      if(task.done < task.total){ paintTask(); return; }
+      clearInterval(taskTimer);
+      var t = nowStr();
+      okIds.forEach(function(id){
+        rows.forEach(function(r){ if(r.id===id && r.status==='run'){ r.status='end'; r.reason='新点控覆盖'; r.op=ME; r.optime=t; } });
+        var ex = rows.filter(function(r){ return r.id===id; })[0];
+        rows.push({key:'k'+(seq++), id:id, acc: ex ? ex.acc : 'user'+id.slice(-4), type:p.type, script:p.script, target:p.amt, actual:0, status:'run', reason:'', src:'manual', apply:t, remark:p.remark, op:ME, optime:t});
+      });
+      task.running = false; paintTask();
+      readFilters(); page = 1; render();
+    }, 250);
   }
 
   // ---------- 自动点控 ----------
@@ -1386,7 +1465,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
 
   // ---------- 标注开关 / 重置 ----------
   $('markToggle').addEventListener('change', function(){ $('protoSec').classList.toggle('hide-marks', !this.checked); });
-  $('resetDemo').addEventListener('click', function(){ seed(); resetFilters(); render(); toast('已重置演示数据'); });
+  $('resetDemo').addEventListener('click', function(){ clearInterval(taskTimer); task = null; paintTask(); seed(); resetFilters(); render(); toast('已重置演示数据'); });
 
   // ---------- 表头「?」提示：悬停或点击显示，点击其他位置关闭 ----------
   var tipEl = $('bkTip'), tipFor = null;
