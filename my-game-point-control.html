@@ -501,7 +501,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>剧本</b></td><td>新增时选择的剧本</td><td>只显示剧本名称，如「快送」</td></tr>
             <tr><td><b>默认货币</b></td><td>平台默认计算货币</td><td>表头带「?」，鼠标悬停或点击显示：平台默认计算货币，金额均按该币种计算和展示</td></tr>
             <tr><td><b>目标金额</b></td><td>新增时填写的金额</td><td>千分位，两位小数</td></tr>
-            <tr><td><b>进行中金额</b></td><td>剧本已完成的金额</td><td>两位小数；正数绿色带「+」，负数红色带「-」；表头「?」鼠标悬停或点击显示正负含义与结束条件；已结束的记录保留结束时的值，不再更新</td></tr>
+            <tr><td><b>进行中金额</b></td><td>剧本已完成的金额；取自接口 SpecCtrl/Query 返回的 actual_value（分）÷100</td><td>两位小数；正数绿色带「+」，负数红色带「-」；表头「?」鼠标悬停或点击显示正负含义与结束条件；已结束的记录保留结束时的值，不再更新</td></tr>
             <tr><td><b>状态</b></td><td>执行中 / 已结束</td><td>执行中蓝色标签，已结束灰色标签</td></tr>
             <tr><td><b>结束原因</b></td><td>达成目标 / 手动终止 / 新点控覆盖 / 清理自动点控</td><td>执行中的记录显示「-」</td></tr>
             <tr><td><b>来源</b></td><td>手动新增 / 自动点控</td><td>自动点控为橙色标签</td></tr>
@@ -826,6 +826,15 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>影响</b></td><td>被点控会员在 MY 系列全部厂商的游戏输赢；前台无界面变化</td></tr>
             <tr><td><b>风险：批量误操作</b></td><td>按层级、代理线批量杀分影响面大，提交前展示人数、覆盖提示与结果明细，供运营核对</td></tr>
             <tr><td><b>风险：自动点控持续生效</b></td><td>开关开启期间每个新会员都会被点控，配置时需确认类型与金额；可通过关闭开关 + 清理旧数据停止</td></tr>
+          </tbody>
+        </table></div>
+        <h3>接口对应</h3>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>场景</th><th>接口</th><th>传入</th><th>取回与用途</th></tr></thead>
+          <tbody>
+            <tr><td><b>新增点控下发（手动、自动）</b></td><td>SpecCtrl/Add</td><td>playerName：会员的 MY 游戏账号名；control_type：1 送分 / 2 杀分；script_id：剧本 ID；target_value：目标金额 ×100（分）</td><td>返回点控记录，新任务 status=0（正在执行）；会员已有执行中任务时，接口自动将旧任务结束并创建新任务</td></tr>
+            <tr><td><b>终止、批量终止、清理旧数据</b></td><td>SpecCtrl/Cancel</td><td>playerName</td><td>任务结束（接口 status=2）；会员没有执行中任务时接口返回失败，按「提交时已自然结束」处理，保持达成目标</td></tr>
+            <tr><td><b>进入页面、查询、刷新</b></td><td>SpecCtrl/Query</td><td>playerName</td><td>actual_value（分）÷100 为进行中金额；status=2 且后台未记录终止、覆盖、清理时，结束原因为达成目标；接口最多返回最新 1,000 条、不分页</td></tr>
           </tbody>
         </table></div>
       </div>
