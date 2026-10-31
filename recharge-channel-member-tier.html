@@ -349,7 +349,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
         <thead><tr><th>位置</th><th>改动</th></tr></thead>
         <tbody>
           <tr><td>支付通道管理 › 添加 / 修改</td><td>新增必填字段「会员层级」,首行「全部层级」,下方列出商户全部层级;交互与福利中心活动的「参与层级」一致。</td></tr>
-          <tr><td>支付通道管理 › 列表</td><td>新增「会员层级」列,显示「全部层级」或「部分层级」。</td></tr>
+          <tr><td>支付通道管理 › 列表</td><td>新增「会员层级」列,全部层级时显示「全部层级」,部分层级时列出所选层级名称。</td></tr>
           <tr><td>客户端充值页</td><td>通道展示条件增加「会员所属层级在该通道的会员层级范围内」。页面样式不变。</td></tr>
           <tr><td>历史通道</td><td>上线时统一设为「全部层级」,客户端可见范围与上线前一致。</td></tr>
         </tbody>
@@ -442,7 +442,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
           <div class="flow-branch"><span class="cond">会员层级一个未选</span><span class="arr">→</span><span class="result bad">提示「请选择会员层级」,不保存</span></div>
           <div class="flow-branch"><span class="cond">其他必填项未填</span><span class="arr">→</span><span class="result bad">对应字段红字提示,不保存</span></div>
           <div class="flow-branch"><span class="cond">「全部层级」为勾选</span><span class="arr">→</span><span class="result good">保存为全部层级,列表显示「全部层级」,立即生效</span></div>
-          <div class="flow-branch"><span class="cond">「全部层级」为半选</span><span class="arr">→</span><span class="result good">保存所选层级,列表显示「部分层级」,立即生效</span></div>
+          <div class="flow-branch"><span class="cond">「全部层级」为半选</span><span class="arr">→</span><span class="result good">保存所选层级,列表列出所选层级名称,立即生效</span></div>
           <div class="flow-branch"><span class="cond">点击「取消」/ 关闭</span><span class="arr">→</span><span class="result neutral">不保存,配置不变</span></div>
         </div>
         <div class="cap">图:保存会员层级配置的流程(点击放大)</div>
@@ -457,7 +457,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
       <div class="mm-root">列表「会员层级」列</div>
       <div class="mm-branches">
         <div class="mm-b"><div class="mm-node">位置</div><div class="mm-leaves"><span class="mm-leaf">「会员等级」与「排除会员标签」之间<span class="tag-new">本期新增</span></span></div></div>
-        <div class="mm-b"><div class="mm-node">取值</div><div class="mm-leaves"><span class="mm-leaf">全部层级</span><span class="mm-leaf">部分层级</span></div></div>
+        <div class="mm-b"><div class="mm-node">取值</div><div class="mm-leaves"><span class="mm-leaf">全部层级</span><span class="mm-leaf">所选层级名称(部分层级时)</span></div></div>
         <div class="mm-b"><div class="mm-node">更新</div><div class="mm-leaves"><span class="mm-leaf">添加 / 修改保存后刷新</span><span class="mm-leaf">计入最近操作时间、最近操作人</span></div></div>
       </div>
     </div><div class="cap">功能结构图(点击放大)</div></div>
@@ -466,12 +466,12 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
       <h3>列字段</h3>
       <div class="tbl-wrap"><table class="dh-table-simple">
         <thead><tr><th>字段</th><th>取值</th><th>示例</th></tr></thead>
-        <tbody><tr><td>会员层级 <span class="tag-new">本期新增</span></td><td>通道保存为全部层级时显示「全部层级」;保存为部分层级时显示「部分层级」。</td><td>全部层级</td></tr></tbody>
+        <tbody><tr><td>会员层级 <span class="tag-new">本期新增</span></td><td>通道保存为全部层级时显示「全部层级」;保存为部分层级时按层级列表顺序列出所选层级名称,用逗号分隔,超出列宽自动换行,与「会员等级」列一致。</td><td>全部层级<br>黄金会员,铂金会员,钻石会员</td></tr></tbody>
       </table></div>
       <div class="dh-prose">
         <ol>
           <li>列位置在「会员等级」之后、「排除会员标签」之前,与表单字段顺序一致。</li>
-          <li>表头带「?」提示图标,鼠标悬停或点击显示:「全部层级:所有层级会员可见,含之后新建的层级;部分层级:仅勾选的层级会员可见,具体层级在修改页查看。」</li>
+          <li>表头带「?」提示图标,鼠标悬停或点击显示:「全部层级:所有层级会员可见,含之后新建的层级;部分层级时列出所选层级名称,仅这些层级的会员可见。」</li>
           <li>页面列设置(工具栏齿轮)中同步出现该列,可与其他列一样显示或隐藏。</li>
           <li>筛选栏不新增层级筛选项,查询、重置、通道排序逻辑不变。</li>
           <li>上线后历史通道该列均显示「全部层级」。</li>
@@ -565,7 +565,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
       <li><strong>F2【P0】全部层级联动</strong>:勾选全选、取消全不选;部分勾选显示半选;逐项勾满自动勾上全部层级。</li>
       <li><strong>F3【P0】必填校验</strong>:未勾选任何层级点击「确认」,字段下方提示「请选择会员层级」,不保存。</li>
       <li><strong>F4【P0】全部层级动态包含新层级</strong>:保存为全部层级的通道,对之后新建的层级同样可见;部分层级的通道不自动包含新层级。</li>
-      <li><strong>F5【P0】列表新增「会员层级」列</strong>:显示「全部层级」或「部分层级」,保存后刷新。</li>
+      <li><strong>F5【P0】列表新增「会员层级」列</strong>:全部层级时显示「全部层级」,部分层级时列出所选层级名称,保存后刷新。</li>
       <li><strong>F6【P0】客户端按层级过滤通道</strong>:会员所属层级不在通道层级范围内时不展示该通道,与会员等级、排除标签同时生效。</li>
       <li><strong>F7【P0】历史通道初始化</strong>:上线时所有已有通道设为全部层级。</li>
       <li><strong>F8【P1】操作留痕</strong>:修改会员层级更新最近操作时间与最近操作人,「支付通道日志」按现有方式记录会员层级的变更。</li>
@@ -593,7 +593,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
         <tr><td>A5</td><td>全部勾选状态下取消一个层级</td><td>「全部层级」显示半选。</td></tr>
         <tr><td>A6</td><td>全不选后逐个勾满所有层级</td><td>「全部层级」自动变为勾选,保存后列表显示「全部层级」。</td></tr>
         <tr><td>A7</td><td>不勾任何层级,点击「确认」</td><td>提示「请选择会员层级」,不保存,抽屉不关闭。</td></tr>
-        <tr><td>A8</td><td>勾选部分层级,填写其他必填项后确认</td><td>保存成功;列表「会员层级」显示「部分层级」;最近操作时间、最近操作人更新。</td></tr>
+        <tr><td>A8</td><td>勾选部分层级,填写其他必填项后确认</td><td>保存成功;列表「会员层级」列出所勾选的层级名称;最近操作时间、最近操作人更新。</td></tr>
         <tr><td>A9</td><td>对部分层级通道点击「编辑」</td><td>抽屉标题「修改」,只勾选已保存的层级,「全部层级」半选。</td></tr>
         <tr><td>A10</td><td>上线后打开任一历史通道「修改」</td><td>「全部层级」及所有层级勾选;列表显示「全部层级」;客户端可见范围与上线前一致。</td></tr>
         <tr><td>A11</td><td>通道为部分层级且勾选「黄金会员」;黄金会员会员(等级在范围内、无排除标签)打开充值页</td><td>能看到该通道。</td></tr>
@@ -603,7 +603,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
         <tr><td>A15</td><td>修改某通道层级并保存,会员重新打开充值页</td><td>按新配置展示,无需重新登录。</td></tr>
         <tr><td>A16</td><td>把会员调整到未勾选的层级,会员重新打开充值页</td><td>看不到该通道。</td></tr>
         <tr><td>A17</td><td>新建一个层级,把会员调整到该层级</td><td>全部层级通道可见;部分层级通道不可见;部分层级通道的修改页中新层级为未勾选。</td></tr>
-        <tr><td>A18</td><td>删除一个已被部分层级通道勾选的层级</td><td>修改页不再显示该层级,其余勾选不变;原属该层级的会员按调整后的层级判断通道是否展示。</td></tr>
+        <tr><td>A18</td><td>删除一个已被部分层级通道勾选的层级</td><td>修改页和列表不再显示该层级,其余勾选不变;原属该层级的会员按调整后的层级判断通道是否展示。</td></tr>
         <tr><td>A19</td><td>部分层级通道勾选的层级全部被删除</td><td>该通道对所有会员不展示;修改页会员层级为空,不勾选无法保存。</td></tr>
         <tr><td>A20</td><td>会员所有可用通道都因层级被过滤</td><td>客户端沿用现有「无可用通道」展示。</td></tr>
         <tr><td>A21</td><td>通道状态为禁用,层级包含该会员</td><td>不展示该通道。</td></tr>
@@ -629,7 +629,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
       <li><strong>层级判断用会员当前所属层级。</strong>会员层级与自定义层级都在同一个选项列表里,会员只会命中其中一个。</li>
       <li><strong>删除层级后要同步清理通道配置。</strong>修改页不能出现已删除的层级;层级被删空的部分层级通道对所有人不可见。</li>
       <li><strong>历史通道初始化为全部层级。</strong>上线后抽查历史通道,客户端可见范围应与上线前完全一致。</li>
-      <li><strong>列表只显示「全部层级 / 部分层级」。</strong>具体层级在修改页查看。</li>
+      <li><strong>列表按保存状态显示。</strong>保存为全部层级时只显示「全部层级」,不要展开成层级名;部分层级时列出所选层级名称,已删除的层级不显示。</li>
       <li><strong>层级只过滤通道,不过滤支付方式。</strong>某支付方式下的通道对会员全部被过滤时,支付方式仍要显示,不能顺带隐藏。</li>
     </ol></div></div>
   </div>
@@ -661,7 +661,7 @@ var UNITS=['元-整数','元-两位小数','角-整数','角-一位小数','分'
 var CH=[
  {sort:'5',no:'PIX_QRCODE',name:'U2CPAY代收',plat:'U2CPAY支付',pay:'U2CPAY / pixⅡ',unit:'分',rate:'1',min:'3',max:'88888',fixed:'5,50,100,1000,5000,10000,31111',limit:'1000000000000000000',limitList:'88888',vips:VIPS.slice(),tags:[],tierAll:true,tiers:TIERS.slice(),desc:'',tip:'😊Estilo de vida e uma vivência pautada pela moda — ou, talvez, um gesto com as palmas das mãos unida',anyAmt:true,on:true,real:false,cnt:'44',amt:'6105',time:'2026-10-25 11:55:00 (UTC-3)',op:'bxduoduo01'},
  {sort:'10',no:'<三方通道号（无）>',name:'NewGPay代收',plat:'NewGPay',pay:'NewGPay / NewGPay',unit:'元-整数',rate:'2',min:'1',max:'500000',fixed:'10,20,50,100,1000,5000,10000,30000,490000',limit:'10000000000000000000',limitList:'500000',vips:VIPS.slice(),tags:[],tierAll:true,tiers:TIERS.slice(),desc:'',tip:'',anyAmt:true,on:true,real:false,cnt:'25',amt:'658',time:'2026-10-27 02:17:18 (UTC-3)',op:'bxduoduo01'},
- {sort:'',no:'TX_BAR_001',name:'bestpay',plat:'bestpay支付',pay:'bestpay / pix_bestpay',unit:'元-整数',rate:'1',min:'1',max:'1000000',fixed:'5,20,50,100,1000,5000,10000,30000,490000',limit:'1000000000000000000',limitList:'1000000',vips:VIPS.slice(),tags:[],tierAll:true,tiers:TIERS.slice(),desc:'',tip:'帆帆帆帆',anyAmt:true,on:true,real:false,cnt:'686',amt:'364786',time:'2026-10-26 05:22:15 (UTC-3)',op:'bxduoduo01'}
+ {sort:'',no:'TX_BAR_001',name:'bestpay',plat:'bestpay支付',pay:'bestpay / pix_bestpay',unit:'元-整数',rate:'1',min:'1',max:'1000000',fixed:'5,20,50,100,1000,5000,10000,30000,490000',limit:'1000000000000000000',limitList:'1000000',vips:VIPS.slice(),tags:[],tierAll:false,tiers:['黄金会员','铂金会员','钻石会员'],desc:'',tip:'帆帆帆帆',anyAmt:true,on:true,real:false,cnt:'686',amt:'364786',time:'2026-10-26 05:22:15 (UTC-3)',op:'bxduoduo01'}
 ];
 function $(id){return document.getElementById(id)}
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
@@ -697,7 +697,7 @@ PLATS.forEach(function(p){$('fPlat').insertAdjacentHTML('beforeend','<option>'+e
 
 /* ---------- 列表 ---------- */
 var COLS=['排序','三方通道号/通道名称/三方平台','状态','是否需要实名','通道说明','支付方式/存款方式','货币单位','费率 / 最小 / 最大 / 固定金额','会员等级','会员层级','排除会员标签','充值金额上限','充值次数','充值金额','金额类型','温馨提示文案','最近操作时间','最近操作人','操作'];
-$('dtHead').innerHTML=COLS.map(function(c){if(c==='会员层级')return '<th class="mk">会员层级<i class="th-tip" tabindex="0" data-tip="全部层级:所有层级会员可见,含之后新建的层级;部分层级:仅勾选的层级会员可见,具体层级在修改页查看。">?</i><span class="mk-tag">本期新增</span></th>';if(c==='操作')return '<th class="op">操作<span class="mk-tag" data-chg="「编辑」打开的修改页新增「会员层级」配置,回显已保存的层级。">本期调整</span></th>';return '<th>'+c+'</th>'}).join('');
+$('dtHead').innerHTML=COLS.map(function(c){if(c==='会员层级')return '<th class="mk">会员层级<i class="th-tip" tabindex="0" data-tip="全部层级:所有层级会员可见,含之后新建的层级;部分层级时列出所选层级名称,仅这些层级的会员可见。">?</i><span class="mk-tag">本期新增</span></th>';if(c==='操作')return '<th class="op">操作<span class="mk-tag" data-chg="「编辑」打开的修改页新增「会员层级」配置,回显已保存的层级。">本期调整</span></th>';return '<th>'+c+'</th>'}).join('');
 (function(){var tip=$('tipbox'),el=document.querySelector('#dtHead .th-tip');
   function show(){var r=el.getBoundingClientRect();tip.textContent=el.dataset.tip;tip.style.display='block';tip.style.left=Math.max(8,r.left-120)+'px';tip.style.top=(r.bottom+6)+'px'}
   function hide(){tip.style.display='none'}
@@ -722,7 +722,7 @@ function renderTable(){
     '<td>'+esc(c.unit)+'</td>'+
     '<td style="white-space:nowrap">'+esc(c.rate)+'% / '+esc(c.min)+' ~ '+esc(c.max)+' /<br>['+esc(c.fixed)+']</td>'+
     '<td class="wrap">'+esc(c.vips.join(','))+'</td>'+
-    '<td class="mk" style="white-space:nowrap">'+(c.tierAll?'全部层级':'部分层级')+'</td>'+
+    '<td class="mk'+(c.tierAll?'" style="white-space:nowrap"':' wrap"')+'>'+(c.tierAll?'全部层级':esc(c.tiers.join(',')))+'</td>'+
     '<td>'+(c.tags.length?esc(c.tags.join(',')):'-')+'</td>'+
     '<td>'+esc(c.limitList)+'</td>'+
     '<td>'+esc(c.cnt)+'</td><td>'+esc(c.amt)+'</td>'+
@@ -822,7 +822,7 @@ $('drOk').addEventListener('click',function(){
   var row=cur;if(cur<0){CH.push(c);row=CH.length-1}
   closeDrawer();renderTable();renderSim();
   var tr=$('dtBody').children[row];if(tr){var td=tr.querySelector('td.mk');td.style.transition='background .3s';td.style.background='#ffe7ba';setTimeout(function(){td.style.background=''},1600)}
-  toast('原型演示:已写回列表,会员层级显示为「'+(c.tierAll?'全部层级':'部分层级')+'」。<a id="toSim">查看客户端可见结果</a>');
+  toast('原型演示:已写回列表,会员层级显示为「'+(c.tierAll?'全部层级':esc(c.tiers.length+' 个所选层级'))+'」。<a id="toSim">查看客户端可见结果</a>');
 });
 var tt;function toast(html){var t=$('toast');t.innerHTML=html;t.style.display='block';clearTimeout(tt);tt=setTimeout(function(){t.style.display='none'},4200);var a=$('toSim');if(a)a.addEventListener('click',function(){t.style.display='none';showPrimary('docs');document.querySelector('.dh-tab[data-tab="client"]').click();window.scrollTo(0,0)})}
 
