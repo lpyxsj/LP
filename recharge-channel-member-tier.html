@@ -201,6 +201,8 @@ table.dt .lnk{color:var(--primary);white-space:nowrap}
 table.dt th.mk{background:var(--mark-bg);box-shadow:inset 3px 0 0 var(--mark)}
 table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
 .th-tip{display:inline-block;width:14px;height:14px;border:1px solid var(--text-secondary);border-radius:50%;font-size:10px;line-height:12px;text-align:center;color:var(--text-secondary);margin-left:4px;vertical-align:1px;cursor:pointer;font-style:normal;font-weight:400}
+.mk-tag[data-chg]{cursor:pointer}
+.sider .mk-tag,.itabs .mk-tag{margin-left:6px}
 .mk-tag{display:inline-block;font-size:10px;line-height:15px;padding:0 4px;border-radius:2px;background:var(--mark);color:#fff;margin-left:4px;vertical-align:1px;font-weight:400}
 .st-tag{display:inline-block;font-size:12px;padding:0 7px;line-height:20px;border-radius:2px;border:1px solid #b7eb8f;background:#f6ffed;color:#52c41a}
 .st-tag.off{border-color:#ffccc7;background:#fff2f0;color:var(--danger)}
@@ -278,6 +280,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
 <section class="dh-primary-panel active" data-primary-panel="proto">
   <div class="legend">
     <span><i class="lg-sw"></i>橙色标记 = 本期新增(添加/修改页「会员层级」、列表「会员层级」列)</span>
+    <span><span class="mk-tag" style="font-family:inherit">本期调整</span> = 入口本身不变,进入后有改动;悬停或点击查看改了什么(仅为原型标注,非页面元素)</span>
     <span>可操作:点「添加」或行内「编辑」打开表单;勾选层级、点「确认」写回列表。查询、重置、通道排序、工具栏图标为静态展示。</span>
   </div>
   <div class="proto-scroll">
@@ -296,7 +299,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
       <div class="pcont"><div class="card">
         <div class="itabs" id="itabs">
           <button type="button" data-it="a">三方平台管理</button>
-          <button type="button" data-it="b" class="on">支付通道管理</button>
+          <button type="button" data-it="b" class="on">支付通道管理<span class="mk-tag" data-chg="支付通道管理:添加 / 修改页新增「会员层级」配置;列表新增「会员层级」列;客户端充值页按会员层级过滤通道。">本期调整</span></button>
           <button type="button" data-it="c">支付成功率</button>
           <button type="button" data-it="d">支付通道日志</button>
         </div>
@@ -309,7 +312,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
             <select class="f-sel" style="width:156px" aria-label="状态" id="fSt"><option>启用</option><option>禁用</option></select>
             <div class="f-btns"><button class="btn" type="button">重 置</button><button class="btn pri" type="button">查 询</button></div>
           </div>
-          <div class="toolbar"><button class="btn pri" type="button" id="btnAdd">添 加</button><button class="btn" type="button">通道排序</button><span class="icons"><span>⟳</span><span>⊤</span><span>⚙︎</span></span></div>
+          <div class="toolbar"><span class="mk-tag" data-chg="添加页新增必填字段「会员层级」,默认勾选全部层级。">本期调整</span><button class="btn pri" type="button" id="btnAdd">添 加</button><button class="btn" type="button">通道排序</button><span class="icons"><span>⟳</span><span>⊤</span><span>⚙︎</span></span></div>
           <div class="tblbox"><table class="dt" id="dt"><thead><tr id="dtHead"></tr></thead><tbody id="dtBody"></tbody></table></div>
           <div class="pager"><span id="total">共 3 条数据</span><span class="pg">1</span><span class="sz">50 条/页 ∨</span></div>
         </div>
@@ -678,7 +681,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'){lb.classLis
 /* ---------- 侧边栏 ---------- */
 var MENU=[['平台概况'],['系统管理'],['商户游戏管理'],['会员管理',['账变记录','会员列表','会员层级','会员详情','会员财务管理','会员注册记录','会员登录信息','会员标签配置','会员信息变更记录','会员标签变更记录','用户回访']],['商户财务管理'],['报表查询'],['代理中心(无限极差)'],['商户财务配置',['支付管理','支付方式管理','支付方式排序','充值返现设置','代付商户管理','提现管理']],['消息管理'],['福利中心',['推荐好友领彩金','VIP管理','活动列表(新)','活动统计','优惠统计','兑换码']],['运营相关'],['推广渠道管理'],['返水管理']];
 var ICON='<svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2.5" y="2.5" width="11" height="11" rx="2"/></svg>';
-$('menu').innerHTML=MENU.map(function(m,i){return '<li class="mi'+(m[0]==='商户财务配置'?' open':'')+'" data-i="'+i+'"><div class="mt">'+ICON+'<span>'+m[0]+'</span><span class="ar">∨</span></div>'+(m[1]?'<ul class="subs">'+m[1].map(function(s){return '<li'+(s==='支付管理'?' class="cur"':'')+'>'+s+'</li>'}).join('')+'</ul>':'')+'</li>'}).join('');
+$('menu').innerHTML=MENU.map(function(m,i){return '<li class="mi'+(m[0]==='商户财务配置'?' open':'')+'" data-i="'+i+'"><div class="mt">'+ICON+'<span>'+m[0]+'</span><span class="ar">∨</span></div>'+(m[1]?'<ul class="subs">'+m[1].map(function(s){return '<li'+(s==='支付管理'?' class="cur"':'')+'>'+s+(s==='支付管理'?'<span class="mk-tag" data-chg="支付管理 › 支付通道管理:新增「会员层级」配置与列表列,其他页签不变。">本期调整</span>':'')+'</li>'}).join('')+'</ul>':'')+'</li>'}).join('');
 document.querySelectorAll('.mi>.mt').forEach(function(t){t.addEventListener('click',function(){var li=t.parentNode;if(!li.querySelector('.subs'))return;var was=li.classList.contains('open');document.querySelectorAll('.mi').forEach(function(x){x.classList.remove('open')});if(!was)li.classList.add('open')})});
 
 /* 时钟 UTC-3 */
@@ -694,13 +697,19 @@ PLATS.forEach(function(p){$('fPlat').insertAdjacentHTML('beforeend','<option>'+e
 
 /* ---------- 列表 ---------- */
 var COLS=['排序','三方通道号/通道名称/三方平台','状态','是否需要实名','通道说明','支付方式/存款方式','货币单位','费率 / 最小 / 最大 / 固定金额','会员等级','会员层级','排除会员标签','充值金额上限','充值次数','充值金额','金额类型','温馨提示文案','最近操作时间','最近操作人','操作'];
-$('dtHead').innerHTML=COLS.map(function(c){if(c==='会员层级')return '<th class="mk">会员层级<i class="th-tip" tabindex="0" data-tip="全部层级:所有层级会员可见,含之后新建的层级;部分层级:仅勾选的层级会员可见,具体层级在修改页查看。">?</i><span class="mk-tag">本期新增</span></th>';return '<th'+(c==='操作'?' class="op"':'')+'>'+c+'</th>'}).join('');
+$('dtHead').innerHTML=COLS.map(function(c){if(c==='会员层级')return '<th class="mk">会员层级<i class="th-tip" tabindex="0" data-tip="全部层级:所有层级会员可见,含之后新建的层级;部分层级:仅勾选的层级会员可见,具体层级在修改页查看。">?</i><span class="mk-tag">本期新增</span></th>';if(c==='操作')return '<th class="op">操作<span class="mk-tag" data-chg="「编辑」打开的修改页新增「会员层级」配置,回显已保存的层级。">本期调整</span></th>';return '<th>'+c+'</th>'}).join('');
 (function(){var tip=$('tipbox'),el=document.querySelector('#dtHead .th-tip');
   function show(){var r=el.getBoundingClientRect();tip.textContent=el.dataset.tip;tip.style.display='block';tip.style.left=Math.max(8,r.left-120)+'px';tip.style.top=(r.bottom+6)+'px'}
   function hide(){tip.style.display='none'}
   el.addEventListener('mouseenter',show);el.addEventListener('mouseleave',hide);
   el.addEventListener('click',function(e){e.stopPropagation();tip.style.display==='block'?hide():show()});
   document.addEventListener('click',hide);document.querySelector('.tblbox').addEventListener('scroll',hide);})();
+(function(){var tip=$('tipbox');
+  function show(el){var r=el.getBoundingClientRect();tip.textContent=el.dataset.chg;tip.style.display='block';tip.style.left=Math.max(8,Math.min(r.left-40,innerWidth-296))+'px';tip.style.top=(r.bottom+6)+'px'}
+  document.querySelectorAll('[data-chg]').forEach(function(el){
+    el.addEventListener('mouseenter',function(){show(el)});el.addEventListener('mouseleave',function(){tip.style.display='none'});
+    el.addEventListener('click',function(e){e.stopPropagation();e.preventDefault();show(el)});
+  });})();
 function renderTable(){
   $('dtBody').innerHTML=CH.map(function(c,i){
     return '<tr>'+
