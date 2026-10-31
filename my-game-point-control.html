@@ -353,7 +353,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
           <div class="bk-field"><label>申请时间</label><span class="bk-range"><input type="date" id="fFrom" aria-label="开始日期"><span class="to">至</span><input type="date" id="fTo" aria-label="结束日期"></span></div>
           <div class="bk-field"><span class="bk-combo"><select class="bk-select" id="fIdType" aria-label="查询维度"><option value="id">会员ID</option><option value="acc">会员账号</option></select><input class="bk-input" id="fKey" placeholder="请输入"></span></div>
           <div class="bk-field"><label for="fType">点控类型</label><select class="bk-select sm" id="fType"><option value="">全部</option><option value="give">送分</option><option value="kill">杀分</option></select></div>
-          <div class="bk-field"><label for="fScript">剧本</label><select class="bk-select" id="fScript"><option value="">全部</option><option value="604">快送（604）</option><option value="603">正常送-通用（603）</option><option value="602">慢送-通用（602）</option><option value="601">快杀（601）</option><option value="600">正常杀-通用（600）</option><option value="599">慢杀-通用（599）</option></select></div>
+          <div class="bk-field"><label for="fScript">剧本</label><select class="bk-select" id="fScript"><option value="">全部</option><option value="604">快送</option><option value="603">正常送-通用</option><option value="602">慢送-通用</option><option value="601">快杀</option><option value="600">正常杀-通用</option><option value="599">慢杀-通用</option></select></div>
           <div class="bk-field"><label for="fStatus">状态</label><select class="bk-select sm" id="fStatus"><option value="">全部</option><option value="run" selected>执行中</option><option value="end">已结束</option></select></div>
           <div class="bk-field"><label for="fSrc">来源</label><select class="bk-select sm" id="fSrc"><option value="">全部</option><option value="manual">手动新增</option><option value="auto">自动点控</option></select></div>
           <div class="bk-actions"><button class="bk-btn" id="btnReset" type="button">重 置</button><button class="bk-btn primary" id="btnQuery" type="button">查 询</button></div>
@@ -428,7 +428,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
           <tbody>
             <tr><td><b>送分</b></td><td>让会员赢分。进行中金额（会员累计赢，正数）<strong>超过</strong> +目标金额时，点控结束</td></tr>
             <tr><td><b>杀分</b></td><td>让会员输分。进行中金额以负数展示（会员累计输），<strong>低于</strong> -目标金额时，点控结束</td></tr>
-            <tr><td><b>剧本</b></td><td>控制输赢节奏。送分：快送（604）、正常送-通用（603）、慢送-通用（602）；杀分：快杀（601）、正常杀-通用（600）、慢杀-通用（599）。剧本名称后统一附带 ID，便于定位问题</td></tr>
+            <tr><td><b>剧本</b></td><td>控制输赢节奏。送分：快送、正常送-通用、慢送-通用；杀分：快杀、正常杀-通用、慢杀-通用。页面只显示剧本名称，剧本 ID 仅供开发对接与排查，见开发测试重点</td></tr>
             <tr><td><b>目标金额</b></td><td>本次点控要送出或杀掉的金额，按平台默认货币计，0.01 ~ 100,000.00</td></tr>
             <tr><td><b>进行中金额</b></td><td>剧本已完成的金额，正数为会员赢、负数为会员输</td></tr>
             <tr><td><b>状态</b></td><td>执行中 / 已结束。已结束包括四种结束原因：达成目标、手动终止、新点控覆盖、清理自动点控</td></tr>
@@ -482,7 +482,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>申请时间</b></td><td>日期区间，按点控的申请时间筛选</td><td>空（不限）</td><td>只显示申请时间落在区间内的记录，含首尾两天</td></tr>
             <tr><td><b>会员ID / 会员账号</b></td><td>下拉切换查询维度，右侧输入框输入内容</td><td>会员ID，输入框为空</td><td>模糊匹配所选维度</td></tr>
             <tr><td><b>点控类型</b></td><td>全部 / 送分 / 杀分</td><td>全部</td><td>按类型筛选</td></tr>
-            <tr><td><b>剧本</b></td><td>全部 + 6 个剧本，格式「剧本名称（ID）」</td><td>全部</td><td>按剧本筛选</td></tr>
+            <tr><td><b>剧本</b></td><td>全部 + 6 个剧本，只显示剧本名称</td><td>全部</td><td>按剧本筛选</td></tr>
             <tr><td><b>状态</b></td><td>全部 / 执行中 / 已结束</td><td><strong>执行中</strong></td><td>进入页面默认只看正在执行的点控；切到「全部」或「已结束」查看历史</td></tr>
             <tr><td><b>来源</b></td><td>全部 / 手动新增 / 自动点控</td><td>全部</td><td>按点控的创建方式筛选</td></tr>
             <tr><td><b>重置 / 查询</b></td><td>重置恢复全部默认值并重新查询；查询按当前条件刷新列表</td><td>—</td><td>查询后回到第 1 页</td></tr>
@@ -498,7 +498,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>勾选框</b></td><td>用于批量终止</td><td>表头勾选框 = 选中本页全部；底部「选择全部」= 选中当前筛选结果全部</td></tr>
             <tr><td><b>会员ID / 账号</b></td><td>两行展示，上为会员ID，下为会员账号</td><td>会员ID 蓝色可点击，打开该会员的会员详情（现有页面）</td></tr>
             <tr><td><b>点控类型</b></td><td>送分 / 杀分</td><td>送分绿色标签，杀分红色标签</td></tr>
-            <tr><td><b>剧本</b></td><td>新增时选择的剧本</td><td>「剧本名称（ID）」，如「快送（604）」</td></tr>
+            <tr><td><b>剧本</b></td><td>新增时选择的剧本</td><td>只显示剧本名称，如「快送」</td></tr>
             <tr><td><b>默认货币</b></td><td>平台默认计算货币</td><td>表头带「?」，鼠标悬停或点击显示：平台默认计算货币，金额均按该币种计算和展示</td></tr>
             <tr><td><b>目标金额</b></td><td>新增时填写的金额</td><td>千分位，两位小数</td></tr>
             <tr><td><b>进行中金额</b></td><td>剧本已完成的金额</td><td>两位小数；正数绿色带「+」，负数红色带「-」；表头「?」鼠标悬停或点击显示正负含义与结束条件；已结束的记录保留结束时的值，不再更新</td></tr>
@@ -589,7 +589,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>代理ID（直属层）</b></td><td>输入 1 个代理ID</td><td>空</td><td>选中该代理的直属下级会员，不含代理本人和更下级；显示已选人数</td></tr>
             <tr><td><b>代理ID（代理线）</b></td><td>输入 1 个代理ID</td><td>空</td><td>选中该代理整条代理线下的全部会员，不含代理本人；显示已选人数</td></tr>
             <tr><td><b>点控类型 *</b></td><td>单选：送分 / 杀分</td><td><strong>无默认值</strong></td><td>未选类型时剧本区显示「请先选择点控类型」</td></tr>
-            <tr><td><b>剧本 *</b></td><td>单选，随点控类型切换选项，格式「剧本名称（ID）」，如「快送（604）」</td><td>选类型后默认选中「正常送-通用（603）」或「正常杀-通用（600）」</td><td>切换类型时剧本重置为该类型的默认剧本</td></tr>
+            <tr><td><b>剧本 *</b></td><td>单选，随点控类型切换选项，只显示剧本名称，如「快送」</td><td>选类型后默认选中「正常送-通用」或「正常杀-通用」</td><td>切换类型时剧本重置为该类型的默认剧本</td></tr>
             <tr><td><b>目标金额 *</b></td><td>输入框，右侧显示平台默认货币</td><td>空</td><td>0.01 ~ 100,000.00，最多两位小数</td></tr>
             <tr><td><b>操作备注</b></td><td>文本框，选填</td><td>空</td><td>最多 100 字，带字数统计；展示在列表「备注」列</td></tr>
           </tbody>
@@ -853,7 +853,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>A16</b></td><td>按代理线选择，人数 &gt; 10,000</td><td>人数提示变红；确定时红字提示超上限，不提交</td></tr>
             <tr><td><b>A17</b></td><td>代理ID（直属层）输入代理ID</td><td>只包含直属下级会员，不含代理本人和更下级；代理线方式同样不含代理本人</td></tr>
             <tr><td><b>A18</b></td><td>不选点控类型 / 金额为空 / 金额 0 / 100000.01 / 1.234</td><td>分别出现对应红字提示，不提交</td></tr>
-            <tr><td><b>A19</b></td><td>选择送分后切换为杀分</td><td>剧本选项变为快杀、正常杀-通用、慢杀-通用，默认正常杀-通用（600）</td></tr>
+            <tr><td><b>A19</b></td><td>选择送分后切换为杀分</td><td>剧本选项变为快杀、正常杀-通用、慢杀-通用，默认正常杀-通用</td></tr>
             <tr><td><b>A20</b></td><td>对已有执行中点控的会员新增，点「继续提交」</td><td>原记录已结束 · 新点控覆盖；新记录执行中</td></tr>
             <tr><td><b>A21</b></td><td>同上，点「取消」</td><td>回到新增弹窗，内容保留，不下发</td></tr>
             <tr><td><b>A22</b></td><td>快速连续点击「确定」</td><td>只提交一次</td></tr>
@@ -921,6 +921,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
           <li><strong>点控记录以后台保存为准。</strong>查询接口不分页、最多返回最新 1,000 条；列表与历史记录用后台自己保存的数据，刷新时按会员查询并更新进行中金额与状态。</li>
           <li><strong>新增接口不幂等。</strong>重复调用会创建新任务；超时或结果未知的会员一律计入失败（原因「下发超时」），不得自动重发。</li>
           <li><strong>时间与账号。</strong>接口返回时间为 UTC，列表按后台时区展示；接口按游戏账号名调用，需做会员与游戏账号的对应。</li>
+          <li><strong>剧本 ID。</strong>页面只显示剧本名称；调用接口按剧本 ID 传，排查问题时按 ID 对应：快送 604、正常送-通用 603、慢送-通用 602、快杀 601、正常杀-通用 600、慢杀-通用 599。</li>
           <li><strong>菜单名称。</strong>菜单位置示意图为现网名称；若客户端游戏排序需求先上线，「游戏排名」显示为「热门游戏排序」，本菜单仍排在最后。</li>
         </ol></div>
       </div>
@@ -1152,7 +1153,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
       var act = r.actual===0 ? '0.00' : '<span class="'+(r.actual>0?'amt-pos':'amt-neg')+'">'+signed(r.actual)+'</span>';
       return '<tr><td><input type="checkbox" class="chk row-chk" data-key="'+r.key+'"'+(selected[r.key]?' checked':'')+' aria-label="选择该行"></td>'+
         '<td><div class="bk-mem"><span class="bk-link" data-mem="'+r.id+'">'+r.id+'</span><small>'+esc(r.acc)+'</small></div></td>'+
-        '<td>'+typeTag+'</td><td>'+SNAME[r.script]+'（'+r.script+'）</td><td>BRL</td><td>'+money(r.target)+'</td><td>'+act+'</td>'+
+        '<td>'+typeTag+'</td><td>'+SNAME[r.script]+'</td><td>BRL</td><td>'+money(r.target)+'</td><td>'+act+'</td>'+
         '<td>'+st+'</td><td>'+(r.reason||'<span class="muted">-</span>')+'</td><td>'+src+'</td><td>'+r.apply+'</td>'+
         '<td class="wrap">'+(r.remark?esc(r.remark):'-')+'</td><td>'+r.op+'</td><td>'+r.optime+'</td>'+
         '<td>'+(r.status==='run'?'<span class="bk-link danger" data-stop="'+r.key+'">终止</span>':'<span class="muted">-</span>')+'</td></tr>';
@@ -1239,7 +1240,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
   function renderScripts(box, type, current){
     if(!type){ box.innerHTML = '<span class="muted">请先选择点控类型</span>'; box.removeAttribute('data-cur'); return; }
     var cur = SCRIPTS[type].some(function(s){ return s.id===current; }) ? current : SCRIPTS[type][1].id;
-    box.innerHTML = SCRIPTS[type].map(function(s){ return '<span class="radio'+(s.id===cur?' on':'')+'" data-sid="'+s.id+'"><span class="r"></span>'+s.name+'<span class="sid">（'+s.id+'）</span></span>'; }).join('');
+    box.innerHTML = SCRIPTS[type].map(function(s){ return '<span class="radio'+(s.id===cur?' on':'')+'" data-sid="'+s.id+'"><span class="r"></span>'+s.name+'</span>'; }).join('');
     box.setAttribute('data-cur', cur);
     box.querySelectorAll('.radio').forEach(function(r){ r.addEventListener('click', function(){
       box.querySelectorAll('.radio').forEach(function(x){ x.classList.toggle('on', x===r); }); box.setAttribute('data-cur', r.getAttribute('data-sid'));
