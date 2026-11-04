@@ -436,8 +436,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
           <tr><td><b>MY 场馆 / 原厂场馆</b></td><td>MY 场馆为仿造原厂的 MY 系列场馆（如 MyPG电子）；原厂场馆为被仿造的场馆（如 PG电子）</td></tr>
           <tr><td><b>场馆对</b></td><td>MY 场馆与原厂场馆的一对一对应，开发预置，不可修改；总控「场馆配置总控」只读展示</td></tr>
           <tr><td><b>游戏对</b></td><td>MY 游戏与原厂游戏的一对一对应，开发预置，不可修改；总控「游戏配置总控」只读展示，两行合并显示。只有游戏对参与切换</td></tr>
-          <tr><td><b>前台显示版本</b></td><td>每个站点、每个游戏对选择前台显示原厂版或 MY 版；默认 MY；站点各自保存</td></tr>
-          <tr><td><b>未关联游戏</b></td><td>不属于任何游戏对的游戏，不受切换影响，前台照常按状态显示</td></tr>
+          <tr><td><b>前台显示版本</b></td><td>每个站点、每个游戏对选择前台显示原厂版或 MY 版；默认（优先）显示 MY；站点各自保存</td></tr>
+          <tr><td><b>未关联游戏</b></td><td>不属于任何游戏对的游戏，不受切换影响，前台照常按状态显示。所有 MY 游戏都有对应关系；万一有 MY 游戏没有对应关系，也照常显示</td></tr>
         </tbody>
       </table></div>
     </div>
@@ -660,7 +660,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>检查项</th><th>结论</th></tr></thead><tbody>
         <tr><td><b>权限</b></td><td>随三个页面现有菜单权限，不新增权限点</td></tr>
         <tr><td><b>操作留痕</b></td><td>站点切换：更新最近操作人 / 最近操作时间（不填备注），游戏对两行同时更新；对应关系为预置数据，后台无操作</td></tr>
-        <tr><td><b>边界状态</b></td><td>一对一；显示版本维护 / 关闭 / 总控停用不自动替换；没有对应原厂的 MY 游戏见待确认</td></tr>
+        <tr><td><b>边界状态</b></td><td>一对一；显示版本维护 / 关闭 / 总控停用不自动替换；没有对应关系的 MY 游戏（按约定不会出现）照常显示</td></tr>
         <tr><td><b>口径与单位</b></td><td>游戏对共用一个序号与排序位置，热门值取较高者</td></tr>
         <tr><td><b>批量操作</b></td><td>站点勾选批量切换（表头全选为当前查询结果）与场馆一键切换</td></tr>
         <tr><td><b>多语言 / 多环境</b></td><td>沿用；前台各语言只显示一款</td></tr>
@@ -668,9 +668,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
         <tr><td><b>生效范围</b></td><td>对应关系平台级（预置）；切换按站点；保存后实时生效并刷新前台缓存</td></tr>
       </tbody></table></div></div>
     <div class="req-block"><h2>开发测试重点说明</h2>
-      <div class="dh-callout warn"><b>待确认：</b>本站找不到原厂版本的 MY 游戏（如 MyNewG电子、MyPPK电子，以及 MY 多于原厂的部分）是否前台显示，暂按"未关联，照常显示"，待与三方确认关联关系后定。</div>
+      
       <div class="dh-prose"><ol>
-        <li><strong>对应关系由开发预置</strong>：按三方关联关系一对一录入场馆对与游戏对；后台不提供任何修改入口；预置后需按清单抽查。</li>
+        <li><strong>对应关系由开发预置</strong>：按三方关联关系一对一录入场馆对与游戏对，所有 MY 游戏都应有对应关系；后台不提供任何修改入口；预置后需按清单抽查。万一有 MY 游戏没有对应关系，前台照常显示，不参与切换。</li>
         <li><strong>切换只改"前台显示版本"</strong>：不改游戏状态；状态按钮与切换互相独立。</li>
         <li><strong>显示版本按站点保存</strong>：游戏对上线或新预置时各站点默认显示 MY，不覆盖站点已做的选择。</li>
         <li><strong>前台所有位置都只能出现一款</strong>：热门、场馆 Tab、首页场馆区、侧边菜单、搜索、最近、收藏逐个核对。</li>
