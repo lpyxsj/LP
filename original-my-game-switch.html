@@ -339,7 +339,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
                 <button class="bk-btn primary" id="btnAlign" type="button">对齐平台排序</button>
               </div>
               <div class="bk-table-wrap"><table class="bk-table" style="min-width:900px;">
-                <thead><tr><th style="width:36px;"><input type="checkbox" class="chk" id="chkAll" aria-label="全选当前查询结果中的游戏对"></th><th style="width:48px;">顺序</th><th>游戏名称</th><th>场馆名称</th><th>游戏状态</th><th>前台显示<span class="mk">本期新增</span></th><th>最近操作人</th><th>最近操作时间</th><th>备注</th><th style="width:108px;">操作</th><th style="width:76px;">前台切换<span class="mk">本期新增</span></th></tr></thead>
+                <thead><tr><th style="width:36px;"><input type="checkbox" class="chk" id="chkAll" aria-label="全选当前查询结果中的游戏对"></th><th style="width:48px;">顺序<span class="mk">本期修改</span></th><th>游戏名称</th><th>场馆名称</th><th>游戏状态</th><th>前台显示<span class="mk">本期新增</span></th><th>最近操作人</th><th>最近操作时间</th><th>备注</th><th style="width:108px;">操作</th><th style="width:76px;">前台切换<span class="mk">本期新增</span></th></tr></thead>
                 <tbody id="siteBody"></tbody>
               </table></div>
               <div class="bk-pager"><span id="siteCount"></span><span class="pg">1</span><span>50 条/页</span></div>
@@ -627,7 +627,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     <div class="req-block"><h2>验收标准</h2>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>编号</th><th>前置条件与操作</th><th>期望结果</th></tr></thead><tbody>
         <tr><td>A1</td><td>回归：游戏管理搜索、维护 / 关闭 / 开启、备注校验、对齐平台排序、分页</td><td>与现网一致</td></tr>
-        <tr><td>A2</td><td>站点：已预置游戏对 MyPG电子「十倍金牛」↔ PG电子「十倍金牛」</td><td>两行相邻，显示版本在上标「显示」，另一行「隐藏」且文字置灰；勾选、顺序、前台切换三格两行合并，前台切换格有一个「切换」</td></tr>
+        <tr><td>A2</td><td>站点：已预置游戏对 MyPG电子「十倍金牛」↔ PG电子「十倍金牛」</td><td>两行相邻，显示版本在上、标「显示」，另一行「隐藏」且文字置灰；勾选、顺序、前台切换三格两行合并，前台切换格有一个「切换」</td></tr>
         <tr><td>A3</td><td>站点：未关联游戏</td><td>前台显示列、前台切换列为「-」，复选框置灰</td></tr>
         <tr><td>A4</td><td>站点：前台显示筛选「显示」/「隐藏」/「未关联」</td><td>分别只返回显示版本 / 隐藏版本 / 未关联游戏</td></tr>
         <tr><td>A5</td><td>站点：点前台切换列「切换」</td><td>弹出确认框「确认将 {游戏名称} 切换为显示 {场馆名称} 版本？」，无备注输入框</td></tr>
@@ -635,7 +635,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
         <tr><td>A7</td><td>站点：确认框点取消</td><td>不变更</td></tr>
         <tr><td>A8</td><td>站点：切换后看前台热门、PG 场馆、首页、侧边菜单、搜索</td><td>只出现新显示版本</td></tr>
         <tr><td>A9</td><td>站点：会员最近 / 收藏中有隐藏版本</td><td>显示当前版本，同一游戏对只出现一次</td></tr>
-        <tr><td>A10</td><td>站点：「原厂 / MY 切换」PG电子 / MyPG电子「全部显示原厂」并确定</td><td>该场馆对下全部游戏对显示原厂；当前显示「全部原厂」，按钮置灰；未关联游戏不变；确认框数量与实际切换数量一致</td></tr>
+        <tr><td>A10</td><td>站点：「原厂 / MY 切换」PG电子 / MyPG电子「全部显示原厂」并确定</td><td>该场馆对下全部游戏对显示原厂；当前显示「全部原厂」，按钮置灰；未关联游戏不变；确认框中数量与实际切换数量一致</td></tr>
         <tr><td>A11</td><td>站点：切换前后对比前台位置</td><td>同一游戏对在热门列表、场馆列表中位置不变</td></tr>
         <tr><td>A12</td><td>站点：显示版本被维护</td><td>前台显示维护中，不自动换回</td></tr>
         <tr><td>A13</td><td>站点：显示版本被关闭，或被总控停用</td><td>该游戏对前台不显示，不自动换回</td></tr>
