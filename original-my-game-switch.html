@@ -314,14 +314,14 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
             </div></div>
             <div class="bk-card">
               <div class="bk-toolbar">
-                <span class="info">游戏对两行相邻，勾选、关联、前台切换合并；显示的版本在上</span>
+                <span class="info">游戏对两行相邻，勾选、关联、前台切换合并；显示的版本在上<span class="mk">本期修改</span></span>
                 <button class="bk-btn primary" id="btnBatchOrig" type="button" disabled>批量显示原厂<span class="mk">本期新增</span></button>
                 <button class="bk-btn primary" id="btnBatchMy" type="button" disabled>批量显示 MY</button>
                 <span class="muted" style="font-size:13px;">已选 <b id="selCount" style="color:var(--text-primary);">0</b> 个游戏对</span>
                 <button class="bk-btn primary" id="btnBets" type="button">批量修改有效注单</button>
               </div>
               <div class="bk-table-wrap"><table class="bk-table" style="min-width:1240px;">
-                <thead><tr><th style="width:36px;"><input type="checkbox" class="chk" id="chkAll" aria-label="全选当前查询结果中的游戏对"></th><th style="width:48px;">序号</th><th>游戏ID</th><th>游戏名称</th><th>场馆名称</th><th style="width:150px;">关联<span class="mk">本期新增</span></th><th>前台显示<span class="mk">本期新增</span></th><th>游戏状态</th><th>最近操作人</th><th>最近操作时间</th><th>有效注单</th><th style="width:170px;">操作</th><th style="width:76px;">前台切换<span class="mk">本期新增</span></th></tr></thead>
+                <thead><tr><th style="width:36px;white-space:nowrap;"><input type="checkbox" class="chk" id="chkAll" aria-label="全选当前查询结果中的游戏对"><span class="mk">本期新增</span></th><th style="width:48px;">序号</th><th>游戏ID</th><th>游戏名称</th><th>场馆名称</th><th style="width:150px;">关联<span class="mk">本期新增</span></th><th>前台显示<span class="mk">本期新增</span></th><th>游戏状态</th><th>最近操作人</th><th>最近操作时间</th><th>有效注单</th><th style="width:170px;">操作</th><th style="width:76px;">前台切换<span class="mk">本期新增</span></th></tr></thead>
                 <tbody id="gameBody"></tbody>
               </table></div>
               <div class="bk-pager"><span id="gameCount"></span><span class="pg">1</span><span>50 条/页</span></div>
@@ -823,7 +823,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     smCb=cb; open('simpleModal');
   }
   document.getElementById('smOk').addEventListener('click', function(){ close('simpleModal'); if(smCb) smCb(); });
-  var ALL_NOTE='<div class="muted" style="font-size:12.5px;margin-top:6px;">全部商户前台同时生效。</div>';
+  function allNote(extra){ return '<div class="muted" style="font-size:12.5px;margin-top:6px;">全部商户前台同时生效。'+(extra||'')+'</div>'; }
+  var ALL_NOTE=allNote();
 
   function zstamp(ids){ var t=now(); ids.forEach(function(id){ var g=G(id); g.zop='zun0123'; g.ztime=t; }); }
 
@@ -846,10 +847,10 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     renderGame();
   });
   function batch(to){
-    var label = to==='my'?'MY':'原厂', ps=Object.keys(sel).map(pairOf).filter(Boolean);
+    var label = to==='my'?'MY':'原厂', lb2 = to==='my'?' MY':'原厂', ps=Object.keys(sel).map(pairOf).filter(Boolean);
     var todo=ps.filter(function(p){ return p.show!==to; }), skip=ps.length-todo.length;
-    if(!todo.length){ toast('所选游戏对均已显示'+label); return; }
-    askSimple('提示','确认将选中的 '+ps.length+' 个游戏对切换为显示 <b style="color:#1890ff">'+label+'</b>？'+(skip?'其中 '+skip+' 个已显示'+label+'，不变。':'')+ALL_NOTE, function(){
+    if(!todo.length){ toast('所选游戏对均已显示'+lb2); return; }
+    askSimple('提示','确认将选中的 '+ps.length+' 个游戏对切换为显示 <b style="color:#1890ff">'+label+'</b>？'+allNote(skip?'其中 '+skip+' 个已显示'+lb2+'，不变。':''), function(){
       var f={}; todo.forEach(function(p){ p.show=to; zstamp([p.my,p.orig]); f[p.my]=f[p.orig]=1; });
       sel={}; renderAll(f); toast('操作成功');
     });
