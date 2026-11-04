@@ -3,7 +3,7 @@
 <title>原厂与 MY 系列游戏切换</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* 布局：文档壳(暖纸色) + 后台复刻窗口（三个子页共用数据）+ 右侧前台显示结果示意 */
+/* 布局：文档壳(暖纸色) + 后台复刻窗口（三个子页共用数据） */
 :root{
   color-scheme:light;
   --doc-paper:#faf8f4;--doc-paper-raised:#ffffff;--doc-ink:#211f1a;--doc-ink-soft:#5c584e;--doc-ink-faint:#8b8677;
@@ -250,8 +250,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .sub-btn{appearance:none;border:1px solid var(--doc-line);background:var(--doc-paper-raised);color:var(--doc-ink-soft);border-radius:100px;padding:6px 14px;font:inherit;font-size:13px;cursor:pointer;}
 .sub-btn small{color:var(--doc-ink-faint);margin-left:4px;font-size:11.5px;}
 .sub-btn.active{border-color:var(--doc-accent);color:var(--doc-accent);background:var(--doc-accent-soft);font-weight:600;}
-.proto-grid{display:grid;grid-template-columns:minmax(0,1fr) 224px;gap:16px;align-items:start;}
-@media (max-width:1100px){.proto-grid{grid-template-columns:1fr;}.fe{position:static;}}
+.proto-grid{display:block;}
 .bk-page{display:none;}
 .bk-page.active{display:block;}
 .bk-table td.pm{background:#f0f7ff;border-left:3px solid var(--primary);}
@@ -271,21 +270,6 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .cand div.em:hover{background:none;}
 .kv{display:flex;gap:8px;line-height:30px;}
 .kv .k{flex:0 0 84px;text-align:right;color:var(--text-secondary);}
-/* 前台显示结果（示意） */
-.fe{background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:10px;box-shadow:var(--shadow-card);padding:14px;position:sticky;top:100px;}
-.fe h3{font-size:16px;margin:0 0 2px;}
-.fe .note{font-size:12px;color:var(--doc-ink-faint);margin-bottom:10px;}
-.fe h4{font-size:13px;margin:12px 0 6px;color:var(--doc-ink);font-family:var(--f-sans);}
-.fe ol{list-style:none;margin:0;padding:0;}
-.fe li{display:flex;align-items:center;gap:6px;font-size:12.5px;padding:4px 6px;border-radius:4px;color:var(--doc-ink-soft);}
-.fe li .no{flex:0 0 22px;font-family:var(--f-mono);color:var(--doc-ink-faint);font-size:11.5px;}
-.fe li .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--doc-ink);}
-.fe li .vn{font-size:11px;padding:0 5px;border-radius:3px;background:var(--doc-line-soft);color:var(--doc-ink-soft);white-space:nowrap;}
-.fe li .vn.my{background:var(--doc-teal-soft);color:var(--doc-teal);}
-.fe li .mt{font-size:11px;color:#d46b08;white-space:nowrap;}
-.fe li.flash{animation:feflash 1.8s ease-out;}
-@keyframes feflash{0%{background:#ffe9a8;}100%{background:transparent;}}
-.fe .lg{font-size:11.5px;color:var(--doc-ink-faint);margin-top:10px;line-height:1.6;}
 .bk-table td.wrap2{white-space:normal;min-width:170px;max-width:240px;}
 .chk{width:14px;height:14px;accent-color:var(--primary);cursor:pointer;vertical-align:middle;}
 .chk[disabled]{cursor:not-allowed;opacity:.45;}
@@ -296,7 +280,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   <div class="dh-meta"><span>模块：<b>商户游戏管理 · 游戏管理；总控 · 站点场馆管理</b></span><span>更新日期：<b>2026-11-04</b></span></div>
 </div></header>
 <nav class="dh-navbar" id="dhNavbar"><div class="dh-navbar-inner dh-primary" id="dhPrimary">
-  <button class="dh-primary-btn active" data-primary="proto" type="button">交互原型 <small>商户切换原厂 / MY，总控查看对应关系，右侧看前台结果</small></button>
+  <button class="dh-primary-btn active" data-primary="proto" type="button">交互原型 <small>商户切换原厂 / MY，总控查看对应关系</small></button>
   <button class="dh-primary-btn" data-primary="docs" type="button">需求文档 <small>功能说明、规则与验收</small></button>
 </div></nav>
 
@@ -305,7 +289,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 <!-- ================= 交互原型 ================= -->
 <section class="dh-primary-panel active" data-primary-panel="proto" id="protoSec">
   <div class="proto-intro">
-    <div class="grow">三个页面共用同一份数据：对应关系为开发预置（总控两页只读展示），在商户后台游戏管理切换前台显示原厂或 MY（单个、勾选批量或按场馆一键）；右侧实时显示前台结果（示意）。游戏名称、场馆、游戏ID、热门值取自测试环境，关联关系与总控游戏状态为示例。</div>
+    <div class="grow">三个页面共用同一份数据：对应关系为开发预置（总控两页只读展示），在商户后台游戏管理切换前台显示原厂或 MY（单个、勾选批量或按场馆一键）。游戏名称、场馆、游戏ID、热门值取自测试环境，关联关系与总控游戏状态为示例。</div>
     <label class="doc-check" for="markToggle"><input type="checkbox" id="markToggle" checked> 显示本期改动标注</label>
     <button class="doc-btn" id="resetDemo" type="button">重置演示数据</button>
   </div>
@@ -398,14 +382,6 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
       <div class="proto-tip">沿用现网的功能（维护 / 停用 / 启用、排序、批量修改有效注单、对齐平台排序、分页）在原型中不演示数据变化。</div>
     </div>
 
-    <!-- ===== 前台显示结果（示意） ===== -->
-    <aside class="fe" aria-live="polite">
-      <h3>前台显示结果（示意）</h3>
-      <div class="note">按当前配置计算，不是前台界面复刻；变化的位置会闪烁</div>
-      <h4>热门（前 12 个位置）</h4><ol id="feHot"></ol>
-      <h4>PG 场馆（前 8 个位置）</h4><ol id="fePg"></ol>
-      <div class="lg"><span class="vn my" style="font-size:11px;padding:0 5px;border-radius:3px;">MY</span> MY 版 · <span style="font-size:11px;padding:0 5px;border-radius:3px;background:var(--doc-line-soft);">原厂</span> 原厂版 · 游戏对只出现一款；关闭或总控停用的不出现</div>
-    </aside>
   </div>
 </section>
 
@@ -780,7 +756,6 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     S = {venues:VENUES0.map(function(v){return {name:v[0],type:v[1],status:v[2],hot:v[3],link:LINK0[v[0]]||null};}),
       games:GAMES0.map(function(g,i){return {id:g[0],zh:g[1],en:g[2],venue:g[3],bets:g[4],site:g[5],zk:ZK_STOP0[g[0]]?'stop':'on',base:i,op:'Kasion01',time:'2026-11-02 04:14:48',remark:'-',zop:'duoduo123',ztime:'2026-10-03 13:54:53'};}),
       pairs:PAIRS0.map(function(p){return {my:p[0],orig:p[1],show:SHOW0[p[0]]||'my'};})};
-    prevFe = null;
   }
   var isMyV = function(n){ return /^My/.test(n); };
   function G(id){ for(var i=0;i<S.games.length;i++) if(S.games[i].id===id) return S.games[i]; }
@@ -922,29 +897,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     document.getElementById('gVenue').innerHTML='<option value="">场馆名称</option>'+names.map(function(n){return '<option>'+esc(n)+'</option>';}).join('');
   }
 
-  /* ---------- 前台显示结果（示意） ---------- */
-  var prevFe=null;
-  function feList(){
-    var out=[];
-    items().forEach(function(it){
-      var g = it.pair ? G(shownId(it.pair)) : it.game;
-      if(g.site==='off' || g.zk==='stop') return;
-      out.push(g);
-    });
-    return out;
-  }
-  function renderFe(){
-    var list=feList(), pg=list.filter(function(g){ return g.venue==='PG电子'||g.venue==='MyPG电子'; });
-    function li(g,i,key){
-      var changed = prevFe && prevFe[key+i]!==g.id;
-      return '<li class="'+(changed?'flash':'')+'"><span class="no">'+(i+1)+'</span><span class="nm">'+esc(g.zh)+'</span>'+(g.site==='mt'?'<span class="mt">维护中</span>':'')+'<span class="vn '+(isMyV(g.venue)?'my':'')+'">'+esc(g.venue)+'</span></li>';
-    }
-    document.getElementById('feHot').innerHTML=list.slice(0,12).map(function(g,i){return li(g,i,'h');}).join('');
-    document.getElementById('fePg').innerHTML=pg.slice(0,8).map(function(g,i){return li(g,i,'p');}).join('');
-    prevFe={}; list.slice(0,12).forEach(function(g,i){prevFe['h'+i]=g.id;}); pg.slice(0,8).forEach(function(g,i){prevFe['p'+i]=g.id;});
-  }
-
-  function renderAll(fl){ renderSite(fl); renderVenue(); renderGame(fl); renderFe(); }
+  function renderAll(fl){ renderSite(fl); renderVenue(); renderGame(fl); }
 
   /* ---------- 弹窗工具 ---------- */
   function open(id){ document.getElementById(id).classList.add('open'); }
