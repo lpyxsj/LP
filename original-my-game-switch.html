@@ -1,0 +1,1184 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>原厂与 MY 系列游戏切换</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* 布局：文档壳(暖纸色) + 后台复刻窗口（三个子页共用数据）+ 右侧前台显示结果示意 */
+:root{
+  color-scheme:light;
+  --doc-paper:#faf8f4;--doc-paper-raised:#ffffff;--doc-ink:#211f1a;--doc-ink-soft:#5c584e;--doc-ink-faint:#8b8677;
+  --doc-line:#e4ded1;--doc-line-soft:#eee9de;--doc-accent:#a8481f;--doc-accent-soft:#f4e2d3;
+  --doc-teal:#0d6d66;--doc-teal-soft:#dcefec;--doc-p0:#b3261e;--doc-p1:#a8481f;--doc-p1-soft:#f4e2d3;--doc-p2:#6b6a5f;
+  --doc-status-done-fg:#0d6d66;--doc-status-done-bg:#dcefec;--doc-status-open-fg:#8a7f5f;--doc-status-open-bg:#f1ecdc;
+  --shadow-card:0 1px 2px rgba(33,31,26,.06),0 4px 14px rgba(33,31,26,.06);
+  --f-serif:'Source Serif 4',Georgia,'Songti SC',serif;
+  --f-sans:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  --f-mono:'IBM Plex Mono',Consolas,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  color-scheme:dark;--doc-paper:#18160f;--doc-paper-raised:#221f17;--doc-ink:#f1ece0;--doc-ink-soft:#c2bba8;--doc-ink-faint:#8f8877;
+  --doc-line:#3b3627;--doc-line-soft:#2c2919;--doc-accent:#e2925e;--doc-accent-soft:#3c2a1a;--doc-teal:#63c2b8;--doc-teal-soft:#183430;
+  --doc-p0:#f2766d;--doc-p1:#e2925e;--doc-p1-soft:#3c2a1a;--doc-p2:#a8a693;
+  --doc-status-done-fg:#63c2b8;--doc-status-done-bg:#183430;--doc-status-open-fg:#cfc29a;--doc-status-open-bg:#2e2a1c;
+  --shadow-card:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.35);}}
+:root[data-theme="dark"]{
+  color-scheme:dark;--doc-paper:#18160f;--doc-paper-raised:#221f17;--doc-ink:#f1ece0;--doc-ink-soft:#c2bba8;--doc-ink-faint:#8f8877;
+  --doc-line:#3b3627;--doc-line-soft:#2c2919;--doc-accent:#e2925e;--doc-accent-soft:#3c2a1a;--doc-teal:#63c2b8;--doc-teal-soft:#183430;
+  --doc-p0:#f2766d;--doc-p1:#e2925e;--doc-p1-soft:#3c2a1a;--doc-p2:#a8a693;
+  --doc-status-done-fg:#63c2b8;--doc-status-done-bg:#183430;--doc-status-open-fg:#cfc29a;--doc-status-open-bg:#2e2a1c;
+  --shadow-card:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.35);}
+
+*{box-sizing:border-box;}
+body{margin:0;background:var(--doc-paper);color:var(--doc-ink);font-family:var(--f-sans);font-size:14.5px;line-height:1.6;}
+h1,h2,h3{font-family:var(--f-serif);font-weight:600;text-wrap:balance;margin:0;}
+.mono{font-family:var(--f-mono);}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--doc-paper-raised);}
+
+.dh-header{background:var(--doc-paper-raised);border-bottom:1px solid var(--doc-line);}
+.dh-header-inner,.dh-navbar-inner{max-width:1360px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));}
+.dh-header-inner{padding-block:22px 16px;}
+.dh-header h1{font-size:26px;letter-spacing:.01em;}
+.dh-meta{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:6px;font-size:12.5px;color:var(--doc-ink-faint);}
+.dh-meta b{color:var(--doc-ink-soft);font-weight:500;}
+.dh-navbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--doc-paper-raised);border-bottom:1px solid var(--doc-line);}
+.dh-primary{display:flex;gap:4px;overflow-x:auto;}
+.dh-primary-btn{appearance:none;border:0;background:none;padding:12px 16px 10px;font:inherit;font-weight:600;color:var(--doc-ink-soft);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;}
+.dh-primary-btn small{font-weight:400;color:var(--doc-ink-faint);margin-left:6px;font-size:12px;}
+.dh-primary-btn.active{color:var(--doc-ink);border-bottom-color:var(--doc-accent);}
+.dh-primary-btn:focus-visible,.dh-tab:focus-visible,.proto-jump:focus-visible,.sub-btn:focus-visible,.fab:focus-visible{outline:2px solid var(--doc-teal);outline-offset:2px;}
+.dh-wrap{max-width:1360px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));padding-block:20px 64px;}
+.dh-primary-panel{display:none;}
+.dh-primary-panel.active{display:block;}
+.dh-tabs{position:sticky;top:calc(env(safe-area-inset-top,0px) + 47px);z-index:20;display:flex;gap:2px;overflow-x:auto;background:var(--doc-paper);border-bottom:1px solid var(--doc-line);margin-bottom:22px;}
+.dh-tab{appearance:none;border:0;background:none;font:inherit;font-size:14px;padding:10px 14px;color:var(--doc-ink-soft);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;}
+.dh-tab .n{font-family:var(--f-mono);color:var(--doc-accent);margin-right:6px;font-size:12px;}
+.dh-tab.active{color:var(--doc-ink);border-bottom-color:var(--doc-accent);font-weight:600;}
+.dh-panel{display:none;}
+.dh-panel.active{display:block;}
+
+.dh-prose{max-width:92ch;color:var(--doc-ink-soft);}
+.dh-prose p{margin:0 0 10px;}
+.dh-prose strong{color:var(--doc-ink);}
+.dh-prose ul,.dh-prose ol{margin:0 0 10px;padding-left:1.4em;}
+.dh-prose li{margin-bottom:4px;}
+.req-block{max-width:1200px;margin:0 0 30px;}
+.req-block h2{font-size:22px;margin-bottom:12px;}
+.req-block h3{font-size:17px;margin:22px 0 10px;}
+.dh-callout{max-width:1200px;border-left:3px solid var(--doc-teal);background:var(--doc-paper-raised);padding:10px 14px;margin:12px 0;font-size:13.5px;color:var(--doc-ink-soft);border-radius:0 6px 6px 0;}
+.dh-callout.warn{border-left-color:var(--doc-p1);}
+.tag-new{display:inline-block;font-size:11px;background:var(--doc-accent);color:#fff;border-radius:3px;padding:0 5px;margin-left:6px;vertical-align:1px;font-weight:500;white-space:nowrap;}
+.tbl-wrap{overflow-x:auto;max-width:1200px;margin:10px 0 16px;}
+.dh-table-simple{width:100%;max-width:1200px;min-width:560px;border-collapse:separate;border-spacing:0;background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:8px;overflow:hidden;font-size:13.5px;box-shadow:var(--shadow-card);}
+.dh-table-simple th,.dh-table-simple td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--doc-line-soft);overflow-wrap:anywhere;}
+.dh-table-simple th{background:var(--doc-line-soft);font-weight:600;color:var(--doc-ink);}
+.dh-table-simple tr:last-child td{border-bottom:0;}
+.dh-table-simple td:first-child,.dh-table-simple th:first-child{min-width:7em;max-width:34em;}
+.dh-table-simple td{color:var(--doc-ink-soft);}
+.dh-table-simple td b{color:var(--doc-ink);}
+
+.dh-flow{max-width:1200px;background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:8px;padding:14px;margin:12px 0 16px;box-shadow:var(--shadow-card);cursor:zoom-in;}
+.flow-diagram{display:flex;flex-wrap:wrap;align-items:center;gap:2px;}
+.flow-step{background:var(--doc-paper);border:1px solid var(--doc-line);border-radius:6px;padding:8px 12px;font-size:12.5px;line-height:1.45;text-align:center;max-width:220px;color:var(--doc-ink);}
+.flow-step .sub{display:block;font-size:11px;color:var(--doc-ink-faint);margin-top:2px;}
+.flow-arrow{color:var(--doc-ink-faint);font-size:15px;padding:0 4px;}
+.flow-branches{display:flex;flex-direction:column;gap:7px;margin-top:10px;padding-left:10px;border-left:2px solid var(--doc-line);}
+.flow-branch{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;color:var(--doc-ink-soft);}
+.flow-branch .arr{color:var(--doc-ink-faint);}
+.flow-branch .result{font-weight:600;padding:2px 10px;border-radius:100px;font-size:12px;}
+.flow-branch .result.good{color:var(--doc-status-done-fg);background:var(--doc-status-done-bg);}
+.flow-branch .result.bad{color:var(--doc-p1);background:var(--doc-p1-soft);}
+.flow-branch .result.neutral{color:var(--doc-ink-soft);background:var(--doc-line-soft);}
+.cap{font-size:12px;color:var(--doc-ink-faint);margin-top:10px;}
+.dh-illustration{margin:14px 0;max-width:1200px;}
+.illus-list{display:flex;flex-wrap:wrap;align-items:center;gap:6px 0;}
+.illus-item{background:var(--doc-paper);border:1px solid var(--doc-line);border-radius:6px;padding:8px 14px;font-size:12.5px;color:var(--doc-ink-soft);white-space:nowrap;}
+.illus-item.new{border-color:var(--doc-accent);color:var(--doc-accent);background:var(--doc-accent-soft);font-weight:600;}
+.illus-item .tag{display:inline-block;margin-left:6px;font-size:10px;background:var(--doc-accent);color:#fff;border-radius:3px;padding:0 4px;vertical-align:1px;}
+.illus-sep{width:16px;height:1px;background:var(--doc-line);margin:0 2px;flex:none;}
+.illus-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;max-width:1200px;margin:14px 0;}
+.illus-col{background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:8px;padding:12px;box-shadow:var(--shadow-card);min-width:0;}
+.illus-col h4{margin:0 0 8px;font-family:var(--f-serif);font-size:15px;}
+.illus-col .illus-item{display:block;white-space:normal;margin-bottom:6px;}
+.illus-col .who{font-size:12px;color:var(--doc-ink-faint);margin-top:6px;}
+.proto-jump{display:inline-flex;align-items:center;gap:6px;appearance:none;border:1px solid var(--doc-teal);color:var(--doc-teal);background:var(--doc-teal-soft);border-radius:100px;padding:5px 14px;font:inherit;font-size:13px;cursor:pointer;margin:4px 0 14px;}
+.dh-lightbox{position:fixed;inset:0;background:rgba(20,18,12,.72);display:none;align-items:center;justify-content:center;z-index:300;padding:32px;}
+.dh-lightbox.open{display:flex;}
+.dh-lightbox-body .dh-flow{max-width:min(92vw,920px);max-height:calc(100vh - 64px);overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.4);cursor:default;}
+.dh-lightbox-body .dh-flow .flow-step{font-size:16px;padding:12px 18px;max-width:260px;}
+.dh-lightbox-body .dh-flow .flow-arrow{font-size:20px;}
+.dh-lightbox-body .dh-flow .flow-branch{font-size:15px;}
+
+
+/* 功能结构图（脑图）：根节点 → 分支 → 末级，只表示组成关系，不画箭头 */
+.dh-mind{max-width:1200px;background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:8px;padding:16px;margin:12px 0 16px;box-shadow:var(--shadow-card);cursor:zoom-in;}
+.mm{display:flex;align-items:center;overflow-x:auto;padding:4px 2px;}
+.mm-root{flex:none;background:var(--doc-ink);color:var(--doc-paper);padding:10px 16px;border-radius:8px;font-weight:600;font-size:14.5px;position:relative;margin-right:26px;font-family:var(--f-serif);}
+.mm-root.zA,.mm-root.zB,.mm-root.zC{background:var(--zc);color:var(--zt);}
+.mm-root::after{content:"";position:absolute;right:-26px;top:50%;width:26px;border-top:1.5px solid var(--doc-ink-faint);}
+.mm-branches{display:flex;flex-direction:column;}
+.mm-b{position:relative;display:flex;align-items:center;padding:6px 0 6px 22px;}
+.mm-b::before{content:"";position:absolute;left:0;top:50%;width:22px;border-top:1.5px solid var(--doc-ink-faint);}
+.mm-b::after{content:"";position:absolute;left:0;top:0;bottom:0;border-left:1.5px solid var(--doc-ink-faint);}
+.mm-b:first-child::after{top:50%;}
+.mm-b:last-child::after{bottom:50%;}
+.mm-b:only-child::after{display:none;}
+.mm-node{flex:none;min-width:96px;border:1.5px solid var(--doc-line);border-radius:6px;padding:5px 10px;background:var(--doc-paper);font-weight:600;font-size:13px;color:var(--doc-ink);position:relative;margin-right:20px;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;}
+.mm-node.zA,.mm-node.zB,.mm-node.zC{border-color:var(--zc);}
+.mm-node::after{content:"";position:absolute;right:-21px;top:50%;width:20px;border-top:1.5px solid var(--doc-line);}
+.mm-leaves{display:flex;flex-direction:column;}
+.mm-leaf{position:relative;display:inline-flex;align-items:center;gap:5px;padding:3px 0 3px 16px;font-size:12.5px;color:var(--doc-ink-soft);white-space:nowrap;}
+.mm-leaf::before{content:"";position:absolute;left:0;top:50%;width:12px;border-top:1px solid var(--doc-line);}
+.mm-leaf::after{content:"";position:absolute;left:0;top:0;bottom:0;border-left:1px solid var(--doc-line);}
+.mm-leaf:first-child::after{top:50%;}
+.mm-leaf:last-child::after{bottom:50%;}
+.mm-leaf:only-child::after{display:none;}
+.mm-leaf .tag-new{margin-left:2px;}
+.dh-lightbox-body .dh-mind{max-width:min(94vw,1300px);max-height:calc(100vh - 64px);overflow:auto;cursor:default;font-size:115%;}
+.dh-lightbox-body .mm-leaf{font-size:14px;}
+.dh-lightbox-body .mm-node{font-size:15px;}
+/* ===== 交互原型区 ===== */
+.proto-intro{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-bottom:14px;font-size:13px;color:var(--doc-ink-soft);}
+.proto-intro .grow{flex:1 1 320px;min-width:0;}
+.doc-btn{appearance:none;border:1px solid var(--doc-line);background:var(--doc-paper-raised);color:var(--doc-ink);border-radius:6px;padding:5px 12px;font:inherit;font-size:13px;cursor:pointer;}
+.doc-btn:hover{border-color:var(--doc-accent);color:var(--doc-accent);}
+.doc-check{display:inline-flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;}
+/* 后台复刻令牌：与弹窗、Toast 共用（红线第7条） */
+.proto-window,.modal-mask,.bk-toast,.bk-tip{
+  --primary:#1890ff;--primary-active:#096dd9;--danger:#ff4d4f;--border:#d9d9d9;--split:#f0f0f0;--th-bg:#fafafa;
+  --text-primary:rgba(0,0,0,.85);--text-secondary:rgba(0,0,0,.45);--layout-bg:#f0f2f5;--disabled-bg:#f5f5f5;--disabled-text:rgba(0,0,0,.25);
+  --tag-green-fg:#389e0d;--tag-green-bg:#f6ffed;--tag-green-bd:#b7eb8f;--tag-red-fg:#cf1322;--tag-red-bg:#fff1f0;--tag-red-bd:#ffa39e;
+  --tag-gold-fg:#d48806;--tag-gold-bg:#fffbe6;--tag-gold-bd:#ffe58f;--warn:#faad14;--success:#52c41a;--white:#fff;--note:#a8481f;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","PingFang SC","Microsoft YaHei",sans-serif;
+  color-scheme:light;
+}
+.proto-window{border:1px solid var(--doc-line);border-radius:10px;overflow:hidden;box-shadow:0 2px 4px rgba(33,31,26,.08),0 12px 32px rgba(33,31,26,.10);background:var(--layout-bg);color:var(--text-primary);font-size:14px;line-height:1.5715;min-width:0;}
+.bk-top{display:flex;align-items:center;gap:12px;background:var(--white);height:48px;padding:0 16px;border-bottom:1px solid var(--split);}
+.bk-crumb{color:var(--text-secondary);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bk-crumb b{color:var(--text-primary);font-weight:400;}
+.bk-top .sp{flex:1;}
+.bk-user{font-size:13px;color:var(--text-primary);white-space:nowrap;}
+.bk-tabs{display:flex;gap:4px;background:var(--white);padding:6px 12px 0;border-bottom:1px solid var(--split);overflow-x:auto;}
+.bk-tab{appearance:none;border:1px solid var(--split);border-bottom:0;background:var(--th-bg);padding:3px 14px;font:inherit;font-size:13px;color:var(--text-primary);cursor:pointer;border-radius:2px 2px 0 0;white-space:nowrap;}
+.bk-tab.active{background:var(--primary);color:var(--white);border-color:var(--primary);}
+.bk-body{padding:12px;}
+.bk-view{display:none;}
+.bk-view.active{display:block;}
+.bk-card{background:var(--white);border-radius:2px;padding:16px;margin-bottom:12px;}
+.bk-form{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;}
+.bk-field{display:flex;align-items:center;gap:8px;min-width:0;}
+.bk-field label{white-space:nowrap;}
+.bk-input,.bk-select{height:32px;border:1px solid var(--border);border-radius:2px;padding:4px 11px;font:inherit;font-size:14px;color:var(--text-primary);background:var(--white);width:170px;max-width:100%;}
+.bk-input:focus,.bk-select:focus{outline:0;border-color:var(--primary);box-shadow:0 0 0 2px rgba(24,144,255,.2);}
+.bk-actions{margin-left:auto;display:flex;gap:8px;}
+.bk-btn{height:32px;padding:4px 15px;border-radius:2px;border:1px solid var(--border);background:var(--white);color:var(--text-primary);font:inherit;font-size:14px;cursor:pointer;white-space:nowrap;line-height:1.5715;position:relative;}
+.bk-btn:hover{border-color:var(--primary);color:var(--primary);}
+.bk-btn.primary{background:var(--primary);border-color:var(--primary);color:var(--white);}
+.bk-btn.primary:hover{background:#40a9ff;border-color:#40a9ff;color:var(--white);}
+.bk-btn.sm{height:24px;padding:0 7px;font-size:13px;line-height:22px;}
+.bk-btn.danger{background:var(--danger);border-color:var(--danger);color:var(--white);}
+.bk-btn.danger:hover{background:#ff7875;border-color:#ff7875;color:var(--white);}
+.bk-btn.warn{background:var(--warn);border-color:var(--warn);color:var(--white);}
+.bk-btn.ok{background:var(--success);border-color:var(--success);color:var(--white);}
+.bk-btn:focus-visible{outline:2px solid var(--primary-active);outline-offset:1px;}
+.bk-toolbar{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:8px;margin-bottom:12px;}
+.bk-toolbar .info{margin-right:auto;font-size:13px;color:var(--text-secondary);}
+.bk-table-wrap{overflow-x:auto;}
+.bk-table{width:100%;border-collapse:collapse;font-size:13.5px;}
+.bk-table.wide{min-width:1240px;}
+.bk-table.mid{min-width:820px;}
+.bk-table th{background:var(--th-bg);font-weight:500;text-align:center;padding:10px 8px;border-bottom:1px solid var(--split);white-space:nowrap;}
+.bk-table td{text-align:center;padding:8px;border-bottom:1px solid var(--split);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.bk-table tr.row-pin td{background:#f7fbff;}
+.bk-table tr.row-flash td{animation:rowflash 1.6s ease-out;}
+@keyframes rowflash{0%{background:#fff7d6;}100%{background:transparent;}}
+.bk-tag{display:inline-block;font-size:12px;line-height:20px;padding:0 7px;border-radius:2px;border:1px solid;}
+.bk-tag.green{color:var(--tag-green-fg);background:var(--tag-green-bg);border-color:var(--tag-green-bd);}
+.bk-tag.red{color:var(--tag-red-fg);background:var(--tag-red-bg);border-color:var(--tag-red-bd);}
+.bk-tag.gold{color:var(--tag-gold-fg);background:var(--tag-gold-bg);border-color:var(--tag-gold-bd);}
+.bk-ops{display:flex;gap:6px;justify-content:center;}
+.bk-pager{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:12px;font-size:13px;color:var(--text-primary);}
+.bk-pager .pg{display:inline-block;min-width:24px;height:24px;line-height:22px;text-align:center;border:1px solid var(--primary);color:var(--primary);border-radius:2px;}
+.bk-th-tip{display:inline-block;width:14px;height:14px;border:1px solid var(--text-secondary);border-radius:50%;font-size:10px;line-height:12px;color:var(--text-secondary);margin-left:4px;vertical-align:1px;cursor:pointer;user-select:none;}
+.bk-th-tip:hover,.bk-th-tip.on{border-color:var(--primary);color:var(--primary);}
+.bk-th-tip:focus-visible{outline:2px solid var(--primary-active);outline-offset:1px;}
+.bk-tip{position:fixed;z-index:330;max-width:280px;background:rgba(0,0,0,.85);color:#fff;font-size:12px;font-weight:400;line-height:1.6;padding:6px 8px;border-radius:2px;box-shadow:0 3px 6px -4px rgba(0,0,0,.12),0 6px 16px rgba(0,0,0,.08);display:none;pointer-events:none;text-align:left;white-space:normal;}
+.bk-tip.open{display:block;}
+.bk-empty{padding:28px;color:var(--text-secondary);text-align:center;}
+.bk-sep td{padding:0;border-bottom:2px dashed #91d5ff;}
+
+/* 本期改动标注（原型标注，可关闭） */
+.mk{display:inline-block;font-size:10px;line-height:14px;background:var(--note);color:#fff;border-radius:3px;padding:0 4px;margin-left:4px;vertical-align:1px;font-weight:500;white-space:nowrap;}
+.hide-marks .mk{display:none;}
+.hide-marks .pin{display:none;}
+
+/* 弹窗 */
+.modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:150;padding:16px;}
+.modal-mask.top{z-index:170;}
+.modal-mask.open{display:flex;}
+.modal-box{background:var(--white);border-radius:2px;width:520px;max-width:100%;max-height:calc(100vh - 32px);display:flex;flex-direction:column;box-shadow:0 3px 6px -4px rgba(0,0,0,.12),0 6px 16px rgba(0,0,0,.08),0 9px 28px 8px rgba(0,0,0,.05);color:var(--text-primary);font-size:14px;}
+.modal-box.sm{width:420px;}
+.modal-box.lg{width:980px;}
+.modal-hd{display:flex;align-items:center;padding:16px 24px;border-bottom:1px solid var(--split);font-weight:500;font-size:16px;flex:none;}
+.modal-hd .x{margin-left:auto;appearance:none;border:0;background:none;font-size:18px;color:var(--text-secondary);cursor:pointer;line-height:1;}
+.modal-bd{padding:20px 24px;overflow:auto;min-height:0;}
+.modal-ft{display:flex;justify-content:flex-end;gap:8px;padding:10px 16px;border-top:1px solid var(--split);flex:none;}
+.confirm-bd{display:flex;gap:12px;padding:28px 28px 20px;}
+.confirm-ic{flex:none;width:22px;height:22px;border-radius:50%;background:var(--warn);color:var(--white);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;}
+.confirm-title{font-weight:500;font-size:16px;margin-bottom:6px;}
+.confirm-ft{display:flex;justify-content:flex-end;gap:8px;padding:0 24px 22px;}
+.m-row{display:flex;align-items:flex-start;gap:10px;}
+.m-row label{white-space:nowrap;line-height:32px;}
+.m-row label .req{color:#ff4d4f;margin-right:4px;}
+.m-row .ctl{flex:1;min-width:0;}
+.m-row .ctl .bk-select,.m-row .ctl .bk-input{width:100%;}
+.m-tip{color:#ff4d4f;font-size:13px;margin-top:8px;line-height:1.6;}
+.bk-toast{position:fixed;top:calc(24px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:#fff;color:rgba(0,0,0,.85);box-shadow:0 6px 16px rgba(0,0,0,.12);border-radius:2px;padding:9px 16px;font-size:14px;z-index:320;display:none;align-items:center;gap:8px;}
+.bk-toast.open{display:flex;}
+.bk-toast .ok{width:16px;height:16px;border-radius:50%;background:#52c41a;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;}
+
+@media (max-width:560px){.bk-actions{margin-left:0;}.dh-header h1{font-size:22px;}}
+
+/* ===== 本需求补充组件 ===== */
+.bk-tag.blue{color:#096dd9;background:#e6f7ff;border-color:#91d5ff;}
+.bk-tag.gray{color:rgba(0,0,0,.45);background:#fafafa;border-color:#d9d9d9;}
+.bk-tag.orange{color:#d46b08;background:#fff7e6;border-color:#ffd591;}
+.bk-link{color:var(--primary);}
+.muted{color:var(--text-secondary);}
+.bk-btn[disabled]{background:var(--disabled-bg);border-color:var(--border);color:var(--disabled-text);cursor:not-allowed;}
+.bk-btn.ghost-danger{color:var(--danger);border-color:var(--danger);}
+.sub-bar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.sub-btn{appearance:none;border:1px solid var(--doc-line);background:var(--doc-paper-raised);color:var(--doc-ink-soft);border-radius:100px;padding:6px 14px;font:inherit;font-size:13px;cursor:pointer;}
+.sub-btn small{color:var(--doc-ink-faint);margin-left:4px;font-size:11.5px;}
+.sub-btn.active{border-color:var(--doc-accent);color:var(--doc-accent);background:var(--doc-accent-soft);font-weight:600;}
+.proto-grid{display:grid;grid-template-columns:minmax(0,1fr) 256px;gap:16px;align-items:start;}
+@media (max-width:1100px){.proto-grid{grid-template-columns:1fr;}.fe{position:static;}}
+.bk-page{display:none;}
+.bk-page.active{display:block;}
+.bk-table tr.pair td{background:#f0f7ff;}
+.bk-table tr.pair td:first-child{box-shadow:inset 3px 0 0 var(--primary);}
+.bk-table tr.pair.hid td{color:var(--text-secondary);}
+.bk-table td.l{text-align:left;}
+.zk-tabs{display:flex;gap:2px;background:var(--white);padding:2px 6px 0;border-bottom:1px solid var(--split);overflow-x:auto;}
+.zk-tab{font-size:12px;line-height:28px;padding:0 14px;color:#595959;white-space:nowrap;}
+.zk-tab.on{background:#0960bd;color:#fff;border-radius:2px 2px 0 0;}
+.cand{border:1px solid var(--border);border-radius:2px;max-height:210px;overflow:auto;margin-top:6px;}
+.cand div{padding:6px 11px;cursor:pointer;font-size:13px;display:flex;gap:8px;justify-content:space-between;}
+.cand div:hover{background:#f5f5f5;}
+.cand div.on{background:#e6f7ff;font-weight:600;}
+.cand .em{padding:14px;color:var(--text-secondary);cursor:default;justify-content:center;}
+.cand div.em:hover{background:none;}
+.kv{display:flex;gap:8px;line-height:30px;}
+.kv .k{flex:0 0 84px;text-align:right;color:var(--text-secondary);}
+/* 前台显示结果（示意） */
+.fe{background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:10px;box-shadow:var(--shadow-card);padding:14px;position:sticky;top:100px;}
+.fe h3{font-size:16px;margin:0 0 2px;}
+.fe .note{font-size:12px;color:var(--doc-ink-faint);margin-bottom:10px;}
+.fe h4{font-size:13px;margin:12px 0 6px;color:var(--doc-ink);font-family:var(--f-sans);}
+.fe ol{list-style:none;margin:0;padding:0;}
+.fe li{display:flex;align-items:center;gap:6px;font-size:12.5px;padding:4px 6px;border-radius:4px;color:var(--doc-ink-soft);}
+.fe li .no{flex:0 0 22px;font-family:var(--f-mono);color:var(--doc-ink-faint);font-size:11.5px;}
+.fe li .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--doc-ink);}
+.fe li .vn{font-size:11px;padding:0 5px;border-radius:3px;background:var(--doc-line-soft);color:var(--doc-ink-soft);white-space:nowrap;}
+.fe li .vn.my{background:var(--doc-teal-soft);color:var(--doc-teal);}
+.fe li .mt{font-size:11px;color:#d46b08;white-space:nowrap;}
+.fe li.flash{animation:feflash 1.8s ease-out;}
+@keyframes feflash{0%{background:#ffe9a8;}100%{background:transparent;}}
+.fe .lg{font-size:11.5px;color:var(--doc-ink-faint);margin-top:10px;line-height:1.6;}
+.bk-table td.wrap2{white-space:normal;min-width:120px;max-width:220px;}
+.proto-tip{font-size:12.5px;color:var(--doc-ink-faint);margin:8px 2px 0;}
+</style></head><body>
+<header class="dh-header"><div class="dh-header-inner">
+  <h1>原厂与 MY 系列游戏切换</h1>
+  <div class="dh-meta"><span>模块：<b>商户游戏管理 · 游戏管理；总控 · 站点场馆管理</b></span><span>更新日期：<b>2026-11-04</b></span></div>
+</div></header>
+<nav class="dh-navbar" id="dhNavbar"><div class="dh-navbar-inner dh-primary" id="dhPrimary">
+  <button class="dh-primary-btn active" data-primary="proto" type="button">交互原型 <small>总控关联与商户切换联动，右侧看前台结果</small></button>
+  <button class="dh-primary-btn" data-primary="docs" type="button">需求文档 <small>功能说明、规则与验收</small></button>
+</div></nav>
+
+<div class="dh-wrap"><main class="dh-main">
+
+<!-- ================= 交互原型 ================= -->
+<section class="dh-primary-panel active" data-primary-panel="proto" id="protoSec">
+  <div class="proto-intro">
+    <div class="grow">三个页面共用同一份数据：先在总控关联场馆、建立游戏对，再到商户后台游戏管理切换前台显示原厂或 MY；右侧实时显示前台结果（示意）。游戏名称、场馆、游戏ID、热门值取自测试环境，关联关系与总控游戏状态为示例。</div>
+    <label class="doc-check" for="markToggle"><input type="checkbox" id="markToggle" checked> 显示本期改动标注</label>
+    <button class="doc-btn" id="resetDemo" type="button">重置演示数据</button>
+  </div>
+  <div class="sub-bar" role="tablist">
+    <button class="sub-btn active" data-page="site" type="button">商户后台 · 游戏管理<small>切换前台显示</small></button>
+    <button class="sub-btn" data-page="venue" type="button">总控 · 场馆配置总控<small>关联场馆</small></button>
+    <button class="sub-btn" data-page="game" type="button">总控 · 游戏配置总控<small>建立游戏对</small></button>
+  </div>
+  <div class="proto-grid">
+    <div style="min-width:0;">
+      <!-- ===== 商户后台 · 游戏管理 ===== -->
+      <div class="bk-page active" data-page-panel="site">
+        <div class="proto-window">
+          <div class="bk-top"><span class="bk-crumb">商户游戏管理 / <b>游戏管理</b></span><span class="sp"></span><span class="bk-user">巴西站-测试</span></div>
+          <div class="bk-tabs"><button class="bk-tab active" type="button">游戏管理</button></div>
+          <div class="bk-body">
+            <div class="bk-card"><div class="bk-form">
+              <div class="bk-field"><label>所属站点</label><select class="bk-select" disabled style="background:var(--disabled-bg);color:var(--disabled-text);"><option>巴西站-测试</option></select></div>
+              <div class="bk-field"><label for="sName">游戏名称</label><input class="bk-input" id="sName" placeholder="游戏名称"></div>
+              <div class="bk-field"><label for="sVenue">场馆名称</label><select class="bk-select" id="sVenue"></select></div>
+              <div class="bk-field"><label for="sShow">前台显示<span class="mk">本期新增</span></label><select class="bk-select" id="sShow" style="width:130px;"><option value="">全部</option><option value="show">显示</option><option value="hide">隐藏</option><option value="none">未关联</option></select></div>
+              <div class="bk-actions"><button class="bk-btn" id="sReset" type="button">重 置</button><button class="bk-btn primary" id="sQuery" type="button">查 询</button></div>
+            </div></div>
+            <div class="bk-card">
+              <div class="bk-toolbar">
+                <span class="info">游戏对两行相邻、共用一个序号，左侧蓝条标识；显示的版本在上</span>
+                <button class="bk-btn primary" id="btnSwitchAll" type="button">原厂 / MY 切换<span class="mk">本期新增</span></button>
+                <button class="bk-btn primary" id="btnAlign" type="button">对齐平台排序</button>
+              </div>
+              <div class="bk-table-wrap"><table class="bk-table" style="min-width:900px;">
+                <thead><tr><th style="width:64px;">顺序</th><th>游戏名称</th><th>场馆名称</th><th>游戏状态</th><th>前台显示<span class="mk">本期新增</span></th><th>最近操作人</th><th>最近操作时间</th><th>备注</th><th style="width:150px;">操作</th></tr></thead>
+                <tbody id="siteBody"></tbody>
+              </table></div>
+              <div class="bk-pager"><span id="siteCount"></span><span class="pg">1</span><span>50 条/页</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 总控 · 场馆配置总控 ===== -->
+      <div class="bk-page" data-page-panel="venue">
+        <div class="proto-window">
+          <div class="bk-top"><span class="bk-crumb">站点场馆管理 / <b>场馆配置总控</b></span><span class="sp"></span></div>
+          <div class="zk-tabs"><span class="zk-tab">游戏配置总控</span><span class="zk-tab on">场馆配置总控 ×</span></div>
+          <div class="bk-body">
+            <div class="bk-card"><div class="bk-form">
+              <input class="bk-input" id="vName" placeholder="场馆名称" style="width:162px;">
+              <select class="bk-select" id="vStatus" style="width:162px;"><option value="">场馆状态</option><option>维护</option><option>启用</option><option>停用</option></select>
+              <select class="bk-select" id="vType" style="width:162px;"><option value="">场馆类型</option><option>视讯</option><option>电子</option><option>捕鱼</option></select>
+              <div class="bk-actions"><button class="bk-btn" id="vReset" type="button">重 置</button><button class="bk-btn primary" id="vQuery" type="button">查 询</button></div>
+            </div></div>
+            <div class="bk-card">
+              <div class="bk-table-wrap"><table class="bk-table" style="min-width:940px;">
+                <thead><tr><th style="width:56px;">序号</th><th>场馆名称</th><th>场馆类型</th><th>场馆状态</th><th>排序(热门游戏数量)</th><th>排序类型</th><th>关联场馆<span class="mk">本期新增</span></th><th style="width:220px;">操作</th></tr></thead>
+                <tbody id="venueBody"></tbody>
+              </table></div>
+              <div class="bk-pager"><span id="venueCount"></span><span class="pg">1</span><span>50 条/页</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 总控 · 游戏配置总控 ===== -->
+      <div class="bk-page" data-page-panel="game">
+        <div class="proto-window">
+          <div class="bk-top"><span class="bk-crumb">站点场馆管理 / <b>游戏配置总控</b></span><span class="sp"></span></div>
+          <div class="zk-tabs"><span class="zk-tab on">游戏配置总控 ×</span><span class="zk-tab">场馆配置总控</span></div>
+          <div class="bk-body">
+            <div class="bk-card"><div class="bk-form">
+              <input class="bk-input" id="gId" placeholder="游戏ID" style="width:162px;">
+              <input class="bk-input" id="gName" placeholder="游戏名称" style="width:162px;">
+              <select class="bk-select" id="gVenue" style="width:162px;"></select>
+              <span style="display:inline-flex;align-items:center;"><select class="bk-select" id="gLink" style="width:162px;"><option value="">关联状态</option><option value="yes">已关联</option><option value="no">未关联</option></select><span class="mk">本期新增</span></span>
+              <div class="bk-actions"><button class="bk-btn" id="gReset" type="button">重 置</button><button class="bk-btn primary" id="gQuery" type="button">查 询</button></div>
+            </div></div>
+            <div class="bk-card">
+              <div class="bk-toolbar"><span class="info">原型省略列：游戏图片、创建时间、最近操作人、最近操作时间、备注、前1小时有效注单、当前小时注单量（沿用现网）</span><button class="bk-btn primary" id="btnBets" type="button">批量修改有效注单</button></div>
+              <div class="bk-table-wrap"><table class="bk-table" style="min-width:960px;">
+                <thead><tr><th style="width:56px;">序号</th><th>游戏ID</th><th>游戏名称</th><th>场馆名称</th><th>关联游戏<span class="mk">本期新增</span></th><th>游戏状态</th><th>有效注单</th><th style="width:250px;">操作</th></tr></thead>
+                <tbody id="gameBody"></tbody>
+              </table></div>
+              <div class="bk-pager"><span id="gameCount"></span><span class="pg">1</span><span>50 条/页</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="proto-tip">沿用现网的功能（维护 / 停用 / 启用、排序、批量修改有效注单、对齐平台排序、分页）在原型中不演示数据变化。</div>
+    </div>
+
+    <!-- ===== 前台显示结果（示意） ===== -->
+    <aside class="fe" aria-live="polite">
+      <h3>前台显示结果（示意）</h3>
+      <div class="note">按当前配置计算，不是前台界面复刻；变化的位置会闪烁</div>
+      <h4>热门（前 12 个位置）</h4><ol id="feHot"></ol>
+      <h4>PG 场馆（前 8 个位置）</h4><ol id="fePg"></ol>
+      <div class="lg"><span class="vn my" style="font-size:11px;padding:0 5px;border-radius:3px;">MY</span> MY 版 · <span style="font-size:11px;padding:0 5px;border-radius:3px;background:var(--doc-line-soft);">原厂</span> 原厂版 · 游戏对只出现一款；关闭或总控停用的不出现</div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============================ 需求文档 ============================ -->
+<section class="dh-primary-panel" data-primary-panel="docs">
+  <nav class="dh-tabs" id="dhTabs">
+    <button class="dh-tab active" data-tab="overview" type="button"><span class="n">0</span>总览</button>
+    <button class="dh-tab" data-tab="venue" type="button"><span class="n">1</span>总控 · 场馆配置总控</button>
+    <button class="dh-tab" data-tab="game" type="button"><span class="n">2</span>总控 · 游戏配置总控</button>
+    <button class="dh-tab" data-tab="site" type="button"><span class="n">3</span>商户后台 · 游戏管理</button>
+    <button class="dh-tab" data-tab="qa" type="button"><span class="n">4</span>验收与开发测试</button>
+  </nav>
+
+  <!-- ===== 0 总览 ===== -->
+  <div class="dh-panel active" data-panel="overview">
+    <div class="req-block">
+      <h2>背景</h2>
+      <div class="dh-prose">
+        <p>MY 系列游戏仿造原厂游戏。前台 MY 场馆不单独出 Tab，游戏并入同源场馆（如 PG 场馆 = PG电子 + MyPG电子），<strong>同一款游戏的原厂版与 MY 版同时出现，且位置不同</strong>（两个版本热门值不同）。平台也没有记录哪款 MY 游戏对应哪款原厂游戏：两边游戏 ID 不同，中文名常不一致（MyPG电子「金龙送宝」与 PG电子「财富龙」都是 Fortune Dragon）。</p>
+        <p>本期：<strong>总控统一维护原厂与 MY 的对应关系</strong>（场馆对 + 游戏对），全部商户共用、商户不能修改；<strong>商户在游戏管理按场馆一键切换或单个切换</strong>前台显示原厂版还是 MY 版；同一游戏对前台同时只出现一款，且<strong>切换后位置不变</strong>。</p>
+      </div>
+    </div>
+    <div class="req-block">
+      <h2>基本概念</h2>
+      <div class="tbl-wrap"><table class="dh-table-simple">
+        <thead><tr><th>概念</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td><b>MY 场馆 / 原厂场馆</b></td><td>MY 场馆为仿造原厂的 MY 系列场馆（如 MyPG电子）；原厂场馆为被仿造的场馆（如 PG电子）</td></tr>
+          <tr><td><b>场馆对</b></td><td>总控在「场馆配置总控」为 MY 场馆指定的原厂场馆，一对一。只有场馆对之间才能建立游戏对</td></tr>
+          <tr><td><b>游戏对</b></td><td>总控在「游戏配置总控」把一款 MY 游戏与一款原厂游戏关联，一对一。只有游戏对参与切换</td></tr>
+          <tr><td><b>前台显示版本</b></td><td>每个站点、每个游戏对选择前台显示原厂版或 MY 版；新建游戏对默认 MY；站点各自保存</td></tr>
+          <tr><td><b>未关联游戏</b></td><td>不属于任何游戏对的游戏，不受切换影响，前台照常按状态显示</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="req-block">
+      <h2>三端关系</h2>
+      <div class="illus-grid">
+        <div class="illus-col"><h4>总控 · 场馆配置总控</h4><div class="illus-item new">关联场馆：MyPG电子 ↔ PG电子<span class="tag">本期新增</span></div><div class="who">总控运营维护，全部站点共用</div></div>
+        <div class="illus-col"><h4>总控 · 游戏配置总控</h4><div class="illus-item new">游戏对：MyPG「十倍金牛」↔ PG「十倍金牛」<span class="tag">本期新增</span></div><div class="who">只能在场馆对之间建立；两行合并展示</div></div>
+        <div class="illus-col"><h4>商户后台 · 游戏管理</h4><div class="illus-item new">前台显示：原厂 / MY，场馆一键或单个切换<span class="tag">本期新增</span></div><div class="who">站点各自保存，不能改对应关系</div></div>
+        <div class="illus-col"><h4>前台</h4><div class="illus-item">游戏对只出现一款，位置不变</div><div class="who">热门、场馆 Tab、首页、侧边菜单、搜索、最近、收藏</div></div>
+      </div>
+      <div class="cap">示意图：本需求涉及的三个后台页面与前台的关系（非流程）</div>
+    </div>
+    <div class="req-block">
+      <h2>整体业务流程</h2>
+      <div class="dh-flow">
+        <div class="flow-diagram">
+          <div class="flow-step">总控关联场馆<span class="sub">场馆配置总控</span></div><div class="flow-arrow">→</div>
+          <div class="flow-step">总控建立游戏对<span class="sub">游戏配置总控</span></div><div class="flow-arrow">→</div>
+          <div class="flow-step">各站点该游戏对默认显示 MY</div><div class="flow-arrow">→</div>
+          <div class="flow-step">商户按需切换<span class="sub">场馆一键 / 单个</span></div><div class="flow-arrow">→</div>
+          <div class="flow-step">前台只显示所选版本，位置不变</div>
+        </div>
+        <div class="flow-branches">
+          <div class="flow-branch"><span class="cond">显示版本开启</span><span class="arr">→</span><span class="result good">前台正常显示</span></div>
+          <div class="flow-branch"><span class="cond">显示版本维护</span><span class="arr">→</span><span class="result bad">前台显示「维护中」，不自动换版本</span></div>
+          <div class="flow-branch"><span class="cond">显示版本关闭，或被总控停用</span><span class="arr">→</span><span class="result neutral">该游戏对前台不显示，不自动换版本</span></div>
+          <div class="flow-branch"><span class="cond">总控解除游戏对</span><span class="arr">→</span><span class="result neutral">两款恢复为未关联，前台都显示</span></div>
+        </div>
+        <div class="cap">图：从总控建立对应关系到前台展示的完整过程（点击放大）</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 1 总控 · 场馆配置总控 ===== -->
+  <div class="dh-panel" data-panel="venue">
+    <button type="button" class="proto-jump" data-goto="venue">在交互原型中查看「场馆配置总控」 →</button>
+    <div class="req-block"><h2>功能结构图</h2><div class="dh-mind"><div class="mm">
+      <div class="mm-root">场馆配置总控</div>
+      <div class="mm-branches">
+        <div class="mm-b"><div class="mm-node">搜索区</div><div class="mm-leaves"><span class="mm-leaf">场馆名称、场馆状态、场馆类型、重置 / 查询（沿用）</span></div></div>
+        <div class="mm-b"><div class="mm-node">列表</div><div class="mm-leaves"><span class="mm-leaf">序号、场馆名称、类型、状态、排序(热门游戏数量)、排序类型（沿用）</span><span class="mm-leaf">关联场馆<span class="tag-new">本期新增</span></span></div></div>
+        <div class="mm-b"><div class="mm-node">操作列</div><div class="mm-leaves"><span class="mm-leaf">维护 / 启用、停用（沿用）</span><span class="mm-leaf">关联 / 解除关联（仅 MY 场馆）<span class="tag-new">本期新增</span></span></div></div>
+        <div class="mm-b"><div class="mm-node">关联场馆弹窗</div><div class="mm-leaves"><span class="mm-leaf">MY 场馆（只读）、原厂场馆（必选）<span class="tag-new">本期新增</span></span></div></div>
+      </div></div></div></div>
+    <div class="req-block"><h2>字段说明</h2>
+      <div class="tbl-wrap"><table class="dh-table-simple">
+        <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
+        <tbody>
+          <tr><td><b>关联场馆</b><span class="tag-new">本期新增</span></td><td>MY 场馆行：已关联显示原厂场馆名称（蓝）+「· 已关联 N 个游戏」，未关联显示「未关联」（灰）；被关联的原厂场馆行显示对应 MY 场馆；其他「-」</td><td>未关联</td><td>决定游戏配置总控中可建立游戏对的范围，以及商户「原厂 / MY 切换」弹窗中的场馆对</td></tr>
+          <tr><td><b>关联</b><span class="tag-new">本期新增</span></td><td>只在未关联的 MY 场馆行显示，蓝色，位于维护 / 停用之后</td><td>—</td><td>打开「关联场馆」弹窗</td></tr>
+          <tr><td><b>解除关联</b><span class="tag-new">本期新增</span></td><td>只在已关联的 MY 场馆行显示，红色</td><td>—</td><td>无游戏对时可解除</td></tr>
+          <tr><td><b>原厂场馆（弹窗）</b></td><td>单选下拉，必选；选项为同场馆类型、非 MY、未被其他 MY 场馆关联的场馆；下方灰字「关联后可在游戏配置总控为两个场馆的游戏建立游戏对」</td><td>空</td><td>保存后一对一关联</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="req-block"><h2>操作流程</h2>
+      <div class="dh-flow">
+        <div class="flow-diagram"><div class="flow-step">MY 场馆行点「关联」</div><div class="flow-arrow">→</div><div class="flow-step">选择原厂场馆</div><div class="flow-arrow">→</div><div class="flow-step">点「确定」</div></div>
+        <div class="flow-branches">
+          <div class="flow-branch"><span class="cond">已选择</span><span class="arr">→</span><span class="result good">保存关联，提示「操作成功」</span></div>
+          <div class="flow-branch"><span class="cond">未选择</span><span class="arr">→</span><span class="result bad">提示「请选择原厂场馆」，弹窗保留</span></div>
+          <div class="flow-branch"><span class="cond">点「解除关联」，该场馆对下有游戏对</span><span class="arr">→</span><span class="result bad">提示先在游戏配置总控解除 N 个游戏对，不变更</span></div>
+          <div class="flow-branch"><span class="cond">点「解除关联」，无游戏对，确认</span><span class="arr">→</span><span class="result good">解除，显示「未关联」</span></div>
+          <div class="flow-branch"><span class="cond">取消 / 关闭</span><span class="arr">→</span><span class="result neutral">不变更</span></div>
+        </div>
+        <div class="cap">图：关联与解除关联场馆（点击放大）</div>
+      </div>
+    </div>
+    <div class="req-block"><h2>触发条件与反馈</h2>
+      <div class="tbl-wrap"><table class="dh-table-simple">
+        <thead><tr><th>触发条件</th><th>系统反馈</th></tr></thead>
+        <tbody>
+          <tr><td>关联弹窗未选原厂场馆点「确定」</td><td>下拉下方红字「请选择原厂场馆」，弹窗不关闭</td></tr>
+          <tr><td>关联成功</td><td>提示「操作成功」；MY 行显示原厂场馆，原厂行显示 MY 场馆；按钮变「解除关联」</td></tr>
+          <tr><td>解除关联，该场馆对下有游戏对</td><td>提示「请先在游戏配置总控解除该场馆下的 N 个游戏对」，按钮「知道了」</td></tr>
+          <tr><td>解除关联，无游戏对</td><td>确认框「确认解除 {MY 场馆} 与 {原厂场馆} 的关联？」，确定后提示「操作成功」</td></tr>
+        </tbody>
+      </table></div>
+      <div class="dh-prose"><ol>
+        <li>关联只决定"哪两个场馆的游戏可以建立游戏对"，不改变场馆或游戏的状态、排序；只关联场馆、未建立游戏对时前台无变化。</li>
+        <li>场馆维护 / 停用 / 启用沿用现有逻辑，与关联互相独立。</li>
+        <li>保存后立即生效，商户「原厂 / MY 切换」弹窗中的场馆对随之更新。</li>
+      </ol></div>
+    </div>
+  </div>
+
+  <!-- ===== 2 总控 · 游戏配置总控 ===== -->
+  <div class="dh-panel" data-panel="game">
+    <button type="button" class="proto-jump" data-goto="game">在交互原型中查看「游戏配置总控」 →</button>
+    <div class="req-block"><h2>功能结构图</h2><div class="dh-mind"><div class="mm">
+      <div class="mm-root">游戏配置总控</div>
+      <div class="mm-branches">
+        <div class="mm-b"><div class="mm-node">搜索区</div><div class="mm-leaves"><span class="mm-leaf">游戏ID、游戏名称、场馆名称、重置 / 查询（沿用）</span><span class="mm-leaf">关联状态<span class="tag-new">本期新增</span></span></div></div>
+        <div class="mm-b"><div class="mm-node">工具栏</div><div class="mm-leaves"><span class="mm-leaf">批量修改有效注单（沿用）</span></div></div>
+        <div class="mm-b"><div class="mm-node">列表</div><div class="mm-leaves"><span class="mm-leaf">原有各列（沿用）</span><span class="mm-leaf">关联游戏<span class="tag-new">本期新增</span></span><span class="mm-leaf">游戏对合并展示<span class="tag-new">本期调整</span></span></div></div>
+        <div class="mm-b"><div class="mm-node">操作列</div><div class="mm-leaves"><span class="mm-leaf">维护 / 启用、停用、排序（沿用）</span><span class="mm-leaf">关联（MY 行）、解除关联（游戏对）<span class="tag-new">本期新增</span></span></div></div>
+        <div class="mm-b"><div class="mm-node">关联游戏弹窗</div><div class="mm-leaves"><span class="mm-leaf">MY 游戏、原厂场馆（只读）、原厂游戏（可搜索，必选）<span class="tag-new">本期新增</span></span></div></div>
+      </div></div></div></div>
+    <div class="req-block"><h2>字段说明</h2>
+      <div class="tbl-wrap"><table class="dh-table-simple">
+        <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
+        <tbody>
+          <tr><td><b>关联状态</b><span class="tag-new">本期新增</span></td><td>单选下拉，可清空；占位「关联状态」；选项：已关联 / 未关联</td><td>空（全部）</td><td>已关联＝游戏对（两行一起返回）；未关联＝所属场馆已关联、但本游戏尚未建立游戏对</td></tr>
+          <tr><td><b>关联游戏</b><span class="tag-new">本期新增</span></td><td>位于场馆名称之后。游戏对：显示对方「场馆名称 · 游戏名称」（蓝）；场馆已关联、本游戏未关联：「未关联」（灰）；场馆未关联：「-」</td><td>—</td><td>一眼看出对应关系</td></tr>
+          <tr><td><b>游戏对合并展示</b><span class="tag-new">本期调整</span></td><td>两行相邻，MY 在上、原厂在下；浅蓝底、左侧蓝色竖条；整体排在两行中较高有效注单的位置；不跨页拆开</td><td>—</td><td>两款游戏的状态、排序、有效注单仍各自独立</td></tr>
+          <tr><td><b>关联</b><span class="tag-new">本期新增</span></td><td>只在所属场馆已关联、本游戏未关联的 MY 游戏行显示，蓝色，位于排序之后</td><td>—</td><td>打开「关联游戏」弹窗</td></tr>
+          <tr><td><b>解除关联</b><span class="tag-new">本期新增</span></td><td>游戏对两行都显示，红色</td><td>—</td><td>确认后两行恢复独立</td></tr>
+          <tr><td><b>原厂游戏（弹窗）</b></td><td>可搜索单选，必选；输入中文名、英文名或游戏ID 筛选；选项为该原厂场馆下未加入游戏对的游戏，每项显示「游戏名称 · 游戏ID · 游戏状态」；下方灰字「关联后各站点默认显示 MY 游戏，站点可自行切换」</td><td>空</td><td>保存后建立游戏对</td></tr>
+        </tbody>
+      </table></div>
+      <div class="dh-callout">搜索命中游戏对中任一行时，两行一起返回，方便核对对应关系。</div>
+    </div>
+    <div class="req-block"><h2>操作流程</h2>
+      <div class="dh-flow">
+        <div class="flow-diagram"><div class="flow-step">MY 游戏行点「关联」</div><div class="flow-arrow">→</div><div class="flow-step">搜索并选择原厂游戏</div><div class="flow-arrow">→</div><div class="flow-step">点「确定」</div></div>
+        <div class="flow-branches">
+          <div class="flow-branch"><span class="cond">已选择</span><span class="arr">→</span><span class="result good">建立游戏对，两行合并展示；各站点默认显示 MY</span></div>
+          <div class="flow-branch"><span class="cond">未选择</span><span class="arr">→</span><span class="result bad">提示「请选择原厂游戏」，弹窗保留</span></div>
+          <div class="flow-branch"><span class="cond">点「解除关联」并确认</span><span class="arr">→</span><span class="result good">两行恢复独立；各站点两款都显示</span></div>
+          <div class="flow-branch"><span class="cond">取消 / 关闭</span><span class="arr">→</span><span class="result neutral">不变更</span></div>
+        </div>
+        <div class="cap">图：建立与解除游戏对（点击放大）</div>
+      </div>
+    </div>
+    <div class="req-block"><h2>触发条件与反馈</h2>
+      <div class="tbl-wrap"><table class="dh-table-simple">
+        <thead><tr><th>触发条件</th><th>系统反馈</th></tr></thead>
+        <tbody>
+          <tr><td>关联弹窗未选原厂游戏点「确定」</td><td>红字「请选择原厂游戏」，弹窗不关闭</td></tr>
+          <tr><td>输入筛选无结果</td><td>候选区显示「无匹配游戏（只列该原厂场馆下未加入游戏对的游戏）」</td></tr>
+          <tr><td>关联成功</td><td>提示「操作成功」；两行合并展示，关联游戏列互指；两行最近操作人、最近操作时间更新</td></tr>
+          <tr><td>点「解除关联」</td><td>确认框「确认解除 {MY 游戏名称} 与 {原厂游戏名称} 的关联？解除后各站点两款游戏都将显示在前台。」</td></tr>
+        </tbody>
+      </table></div>
+      <div class="dh-prose"><ol>
+        <li><strong>一对一</strong>：一款游戏只能属于一个游戏对；只能在场馆对之间建立；只在 MY 游戏行发起。</li>
+        <li><strong>状态独立</strong>：关联、解除关联不改两款游戏的状态、排序、有效注单。</li>
+        <li><strong>下发</strong>：新建游戏对后各站点默认显示 MY；站点已做的切换不被总控覆盖；解除后各站点的显示设置清除。</li>
+        <li><strong>停用叠加</strong>：站点显示的版本被总控停用时，该游戏对前台不显示，不自动换回。</li>
+      </ol></div>
+    </div>
+  </div>
+
+  <!-- ===== 3 商户后台 · 游戏管理 ===== -->
+  <div class="dh-panel" data-panel="site">
+    <button type="button" class="proto-jump" data-goto="site">在交互原型中查看「游戏管理」 →</button>
+    <div class="req-block"><h2>功能结构图</h2><div class="dh-mind"><div class="mm">
+      <div class="mm-root">游戏管理</div>
+      <div class="mm-branches">
+        <div class="mm-b"><div class="mm-node">搜索区</div><div class="mm-leaves"><span class="mm-leaf">所属站点、游戏名称、场馆名称、重置 / 查询（沿用）</span><span class="mm-leaf">前台显示<span class="tag-new">本期新增</span></span></div></div>
+        <div class="mm-b"><div class="mm-node">工具栏</div><div class="mm-leaves"><span class="mm-leaf">对齐平台排序（沿用）</span><span class="mm-leaf">原厂 / MY 切换<span class="tag-new">本期新增</span></span></div></div>
+        <div class="mm-b"><div class="mm-node">列表</div><div class="mm-leaves"><span class="mm-leaf">顺序、游戏名称、场馆名称、游戏状态、最近操作人 / 时间、备注（沿用）</span><span class="mm-leaf">前台显示<span class="tag-new">本期新增</span></span><span class="mm-leaf">游戏对相邻、共用序号<span class="tag-new">本期调整</span></span></div></div>
+        <div class="mm-b"><div class="mm-node">操作列</div><div class="mm-leaves"><span class="mm-leaf">维护、关闭、开启（沿用）</span><span class="mm-leaf">切换（仅游戏对）<span class="tag-new">本期新增</span></span></div></div>
+        <div class="mm-b"><div class="mm-node">弹窗</div><div class="mm-leaves"><span class="mm-leaf">原厂 / MY 切换（场馆对列表）<span class="tag-new">本期新增</span></span><span class="mm-leaf">切换确认框（备注必填）<span class="tag-new">本期新增</span></span></div></div>
+      </div></div></div></div>
+    <div class="req-block"><h2>字段说明</h2>
+      <div class="tbl-wrap"><table class="dh-table-simple">
+        <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
+        <tbody>
+          <tr><td><b>前台显示（搜索）</b><span class="tag-new">本期新增</span></td><td>单选下拉，可清空；选项：显示 / 隐藏 / 未关联</td><td>空（全部）</td><td>显示＝游戏对中当前显示的版本；隐藏＝当前隐藏的版本；未关联＝不属于任何游戏对</td></tr>
+          <tr><td><b>前台显示（列）</b><span class="tag-new">本期新增</span></td><td>游戏对：显示的版本绿色「显示」，另一版本灰色「隐藏」；未关联「-」</td><td>新游戏对显示 MY</td><td>—</td></tr>
+          <tr><td><b>顺序</b><span class="tag-new">本期调整</span></td><td>游戏对两行显示同一个序号；显示的版本在上、隐藏的在下，左侧蓝色竖条；不跨页拆开</td><td>—</td><td>游戏对共用一个排序位置</td></tr>
+          <tr><td><b>切换（行内）</b><span class="tag-new">本期新增</span></td><td>游戏对两行都显示蓝色「切换」，位于维护 / 关闭 / 开启之后；未关联不显示</td><td>—</td><td>该游戏对显示与隐藏互换</td></tr>
+          <tr><td><b>原厂 / MY 切换（工具栏）</b><span class="tag-new">本期新增</span></td><td>「对齐平台排序」左侧蓝色按钮；弹窗列出总控已关联、且本站有游戏对的场馆对：原厂场馆 / MY 场馆 / 游戏对数量 / 当前显示（全部 MY、全部原厂，或「MY X 个 · 原厂 Y 个」）/「全部显示原厂」「全部显示 MY」（已全部是该版本时置灰）</td><td>—</td><td>整场馆一键切换</td></tr>
+          <tr><td><b>切换确认框</b><span class="tag-new">本期新增</span></td><td>沿用状态变更的「警告」确认框；备注必填（提示「请输入备注信息方可变更」，最多 30 字，计数 N / 30）</td><td>—</td><td>确定后提示「操作成功」</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="req-block"><h2>切换流程</h2>
+      <div class="dh-flow">
+        <div class="flow-diagram"><div class="flow-step">点「全部显示原厂 / 全部显示 MY」或行内「切换」</div><div class="flow-arrow">→</div><div class="flow-step">确认框填写备注</div><div class="flow-arrow">→</div><div class="flow-step">显示与隐藏互换<span class="sub">更新留痕，刷新前台缓存</span></div></div>
+        <div class="flow-branches">
+          <div class="flow-branch"><span class="cond">新显示版本开启</span><span class="arr">→</span><span class="result good">前台显示新版本，位置不变</span></div>
+          <div class="flow-branch"><span class="cond">新显示版本维护</span><span class="arr">→</span><span class="result bad">前台显示「维护中」，不自动换回</span></div>
+          <div class="flow-branch"><span class="cond">新显示版本关闭，或被总控停用</span><span class="arr">→</span><span class="result neutral">该游戏对前台不显示，不自动换回</span></div>
+          <div class="flow-branch"><span class="cond">备注为空点确定</span><span class="arr">→</span><span class="result bad">阻止提交，提示需填写备注</span></div>
+          <div class="flow-branch"><span class="cond">取消 / 关闭</span><span class="arr">→</span><span class="result neutral">不变更</span></div>
+        </div>
+        <div class="cap">图：场馆一键切换与单个切换通用（点击放大）</div>
+      </div>
+    </div>
+    <div class="req-block"><h2>触发条件与反馈</h2>
+      <div class="tbl-wrap"><table class="dh-table-simple">
+        <thead><tr><th>触发条件</th><th>系统反馈</th></tr></thead>
+        <tbody>
+          <tr><td>场馆切换按钮</td><td>确认框「确认将 {原厂场馆} / {MY 场馆} 下 {N} 个游戏对全部切换为显示 {原厂 / MY}？」，N 为实际会被切换的数量（已是目标版本的不计）</td></tr>
+          <tr><td>行内「切换」</td><td>确认框「确认将 {游戏名称} 切换为显示 {场馆名称} 版本？」（场馆为切换后显示的版本所属场馆）</td></tr>
+          <tr><td>切换成功</td><td>提示「操作成功」；两行显示 / 隐藏与上下位置互换；两行最近操作人、时间、备注更新；游戏状态不变；弹窗中当前显示刷新</td></tr>
+          <tr><td>维护 / 关闭 / 开启</td><td>沿用现有确认框与备注规则，与切换互相独立</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="req-block"><h2>前台规则</h2>
+      <div class="dh-prose"><ol>
+        <li><strong>只出现一款</strong>：同一游戏对在热门列表、场馆 Tab、首页场馆区、侧边菜单、搜索、最近、收藏都只显示当前版本；最近 / 收藏中的隐藏版本替换为当前版本，同一游戏对只出现一次。</li>
+        <li><strong>位置统一</strong>：游戏对在热门游戏排序、场馆游戏排序中只占一个排序项；自然排序取两个版本中较高的热门值；置顶位置共用；切换后位置不变。上线时两个版本都有置顶的，保留位置靠前的一个。（热门游戏排序、场馆游戏排序页面另行更新）</li>
+        <li><strong>不自动替换</strong>：显示版本维护 → 显示维护中；关闭或被总控停用 → 该游戏对不显示。隐藏版本的状态变化不影响前台。</li>
+        <li><strong>MY 游戏点控</strong>：切到原厂后，进行中的点控任务保持不变（进度暂停），切回 MY 后继续。</li>
+        <li><strong>生效</strong>：保存后前台实时生效，并主动刷新前台缓存。</li>
+      </ol></div>
+      <div class="dh-illustration"><div class="illus-list">
+        <div class="illus-item">切换前 · 热门第 2 位：MyPG电子「十倍金牛」</div><span class="illus-sep"></span>
+        <div class="illus-item new">切换后 · 热门第 2 位：PG电子「十倍金牛」<span class="tag">位置不变</span></div>
+      </div><div class="cap">示意图：游戏对切换前后在前台占同一个位置</div></div>
+    </div>
+  </div>
+
+  <!-- ===== 4 验收与开发测试 ===== -->
+  <div class="dh-panel" data-panel="qa">
+    <div class="req-block"><h2>范围</h2>
+      <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>项目</th><th>说明</th></tr></thead><tbody>
+        <tr><td><b>本期做</b></td><td>总控「场馆配置总控」关联场馆；总控「游戏配置总控」关联状态筛选、关联游戏列、关联 / 解除关联、游戏对合并展示；商户后台「游戏管理」前台显示列与筛选、原厂 / MY 切换、行内切换、游戏对相邻展示；前台游戏对只显示一款、位置统一</td></tr>
+        <tr><td><b>本期不做</b></td><td>自动配对、批量导入游戏对；商户修改对应关系；「热门游戏排序」页与「场馆游戏排序」弹窗的页面改版（规则已在本需求定义）</td></tr>
+        <tr><td><b>适用范围</b></td><td>对应关系为平台级，对全部商户站点生效；切换按站点各自保存，只作用于已关联的游戏对</td></tr>
+      </tbody></table></div></div>
+    <div class="req-block"><h2>用户与场景</h2>
+      <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>项目</th><th>说明</th></tr></thead><tbody>
+        <tr><td><b>总控运营</b></td><td>需「场馆配置总控」「游戏配置总控」菜单权限，不新增权限点。新接入 MY 场馆时指定原厂场馆；按三方清单逐个建立游戏对；查找未关联游戏补齐；配错后解除重配</td></tr>
+        <tr><td><b>商户运营</b></td><td>需「游戏管理」菜单权限，不新增权限点。MY 版某场馆异常时整场馆切回原厂；单款切换；查看哪些游戏显示原厂、哪些显示 MY</td></tr>
+      </tbody></table></div></div>
+    <div class="req-block"><h2>功能点清单</h2>
+      <div class="dh-prose"><ol>
+        <li><strong>F1【P0】场馆关联</strong>：场馆配置总控关联场馆列、关联 / 解除关联，一对一，有游戏对时不能解除。</li>
+        <li><strong>F2【P0】游戏对</strong>：游戏配置总控关联 / 解除关联，可搜索选择原厂游戏，一对一。</li>
+        <li><strong>F3【P1】游戏对展示与筛选</strong>：总控关联游戏列、关联状态筛选、两行合并展示。</li>
+        <li><strong>F4【P0】单个切换</strong>：游戏管理行内切换，备注必填。</li>
+        <li><strong>F5【P0】场馆一键切换</strong>：原厂 / MY 切换弹窗，按场馆对全部显示原厂 / MY。</li>
+        <li><strong>F6【P0】前台只出现一款、位置统一</strong>：前台全部位置只显示当前版本，游戏对共用一个排序位置，保存后刷新前台缓存。</li>
+        <li><strong>F7【P1】前台显示列与筛选</strong>：游戏管理前台显示列、筛选、游戏对相邻展示。</li>
+      </ol></div></div>
+    <div class="req-block"><h2>数据与埋点</h2>
+      <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>项目</th><th>说明</th></tr></thead><tbody>
+        <tr><td><b>新增埋点</b></td><td>无</td></tr>
+        <tr><td><b>新增数据</b></td><td>场馆对（MY 场馆 ↔ 原厂场馆，平台级）；游戏对（MY 游戏 ↔ 原厂游戏，平台级）；前台显示版本（每站点每游戏对）；相关最近操作人 / 时间 / 备注</td></tr>
+      </tbody></table></div></div>
+    <div class="req-block"><h2>依赖、影响与风险</h2>
+      <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>项目</th><th>说明</th></tr></thead><tbody>
+        <tr><td><b>依赖</b></td><td>总控场馆、游戏数据；站点游戏数据与状态；前台游戏列表接口与缓存</td></tr>
+        <tr><td><b>影响</b></td><td>前台热门、场馆 Tab、首页场馆区、侧边菜单、搜索、最近、收藏；热门游戏排序与场馆游戏排序的排序项；MY 游戏点控（切到原厂后暂停）</td></tr>
+        <tr><td><b>风险：上线即变化</b></td><td>总控建立游戏对后，各站点该游戏对前台立即从两款变为只显示 MY 版</td></tr>
+        <tr><td><b>风险：配错</b></td><td>对应关系配错会让全部站点前台显示错误游戏；按三方清单录入后抽查名称与英文名</td></tr>
+        <tr><td><b>风险：影响面</b></td><td>场馆一键切换影响面大，确认框必须显示实际切换数量</td></tr>
+      </tbody></table></div></div>
+    <div class="req-block"><h2>验收标准</h2>
+      <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>编号</th><th>前置条件与操作</th><th>期望结果</th></tr></thead><tbody>
+        <tr><td>A1</td><td>回归：游戏管理搜索、维护 / 关闭 / 开启、备注校验、对齐平台排序、分页</td><td>与现网一致</td></tr>
+        <tr><td>A2</td><td>站点：已建立游戏对 MyPG电子「十倍金牛」↔ PG电子「十倍金牛」</td><td>两行相邻，显示版本在上标「显示」，另一行「隐藏」；序号相同；左侧蓝条；两行都有「切换」</td></tr>
+        <tr><td>A3</td><td>站点：未关联游戏</td><td>前台显示列「-」，无「切换」</td></tr>
+        <tr><td>A4</td><td>站点：前台显示筛选「显示」/「隐藏」/「未关联」</td><td>分别只返回显示版本 / 隐藏版本 / 未关联游戏</td></tr>
+        <tr><td>A5</td><td>站点：行内「切换」，不填备注点确定</td><td>阻止提交并提示，弹窗不关闭</td></tr>
+        <tr><td>A6</td><td>站点：行内「切换」，填备注后确定</td><td>提示操作成功；显示与隐藏互换、上下互换；两行留痕更新；游戏状态不变</td></tr>
+        <tr><td>A7</td><td>站点：确认框点取消</td><td>不变更</td></tr>
+        <tr><td>A8</td><td>站点：切换后看前台热门、PG 场馆、首页、侧边菜单、搜索</td><td>只出现新显示版本</td></tr>
+        <tr><td>A9</td><td>站点：会员最近 / 收藏中有隐藏版本</td><td>显示当前版本，同一游戏对只出现一次</td></tr>
+        <tr><td>A10</td><td>站点：「原厂 / MY 切换」PG电子 / MyPG电子「全部显示原厂」并确定</td><td>该场馆对下全部游戏对显示原厂；当前显示「全部原厂」，按钮置灰；未关联游戏不变；确认框数量与实际切换数量一致</td></tr>
+        <tr><td>A11</td><td>站点：切换前后对比前台位置</td><td>同一游戏对在热门列表、场馆列表中位置不变</td></tr>
+        <tr><td>A12</td><td>站点：显示版本被维护</td><td>前台显示维护中，不自动换回</td></tr>
+        <tr><td>A13</td><td>站点：显示版本被关闭，或被总控停用</td><td>该游戏对前台不显示，不自动换回</td></tr>
+        <tr><td>A14</td><td>站点：隐藏版本被维护 / 关闭 / 开启</td><td>前台无变化</td></tr>
+        <tr><td>A15</td><td>站点：会员 MY 点控进行中，切到原厂再切回 MY</td><td>点控保持执行中，切回后继续累计</td></tr>
+        <tr><td>A16</td><td>总控场馆：未关联的 MY 场馆行</td><td>关联场馆列「未关联」，有「关联」</td></tr>
+        <tr><td>A17</td><td>总控场馆：「关联」不选原厂场馆点确定</td><td>提示「请选择原厂场馆」</td></tr>
+        <tr><td>A18</td><td>总控场馆：选择原厂场馆后确定</td><td>MY 行显示原厂场馆，原厂行显示 MY 场馆；按钮变「解除关联」</td></tr>
+        <tr><td>A19</td><td>总控场馆：原厂场馆下拉</td><td>只列同类型、非 MY、未被关联的场馆</td></tr>
+        <tr><td>A20</td><td>总控场馆：有游戏对的场馆对「解除关联」</td><td>提示先解除游戏对，不变更</td></tr>
+        <tr><td>A21</td><td>总控场馆：无游戏对的场馆对「解除关联」并确定</td><td>解除成功，显示「未关联」</td></tr>
+        <tr><td>A22</td><td>总控场馆：非 MY 场馆行</td><td>不显示「关联 / 解除关联」</td></tr>
+        <tr><td>A23</td><td>总控游戏：游戏对</td><td>两行相邻、MY 在上、浅蓝底左侧蓝条；关联游戏列互指；两行都有「解除关联」</td></tr>
+        <tr><td>A24</td><td>总控游戏：所属场馆已关联、未建游戏对的 MY 游戏</td><td>「未关联」，有「关联」</td></tr>
+        <tr><td>A25</td><td>总控游戏：原厂游戏行、所属场馆未关联的游戏</td><td>无「关联」；后者关联游戏列「-」</td></tr>
+        <tr><td>A26</td><td>总控游戏：「关联」不选原厂游戏点确定</td><td>提示「请选择原厂游戏」</td></tr>
+        <tr><td>A27</td><td>总控游戏：原厂游戏下拉输入英文名或游戏ID</td><td>只列该原厂场馆下未加入游戏对、匹配的游戏</td></tr>
+        <tr><td>A28</td><td>总控游戏：选择后确定</td><td>两行合并展示；各站点该游戏对显示 MY</td></tr>
+        <tr><td>A29</td><td>总控游戏：「解除关联」并确定</td><td>两行恢复独立、按各自有效注单排序；各站点两款游戏都显示</td></tr>
+        <tr><td>A30</td><td>总控游戏：关联状态筛选「已关联」/「未关联」</td><td>分别返回游戏对两行 / 场馆已关联但未建游戏对的游戏</td></tr>
+        <tr><td>A31</td><td>总控游戏：游戏对其中一款维护 / 停用 / 改有效注单</td><td>只影响该行</td></tr>
+        <tr><td>A32</td><td>某站点已切换为原厂，总控修改其他游戏对</td><td>该站点已有选择不被覆盖</td></tr>
+        <tr><td>A33</td><td>回归：总控两页原有搜索、维护 / 停用 / 启用、排序、批量修改有效注单</td><td>与现网一致</td></tr>
+      </tbody></table></div></div>
+    <div class="req-block"><h2>需求完整性自查</h2>
+      <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>检查项</th><th>结论</th></tr></thead><tbody>
+        <tr><td><b>权限</b></td><td>随三个页面现有菜单权限，不新增权限点</td></tr>
+        <tr><td><b>操作留痕</b></td><td>站点切换：最近操作人 / 时间 / 备注；总控关联：最近操作人 / 时间；游戏对两行同时更新</td></tr>
+        <tr><td><b>边界状态</b></td><td>一对一；有游戏对的场馆对不能解除；显示版本维护 / 关闭 / 总控停用不自动替换；总控解除后站点恢复未关联</td></tr>
+        <tr><td><b>口径与单位</b></td><td>游戏对共用一个序号与排序位置，热门值取较高者</td></tr>
+        <tr><td><b>批量操作</b></td><td>站点场馆一键切换；总控不支持批量关联</td></tr>
+        <tr><td><b>多语言 / 多环境</b></td><td>沿用；前台各语言只显示一款</td></tr>
+        <tr><td><b>特殊模式</b></td><td>试玩与正式使用同一显示版本</td></tr>
+        <tr><td><b>生效范围</b></td><td>对应关系平台级；切换按站点；保存后实时生效并刷新前台缓存</td></tr>
+      </tbody></table></div></div>
+    <div class="req-block"><h2>开发测试重点说明</h2>
+      <div class="dh-callout warn"><b>待确认：</b>① 本站找不到原厂版本的 MY 游戏（如 MyNewG电子、MyPPK电子，以及 MY 多于原厂的部分）是否前台显示，暂按"未关联，照常显示"；② MY 场馆的识别依据（场馆数据中是否已有 MY 标识，或按名称前缀判断），由开发确认后统一使用。</div>
+      <div class="dh-prose"><ol>
+        <li><strong>切换只改"前台显示版本"</strong>：不改游戏状态；状态按钮与切换互相独立。</li>
+        <li><strong>显示版本按站点保存</strong>：总控只下发对应关系与新游戏对的默认值（MY），不覆盖站点已做的选择；解除游戏对时清除各站点的显示设置。</li>
+        <li><strong>前台所有位置都只能出现一款</strong>：热门、场馆 Tab、首页场馆区、侧边菜单、搜索、最近、收藏逐个核对。</li>
+        <li><strong>游戏对共用一个排序位置</strong>：热门值取较高者，置顶共用；切换前后位置一致；站点与总控列表中游戏对两行不能被其他游戏插入，分页不拆开。</li>
+        <li><strong>不自动替换</strong>：显示版本维护 / 关闭 / 被总控停用时，不得自动改显示另一版本。</li>
+        <li><strong>保存后主动刷新前台缓存</strong>，不能等缓存自然过期。</li>
+        <li><strong>一对一校验</strong>：原厂场馆下拉过滤已被关联的；原厂游戏下拉过滤已加入游戏对的；解除场馆关联前校验无游戏对。</li>
+      </ol></div></div>
+  </div>
+</section>
+
+</main></div>
+<!-- ===== 后台弹窗（共用复刻令牌） ===== -->
+<div class="modal-mask" id="remarkModal" role="dialog" aria-modal="true" aria-labelledby="rmTitle"><div class="modal-box sm">
+  <div class="confirm-bd"><div class="confirm-ic">!</div><div style="flex:1;min-width:0;">
+    <div class="confirm-title" id="rmTitle">警告</div>
+    <div id="rmText"></div>
+    <div class="muted" style="font-size:12.5px;margin-top:12px;">请输入备注信息方可变更</div>
+    <textarea class="bk-input" id="rmInput" maxlength="30" placeholder="最多30个中文字符" style="width:100%;height:80px;margin-top:6px;resize:none;"></textarea>
+    <div class="cnt" id="rmCnt">0 / 30</div>
+    <div class="m-tip m-tip hide" id="rmErr">请输入备注信息方可变更</div>
+  </div></div>
+  <div class="confirm-ft"><button class="bk-btn" data-close type="button">取 消</button><button class="bk-btn primary" id="rmOk" type="button">确 定</button></div>
+</div></div>
+
+<div class="modal-mask" id="simpleModal" role="dialog" aria-modal="true" aria-labelledby="smTitle"><div class="modal-box sm">
+  <div class="confirm-bd"><div class="confirm-ic">!</div><div style="flex:1;min-width:0;"><div class="confirm-title" id="smTitle">警告</div><div id="smText"></div></div></div>
+  <div class="confirm-ft"><button class="bk-btn" data-close type="button" id="smCancel">取 消</button><button class="bk-btn primary" id="smOk" type="button">确 定</button></div>
+</div></div>
+
+<div class="modal-mask" id="switchModal" role="dialog" aria-modal="true" aria-labelledby="swTitle"><div class="modal-box" style="width:820px;">
+  <div class="modal-hd"><span id="swTitle">原厂 / MY 切换</span><button class="x" data-close type="button" aria-label="关闭">✕</button></div>
+  <div class="modal-bd">
+    <div class="bk-table-wrap"><table class="bk-table" style="min-width:700px;"><thead><tr><th>原厂场馆</th><th>MY 场馆</th><th>游戏对数量</th><th>当前显示</th><th style="width:250px;">操作</th></tr></thead><tbody id="swBody"></tbody></table></div>
+    <div class="muted" style="font-size:12.5px;margin-top:10px;">只列出总控已关联、且本站有游戏对的场馆对；只处理已关联的游戏对，未关联的游戏不受影响。</div>
+  </div>
+  <div class="modal-ft"><button class="bk-btn" data-close type="button">关 闭</button></div>
+</div></div>
+
+<div class="modal-mask" id="lvModal" role="dialog" aria-modal="true" aria-labelledby="lvTitle"><div class="modal-box">
+  <div class="modal-hd"><span id="lvTitle">关联场馆</span><button class="x" data-close type="button" aria-label="关闭">✕</button></div>
+  <div class="modal-bd"><div class="m-form">
+    <div class="m-row"><label>MY 场馆</label><div class="ctl" id="lvMy" style="line-height:32px;"></div></div>
+    <div class="m-row"><label for="lvSel"><span class="req">*</span>原厂场馆</label><div class="ctl"><select class="bk-select" id="lvSel"></select>
+      <div class="m-help">关联后可在游戏配置总控为两个场馆的游戏建立游戏对</div><div class="m-tip hide" id="lvErr">请选择原厂场馆</div></div></div>
+  </div></div>
+  <div class="modal-ft"><button class="bk-btn" data-close type="button">取 消</button><button class="bk-btn primary" id="lvOk" type="button">确 定</button></div>
+</div></div>
+
+<div class="modal-mask" id="lgModal" role="dialog" aria-modal="true" aria-labelledby="lgTitle"><div class="modal-box" style="width:600px;">
+  <div class="modal-hd"><span id="lgTitle">关联游戏</span><button class="x" data-close type="button" aria-label="关闭">✕</button></div>
+  <div class="modal-bd"><div class="m-form">
+    <div class="m-row"><label>MY 游戏</label><div class="ctl" id="lgMy" style="line-height:32px;"></div></div>
+    <div class="m-row"><label>原厂场馆</label><div class="ctl" id="lgVenue" style="line-height:32px;"></div></div>
+    <div class="m-row"><label for="lgSearch"><span class="req">*</span>原厂游戏</label><div class="ctl">
+      <input class="bk-input" id="lgSearch" placeholder="输入游戏名称（中文 / 英文）或游戏ID 筛选" autocomplete="off">
+      <div class="cand" id="lgCand" role="listbox" aria-label="原厂游戏"></div>
+      <div class="m-help">关联后各站点默认显示 MY 游戏，站点可自行切换</div><div class="m-tip hide" id="lgErr">请选择原厂游戏</div></div></div>
+  </div></div>
+  <div class="modal-ft"><button class="bk-btn" data-close type="button">取 消</button><button class="bk-btn primary" id="lgOk" type="button">确 定</button></div>
+</div></div>
+
+<div class="bk-toast" id="toast" role="status"><span class="ok">✓</span><span id="toastText">操作成功</span></div>
+
+<div class="dh-lightbox" id="dhLightbox"><div class="dh-lightbox-body" id="dhLightboxBody"></div></div>
+
+<script>
+(function(){
+  /* ---------- 数据（游戏名称、场馆、游戏ID、热门值取自测试环境；关联关系与总控状态为示例） ---------- */
+  var VENUES0 = [
+    ['MyPG电子','电子','启用',28],['MyPP电子','电子','启用',19],['MyTaDa电子','电子','启用',15],['MyNewG电子','电子','启用',10],['FC电子','电子','启用',5],
+    ['G759 电子','电子','启用',4],['MyPPK电子','电子','启用',4],['MyG759电子','电子','启用',4],['CQ9电子','电子','启用',2],['JDB电子','电子','启用',2],
+    ['CP 电子','电子','启用',2],['FASTSPIN 电子','电子','启用',2],['EVO真人','视讯','启用',1],['PG电子','电子','启用',1],['TaDa 电子','电子','启用',1],
+    ['MG电子','电子','启用',0],['PP电子','电子','启用',0],['Kingmidas电子','电子','启用',0],['InOut电子','电子','启用',0],['TaDa 捕鱼','捕鱼','启用',0],
+    ['Spribe 电子','电子','停用',0],['Playson 电子','电子','启用',0],['RubyPlay 电子','电子','启用',0],['TP 电子','电子','启用',0],['Yb Bingo','电子','启用',0],
+    ['1BET','电子','启用',0],['MyPlayson电子','电子','启用',0]
+  ];
+  var LINK0 = {'MyPG电子':'PG电子','MyTaDa电子':'TaDa 电子','MyG759电子':'G759 电子'};
+  // [游戏ID, 中文名, 英文名, 场馆, 热门值/有效注单, 站点状态 on|mt|off]
+  var GAMES0 = [
+    ['6100610180318','冰火奇缘','Frosty and Flamy','FASTSPIN 电子',67977780,'off'],
+    ['61006101804279','十倍金牛','Fortune Ox','MyPG电子',67977780,'on'],
+    ['61006101806378','EVO真人','CASSINO AO VIVO','EVO真人',67977779,'on'],
+    ['61006101806412','派对明猩','Party Ape','MyTaDa电子',67977779,'on'],
+    ['61006101804293','澳门壕梦','Dreams of Macau','MyPG电子',6797778,'on'],
+    ['133','飞龙在天','Fortune Dragon','CQ9电子',6532960,'on'],
+    ['61006101804217','金龙送宝','Fortune Dragon','MyPG电子',4993000,'on'],
+    ['1411','金钱兔','Fortune Rabbit','PG电子',4992280,'on'],
+    ['61006101804231','金钱兔','Fortune Rabbit','MyPG电子',4992280,'on'],
+    ['610061017979','财富龙','Fortune Dragon','PG电子',4992000,'on'],
+    ['61006101804235','墨西哥狂欢','Pinata Wins','MyPG电子',4991000,'on'],
+    ['61006101796','皮纳塔胜利','Pinata Wins','PG电子',4990000,'on'],
+    ['61006101804209','金蛇招财','Fortune Snake','MyPG电子',4989000,'on'],
+    ['6100610179792','财富蛇','Fortune Snake','PG电子',4988000,'on'],
+    ['61006101804868','宝藏大冒险',"Mr. Treasure's Fortune",'MyPG电子',4987000,'on'],
+    ['61006101804297','鼠鼠福福','Fortune Mouse','MyPG电子',4986000,'on'],
+    ['1361','鼠鼠福福','Fortune Mouse','PG电子',4985000,'on'],
+    ['61006101804218','快钱来了','Cash Mania','MyPG电子',4984000,'on'],
+    ['610061017978','现金狂热','Cash Mania','PG电子',4983000,'on'],
+    ['6100610180258','幸运兔',"Rabbit's Grace",'G759 电子',4981000,'on'],
+    ['61006101805003','幸运兔',"Rabbit's Grace",'MyG759电子',4981000,'on'],
+    ['61006101804251','赏金大对决','Wild Bounty Showdown','MyPG电子',4980000,'on'],
+    ['1317','赏金大对决','Wild Bounty Showdown','PG电子',4979000,'on'],
+    ['61006101804306','双囍临门','Double Fortune','MyPG电子',4978000,'on'],
+    ['1311','双囍临门','Double Fortune','PG电子',4977000,'on'],
+    ['6100610180403','飞行员','aviator','Spribe 电子',4976000,'on'],
+    ['6100610180226','财富宝石500','Fortune Gems 500','TaDa 电子',4974000,'on'],
+    ['61006101804853','伽罗宝石 500','Fortune Gems 500','MyTaDa电子',4973999,'on'],
+    ['61006101804843','富贵兔','Prosperity Rabbit','MyNewG电子',4973000,'on'],
+    ['61006101804307','象财神','Ganesha Gold','MyPG电子',4972000,'on'],
+    ['1354','象财神','Ganesha Gold','PG电子',4971000,'on'],
+    ['61006101804274','亡灵大盗','Wild Bandito','MyPG电子',4970000,'on'],
+    ['1308','亡灵大盗','Wild Bandito','PG电子',4969000,'on'],
+    ['61006101804243','点石成金','Midas Fortune','MyPG电子',4968000,'on'],
+    ['1410','点石成金','Midas Fortune','PG电子',4967000,'on'],
+    ['61006101804565','疯狂钱来也','Money Coming','MyTaDa电子',4965999,'on'],
+    ['6100610180170','财源滚滚','Money Coming','TaDa 电子',4965000,'on'],
+    ['61006101804286','招财喵','Lucky Neko','MyPG电子',4963000,'on'],
+    ['1305','招财喵','Lucky Neko','PG电子',4962000,'on'],
+    ['61006101804844','富贵牛','Prosperity Ox','MyNewG电子',4961000,'on'],
+    ['1315','澳门壕梦','Dreams of Macau','PG电子',4756000,'on'],
+    ['1316','十倍金牛','Fortune Ox','PG电子',1,'on']
+  ];
+  var ZK_STOP0 = {'1411':1,'610061017979':1}; // 总控停用（示例）
+  var PAIRS0 = [['61006101804279','1316'],['61006101804231','1411'],['61006101804235','61006101796'],['61006101804297','1361'],['61006101804251','1317'],['61006101804306','1311'],['61006101804853','6100610180226'],['61006101804307','1354']];
+  var SHOW0 = {'61006101804297':'orig'}; // 站点显示设置（默认 MY）
+
+  var S;
+  function reset(){
+    S = {venues:VENUES0.map(function(v){return {name:v[0],type:v[1],status:v[2],hot:v[3],link:LINK0[v[0]]||null};}),
+      games:GAMES0.map(function(g,i){return {id:g[0],zh:g[1],en:g[2],venue:g[3],bets:g[4],site:g[5],zk:ZK_STOP0[g[0]]?'stop':'on',base:i,op:'Kasion01',time:'2026-11-02 04:14:48',remark:'-',zop:'duoduo123',ztime:'2026-10-03 13:54:53'};}),
+      pairs:PAIRS0.map(function(p){return {my:p[0],orig:p[1],show:SHOW0[p[0]]||'my'};})};
+    prevFe = null;
+  }
+  var isMyV = function(n){ return /^My/.test(n); };
+  function G(id){ for(var i=0;i<S.games.length;i++) if(S.games[i].id===id) return S.games[i]; }
+  function V(n){ for(var i=0;i<S.venues.length;i++) if(S.venues[i].name===n) return S.venues[i]; }
+  function pairOf(id){ for(var i=0;i<S.pairs.length;i++){var p=S.pairs[i]; if(p.my===id||p.orig===id) return p;} return null; }
+  function linkedOrigOf(myV){ var v=V(myV); return v&&v.link; }
+  function myOfOrig(oV){ for(var i=0;i<S.venues.length;i++) if(S.venues[i].link===oV) return S.venues[i].name; return null; }
+  function shownId(p){ return p.show==='my'?p.my:p.orig; }
+  function nameSite(g){ return g.zh+'('+g.en+')'; }
+  function nameZk(g){ return g.zh+'（'+g.en+'）'; }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function now(){ var d=new Date(),p=function(n){return (n<10?'0':'')+n;}; return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds()); }
+
+  /* 排序项：游戏对算一项，取较高热门值；并列按原顺序 */
+  function items(){
+    var seen={}, out=[];
+    S.games.forEach(function(g){
+      if(seen[g.id]) return;
+      var p=pairOf(g.id);
+      if(p){ var a=G(p.my), b=G(p.orig); seen[a.id]=seen[b.id]=1; out.push({pair:p,key:Math.max(a.bets,b.bets),base:Math.min(a.base,b.base)}); }
+      else { seen[g.id]=1; out.push({game:g,key:g.bets,base:g.base}); }
+    });
+    out.sort(function(x,y){ return y.key-x.key || x.base-y.base; });
+    out.forEach(function(it,i){ it.no=i+1; });
+    return out;
+  }
+
+  /* ---------- 商户后台 · 游戏管理 ---------- */
+  var sf={name:'',venue:'',show:''};
+  function siteRows(){
+    var rows=[];
+    items().forEach(function(it){
+      if(it.pair){ var s=G(shownId(it.pair)), h=G(it.pair.show==='my'?it.pair.orig:it.pair.my);
+        rows.push({g:s,no:it.no,show:'show',pair:it.pair}); rows.push({g:h,no:it.no,show:'hide',pair:it.pair}); }
+      else rows.push({g:it.game,no:it.no,show:'none'});
+    });
+    return rows.filter(function(r){
+      if(sf.name && (r.g.zh+r.g.en).toLowerCase().indexOf(sf.name.toLowerCase())<0) return false;
+      if(sf.venue && r.g.venue!==sf.venue) return false;
+      if(sf.show && r.show!==sf.show) return false;
+      return true;
+    });
+  }
+  var ST={on:['green','开启'],mt:['gold','维护'],off:['red','关闭']};
+  function renderSite(flashIds){
+    var rows=siteRows(), h='';
+    rows.forEach(function(r){
+      var g=r.g, st=ST[g.site], ops='';
+      ops += g.site==='on' ? '<button class="bk-btn sm warn" data-st="mt" data-id="'+g.id+'" type="button">维护</button>' : '<button class="bk-btn sm ok" data-st="on" data-id="'+g.id+'" type="button">开启</button>';
+      ops += '<button class="bk-btn sm danger" data-st="off" data-id="'+g.id+'" type="button">关闭</button>';
+      if(r.pair) ops += '<button class="bk-btn sm primary" data-sw="'+g.id+'" type="button">切换</button>';
+      var show = r.show==='show'?'<span class="bk-tag green">显示</span>':r.show==='hide'?'<span class="bk-tag gray">隐藏</span>':'<span class="muted">-</span>';
+      var cls=(r.pair?'pair':'')+(r.show==='hide'?' hid':'')+(flashIds&&flashIds[g.id]?' row-flash':'');
+      h+='<tr class="'+cls+'"><td>'+r.no+'</td><td class="wrap2">'+esc(nameSite(g))+'</td><td>'+esc(g.venue)+'</td><td><span class="bk-tag '+st[0]+'">'+st[1]+'</span></td><td>'+show+'</td><td>'+esc(g.op)+'</td><td style="font-size:12.5px;">'+g.time+'<br><span class="muted">(UTC-3)</span></td><td>'+esc(g.remark)+'</td><td><div class="bk-ops">'+ops+'</div></td></tr>';
+    });
+    document.getElementById('siteBody').innerHTML = h || '<tr><td colspan="9" class="bk-empty">暂无数据</td></tr>';
+    document.getElementById('siteCount').textContent='共 '+rows.length+' 条数据';
+  }
+  function fillSiteVenue(){
+    var names=[]; S.games.forEach(function(g){ if(names.indexOf(g.venue)<0) names.push(g.venue); });
+    document.getElementById('sVenue').innerHTML='<option value="">全部场馆</option>'+names.map(function(n){return '<option>'+esc(n)+'</option>';}).join('');
+  }
+
+  /* ---------- 总控 · 场馆配置总控 ---------- */
+  var vf={name:'',status:'',type:''};
+  function pairCount(myV){ return S.pairs.filter(function(p){ return G(p.my).venue===myV; }).length; }
+  function renderVenue(flash){
+    var h='', n=0;
+    S.venues.forEach(function(v){
+      if(vf.name && v.name.toLowerCase().indexOf(vf.name.toLowerCase())<0) return;
+      if(vf.status && v.status!==vf.status) return;
+      if(vf.type && v.type!==vf.type) return;
+      n++;
+      var link='<span class="muted">-</span>', ops='';
+      ops += v.status==='停用' ? '<button class="bk-btn sm ok" data-keep type="button">启用</button>' : '<button class="bk-btn sm warn" data-keep type="button">维护</button>';
+      ops += '<button class="bk-btn sm danger" data-keep type="button">停用</button>';
+      if(isMyV(v.name)){
+        if(v.link){ link='<span class="bk-link">'+esc(v.link)+'</span> <span class="muted" style="font-size:12px;">· 已关联 '+pairCount(v.name)+' 个游戏</span>'; ops+='<button class="bk-btn sm danger" data-vunlink="'+esc(v.name)+'" type="button">解除关联</button>'; }
+        else { link='<span class="muted">未关联</span>'; ops+='<button class="bk-btn sm primary" data-vlink="'+esc(v.name)+'" type="button">关联</button>'; }
+      } else { var m=myOfOrig(v.name); if(m) link='<span class="bk-link">'+esc(m)+'</span>'; }
+      var st=v.status==='启用'?'green':v.status==='停用'?'red':'gold';
+      h+='<tr class="'+(flash===v.name?'row-flash':'')+'"><td>'+n+'</td><td>'+esc(v.name)+'</td><td>'+v.type+'</td><td><span class="bk-tag '+st+'">'+v.status+'</span></td><td class="bk-link">'+v.hot+'</td><td><span class="bk-tag gray">自动排序</span></td><td>'+link+'</td><td><div class="bk-ops">'+ops+'</div></td></tr>';
+    });
+    document.getElementById('venueBody').innerHTML=h||'<tr><td colspan="8" class="bk-empty">暂无数据</td></tr>';
+    document.getElementById('venueCount').textContent='共 '+n+' 条数据';
+  }
+
+  /* ---------- 总控 · 游戏配置总控 ---------- */
+  var gf={id:'',name:'',venue:'',link:''};
+  function gameRows(){
+    var rows=[];
+    items().forEach(function(it){
+      if(it.pair) { rows.push({g:G(it.pair.my),pair:it.pair}); rows.push({g:G(it.pair.orig),pair:it.pair}); }
+      else rows.push({g:it.game});
+    });
+    function hit(r){
+      var g=r.g;
+      if(gf.id && g.id.indexOf(gf.id)<0) return false;
+      if(gf.name && (g.zh+g.en).toLowerCase().indexOf(gf.name.toLowerCase())<0) return false;
+      if(gf.venue && g.venue!==gf.venue) return false;
+      if(gf.link==='yes' && !r.pair) return false;
+      if(gf.link==='no' && (r.pair || !venueLinked(g.venue))) return false;
+      return true;
+    }
+    var keep={}; rows.forEach(function(r){ if(hit(r)) keep[r.pair?('p'+r.pair.my):r.g.id]=1; });
+    return rows.filter(function(r){ return keep[r.pair?('p'+r.pair.my):r.g.id]; });
+  }
+  function venueLinked(vn){ var v=V(vn); if(!v) return false; return isMyV(vn) ? !!v.link : !!myOfOrig(vn); }
+  function renderGame(flashIds){
+    var rows=gameRows(), h='';
+    rows.forEach(function(r,i){
+      var g=r.g, rel, ops='';
+      ops += g.zk==='stop' ? '<button class="bk-btn sm ok" data-keep type="button">启用</button>' : '<button class="bk-btn sm warn" data-keep type="button">维护</button>';
+      ops += '<button class="bk-btn sm danger" data-keep type="button">停用</button><button class="bk-btn sm primary" data-keep type="button">排序</button>';
+      if(r.pair){ var o=G(g.id===r.pair.my?r.pair.orig:r.pair.my); rel='<span class="bk-link">'+esc(o.venue+' · '+nameZk(o))+'</span>'; ops+='<button class="bk-btn sm danger" data-gunlink="'+g.id+'" type="button">解除关联</button>'; }
+      else if(venueLinked(g.venue)){ rel='<span class="muted">未关联</span>'; if(isMyV(g.venue)) ops+='<button class="bk-btn sm primary" data-glink="'+g.id+'" type="button">关联</button>'; }
+      else rel='<span class="muted">-</span>';
+      var st=g.zk==='stop'?'<span class="bk-tag red">停用</span>':'<span class="bk-tag green">启用</span>';
+      h+='<tr class="'+(r.pair?'pair':'')+(flashIds&&flashIds[g.id]?' row-flash':'')+'"><td>'+(i+1)+'</td><td>'+g.id+'</td><td class="wrap2">'+esc(nameZk(g))+'</td><td>'+esc(g.venue)+'</td><td class="wrap2">'+rel+'</td><td>'+st+'</td><td>'+g.bets+'</td><td><div class="bk-ops">'+ops+'</div></td></tr>';
+    });
+    document.getElementById('gameBody').innerHTML=h||'<tr><td colspan="8" class="bk-empty">暂无数据</td></tr>';
+    document.getElementById('gameCount').textContent='共 '+rows.length+' 条数据';
+  }
+  function fillGameVenue(){
+    var names=[]; S.games.forEach(function(g){ if(names.indexOf(g.venue)<0) names.push(g.venue); });
+    document.getElementById('gVenue').innerHTML='<option value="">场馆名称</option>'+names.map(function(n){return '<option>'+esc(n)+'</option>';}).join('');
+  }
+
+  /* ---------- 前台显示结果（示意） ---------- */
+  var prevFe=null;
+  function feList(){
+    var out=[];
+    items().forEach(function(it){
+      var g = it.pair ? G(shownId(it.pair)) : it.game;
+      if(g.site==='off' || g.zk==='stop') return;
+      out.push(g);
+    });
+    return out;
+  }
+  function renderFe(){
+    var list=feList(), pg=list.filter(function(g){ return g.venue==='PG电子'||g.venue==='MyPG电子'; });
+    function li(g,i,key){
+      var changed = prevFe && prevFe[key+i]!==g.id;
+      return '<li class="'+(changed?'flash':'')+'"><span class="no">'+(i+1)+'</span><span class="nm">'+esc(g.zh)+'</span>'+(g.site==='mt'?'<span class="mt">维护中</span>':'')+'<span class="vn '+(isMyV(g.venue)?'my':'')+'">'+esc(g.venue)+'</span></li>';
+    }
+    document.getElementById('feHot').innerHTML=list.slice(0,12).map(function(g,i){return li(g,i,'h');}).join('');
+    document.getElementById('fePg').innerHTML=pg.slice(0,8).map(function(g,i){return li(g,i,'p');}).join('');
+    prevFe={}; list.slice(0,12).forEach(function(g,i){prevFe['h'+i]=g.id;}); pg.slice(0,8).forEach(function(g,i){prevFe['p'+i]=g.id;});
+  }
+
+  function renderAll(fl){ renderSite(fl); renderVenue(); renderGame(fl); renderFe(); }
+
+  /* ---------- 弹窗工具 ---------- */
+  function open(id){ document.getElementById(id).classList.add('open'); }
+  function close(id){ document.getElementById(id).classList.remove('open'); }
+  document.querySelectorAll('.modal-mask').forEach(function(m){
+    m.addEventListener('click', function(e){ if(e.target===m) m.classList.remove('open'); });
+    m.querySelectorAll('[data-close]').forEach(function(b){ b.addEventListener('click', function(){ m.classList.remove('open'); }); });
+  });
+  var toastT;
+  function toast(t){ var el=document.getElementById('toast'); document.getElementById('toastText').textContent=t||'操作成功'; el.classList.add('open'); clearTimeout(toastT); toastT=setTimeout(function(){el.classList.remove('open');},1800); }
+
+  var rmCb=null, rmInput=document.getElementById('rmInput');
+  function askRemark(html, cb){
+    document.getElementById('rmText').innerHTML=html; rmInput.value=''; document.getElementById('rmCnt').textContent='0 / 30';
+    document.getElementById('rmErr').classList.add('hide'); rmCb=cb; open('remarkModal'); setTimeout(function(){rmInput.focus();},30);
+  }
+  rmInput.addEventListener('input', function(){ document.getElementById('rmCnt').textContent=rmInput.value.length+' / 30'; if(rmInput.value.trim()) document.getElementById('rmErr').classList.add('hide'); });
+  document.getElementById('rmOk').addEventListener('click', function(){
+    var v=rmInput.value.trim(); if(!v){ document.getElementById('rmErr').classList.remove('hide'); return; }
+    close('remarkModal'); if(rmCb) rmCb(v);
+  });
+  var smCb=null;
+  function askSimple(title, html, cb, okOnly){
+    document.getElementById('smTitle').textContent=title; document.getElementById('smText').innerHTML=html;
+    document.getElementById('smCancel').style.display=okOnly?'none':''; document.getElementById('smOk').textContent=okOnly?'知道了':'确 定';
+    smCb=cb; open('simpleModal');
+  }
+  document.getElementById('smOk').addEventListener('click', function(){ close('simpleModal'); if(smCb) smCb(); });
+
+  function stamp(ids, remark){ var t=now(); ids.forEach(function(id){ var g=G(id); g.op='zune01'; g.time=t; if(remark) g.remark=remark; }); }
+  function zstamp(ids){ var t=now(); ids.forEach(function(id){ var g=G(id); g.zop='zun0123'; g.ztime=t; }); }
+
+  /* ---------- 商户后台事件 ---------- */
+  document.getElementById('siteBody').addEventListener('click', function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    if(b.dataset.st){
+      var g=G(b.dataset.id), act={mt:['维护','#d48806'],on:['开启','#389e0d'],off:['关闭','#cf1322']}[b.dataset.st];
+      askRemark('确认是否将 '+esc(nameSite(g))+' 游戏进行 <b style="color:'+act[1]+'">'+act[0]+'</b>', function(r){ g.site=b.dataset.st; stamp([g.id], r); var f={}; f[g.id]=1; renderAll(f); toast('操作成功'); });
+    }
+    if(b.dataset.sw){
+      var p=pairOf(b.dataset.sw), to=p.show==='my'?'orig':'my', tg=G(to==='my'?p.my:p.orig);
+      askRemark('确认将 '+esc(nameSite(tg))+' 切换为显示 <b style="color:#1890ff">'+esc(tg.venue)+'</b> 版本？', function(r){ p.show=to; stamp([p.my,p.orig], r); var f={}; f[p.my]=f[p.orig]=1; renderAll(f); toast('操作成功'); });
+    }
+  });
+  function venuePairs(){
+    var out=[];
+    S.venues.forEach(function(v){ if(isMyV(v.name)&&v.link){ var ps=S.pairs.filter(function(p){return G(p.my).venue===v.name;}); if(ps.length) out.push({my:v.name,orig:v.link,ps:ps}); } });
+    return out;
+  }
+  function renderSwitch(){
+    var h='';
+    venuePairs().forEach(function(vp,i){
+      var m=vp.ps.filter(function(p){return p.show==='my';}).length, o=vp.ps.length-m;
+      var cur=o===0?'全部 MY':m===0?'全部原厂':'MY '+m+' 个 · 原厂 '+o+' 个';
+      h+='<tr><td>'+esc(vp.orig)+'</td><td>'+esc(vp.my)+'</td><td>'+vp.ps.length+'</td><td>'+cur+'</td><td><div class="bk-ops"><button class="bk-btn sm primary" data-all="orig" data-i="'+i+'" type="button" '+(m===0?'disabled':'')+'>全部显示原厂</button><button class="bk-btn sm primary" data-all="my" data-i="'+i+'" type="button" '+(o===0?'disabled':'')+'>全部显示 MY</button></div></td></tr>';
+    });
+    document.getElementById('swBody').innerHTML=h||'<tr><td colspan="5" class="bk-empty">暂无已关联的场馆对</td></tr>';
+  }
+  document.getElementById('btnSwitchAll').addEventListener('click', function(){ renderSwitch(); open('switchModal'); });
+  document.getElementById('swBody').addEventListener('click', function(e){
+    var b=e.target.closest('button[data-all]'); if(!b||b.disabled) return;
+    var vp=venuePairs()[+b.dataset.i], to=b.dataset.all, todo=vp.ps.filter(function(p){return p.show!==to;});
+    askRemark('确认将 '+esc(vp.orig)+' / '+esc(vp.my)+' 下 '+todo.length+' 个游戏对全部切换为显示 <b style="color:#1890ff">'+(to==='my'?'MY':'原厂')+'</b>？', function(r){
+      var f={}; todo.forEach(function(p){ p.show=to; stamp([p.my,p.orig], r); f[p.my]=f[p.orig]=1; }); renderAll(f); renderSwitch(); toast('操作成功');
+    });
+  });
+  document.getElementById('btnAlign').addEventListener('click', function(){ toast('沿用现网：从总控同步最新热门值（原型不演示）'); });
+  document.getElementById('sQuery').addEventListener('click', function(){ sf={name:document.getElementById('sName').value.trim(),venue:document.getElementById('sVenue').value,show:document.getElementById('sShow').value}; renderSite(); });
+  document.getElementById('sReset').addEventListener('click', function(){ ['sName','sVenue','sShow'].forEach(function(id){document.getElementById(id).value='';}); sf={name:'',venue:'',show:''}; renderSite(); });
+
+  /* ---------- 总控 · 场馆事件 ---------- */
+  var lvFor=null;
+  document.getElementById('venueBody').addEventListener('click', function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    if(b.hasAttribute('data-keep')){ toast('沿用现网功能，原型不演示'); return; }
+    if(b.dataset.vlink){
+      lvFor=b.dataset.vlink; var my=V(lvFor);
+      document.getElementById('lvMy').textContent=lvFor;
+      var opts=S.venues.filter(function(v){ return !isMyV(v.name) && v.type===my.type && !myOfOrig(v.name); });
+      document.getElementById('lvSel').innerHTML='<option value="">请选择原厂场馆</option>'+opts.map(function(v){return '<option>'+esc(v.name)+'</option>';}).join('');
+      document.getElementById('lvErr').classList.add('hide'); open('lvModal');
+    }
+    if(b.dataset.vunlink){
+      var vn=b.dataset.vunlink, v=V(vn), c=pairCount(vn);
+      if(c>0) askSimple('提示','请先在游戏配置总控解除该场馆下的 '+c+' 个游戏对',null,true);
+      else askSimple('警告','确认解除 '+esc(vn)+' 与 '+esc(v.link)+' 的关联？', function(){ v.link=null; renderAll(); renderVenue(vn); toast('操作成功'); });
+    }
+  });
+  document.getElementById('lvOk').addEventListener('click', function(){
+    var sel=document.getElementById('lvSel').value; if(!sel){ document.getElementById('lvErr').classList.remove('hide'); return; }
+    V(lvFor).link=sel; close('lvModal'); renderAll(); renderVenue(lvFor); toast('操作成功');
+  });
+  document.getElementById('vQuery').addEventListener('click', function(){ vf={name:document.getElementById('vName').value.trim(),status:document.getElementById('vStatus').value,type:document.getElementById('vType').value}; renderVenue(); });
+  document.getElementById('vReset').addEventListener('click', function(){ ['vName','vStatus','vType'].forEach(function(id){document.getElementById(id).value='';}); vf={name:'',status:'',type:''}; renderVenue(); });
+
+  /* ---------- 总控 · 游戏事件 ---------- */
+  var lgFor=null, lgPick=null;
+  function renderCand(){
+    var my=G(lgFor), ov=linkedOrigOf(my.venue), q=document.getElementById('lgSearch').value.trim().toLowerCase();
+    var c=S.games.filter(function(g){ return g.venue===ov && !pairOf(g.id) && (!q || (g.zh+' '+g.en+' '+g.id).toLowerCase().indexOf(q)>=0); });
+    document.getElementById('lgCand').innerHTML = c.length ? c.map(function(g){ return '<div role="option" data-id="'+g.id+'" class="'+(lgPick===g.id?'on':'')+'"><span>'+esc(nameZk(g))+'</span><span class="muted">'+g.id+' · '+(g.zk==='stop'?'停用':'启用')+'</span></div>'; }).join('') : '<div class="em">无匹配游戏（只列该原厂场馆下未加入游戏对的游戏）</div>';
+  }
+  document.getElementById('gameBody').addEventListener('click', function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    if(b.hasAttribute('data-keep')){ toast('沿用现网功能，原型不演示'); return; }
+    if(b.dataset.glink){
+      lgFor=b.dataset.glink; lgPick=null; var g=G(lgFor);
+      document.getElementById('lgMy').textContent=g.venue+' · '+nameZk(g)+' · '+g.id;
+      document.getElementById('lgVenue').textContent=linkedOrigOf(g.venue);
+      document.getElementById('lgSearch').value=g.en; document.getElementById('lgErr').classList.add('hide');
+      renderCand(); open('lgModal');
+    }
+    if(b.dataset.gunlink){
+      var p=pairOf(b.dataset.gunlink), a=G(p.my), o=G(p.orig);
+      askSimple('警告','确认解除 '+esc(a.venue+' · '+nameZk(a))+' 与 '+esc(o.venue+' · '+nameZk(o))+' 的关联？解除后各站点两款游戏都将显示在前台。', function(){
+        S.pairs.splice(S.pairs.indexOf(p),1); zstamp([a.id,o.id]); var f={}; f[a.id]=f[o.id]=1; renderAll(f); toast('操作成功');
+      });
+    }
+  });
+  document.getElementById('lgSearch').addEventListener('input', renderCand);
+  document.getElementById('lgCand').addEventListener('click', function(e){ var d=e.target.closest('div[data-id]'); if(!d) return; lgPick=d.dataset.id; document.getElementById('lgErr').classList.add('hide'); renderCand(); });
+  document.getElementById('lgOk').addEventListener('click', function(){
+    if(!lgPick){ document.getElementById('lgErr').classList.remove('hide'); return; }
+    S.pairs.push({my:lgFor,orig:lgPick,show:'my'}); zstamp([lgFor,lgPick]); close('lgModal');
+    var f={}; f[lgFor]=f[lgPick]=1; renderAll(f); toast('操作成功，各站点默认显示 MY');
+  });
+  document.getElementById('btnBets').addEventListener('click', function(){ toast('沿用现网功能，原型不演示'); });
+  document.getElementById('gQuery').addEventListener('click', function(){ gf={id:document.getElementById('gId').value.trim(),name:document.getElementById('gName').value.trim(),venue:document.getElementById('gVenue').value,link:document.getElementById('gLink').value}; renderGame(); });
+  document.getElementById('gReset').addEventListener('click', function(){ ['gId','gName','gVenue','gLink'].forEach(function(id){document.getElementById(id).value='';}); gf={id:'',name:'',venue:'',link:''}; renderGame(); });
+
+  /* ---------- 子页、标注、重置 ---------- */
+  var subBtns=document.querySelectorAll('.sub-btn');
+  window.__showPage=function(name){
+    subBtns.forEach(function(b){ b.classList.toggle('active', b.dataset.page===name); });
+    document.querySelectorAll('.bk-page').forEach(function(p){ p.classList.toggle('active', p.dataset.pagePanel===name); });
+  };
+  subBtns.forEach(function(b){ b.addEventListener('click', function(){ window.__showPage(b.dataset.page); }); });
+  document.getElementById('markToggle').addEventListener('change', function(e){ document.getElementById('protoSec').classList.toggle('hide-marks', !e.target.checked); });
+  document.getElementById('resetDemo').addEventListener('click', function(){ reset(); sf={name:'',venue:'',show:''}; vf={name:'',status:'',type:''}; gf={id:'',name:'',venue:'',link:''}; document.querySelectorAll('#protoSec input.bk-input, #protoSec select.bk-select:not([disabled])').forEach(function(el){ el.value=''; }); renderAll(); toast('已重置演示数据'); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') document.querySelectorAll('.modal-mask.open').forEach(function(m){ m.classList.remove('open'); }); });
+
+  reset(); fillSiteVenue(); fillGameVenue(); renderAll();
+})();
+(function(){
+  var primBtns = document.querySelectorAll('.dh-primary-btn');
+  function showPrimary(name){
+    primBtns.forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-primary') === name); });
+    document.querySelectorAll('.dh-primary-panel').forEach(function(p){ p.classList.toggle('active', p.getAttribute('data-primary-panel') === name); });
+    window.scrollTo(0,0);
+  }
+  primBtns.forEach(function(b){ b.addEventListener('click', function(){ showPrimary(b.getAttribute('data-primary')); }); });
+  var tabs = document.querySelectorAll('.dh-tab');
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){
+      var name = t.getAttribute('data-tab');
+      tabs.forEach(function(x){ x.classList.toggle('active', x === t); });
+      document.querySelectorAll('.dh-panel').forEach(function(p){ p.classList.toggle('active', p.getAttribute('data-panel') === name); });
+      var nav = document.getElementById('dhTabs');
+      var top = nav.getBoundingClientRect().top + window.scrollY - 70;
+      if(window.scrollY > top) window.scrollTo(0, top);
+    });
+  });
+  document.querySelectorAll('.proto-jump').forEach(function(b){
+    b.addEventListener('click', function(){ showPrimary('proto'); window.__showPage(b.getAttribute('data-goto')); });
+  });
+  var lb = document.getElementById('dhLightbox'), lbBody = document.getElementById('dhLightboxBody');
+  document.querySelectorAll('.dh-flow, .dh-mind').forEach(function(el){
+    el.addEventListener('click', function(e){ e.stopPropagation(); lbBody.innerHTML=''; lbBody.appendChild(el.cloneNode(true)); lb.classList.add('open'); });
+  });
+  lb.addEventListener('click', function(){ lb.classList.remove('open'); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') lb.classList.remove('open'); });
+})();
+</script></body></html>
