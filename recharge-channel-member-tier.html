@@ -201,7 +201,15 @@ table.dt .lnk{color:var(--primary);white-space:nowrap}
 table.dt th.mk{background:var(--mark-bg);box-shadow:inset 3px 0 0 var(--mark)}
 table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
 .th-tip{display:inline-block;width:14px;height:14px;border:1px solid var(--text-secondary);border-radius:50%;font-size:10px;line-height:12px;text-align:center;color:var(--text-secondary);margin-left:4px;vertical-align:1px;cursor:pointer;font-style:normal;font-weight:400}
-.mk-tag[data-chg]{cursor:pointer}
+[data-ct]{cursor:help}
+[data-ct]:hover,[data-ct]:focus{filter:brightness(1.12);text-decoration:underline dotted;outline:none}
+#chgTip{position:fixed;z-index:9999;max-width:340px;width:calc(100vw - 32px);box-sizing:border-box;background:#1f2433;color:#eef1f7;border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.65;box-shadow:0 8px 28px rgba(0,0,0,.28);display:none;text-align:left;font-weight:400;white-space:normal;font-family:var(--f-sans)}
+#chgTip .tt{font-weight:600;font-size:13px;margin-bottom:6px;display:flex;align-items:center;gap:8px;padding-right:18px}
+#chgTip .tt i{font-style:normal;font-size:11px;padding:1px 6px;border-radius:3px;background:#ff8a00;color:#fff;font-weight:500;white-space:nowrap}
+#chgTip .tt i.n{background:#19be6b}
+#chgTip p{margin:0 0 4px;white-space:pre-wrap}
+#chgTip p b{color:#ffcf70;font-weight:500}
+#chgTip .x{position:absolute;right:8px;top:6px;cursor:pointer;color:#9aa3b5;font-size:16px;line-height:1;background:none;border:0;padding:2px}
 .sider .mk-tag,.itabs .mk-tag{margin-left:6px}
 .mk-tag{display:inline-block;font-size:10px;line-height:15px;padding:0 4px;border-radius:2px;background:var(--mark);color:#fff;margin-left:4px;vertical-align:1px;font-weight:400}
 .st-tag{display:inline-block;font-size:12px;padding:0 7px;line-height:20px;border-radius:2px;border:1px solid #b7eb8f;background:#f6ffed;color:#52c41a}
@@ -265,7 +273,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
 
 <header class="dh-header">
   <h1>充值通道会员层级控制</h1>
-  <div class="dh-meta"><span>模块:<b>商户财务配置 / 支付管理 / 支付通道管理</b></span><span>产品经理:<b>Zuno</b></span><span>更新日期:<b class="mono">2026-10-31</b></span></div>
+  <div class="dh-meta"><span>模块:<b>商户财务配置 / 支付管理 / 支付通道管理</b></span><span>产品经理:<b>Zuno</b></span><span>更新日期:<b class="mono">2026-11-05</b></span></div>
 </header>
 <nav class="dh-navbar" id="dhNavbar">
   <div class="dh-navbar-inner dh-primary" id="dhPrimary">
@@ -279,7 +287,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
 <!-- ========== 交互原型 ========== -->
 <section class="dh-primary-panel active" data-primary-panel="proto">
   <div class="legend">
-    <span><i class="lg-sw"></i>橙色标记 = 本期新增(添加/修改页「会员层级」、列表「会员层级」列)</span>
+    <span><i class="lg-sw"></i>橙色标记 = 本期新增(添加/修改页「会员层级」、列表「会员层级」列);所有「本期新增 / 本期调整」角标悬停或点击可查看原 / 现改动</span>
     <span><span class="mk-tag" style="font-family:inherit">本期调整</span> = 入口本身不变,进入后有改动;悬停或点击查看改了什么(仅为原型标注,非页面元素)</span>
     <span>可操作:点「添加」或行内「编辑」打开表单;勾选层级、点「确认」写回列表。查询、重置、通道排序、工具栏图标为静态展示。</span>
   </div>
@@ -299,7 +307,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
       <div class="pcont"><div class="card">
         <div class="itabs" id="itabs">
           <button type="button" data-it="a">三方平台管理</button>
-          <button type="button" data-it="b" class="on">支付通道管理<span class="mk-tag" data-chg="支付通道管理:添加 / 修改页新增「会员层级」配置;列表新增「会员层级」列;客户端充值页按会员层级过滤通道。">本期调整</span></button>
+          <button type="button" data-it="b" class="on">支付通道管理<span class="mk-tag" data-ct="tab">本期调整</span></button>
           <button type="button" data-it="c">支付成功率</button>
           <button type="button" data-it="d">支付通道日志</button>
         </div>
@@ -312,7 +320,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
             <select class="f-sel" style="width:156px" aria-label="状态" id="fSt"><option>启用</option><option>禁用</option></select>
             <div class="f-btns"><button class="btn" type="button">重 置</button><button class="btn pri" type="button">查 询</button></div>
           </div>
-          <div class="toolbar"><span class="mk-tag" data-chg="添加页新增必填字段「会员层级」,默认勾选全部层级。">本期调整</span><button class="btn pri" type="button" id="btnAdd">添 加</button><button class="btn" type="button">通道排序</button><span class="icons"><span>⟳</span><span>⊤</span><span>⚙︎</span></span></div>
+          <div class="toolbar"><span class="mk-tag" data-ct="add">本期调整</span><button class="btn pri" type="button" id="btnAdd">添 加</button><button class="btn" type="button">通道排序</button><span class="icons"><span>⟳</span><span>⊤</span><span>⚙︎</span></span></div>
           <div class="tblbox"><table class="dt" id="dt"><thead><tr id="dtHead"></tr></thead><tbody id="dtBody"></tbody></table></div>
           <div class="pager"><span id="total">共 3 条数据</span><span class="pg">1</span><span class="sz">50 条/页 ∨</span></div>
         </div>
@@ -357,7 +365,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
       <div class="dh-illustration">
         <div class="illus-list">
           <div class="illus-item">会员等级</div><span class="illus-sep"></span>
-          <div class="illus-item new">会员层级<span class="tag">本期新增</span></div><span class="illus-sep"></span>
+          <div class="illus-item new">会员层级<span class="tag" data-ct="field">本期新增</span></div><span class="illus-sep"></span>
           <div class="illus-item">排除会员标签</div>
         </div>
         <div class="cap">示意图:表单字段与列表列中三项会员范围配置的排列位置,表单与列表顺序相同</div>
@@ -385,9 +393,9 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
       <div class="mm-root">会员层级配置</div>
       <div class="mm-branches">
         <div class="mm-b"><div class="mm-node">入口</div><div class="mm-leaves"><span class="mm-leaf">支付通道管理 › 添加</span><span class="mm-leaf">支付通道管理 › 编辑(抽屉标题「修改」)</span></div></div>
-        <div class="mm-b"><div class="mm-node">字段</div><div class="mm-leaves"><span class="mm-leaf">会员层级(必填)<span class="tag-new">本期新增</span></span><span class="mm-leaf">全部层级<span class="tag-new">本期新增</span></span><span class="mm-leaf">层级选项:会员层级 + 自定义层级</span><span class="mm-leaf">注释文案</span></div></div>
+        <div class="mm-b"><div class="mm-node">字段</div><div class="mm-leaves"><span class="mm-leaf">会员层级(必填)<span class="tag-new" data-ct="field">本期新增</span></span><span class="mm-leaf">全部层级<span class="tag-new" data-ct="all">本期新增</span></span><span class="mm-leaf">层级选项:会员层级 + 自定义层级</span><span class="mm-leaf">注释文案</span></div></div>
         <div class="mm-b"><div class="mm-node">交互</div><div class="mm-leaves"><span class="mm-leaf">全部层级全选 / 全不选</span><span class="mm-leaf">部分勾选显示半选</span><span class="mm-leaf">逐项勾满自动勾上全部层级</span></div></div>
-        <div class="mm-b"><div class="mm-node">规则</div><div class="mm-leaves"><span class="mm-leaf">至少勾选一项</span><span class="mm-leaf">全部层级含后续新增层级</span><span class="mm-leaf">添加默认全部层级</span><span class="mm-leaf">历史通道默认全部层级</span><span class="mm-leaf">保存后立即生效</span></div></div>
+        <div class="mm-b"><div class="mm-node">规则</div><div class="mm-leaves"><span class="mm-leaf">至少勾选一项</span><span class="mm-leaf">全部层级含后续新增层级</span><span class="mm-leaf">添加默认不勾选</span><span class="mm-leaf">历史通道默认全部层级</span><span class="mm-leaf">保存后立即生效</span></div></div>
       </div>
     </div><div class="cap">功能结构图(点击放大)</div></div>
     <button class="proto-jump" type="button" data-goto="add">在交互原型中打开「添加」</button>
@@ -400,8 +408,8 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
       <div class="tbl-wrap"><table class="dh-table-simple">
         <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
         <tbody>
-          <tr><td>会员层级 <span class="tag-new">本期新增</span></td><td>多选复选框,必填,至少勾选一个层级。选项为当前商户全部会员层级与自定义层级。</td><td>添加:全部层级勾选<br>修改:回显已保存的配置</td><td>只有所属层级被勾选的会员,才可能在客户端充值页看到该通道(还需同时满足会员等级、排除会员标签)。</td></tr>
-          <tr><td>全部层级 <span class="tag-new">本期新增</span></td><td>复选框,位于层级列表首行,控制全选与全不选。</td><td>添加:勾选</td><td>勾选时保存为「全部层级」:当前所有层级可见,之后新建的层级也自动可见。未勾选时保存为勾选的具体层级。</td></tr>
+          <tr><td>会员层级 <span class="tag-new" data-ct="field">本期新增</span></td><td>多选复选框,必填,至少勾选一个层级。选项为当前商户全部会员层级与自定义层级。</td><td>添加:不勾选<br>修改:回显已保存的配置</td><td>只有所属层级被勾选的会员,才可能在客户端充值页看到该通道(还需同时满足会员等级、排除会员标签)。</td></tr>
+          <tr><td>全部层级 <span class="tag-new" data-ct="all">本期新增</span></td><td>复选框,位于层级列表首行,控制全选与全不选。</td><td>添加:不勾选</td><td>勾选时保存为「全部层级」:当前所有层级可见,之后新建的层级也自动可见。未勾选时保存为勾选的具体层级。</td></tr>
         </tbody>
       </table></div>
       <div class="dh-prose"><p>以下为现有字段,本期不改,列出用于理解与新字段的组合关系:</p></div>
@@ -419,7 +427,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
       <div class="tbl-wrap"><table class="dh-table-simple">
         <thead><tr><th>触发条件</th><th>系统反馈</th></tr></thead>
         <tbody>
-          <tr><td>打开「添加」</td><td>「全部层级」勾选,下方所有层级勾选。</td></tr>
+          <tr><td>打开「添加」</td><td>「全部层级」及下方所有层级均不勾选,需手动勾选。</td></tr>
           <tr><td>打开「修改」,通道保存为全部层级(含上线前的历史通道)</td><td>「全部层级」勾选,所有层级勾选,包括该通道保存之后新建的层级。</td></tr>
           <tr><td>打开「修改」,通道保存为部分层级</td><td>只勾选已保存的层级;「全部层级」显示半选。保存之后新建的层级显示为未勾选。</td></tr>
           <tr><td>勾选「全部层级」</td><td>下方所有层级变为勾选。</td></tr>
@@ -456,7 +464,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
     <div class="dh-mind"><div class="mm">
       <div class="mm-root">列表「会员层级」列</div>
       <div class="mm-branches">
-        <div class="mm-b"><div class="mm-node">位置</div><div class="mm-leaves"><span class="mm-leaf">「会员等级」与「排除会员标签」之间<span class="tag-new">本期新增</span></span></div></div>
+        <div class="mm-b"><div class="mm-node">位置</div><div class="mm-leaves"><span class="mm-leaf">「会员等级」与「排除会员标签」之间<span class="tag-new" data-ct="col">本期新增</span></span></div></div>
         <div class="mm-b"><div class="mm-node">取值</div><div class="mm-leaves"><span class="mm-leaf">全部层级</span><span class="mm-leaf">所选层级名称(部分层级时)</span></div></div>
         <div class="mm-b"><div class="mm-node">更新</div><div class="mm-leaves"><span class="mm-leaf">添加 / 修改保存后刷新</span><span class="mm-leaf">计入最近操作时间、最近操作人</span></div></div>
       </div>
@@ -466,7 +474,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
       <h3>列字段</h3>
       <div class="tbl-wrap"><table class="dh-table-simple">
         <thead><tr><th>字段</th><th>取值</th><th>示例</th></tr></thead>
-        <tbody><tr><td>会员层级 <span class="tag-new">本期新增</span></td><td>通道保存为全部层级时显示「全部层级」;保存为部分层级时按层级列表顺序列出所选层级名称,用逗号分隔,超出列宽自动换行,与「会员等级」列一致。</td><td>全部层级<br>黄金会员,铂金会员,钻石会员</td></tr></tbody>
+        <tbody><tr><td>会员层级 <span class="tag-new" data-ct="col">本期新增</span></td><td>通道保存为全部层级时显示「全部层级」;保存为部分层级时按层级列表顺序列出所选层级名称,用逗号分隔,超出列宽自动换行,与「会员等级」列一致。</td><td>全部层级<br>黄金会员,铂金会员,钻石会员</td></tr></tbody>
       </table></div>
       <div class="dh-prose">
         <ol>
@@ -486,7 +494,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
     <div class="dh-mind"><div class="mm">
       <div class="mm-root">充值页通道过滤</div>
       <div class="mm-branches">
-        <div class="mm-b"><div class="mm-node">判断依据</div><div class="mm-leaves"><span class="mm-leaf">会员当前所属层级<span class="tag-new">本期新增</span></span><span class="mm-leaf">会员等级</span><span class="mm-leaf">会员标签</span><span class="mm-leaf">通道状态</span></div></div>
+        <div class="mm-b"><div class="mm-node">判断依据</div><div class="mm-leaves"><span class="mm-leaf">会员当前所属层级<span class="tag-new" data-ct="client">本期新增</span></span><span class="mm-leaf">会员等级</span><span class="mm-leaf">会员标签</span><span class="mm-leaf">通道状态</span></div></div>
         <div class="mm-b"><div class="mm-node">层级变化</div><div class="mm-leaves"><span class="mm-leaf">新建层级</span><span class="mm-leaf">删除层级</span><span class="mm-leaf">会员调整层级</span></div></div>
         <div class="mm-b"><div class="mm-node">前台表现</div><div class="mm-leaves"><span class="mm-leaf">样式不变</span><span class="mm-leaf">只增减可见通道</span><span class="mm-leaf">支付方式照常显示</span><span class="mm-leaf">无可用通道沿用现有展示</span></div></div>
       </div>
@@ -561,7 +569,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
         <tr><td>场景二</td><td>某通道不对「套利会员」「黑名单」开放,其余层级均可见。</td></tr>
       </tbody></table></div></div>
     <div class="req-block"><h3>功能点清单</h3><div class="dh-prose"><ol>
-      <li><strong>F1【P0】添加 / 修改页新增「会员层级」</strong>:位于会员等级与排除会员标签之间,首行「全部层级」,下方列出商户全部层级,带注释文案;添加默认全部层级,修改回显已保存配置。</li>
+      <li><strong>F1【P0】添加 / 修改页新增「会员层级」</strong>:位于会员等级与排除会员标签之间,首行「全部层级」,下方列出商户全部层级,带注释文案;添加默认不勾选,修改回显已保存配置。</li>
       <li><strong>F2【P0】全部层级联动</strong>:勾选全选、取消全不选;部分勾选显示半选;逐项勾满自动勾上全部层级。</li>
       <li><strong>F3【P0】必填校验</strong>:未勾选任何层级点击「确认」,字段下方提示「请选择会员层级」,不保存。</li>
       <li><strong>F4【P0】全部层级动态包含新层级</strong>:保存为全部层级的通道,对之后新建的层级同样可见;部分层级的通道不自动包含新层级。</li>
@@ -587,7 +595,7 @@ table.dt td.mk{background:#fffbf3;box-shadow:inset 3px 0 0 var(--mark)}
     <div class="req-block"><h3>验收标准</h3>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>编号</th><th>前置条件与操作</th><th>期望结果</th></tr></thead><tbody>
         <tr><td>A1</td><td>打开支付通道管理「添加」</td><td>「会员层级」位于会员等级与排除会员标签之间,有必填星号;首行「全部层级」;下方列出商户全部会员层级与自定义层级,顺序与活动「参与层级」一致;显示注释文案;标题后提示图标悬停显示提示文案。</td></tr>
-        <tr><td>A2</td><td>打开「添加」不做操作</td><td>「全部层级」及所有层级默认勾选。</td></tr>
+        <tr><td>A2</td><td>打开「添加」不做操作</td><td>「全部层级」及所有层级均不勾选;直接点击「确认」提示「请选择会员层级」。</td></tr>
         <tr><td>A3</td><td>取消勾选「全部层级」</td><td>所有层级取消勾选。</td></tr>
         <tr><td>A4</td><td>勾选「全部层级」</td><td>所有层级勾选。</td></tr>
         <tr><td>A5</td><td>全部勾选状态下取消一个层级</td><td>「全部层级」显示半选。</td></tr>
@@ -681,7 +689,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'){lb.classLis
 /* ---------- 侧边栏 ---------- */
 var MENU=[['平台概况'],['系统管理'],['商户游戏管理'],['会员管理',['账变记录','会员列表','会员层级','会员详情','会员财务管理','会员注册记录','会员登录信息','会员标签配置','会员信息变更记录','会员标签变更记录','用户回访']],['商户财务管理'],['报表查询'],['代理中心(无限极差)'],['商户财务配置',['支付管理','支付方式管理','支付方式排序','充值返现设置','代付商户管理','提现管理']],['消息管理'],['福利中心',['推荐好友领彩金','VIP管理','活动列表(新)','活动统计','优惠统计','兑换码']],['运营相关'],['推广渠道管理'],['返水管理']];
 var ICON='<svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2.5" y="2.5" width="11" height="11" rx="2"/></svg>';
-$('menu').innerHTML=MENU.map(function(m,i){return '<li class="mi'+(m[0]==='商户财务配置'?' open':'')+'" data-i="'+i+'"><div class="mt">'+ICON+'<span>'+m[0]+'</span><span class="ar">∨</span></div>'+(m[1]?'<ul class="subs">'+m[1].map(function(s){return '<li'+(s==='支付管理'?' class="cur"':'')+'>'+s+(s==='支付管理'?'<span class="mk-tag" data-chg="支付管理 › 支付通道管理:新增「会员层级」配置与列表列,其他页签不变。">本期调整</span>':'')+'</li>'}).join('')+'</ul>':'')+'</li>'}).join('');
+$('menu').innerHTML=MENU.map(function(m,i){return '<li class="mi'+(m[0]==='商户财务配置'?' open':'')+'" data-i="'+i+'"><div class="mt">'+ICON+'<span>'+m[0]+'</span><span class="ar">∨</span></div>'+(m[1]?'<ul class="subs">'+m[1].map(function(s){return '<li'+(s==='支付管理'?' class="cur"':'')+'>'+s+(s==='支付管理'?'<span class="mk-tag" data-ct="menu">本期调整</span>':'')+'</li>'}).join('')+'</ul>':'')+'</li>'}).join('');
 document.querySelectorAll('.mi>.mt').forEach(function(t){t.addEventListener('click',function(){var li=t.parentNode;if(!li.querySelector('.subs'))return;var was=li.classList.contains('open');document.querySelectorAll('.mi').forEach(function(x){x.classList.remove('open')});if(!was)li.classList.add('open')})});
 
 /* 时钟 UTC-3 */
@@ -697,19 +705,13 @@ PLATS.forEach(function(p){$('fPlat').insertAdjacentHTML('beforeend','<option>'+e
 
 /* ---------- 列表 ---------- */
 var COLS=['排序','三方通道号/通道名称/三方平台','状态','是否需要实名','通道说明','支付方式/存款方式','货币单位','费率 / 最小 / 最大 / 固定金额','会员等级','会员层级','排除会员标签','充值金额上限','充值次数','充值金额','金额类型','温馨提示文案','最近操作时间','最近操作人','操作'];
-$('dtHead').innerHTML=COLS.map(function(c){if(c==='会员层级')return '<th class="mk">会员层级<i class="th-tip" tabindex="0" data-tip="全部层级:所有层级会员可见,含之后新建的层级;部分层级时列出所选层级名称,仅这些层级的会员可见。">?</i><span class="mk-tag">本期新增</span></th>';if(c==='操作')return '<th class="op">操作<span class="mk-tag" data-chg="「编辑」打开的修改页新增「会员层级」配置,回显已保存的层级。">本期调整</span></th>';return '<th>'+c+'</th>'}).join('');
+$('dtHead').innerHTML=COLS.map(function(c){if(c==='会员层级')return '<th class="mk">会员层级<i class="th-tip" tabindex="0" data-tip="全部层级:所有层级会员可见,含之后新建的层级;部分层级时列出所选层级名称,仅这些层级的会员可见。">?</i><span class="mk-tag" data-ct="col">本期新增</span></th>';if(c==='操作')return '<th class="op">操作<span class="mk-tag" data-ct="op">本期调整</span></th>';return '<th>'+c+'</th>'}).join('');
 (function(){var tip=$('tipbox'),el=document.querySelector('#dtHead .th-tip');
   function show(){var r=el.getBoundingClientRect();tip.textContent=el.dataset.tip;tip.style.display='block';tip.style.left=Math.max(8,r.left-120)+'px';tip.style.top=(r.bottom+6)+'px'}
   function hide(){tip.style.display='none'}
   el.addEventListener('mouseenter',show);el.addEventListener('mouseleave',hide);
   el.addEventListener('click',function(e){e.stopPropagation();tip.style.display==='block'?hide():show()});
   document.addEventListener('click',hide);document.querySelector('.tblbox').addEventListener('scroll',hide);})();
-(function(){var tip=$('tipbox');
-  function show(el){var r=el.getBoundingClientRect();tip.textContent=el.dataset.chg;tip.style.display='block';tip.style.left=Math.max(8,Math.min(r.left-40,innerWidth-296))+'px';tip.style.top=(r.bottom+6)+'px'}
-  document.querySelectorAll('[data-chg]').forEach(function(el){
-    el.addEventListener('mouseenter',function(){show(el)});el.addEventListener('mouseleave',function(){tip.style.display='none'});
-    el.addEventListener('click',function(e){e.stopPropagation();e.preventDefault();show(el)});
-  });})();
 function renderTable(){
   $('dtBody').innerHTML=CH.map(function(c,i){
     return '<tr>'+
@@ -749,7 +751,7 @@ function platOpt(name){for(var i=0;i<PLATS.length;i++)if(PLATS[i].split(' / ')[0
 
 function openDrawer(idx){
   cur=idx;var c=idx>=0?CH[idx]:null;
-  st={vips:c?c.vips.slice():[],tags:c?c.tags.slice():[],tiers:c?(c.tierAll?TIERS.slice():c.tiers.slice()):TIERS.slice(),anyAmt:c?c.anyAmt:true,on:c?c.on:false,real:c?c.real:false};
+  st={vips:c?c.vips.slice():[],tags:c?c.tags.slice():[],tiers:c?(c.tierAll?TIERS.slice():c.tiers.slice()):[],anyAmt:c?c.anyAmt:true,on:c?c.on:false,real:c?c.real:false};
   $('drTitle').textContent=c?'修改':'添加';
   var h='';
   h+=c?fi('plat',lab('平台名称'),false,inp('fPlatN',c.plat,true)):fi('plat',lab('三方平台',true),true,sel('fPlatS',PLATS,''),'','请选择三方平台');
@@ -846,5 +848,32 @@ function renderSim(){
 renderSim();
 })();
 </script>
+<div id="chgTip" role="tooltip"><button class="x" type="button" aria-label="关闭">×</button><div class="tt"></div><div class="bd"></div></div>
+<script>(function(){var TIPS={
+ 'menu': ['侧边栏 · 支付管理', '原：支付通道只能按会员等级、排除会员标签控制客户端可见范围。\n现：「支付通道管理」页签新增「会员层级」配置与列表列，其他页签不变。'],
+ 'tab': ['支付管理 · 支付通道管理', '原：添加 / 修改页与列表没有会员层级。\n现：添加 / 修改页新增「会员层级」，列表新增「会员层级」列，客户端充值页按会员所属层级过滤通道。'],
+ 'add': ['支付通道管理 · 添加', '原：添加页没有「会员层级」。\n现：新增必填字段「会员层级」，默认不勾选，至少勾选一个层级才能保存。'],
+ 'op': ['支付通道管理 · 编辑（修改页）', '原：修改页没有「会员层级」。\n现：修改页新增「会员层级」，回显已保存的配置；上线前已有的通道显示为全部层级。'],
+ 'col': ['支付通道管理 · 列表「会员层级」列', '原：列表没有会员层级。\n现：在「会员等级」与「排除会员标签」之间新增一列；全部层级显示「全部层级」，部分层级列出所选层级名称。'],
+ 'field': ['添加 / 修改 · 会员层级', '原：通道只能按会员等级、排除会员标签控制可见范围。\n现：新增必填多选，选项为商户全部会员层级与自定义层级；添加默认不勾选；未勾选的层级会员，客户端不显示该通道。'],
+ 'all': ['添加 / 修改 · 全部层级', '原：无。\n现：层级列表首行复选框，控制全选 / 全不选，部分勾选显示半选；勾选时保存为全部层级，之后新建的层级自动包含。'],
+ 'client': ['客户端 · 充值通道过滤', '原：按会员等级、排除会员标签过滤通道。\n现：增加「会员所属层级」条件，三项同时满足才展示该通道。'],
+};
+var box=document.getElementById('chgTip'),cur=null,pinned=false,ht=null;
+function esc(t){return t.replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+function place(){if(!cur)return;var r=cur.getBoundingClientRect(),w=box.offsetWidth,h=box.offsetHeight,vw=document.documentElement.clientWidth,vh=innerHeight;if(r.bottom<0||r.top>vh||!r.width){hide();return;}var x=Math.min(Math.max(16,r.left),vw-w-16),y=r.bottom+6;if(y+h>vh-8)y=Math.max(8,r.top-h-6);box.style.left=x+'px';box.style.top=y+'px';}
+function show(el){var d=TIPS[el.getAttribute('data-ct')];if(!d)return;clearTimeout(ht);cur=el;var lab=el.textContent.trim();
+box.querySelector('.tt').innerHTML='<i class="'+(lab.indexOf('新增')>-1?'n':'')+'">'+esc(lab)+'</i>'+esc(d[0]);
+box.querySelector('.bd').innerHTML=d[1].split('\n').map(function(l){var m=l.match(/^(原|现)：/);return '<p>'+(m?'<b>'+m[0]+'</b>'+esc(l.slice(2)):esc(l))+'</p>';}).join('');
+box.style.display='block';place();}
+function hide(){box.style.display='none';cur=null;pinned=false;}
+function tipOf(t){return t&&t.closest?t.closest('[data-ct]'):null;}
+document.addEventListener('mouseover',function(e){var el=tipOf(e.target);if(el&&!pinned)show(el);else if(!el&&!pinned&&cur&&!(e.target.closest&&e.target.closest('#chgTip'))){clearTimeout(ht);ht=setTimeout(function(){if(!pinned)hide();},150);}});
+document.addEventListener('click',function(e){var el=tipOf(e.target);
+if(el){e.preventDefault();e.stopPropagation();show(el);pinned=box.style.display==='block';return;}
+if(e.target.closest&&e.target.closest('#chgTip')&&!e.target.closest('.x'))return;hide();},true);
+document.addEventListener('focusin',function(e){var el=tipOf(e.target);if(el)show(el);});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')hide();});
+addEventListener('scroll',place,true);addEventListener('resize',place);})();</script>
 
 </body></html>
