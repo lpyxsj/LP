@@ -279,7 +279,7 @@ textarea.bk-input{height:auto;min-height:64px;resize:vertical;width:100%;line-he
 .radio .r{width:16px;height:16px;border-radius:50%;border:1px solid var(--border);background:var(--white);position:relative;flex:none;}
 .radio.on .r{border-color:var(--primary);}
 .radio.on .r::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--primary);}
-.script-box{border:1px solid var(--border);border-radius:2px;padding:8px 12px;display:flex;flex-direction:column;gap:8px;}
+.script-box .bk-select{width:240px;}
 .script-box .sid{color:var(--text-secondary);font-family:var(--f-mono);font-size:12px;}
 .check-group{display:flex;flex-wrap:wrap;gap:8px 16px;padding:8px 10px;border:1px solid var(--split);border-radius:2px;background:var(--th-bg);}
 .check-group label{display:inline-flex;align-items:center;gap:5px;cursor:pointer;line-height:1.6;}
@@ -667,8 +667,8 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
           <tbody>
             <tr><td><b>会员ID *</b></td><td>文本框输入会员ID，多个用英文逗号隔开（兼容中文逗号、空格、换行）</td><td>空</td><td>重复ID自动去重，实时显示「已输入 N 个」；单次最多 10,000 个</td></tr>
             <tr><td><b>校验会员</b></td><td>输入框下方按钮，提交前可主动校验</td><td>—</td><td>显示「共 N 个：有效 X 个；不存在 Y 个（红字列出ID）；试玩会员 W 个（不支持点控，红字列出ID）」；已有执行中点控的会员单独提示「其中 Z 个已有执行中的点控，提交后原点控将终止」</td></tr>
-            <tr><td><b>点控类型 *</b></td><td>单选：送分 / 杀分</td><td><strong>无默认值</strong></td><td>未选类型时剧本区显示「请先选择点控类型」</td></tr>
-            <tr><td><b>剧本 *</b></td><td>单选，随点控类型切换选项，只显示剧本名称，如「快送」</td><td>选类型后默认选中「正常送-通用」或「正常杀-通用」</td><td>切换类型时剧本重置为该类型的默认剧本</td></tr>
+            <tr><td><b>点控类型 *</b></td><td>单选：送分 / 杀分</td><td><strong>无默认值</strong></td><td>未选类型时剧本下拉置灰，显示「请先选择点控类型」</td></tr>
+            <tr><td><b>剧本 *</b></td><td>下拉单选，随点控类型切换选项，只显示剧本名称，如「快送」；未选点控类型时下拉置灰，显示「请先选择点控类型」</td><td>选类型后默认选中「正常送-通用」或「正常杀-通用」</td><td>切换类型时剧本重置为该类型的默认剧本</td></tr>
             <tr><td><b>目标金额 *</b></td><td>输入框，右侧显示平台默认货币</td><td>空</td><td>0.01 ~ 100,000.00，最多两位小数</td></tr>
             <tr><td><b>操作备注</b></td><td>文本框，选填</td><td>空</td><td>最多 100 字，带字数统计；展示在列表「备注」列</td></tr>
           </tbody>
@@ -1507,14 +1507,12 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
   }
   function setRadio(el, attr, val){ el.querySelectorAll('.radio').forEach(function(x){ x.classList.toggle('on', x.getAttribute(attr)===val); }); }
   function renderScripts(box, type, current){
-    if(!type){ box.innerHTML = '<span class="muted">请先选择点控类型</span>'; box.removeAttribute('data-cur'); return; }
+    // 剧本为下拉：未选点控类型时置灰提示；选类型后默认「正常」剧本
+    if(!type){ box.innerHTML = '<select class="bk-select" disabled aria-label="剧本"><option>请先选择点控类型</option></select>'; box.removeAttribute('data-cur'); return; }
     var cur = SCRIPTS[type].some(function(s){ return s.id===current; }) ? current : SCRIPTS[type][1].id;
-    box.innerHTML = SCRIPTS[type].map(function(s){ return '<span class="radio'+(s.id===cur?' on':'')+'" data-sid="'+s.id+'"><span class="r"></span>'+s.name+'</span>'; }).join('');
+    box.innerHTML = '<select class="bk-select" aria-label="剧本"'+(box.classList.contains('dis')?' disabled':'')+'>'+SCRIPTS[type].map(function(s){ return '<option value="'+s.id+'"'+(s.id===cur?' selected':'')+'>'+s.name+'</option>'; }).join('')+'</select>';
     box.setAttribute('data-cur', cur);
-    box.querySelectorAll('.radio').forEach(function(r){ r.addEventListener('click', function(){
-      if(box.classList.contains('dis')) return;
-      box.querySelectorAll('.radio').forEach(function(x){ x.classList.toggle('on', x===r); }); box.setAttribute('data-cur', r.getAttribute('data-sid'));
-    }); });
+    box.querySelector('select').addEventListener('change', function(e){ box.setAttribute('data-cur', e.target.value); });
   }
   var amtReg = /^\d+(\.\d{1,2})?$/;
   function checkAmt(v){
@@ -1761,6 +1759,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
     ['condGroup','gTypeGroup','gScriptBox'].forEach(function(id){ $(id).classList.toggle('dis', lock); });
     document.querySelectorAll('#stgModal .check-group').forEach(function(g){ g.classList.toggle('dis', lock); g.querySelectorAll('input').forEach(function(x){ x.disabled = lock; }); });
     ['gAgentDirect','gAgentLine','gAmt'].forEach(function(id){ $(id).disabled = lock; });
+    var ss = $('gScriptBox').querySelector('select'); if(ss && $('gScriptBox').hasAttribute('data-cur')) ss.disabled = lock;
     show($('stgEditNote'), lock);
     show($('stgAddNote'), !lock);
   }
