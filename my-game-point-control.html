@@ -311,6 +311,9 @@ table.mini th{background:var(--th-bg);font-weight:500;}
 .pg-tab:focus-visible{outline:2px solid var(--primary-active);outline-offset:1px;}
 .m-note{background:#e6f7ff;border:1px solid #91d5ff;border-radius:2px;padding:8px 12px;font-size:13px;line-height:1.6;color:var(--text-primary);}
 .m-note.warn{background:#fffbe6;border-color:#ffe58f;}
+.m-note ul{margin:4px 0 0;padding-left:1.3em;}
+.m-note li{margin:2px 0;}
+.stg-rule{margin-bottom:12px;}
 .m-count{font-size:13px;margin-top:8px;color:var(--text-primary);}
 .m-count:empty{display:none;}
 .radio-group.dis,.check-group.dis,.script-box.dis{opacity:.55;cursor:not-allowed;}
@@ -415,6 +418,16 @@ table.mini th{background:var(--th-bg);font-weight:500;}
         </div>
       </div>
       <div class="bk-card">
+        <div class="m-note stg-rule"><b>策略生效规则</b>
+          <ul>
+            <li>发布后立即生效：当前符合条件的会员马上生成点控（新注册会员策略只对发布后注册的会员生效），之后新符合条件的会员自动生成。</li>
+            <li>每个会员在一条策略下只点控一次：达成目标、被终止或被覆盖后不再生成，离开条件后再进入也不再生成；需要继续控制请手动新增点控。</li>
+            <li>后生成的点控会覆盖会员原有执行中的点控（含手动新增的）；同时符合多条策略时，只按最新发布的一条生成。</li>
+            <li>会员离开条件范围，已生成的点控继续执行。</li>
+            <li>发布后只能修改名称和备注；停用后不可再启用，停用时可选择同时终止已生成、执行中的点控。</li>
+            <li>策略生成的点控都在「点控记录」中显示，来源为「点控策略」；生成失败的会员不产生记录，可在「失败 N 人」中查看。</li>
+          </ul>
+        </div>
         <div class="bk-toolbar">
           <span class="info" id="stgInfo"></span>
           <button class="bk-btn primary" id="btnAddStg" type="button">+ 新增策略</button>
@@ -738,6 +751,17 @@ table.mini th{background:var(--th-bg);font-weight:500;}
       </div><div class="cap">功能结构图：点控策略页签的组成</div></div></div>
 
       <div class="req-block">
+        <h2>页面提示</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>位置</th><th>提示内容</th></tr></thead>
+          <tbody>
+            <tr><td><b>策略列表上方（常驻，蓝色说明框，标题「策略生效规则」）</b></td><td>1. 发布后立即生效：当前符合条件的会员马上生成点控（新注册会员策略只对发布后注册的会员生效），之后新符合条件的会员自动生成。<br>2. 每个会员在一条策略下只点控一次：达成目标、被终止或被覆盖后不再生成，离开条件后再进入也不再生成；需要继续控制请手动新增点控。<br>3. 后生成的点控会覆盖会员原有执行中的点控（含手动新增的）；同时符合多条策略时，只按最新发布的一条生成。<br>4. 会员离开条件范围，已生成的点控继续执行。<br>5. 发布后只能修改名称和备注；停用后不可再启用，停用时可选择同时终止已生成、执行中的点控。<br>6. 策略生成的点控都在「点控记录」中显示，来源为「点控策略」；生成失败的会员不产生记录，可在「失败 N 人」中查看。</td></tr>
+            <tr><td><b>新增策略弹窗顶部（蓝色说明条，编辑时不显示）</b></td><td>发布后立即生效：当前符合条件的会员马上生成点控，之后符合条件的会员自动生成；每个会员在本策略下只点控一次；后生成的点控会覆盖会员原有执行中的点控；发布后只能修改名称和备注。</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
         <h2>筛选项</h2>
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
@@ -1050,6 +1074,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>A55</b></td><td>层级策略当前 0 人时发布</td><td>允许发布，提示对之后符合条件的会员生效；已生成 0 人</td></tr>
             <tr><td><b>A56</b></td><td>层级策略当前 15,000 人，发布</td><td>不受 10,000 人上限限制，后台分批生成，生成情况显示进度，完成后已生成 15,000 人（失败的计入失败）</td></tr>
             <tr><td><b>A57</b></td><td>新增点控、终止、批量终止、新增策略、编辑策略、停用策略</td><td>后台操作日志均有对应记录</td></tr>
+            <tr><td><b>A58</b></td><td>进入「点控策略」页签；打开新增策略；打开编辑策略</td><td>列表上方常驻显示「策略生效规则」6 条；新增弹窗顶部显示生效规则说明条；编辑弹窗不显示该说明条，只显示不可修改提示</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -1136,6 +1161,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
 <div class="modal-mask" id="stgModal"><div class="modal-box lg" role="dialog" aria-modal="true" style="width:760px;">
   <div class="modal-hd"><span id="stgTitle">新增策略</span><button class="x" data-close="stgModal" type="button" aria-label="关闭">×</button></div>
   <div class="modal-bd"><div class="m-form">
+    <div class="m-note" id="stgAddNote">发布后立即生效：当前符合条件的会员马上生成点控，之后符合条件的会员自动生成；每个会员在本策略下只点控一次；后生成的点控会覆盖会员原有执行中的点控；发布后只能修改名称和备注。</div>
     <div class="m-note warn hide" id="stgEditNote">发布后不可修改，如需调整请停用后新建策略。</div>
     <div class="m-row"><label for="gName"><span class="req">*</span>策略名称</label><div class="ctl">
       <input class="bk-input" id="gName" maxlength="30" style="width:320px;" placeholder="请输入，最多 30 字">
@@ -1707,6 +1733,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
     document.querySelectorAll('#stgModal .check-group').forEach(function(g){ g.classList.toggle('dis', lock); g.querySelectorAll('input').forEach(function(x){ x.disabled = lock; }); });
     ['gAgentDirect','gAgentLine','gAmt'].forEach(function(id){ $(id).disabled = lock; });
     show($('stgEditNote'), lock);
+    show($('stgAddNote'), !lock);
   }
   function openStg(s){
     gState = {cond:s ? s.cond : 'reg', type:s ? s.type : '', edit:s || null};
