@@ -315,6 +315,11 @@ table.mini th{background:var(--th-bg);font-weight:500;}
 .m-note li{margin:2px 0;}
 .stg-rule{margin-bottom:12px;}
 .sel-hint{margin-bottom:8px;padding:6px 12px;background:#e6f7ff;border:1px solid #91d5ff;border-radius:2px;font-size:13px;text-align:center;}
+/* 操作列固定在右侧，策略名称固定在左侧，横向滚动时不丢 */
+table:has(#ctrlBody) th:last-child,table:has(#ctrlBody) td:last-child,table:has(#stgBody) th:last-child,table:has(#stgBody) td:last-child{position:sticky;right:0;z-index:1;box-shadow:-6px 0 6px -6px rgba(0,0,0,.18);}
+table:has(#stgBody) th:first-child,table:has(#stgBody) td:first-child{position:sticky;left:0;z-index:1;box-shadow:6px 0 6px -6px rgba(0,0,0,.18);}
+table:has(#ctrlBody) td:last-child,table:has(#stgBody) td:last-child,table:has(#stgBody) td:first-child{background:var(--white);}
+table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#stgBody) th:first-child{background:var(--th-bg);}
 .m-count{font-size:13px;margin-top:8px;color:var(--text-primary);}
 .m-count:empty{display:none;}
 .radio-group.dis,.check-group.dis,.script-box.dis{opacity:.55;cursor:not-allowed;}
@@ -632,7 +637,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>数据更新</b></td><td>进入页面、查询、刷新、新增与终止后，进行中金额与状态均为最新值；策略的生成情况随生成进度更新</td></tr>
             <tr><td><b>历史记录</b></td><td>所有点控记录（含已结束）与策略（含已停用）完整保留，不删除</td></tr>
             <tr><td><b>时区</b></td><td>所有时间按后台时区展示</td></tr>
-            <tr><td><b>页签</b></td><td>进入页面默认「点控记录」；切换页签保留各自的筛选条件</td></tr>
+            <tr><td><b>页签</b></td><td>进入页面默认「点控记录」；切换页签保留各自的筛选条件</td></tr><tr><td><b>固定列</b></td><td>列表较宽需要横向滚动时，两个页签的「操作」列固定在右侧，点控策略的「策略名称」列固定在左侧</td></tr><tr><td><b>空状态</b></td><td>点控记录：状态为执行中且无数据时显示「暂无执行中的点控记录。如需查看历史，请把「状态」改为「全部」后查询。」，其他情况「暂无符合条件的点控记录，请调整筛选条件后查询。」；点控策略：默认条件下无数据时显示「暂无生效中的策略，可点「+ 新增策略」创建；如需查看已停用的策略，请把「状态」改为「全部」后查询。」，其他情况「暂无符合条件的策略，请调整筛选条件后查询。」</td></tr>
             <tr><td><b>权限</b></td><td>菜单查看、新增点控、终止、新增策略、编辑策略、停用策略纳入现有角色权限体系，按菜单与功能分配，不新增独立权限点</td></tr>
             <tr><td><b>操作日志</b></td><td>新增点控、终止、批量终止、新增策略、编辑策略、停用策略均写入现有后台操作日志</td></tr>
           </tbody>
@@ -885,12 +890,12 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>代理ID 未输入 / 不存在</b></td><td>红字「请输入代理ID」/「代理不存在」</td></tr>
             <tr><td><b>未选点控类型、目标金额为空或不合规</b></td><td>红字提示，规则同新增点控</td></tr>
             <tr><td><b>层级 / VIP / 代理当前没有符合条件的会员</b></td><td>人数提示显示「当前符合条件的会员：0 人，发布后对之后符合条件的会员生效」，允许发布</td></tr>
-            <tr><td><b>点击「发布」且校验通过</b></td><td>弹出确认：层级 / VIP / 代理「发布后立即对当前符合条件的 N 个会员生成点控（其中 M 个已有执行中的点控将被覆盖），之后新符合条件的会员也会自动生成。发布后条件与点控设置不可修改。」；新注册会员「发布后，之后注册的新会员将自动生成点控。发布后条件与点控设置不可修改。」</td></tr>
-            <tr><td><b>确定发布</b></td><td>提示「策略已发布」；策略出现在列表第一行，生效中；有现有会员时生成情况显示「生成中：已处理 A / B」，完成后显示已生成与失败人数</td></tr>
+            <tr><td><b>点击「发布」且校验通过</b></td><td>弹出「确认发布」：第一行「确认发布策略「{策略名称}」？」；第二行写影响范围——层级 / VIP / 代理「将立即对当前符合条件的 N 个会员{送分/杀分}，每人目标 X（其中 M 个已有执行中的点控将被覆盖），之后新符合条件的会员也会自动生成。」，当前 0 人时「当前没有符合条件的会员，发布后对之后符合条件的会员{送分/杀分}，每人目标 X。」；新注册会员「之后注册的新会员将自动{送分/杀分}，每人目标 X。」；第三行加粗「发布后条件与点控设置不可修改。」</td></tr>
+            <tr><td><b>确定发布</b></td><td>提示「策略已发布，正在为 N 个会员生成点控」（新注册会员策略为「策略已发布，之后注册的新会员将自动生成点控」，0 人为「策略已发布，当前没有符合条件的会员」）；策略出现在列表第一行，生效中；有现有会员时生成情况显示「生成中：已处理 A / B」，完成后显示已生成与失败人数</td></tr>
             <tr><td><b>点击「已生成 X 人」</b></td><td>切到「点控记录」页签，策略名称带入、状态为「全部」，显示该策略生成的全部记录</td></tr>
             <tr><td><b>点击「失败 Z 人」</b></td><td>弹出「生成失败明细」：会员ID、失败原因、时间；「复制失败会员ID」同下发结果</td></tr>
             <tr><td><b>点击「编辑」</b></td><td>弹窗回显全部字段，只有名称、备注可改；保存成功提示「保存成功」，最后操作人与时间更新</td></tr>
-            <tr><td><b>点击「停用」</b></td><td>弹出警告「确认停用策略「{策略名称}」？停用后不再生成点控，且不可再启用。」+ 勾选项「同时终止该策略已生成、执行中的点控（N 条）」，默认不勾；N 为 0 时勾选项置灰</td></tr>
+            <tr><td><b>点击「停用」</b></td><td>弹出警告：第一行「确认停用策略「{策略名称}」？」；第二行「停用后不再生成点控，且不可再启用（红字）；不勾选下方选项时，已生成的点控继续执行。」+ 勾选项「同时终止该策略已生成、执行中的点控（N 条）」，默认不勾；N 为 0 时勾选项置灰</td></tr>
             <tr><td><b>确定停用</b></td><td>提示「策略已停用」或「策略已停用，终止 N 条点控」；状态变为已停用，操作列只剩「编辑」</td></tr>
           </tbody>
         </table></div>
@@ -1401,7 +1406,8 @@ table.mini th{background:var(--th-bg);font-weight:500;}
   function render(flashKeys){
     filtered = rows.filter(match).sort(function(a,b){ return a.apply < b.apply ? 1 : (a.apply > b.apply ? -1 : 0); });
     var slice = pageOf(filtered, rp);
-    $('ctrlBody').innerHTML = !slice.length ? '<tr><td colspan="15" class="bk-empty">暂无数据</td></tr>' : slice.map(function(r){
+    var empty = applied.status==='run' ? '暂无执行中的点控记录。如需查看历史，请把「状态」改为「全部」后查询。' : '暂无符合条件的点控记录，请调整筛选条件后查询。';
+    $('ctrlBody').innerHTML = !slice.length ? '<tr><td colspan="15" class="bk-empty">'+empty+'</td></tr>' : slice.map(function(r){
       var st = r.status==='run' ? '<span class="bk-tag blue">执行中</span>' : '<span class="bk-tag gray">已结束</span>';
       var s = r.src==='stg' && stgById(r.stg);
       var src = s ? '<div class="bk-mem"><span class="bk-tag gold">点控策略</span><small>'+esc(s.name)+'</small></div>' : '<span class="bk-tag gray">手动新增</span>';
@@ -1417,7 +1423,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
     $('runInfo').textContent = '当前执行中的点控共 '+runN+' 条';
     renderPager($('pager'), filtered.length, rp, function(){ clearSel(); render(); }); syncChecks();
   }
-  // 批量选择：表头 = 本页；底部「选择全部」= 当前筛选结果全部（K-UI-004 3.14）
+  // 批量选择：表头 = 本页；底部「选择全部」= 当前筛选结果全部
   var allMode = false;
   function selKeys(){ return Object.keys(selected).filter(function(k){ return selected[k]; }); }
   function pageKeys(){ return Array.prototype.map.call($('ctrlBody').querySelectorAll('.row-chk'), function(c){ return c.getAttribute('data-key'); }); }
@@ -1655,7 +1661,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
       return true;
     }).sort(function(a,b){ return a.pubTime < b.pubTime ? 1 : (a.pubTime > b.pubTime ? -1 : 0); });
     var slice = pageOf(list, sp);
-    $('stgBody').innerHTML = !slice.length ? '<tr><td colspan="12" class="bk-empty">暂无数据</td></tr>' : slice.map(function(s){
+    $('stgBody').innerHTML = !slice.length ? '<tr><td colspan="12" class="bk-empty">'+(sApplied.status==='on' && !sApplied.name && !sApplied.cond && !sApplied.type ? '暂无生效中的策略，可点「+ 新增策略」创建；如需查看已停用的策略，请把「状态」改为「全部」后查询。' : '暂无符合条件的策略，请调整筛选条件后查询。')+'</td></tr>' : slice.map(function(s){
       var gen;
       if(s.gening) gen = '<div class="gen"><span>生成中：已处理 <b>'+fmt(s.gening.done)+'</b> / '+fmt(s.gening.total)+'</span><span class="bar"><i style="width:'+Math.round(s.gening.done/s.gening.total*100)+'%"></i></span></div>';
       else gen = '<div class="gen"><span>已生成 <span class="bk-link" data-gen="'+s.id+'">'+fmt(s.gen)+'</span> 人（执行中 '+fmt(stgRun(s))+'）</span>'+
@@ -1792,21 +1798,24 @@ table.mini th{background:var(--th-bg);font-weight:500;}
     if(!ok) return;
     $('stgConfirm').disabled = true;
     var draft = {name:name, cond:gState.cond, items:items, type:gState.type, script:$('gScriptBox').getAttribute('data-cur'), amt:parseFloat($('gAmt').value), remark:$('gRemark').value.trim()};
-    var n = stgTotal(), html;
-    if(draft.cond==='reg') html = '发布后，之后注册的新会员将自动生成点控。<br>发布后条件与点控设置不可修改。';
+    var n = stgTotal(), html, what = (draft.type==='give'?'送分':'杀分')+'，每人目标 '+money(draft.amt);
+    html = '确认发布策略「<b>'+esc(name)+'</b>」？<br>';
+    if(draft.cond==='reg') html += '之后注册的新会员将自动'+what+'。';
     else {
       var runIds = Object.keys(runMap()), m = n ? Math.max(Math.min(runIds.length, 1), Math.round(n*0.04)) : 0;
       draft.n = n; draft.m = m;
-      html = '发布后立即对当前符合条件的 <b>'+fmt(n)+'</b> 个会员生成点控（其中 <b>'+fmt(m)+'</b> 个已有执行中的点控将被覆盖），之后新符合条件的会员也会自动生成。<br>发布后条件与点控设置不可修改。';
+      html += n ? '将立即对当前符合条件的 <b>'+fmt(n)+'</b> 个会员'+what+'（其中 <b>'+fmt(m)+'</b> 个已有执行中的点控将被覆盖），之后新符合条件的会员也会自动生成。'
+                : '当前没有符合条件的会员，发布后对之后符合条件的会员'+what+'。';
     }
-    confirmBox('提示', html, '确定发布', false, function(){ publishStg(draft); }, function(){ $('stgConfirm').disabled = false; });
+    html += '<br><span class="confirm-text"><b>发布后条件与点控设置不可修改。</b></span>';
+    confirmBox('确认发布', html, '确定发布', false, function(){ publishStg(draft); }, function(){ $('stgConfirm').disabled = false; });
   });
   var genTimers = {};
   function publishStg(d){
     var t = nowStr();
     var s = {id:'s'+(++stgSeq), name:d.name, cond:d.cond, items:d.items, type:d.type, script:d.script, amt:d.amt, remark:d.remark, status:'on', pub:ME, pubTime:t, op:ME, optime:t, fails:[], gen:0, extraEnd:0, gening:null};
     stgs.push(s);
-    closeM('stgModal'); toast('策略已发布');
+    closeM('stgModal'); toast(d.cond==='reg' ? '策略已发布，之后注册的新会员将自动生成点控' : (d.n ? '策略已发布，正在为 '+fmt(d.n)+' 个会员生成点控' : '策略已发布，当前没有符合条件的会员'));
     resetStgFilters(); sp.page = 1;
     if(d.cond!=='reg' && d.n){
       s.gening = {done:0, total:d.n};
@@ -1840,7 +1849,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
   // ---------- 停用策略 ----------
   function askStgOff(s){
     var n = stgRun(s);
-    var html = '确认停用策略「<b>'+esc(s.name)+'</b>」？停用后不再生成点控，且不可再启用。'+
+    var html = '确认停用策略「<b>'+esc(s.name)+'</b>」？<br>停用后不再生成点控，且<b style="color:var(--danger)">不可再启用</b>；不勾选下方选项时，已生成的点控继续执行。'+
       '<label class="stop-chk'+(n?'':' dis')+'"><input type="checkbox" class="chk" id="cStopAll"'+(n?'':' disabled')+'><span>同时终止该策略已生成、执行中的点控（'+fmt(n)+' 条）</span></label>';
     confirmBox('警告', html, '确定停用', true, function(){
       var all = $('cStopAll').checked, t = nowStr(), k = 0;
