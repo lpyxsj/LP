@@ -269,7 +269,6 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .bk-btn.ghost-danger:hover{background:#fff1f0;}
 .m-form{display:flex;flex-direction:column;gap:18px;}
 .m-form .m-row label{flex:0 0 84px;text-align:right;}
-#autoModal .m-form .m-row label{flex-basis:150px;}
 .m-help{color:var(--text-secondary);font-size:12.5px;margin-top:6px;line-height:1.6;}
 .m-tip.hide{display:none;}
 .unit{margin-left:8px;color:var(--text-secondary);}
@@ -289,15 +288,6 @@ textarea.bk-input{height:auto;min-height:64px;resize:vertical;width:100%;line-he
 .verify-box .bad{color:var(--danger);}
 .verify-box .warnc{color:#d46b08;}
 .verify-box .ok{color:#389e0d;}
-.switch{width:44px;height:22px;border-radius:11px;background:rgba(0,0,0,.25);position:relative;cursor:pointer;display:inline-block;vertical-align:middle;transition:background .2s;}
-.switch::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 2px 4px rgba(0,35,11,.2);}
-.switch.on{background:var(--primary);}
-.switch.on::after{left:24px;}
-.auto-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:20px;}
-.stop-box{border:1px dashed #ffccc7;background:#fff1f0;border-radius:2px;padding:12px 14px;align-self:start;}
-.stop-box .t{font-weight:600;color:#cf1322;margin-bottom:8px;}
-.stop-box .n{color:#cf1322;font-size:12.5px;margin-top:8px;line-height:1.6;}
-.last-op{font-size:12.5px;color:var(--text-secondary);margin-top:14px;}
 .bk-task{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:8px 12px;margin-bottom:12px;border:1px solid #91d5ff;background:#e6f7ff;border-radius:2px;font-size:13px;color:var(--text-primary);}
 .bk-task.done{border-color:#b7eb8f;background:#f6ffed;}
 .bk-task .bar{flex:0 0 160px;height:6px;background:#d9d9d9;border-radius:3px;overflow:hidden;}
@@ -313,8 +303,27 @@ table.mini th,table.mini td{border-bottom:1px solid var(--split);padding:7px 8px
 table.mini th{background:var(--th-bg);font-weight:500;}
 .confirm-text b{color:var(--danger);font-weight:600;}
 .bk-toast.warn .ok{background:var(--warn);}
+.hide{display:none !important;}
+.pg-tabs{display:flex;gap:28px;background:var(--white);padding:0 16px;margin-bottom:12px;border-radius:2px;overflow-x:auto;}
+.pg-tab{appearance:none;border:0;background:none;padding:12px 0 10px;font:inherit;font-size:14px;color:var(--text-primary);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;}
+.pg-tab:hover{color:var(--primary);}
+.pg-tab.active{color:var(--primary);border-bottom-color:var(--primary);font-weight:500;}
+.pg-tab:focus-visible{outline:2px solid var(--primary-active);outline-offset:1px;}
+.m-note{background:#e6f7ff;border:1px solid #91d5ff;border-radius:2px;padding:8px 12px;font-size:13px;line-height:1.6;color:var(--text-primary);}
+.m-note.warn{background:#fffbe6;border-color:#ffe58f;}
+.m-count{font-size:13px;margin-top:8px;color:var(--text-primary);}
+.m-count:empty{display:none;}
+.radio-group.dis,.check-group.dis,.script-box.dis{opacity:.55;cursor:not-allowed;}
+.radio-group.dis .radio,.check-group.dis label,.script-box.dis .radio{pointer-events:none;}
+.bk-input[disabled]{background:var(--disabled-bg);color:var(--disabled-text);cursor:not-allowed;}
+.bk-table td.ell{max-width:160px;overflow:hidden;text-overflow:ellipsis;}
+.gen{display:flex;flex-direction:column;align-items:center;line-height:1.6;font-size:13px;}
+.gen .bar{width:110px;height:5px;background:#d9d9d9;border-radius:3px;overflow:hidden;margin-top:3px;}
+.gen .bar i{display:block;height:100%;background:var(--primary);transition:width .2s;}
+.stop-chk{display:flex;align-items:flex-start;gap:6px;margin-top:12px;cursor:pointer;color:var(--text-primary);}
+.stop-chk .chk{margin-top:4px;}
+.stop-chk.dis{color:var(--disabled-text);cursor:not-allowed;}
 @media (max-width:760px){
-  .auto-grid{grid-template-columns:1fr;}
   .m-form .m-row{flex-direction:column;gap:4px;}
   .m-form .m-row label{flex:none;text-align:left;line-height:1.5;}
   .m-form .m-row .ctl{width:100%;}
@@ -322,10 +331,10 @@ table.mini th{background:var(--th-bg);font-weight:500;}
 </style></head><body>
 <header class="dh-header"><div class="dh-header-inner">
   <h1>MY游戏点控管理</h1>
-  <div class="dh-meta"><span>模块：<b>商户游戏管理 · MY游戏点控管理</b></span><span>更新日期：<b>2026-10-31</b></span></div>
+  <div class="dh-meta"><span>模块：<b>商户游戏管理 · MY游戏点控管理</b></span><span>更新日期：<b>2026-11-07</b></span></div>
 </div></header>
 <nav class="dh-navbar" id="dhNavbar"><div class="dh-navbar-inner dh-primary" id="dhPrimary">
-  <button class="dh-primary-btn active" data-primary="proto" type="button">交互原型 <small>点控列表、新增点控、自动点控均可操作</small></button>
+  <button class="dh-primary-btn active" data-primary="proto" type="button">交互原型 <small>点控记录、新增点控、点控策略均可操作</small></button>
   <button class="dh-primary-btn" data-primary="docs" type="button">需求文档 <small>功能说明、规则与验收</small></button>
 </div></nav>
 
@@ -334,7 +343,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
 <!-- ================= 交互原型 ================= -->
 <section class="dh-primary-panel active" data-primary-panel="proto" id="protoSec">
   <div class="proto-intro">
-    <div class="grow">在「商户游戏管理」下新增菜单。列表默认只看执行中的点控；点「+ 新增点控」下发送分 / 杀分，点「自动点控」设置新注册会员自动点控与清理旧数据。数据为示例，操作只影响本页；演示规则：以 9 开头的会员ID视为不存在，以 8 开头的视为试玩会员，以 7 开头的视为下发超时，以 6 开头的视为没有游戏账号。</div>
+    <div class="grow">在「商户游戏管理」下新增菜单，页面分「点控记录」「点控策略」两个页签。点控记录默认只看执行中的点控，点「+ 新增点控」对指定会员一次性下发送分 / 杀分；点控策略默认只看生效中的策略，点「+ 新增策略」按新注册会员、会员层级、VIP 等级或代理常驻生效。数据为示例，操作只影响本页；演示规则：以 9 开头的会员ID视为不存在，以 8 开头的视为试玩会员，以 7 开头的视为下发超时，以 6 开头的视为没有游戏账号；下发与策略首批生成约 3 秒演示完成；策略发布后只插入 3 条示意记录。</div>
     <label class="doc-check" for="markToggle"><input type="checkbox" id="markToggle" checked> 显示本期新增标注</label>
     <button class="doc-btn" id="resetDemo" type="button">重置演示数据</button>
   </div>
@@ -345,9 +354,16 @@ table.mini th{background:var(--th-bg);font-weight:500;}
       <span class="bk-user">巴西站-测试</span>
     </div>
     <div class="bk-tabs" role="tablist">
-      <button class="bk-tab active" type="button">MY游戏点控管理<span class="mk">本期新增</span></button>
+      <button class="bk-tab active" type="button">MY游戏点控管理<span class="mk" data-tip="menu" tabindex="0">本期新增</span></button>
     </div>
     <div class="bk-body">
+      <div class="pg-tabs" role="tablist" id="pgTabs">
+        <button class="pg-tab active" type="button" data-view="rec" role="tab">点控记录</button>
+        <button class="pg-tab" type="button" data-view="stg" role="tab">点控策略</button>
+      </div>
+
+      <!-- ===== 点控记录 ===== -->
+      <div class="bk-view active" data-view-panel="rec">
       <div class="bk-card">
         <div class="bk-form">
           <div class="bk-field"><label>申请时间</label><span class="bk-range"><input type="date" id="fFrom" aria-label="开始日期"><span class="to">至</span><input type="date" id="fTo" aria-label="结束日期"></span></div>
@@ -355,7 +371,8 @@ table.mini th{background:var(--th-bg);font-weight:500;}
           <div class="bk-field"><label for="fType">点控类型</label><select class="bk-select sm" id="fType"><option value="">全部</option><option value="give">送分</option><option value="kill">杀分</option></select></div>
           <div class="bk-field"><label for="fScript">剧本</label><select class="bk-select" id="fScript"><option value="">全部</option><option value="604">快送</option><option value="603">正常送-通用</option><option value="602">慢送-通用</option><option value="601">快杀</option><option value="600">正常杀-通用</option><option value="599">慢杀-通用</option></select></div>
           <div class="bk-field"><label for="fStatus">状态</label><select class="bk-select sm" id="fStatus"><option value="">全部</option><option value="run" selected>执行中</option><option value="end">已结束</option></select></div>
-          <div class="bk-field"><label for="fSrc">来源</label><select class="bk-select sm" id="fSrc"><option value="">全部</option><option value="manual">手动新增</option><option value="auto">自动点控</option></select></div>
+          <div class="bk-field"><label for="fSrc">来源</label><select class="bk-select sm" id="fSrc"><option value="">全部</option><option value="manual">手动新增</option><option value="stg">点控策略</option></select></div>
+          <div class="bk-field"><label for="fStg">策略名称</label><input class="bk-input" id="fStg" placeholder="请输入"></div>
           <div class="bk-actions"><button class="bk-btn" id="btnReset" type="button">重 置</button><button class="bk-btn primary" id="btnQuery" type="button">查 询</button></div>
         </div>
       </div>
@@ -364,16 +381,15 @@ table.mini th{background:var(--th-bg);font-weight:500;}
         <div class="bk-toolbar">
           <span class="info" id="runInfo"></span>
           <button class="bk-btn" id="btnRefresh" type="button" title="获取最新的进行中金额与状态">刷 新</button>
-          <button class="bk-btn ghost" id="btnAuto" type="button">自动点控</button>
           <button class="bk-btn primary" id="btnAdd" type="button">+ 新增点控</button>
         </div>
-        <div class="bk-table-wrap"><table class="bk-table wide" style="min-width:1500px;">
+        <div class="bk-table-wrap"><table class="bk-table wide" style="min-width:1560px;">
           <thead><tr>
             <th style="width:40px;"><input type="checkbox" class="chk" id="chkAllHead" aria-label="全选本页"></th>
             <th>会员ID / 账号</th><th>点控类型</th><th>剧本</th>
-            <th>默认货币<span class="bk-th-tip" data-tip="平台默认计算货币，金额均按该币种计算和展示" tabindex="0" role="button" aria-label="默认货币说明">?</span></th>
+            <th>默认货币<span class="bk-th-tip" data-hint="平台默认计算货币，金额均按该币种计算和展示" tabindex="0" role="button" aria-label="默认货币说明">?</span></th>
             <th>目标金额</th>
-            <th>进行中金额<span class="bk-th-tip" data-tip="剧本已完成的金额：正数为会员赢，负数为会员输。送分超过 +目标金额、杀分低于 -目标金额时点控结束" tabindex="0" role="button" aria-label="进行中金额说明">?</span></th>
+            <th>进行中金额<span class="bk-th-tip" data-hint="剧本已完成的金额：正数为会员赢，负数为会员输。送分超过 +目标金额、杀分低于 -目标金额时点控结束" tabindex="0" role="button" aria-label="进行中金额说明">?</span></th>
             <th>状态</th><th>结束原因</th><th>来源</th><th>申请时间</th><th>备注</th><th>操作人</th><th>最后操作时间</th><th>操作</th>
           </tr></thead>
           <tbody id="ctrlBody"></tbody>
@@ -385,6 +401,33 @@ table.mini th{background:var(--th-bg);font-weight:500;}
           <div class="bk-pager" id="pager"></div>
         </div>
       </div>
+      </div>
+
+      <!-- ===== 点控策略 ===== -->
+      <div class="bk-view" data-view-panel="stg">
+      <div class="bk-card">
+        <div class="bk-form">
+          <div class="bk-field"><label for="sName">策略名称</label><input class="bk-input" id="sName" placeholder="请输入"></div>
+          <div class="bk-field"><label for="sCond">条件类型</label><select class="bk-select" id="sCond"><option value="">全部</option><option value="reg">新注册会员</option><option value="level">会员层级</option><option value="vip">VIP等级</option><option value="direct">代理（直属层）</option><option value="line">代理（代理线）</option></select></div>
+          <div class="bk-field"><label for="sType">点控类型</label><select class="bk-select sm" id="sType"><option value="">全部</option><option value="give">送分</option><option value="kill">杀分</option></select></div>
+          <div class="bk-field"><label for="sStatus">状态</label><select class="bk-select sm" id="sStatus"><option value="">全部</option><option value="on" selected>生效中</option><option value="off">已停用</option></select></div>
+          <div class="bk-actions"><button class="bk-btn" id="sReset" type="button">重 置</button><button class="bk-btn primary" id="sQuery" type="button">查 询</button></div>
+        </div>
+      </div>
+      <div class="bk-card">
+        <div class="bk-toolbar">
+          <span class="info" id="stgInfo"></span>
+          <button class="bk-btn primary" id="btnAddStg" type="button">+ 新增策略</button>
+        </div>
+        <div class="bk-table-wrap"><table class="bk-table wide" style="min-width:1480px;">
+          <thead><tr>
+            <th>策略名称</th><th>条件类型</th><th>条件内容</th><th>点控类型</th><th>剧本</th><th>目标金额</th><th>生成情况</th><th>状态</th><th>备注</th><th>发布人 / 发布时间</th><th>最后操作人 / 时间</th><th>操作</th>
+          </tr></thead>
+          <tbody id="stgBody"></tbody>
+        </table></div>
+        <div class="bk-foot"><div class="bk-pager" id="stgPager"></div></div>
+      </div>
+      </div>
     </div>
   </div>
 </section>
@@ -394,9 +437,9 @@ table.mini th{background:var(--th-bg);font-weight:500;}
   <section class="dh-primary-panel" data-primary-panel="docs">
     <nav class="dh-tabs" id="dhTabs">
       <button class="dh-tab active" data-tab="overview" type="button"><span class="n">0</span>总览</button>
-      <button class="dh-tab" data-tab="list" type="button"><span class="n">1</span>点控列表</button>
+      <button class="dh-tab" data-tab="list" type="button"><span class="n">1</span>点控记录</button>
       <button class="dh-tab" data-tab="add" type="button"><span class="n">2</span>新增点控</button>
-      <button class="dh-tab" data-tab="auto" type="button"><span class="n">3</span>自动点控</button>
+      <button class="dh-tab" data-tab="stg" type="button"><span class="n">3</span>点控策略</button>
       <button class="dh-tab" data-tab="qa" type="button"><span class="n">4</span>验收与开发测试</button>
     </nav>
 
@@ -405,8 +448,17 @@ table.mini th{background:var(--th-bg);font-weight:500;}
       <div class="req-block">
         <h2>背景</h2>
         <div class="dh-prose">
-          <p>商户后台目前无法对单个会员做输赢控制。MY 游戏提供会员点控能力：对指定会员下发<strong>送分</strong>或<strong>杀分</strong>任务，会员在 MY 系列游戏中按所选剧本输赢，累计到目标金额后点控自动结束。点控对 MY 系列<strong>全部厂商统一生效</strong>，不区分厂商与游戏。</p>
-          <p>本期在「商户游戏管理」下新增菜单「MY游戏点控管理」，提供点控记录查看、手动新增（单个或批量）、终止，以及新注册会员自动点控。</p>
+          <p><strong>现状</strong></p>
+          <ol>
+            <li>商户后台无法对单个会员做输赢控制。</li>
+            <li>MY 游戏提供会员点控能力：对指定会员下发送分或杀分任务，会员在 MY 系列游戏中按所选剧本输赢，累计到目标金额后点控自动结束。</li>
+          </ol>
+          <p><strong>目标</strong></p>
+          <ol>
+            <li>在「商户游戏管理」下新增菜单「MY游戏点控管理」，运营可查看点控记录、对指定会员手动新增点控（一次性）、终止点控。</li>
+            <li>支持点控策略：按新注册会员、会员层级、VIP 等级或代理设置常驻策略，当前和之后符合条件的会员自动生成点控，每个会员在一条策略下只点控一次。</li>
+            <li>点控对 MY 系列全部厂商统一生效，不区分厂商与游戏。</li>
+          </ol>
         </div>
       </div>
       <div class="req-block">
@@ -416,9 +468,16 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <div class="illus-item">厂商管理</div><span class="illus-sep"></span>
             <div class="illus-item">游戏管理</div><span class="illus-sep"></span>
             <div class="illus-item">游戏排名</div><span class="illus-sep"></span>
-            <div class="illus-item new">MY游戏点控管理<span class="tag">本期新增</span></div>
+            <div class="illus-item new">MY游戏点控管理<span class="tag" data-tip="menu" tabindex="0">本期新增</span></div>
           </div>
           <div class="cap">示意图：「商户游戏管理」下的子菜单顺序，新菜单排在最后</div>
+        </div>
+        <div class="dh-illustration">
+          <div class="illus-list">
+            <div class="illus-item">点控记录</div><span class="illus-sep"></span>
+            <div class="illus-item">点控策略</div>
+          </div>
+          <div class="cap">示意图：「MY游戏点控管理」页面内的页签，进入页面默认「点控记录」</div>
         </div>
       </div>
       <div class="req-block">
@@ -426,13 +485,15 @@ table.mini th{background:var(--th-bg);font-weight:500;}
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>概念</th><th>说明</th></tr></thead>
           <tbody>
-            <tr><td><b>送分</b></td><td>让会员赢分。进行中金额（会员累计赢，正数）<strong>超过</strong> +目标金额时，点控结束</td></tr>
-            <tr><td><b>杀分</b></td><td>让会员输分。进行中金额以负数展示（会员累计输），<strong>低于</strong> -目标金额时，点控结束</td></tr>
+            <tr><td><b>送分</b></td><td>让会员赢分。进行中金额（会员累计赢，正数）超过 +目标金额时，点控结束</td></tr>
+            <tr><td><b>杀分</b></td><td>让会员输分。进行中金额以负数展示（会员累计输），低于 -目标金额时，点控结束</td></tr>
             <tr><td><b>剧本</b></td><td>控制输赢节奏。送分：快送、正常送-通用、慢送-通用；杀分：快杀、正常杀-通用、慢杀-通用。页面只显示剧本名称，剧本 ID 仅供开发对接与排查，见开发测试重点</td></tr>
             <tr><td><b>目标金额</b></td><td>本次点控要送出或杀掉的金额，按平台默认货币计，0.01 ~ 100,000.00</td></tr>
             <tr><td><b>进行中金额</b></td><td>剧本已完成的金额，正数为会员赢、负数为会员输</td></tr>
-            <tr><td><b>状态</b></td><td>执行中 / 已结束。已结束包括四种结束原因：达成目标、手动终止、新点控覆盖、清理自动点控</td></tr>
-            <tr><td><b>唯一性</b></td><td>同一会员同一时间只有 <strong>1 条</strong>执行中的点控。对已有执行中点控的会员再次新增，原点控结束（结束原因「新点控覆盖」），按新设置重新开始</td></tr>
+            <tr><td><b>状态</b></td><td>执行中 / 已结束。已结束有四种结束原因：达成目标、手动终止、新点控覆盖、停用策略</td></tr>
+            <tr><td><b>手动新增</b></td><td>对输入的会员ID 一次性下发点控，提交后不再自动生成</td></tr>
+            <tr><td><b>点控策略</b></td><td>常驻规则：发布时已符合条件的会员立即生成点控，之后新符合条件的会员自动生成；每个会员在一条策略下只生成一次</td></tr>
+            <tr><td><b>唯一性与覆盖</b></td><td>同一会员同一时间只有 1 条执行中的点控。后生成的点控直接覆盖之前执行中的点控（原点控结束原因「新点控覆盖」），不区分手动新增或策略生成</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -440,7 +501,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
         <h2>整体业务流程</h2>
         <div class="dh-flow">
           <div class="flow-diagram">
-            <div class="flow-step">新增点控<span class="sub">手动新增 / 新注册会员自动点控</span></div>
+            <div class="flow-step">手动新增点控 / 点控策略生成</div>
             <div class="flow-arrow">→</div>
             <div class="flow-step">点控生效，状态「执行中」</div>
             <div class="flow-arrow">→</div>
@@ -451,28 +512,28 @@ table.mini th{background:var(--th-bg);font-weight:500;}
           <div class="flow-branches">
             <div class="flow-branch"><span class="cond">送分：进行中金额超过 +目标金额；杀分：低于 -目标金额</span><span class="arr">→</span><span class="result good">已结束 · 达成目标</span></div>
             <div class="flow-branch"><span class="cond">运营点击「终止」/ 批量终止</span><span class="arr">→</span><span class="result neutral">已结束 · 手动终止</span></div>
-            <div class="flow-branch"><span class="cond">对该会员再次新增点控（手动或批量）</span><span class="arr">→</span><span class="result neutral">原点控已结束 · 新点控覆盖；新点控执行中</span></div>
-            <div class="flow-branch"><span class="cond">自动点控中执行「清理旧数据」（仅来源为自动点控的）</span><span class="arr">→</span><span class="result neutral">已结束 · 清理自动点控</span></div>
+            <div class="flow-branch"><span class="cond">该会员又被手动新增或被策略生成新的点控</span><span class="arr">→</span><span class="result neutral">原点控已结束 · 新点控覆盖；新点控执行中</span></div>
+            <div class="flow-branch"><span class="cond">停用策略并勾选「同时终止」</span><span class="arr">→</span><span class="result neutral">该策略生成的执行中点控已结束 · 停用策略</span></div>
           </div>
           <div class="cap">图：一条点控从创建到结束的完整过程</div>
         </div>
       </div>
     </div>
 
-    <!-- ===== 1 点控列表 ===== -->
+    <!-- ===== 1 点控记录 ===== -->
     <div class="dh-panel" data-panel="list">
-      <button type="button" class="proto-jump" data-goto="proto">在交互原型中查看「点控列表」 →</button>
+      <button type="button" class="proto-jump" data-goto="proto" data-view="rec">在交互原型中查看「点控记录」 →</button>
 
       <div class="req-block"><h2>功能结构图</h2><div class="dh-mind"><div class="mm">
-        <div class="mm-root">点控列表</div>
+        <div class="mm-root">点控记录</div>
         <div class="mm-branches">
-          <div class="mm-b"><div class="mm-node">入口</div><div class="mm-leaves"><span class="mm-leaf">商户游戏管理 › MY游戏点控管理</span></div></div>
-          <div class="mm-b"><div class="mm-node">筛选</div><div class="mm-leaves"><span class="mm-leaf">申请时间</span><span class="mm-leaf">会员ID / 会员账号</span><span class="mm-leaf">点控类型</span><span class="mm-leaf">剧本</span><span class="mm-leaf">状态（默认执行中）</span><span class="mm-leaf">来源</span></div></div>
+          <div class="mm-b"><div class="mm-node">入口</div><div class="mm-leaves"><span class="mm-leaf">商户游戏管理 › MY游戏点控管理</span><span class="mm-leaf">默认页签「点控记录」</span></div></div>
+          <div class="mm-b"><div class="mm-node">筛选</div><div class="mm-leaves"><span class="mm-leaf">申请时间</span><span class="mm-leaf">会员ID / 会员账号</span><span class="mm-leaf">点控类型</span><span class="mm-leaf">剧本</span><span class="mm-leaf">状态（默认执行中）</span><span class="mm-leaf">来源</span><span class="mm-leaf">策略名称</span></div></div>
           <div class="mm-b"><div class="mm-node">列表字段</div><div class="mm-leaves"><span class="mm-leaf">会员ID / 账号</span><span class="mm-leaf">点控类型</span><span class="mm-leaf">剧本</span><span class="mm-leaf">默认货币</span><span class="mm-leaf">目标金额</span><span class="mm-leaf">进行中金额</span><span class="mm-leaf">状态</span><span class="mm-leaf">结束原因</span><span class="mm-leaf">来源</span><span class="mm-leaf">申请时间</span><span class="mm-leaf">备注</span><span class="mm-leaf">操作人</span><span class="mm-leaf">最后操作时间</span></div></div>
           <div class="mm-b"><div class="mm-node">操作</div><div class="mm-leaves"><span class="mm-leaf">终止</span><span class="mm-leaf">批量终止</span><span class="mm-leaf">刷新</span><span class="mm-leaf">会员ID 打开会员详情</span></div></div>
-          <div class="mm-b"><div class="mm-node">工具栏入口</div><div class="mm-leaves"><span class="mm-leaf">+ 新增点控</span><span class="mm-leaf">自动点控</span></div></div>
+          <div class="mm-b"><div class="mm-node">工具栏入口</div><div class="mm-leaves"><span class="mm-leaf">+ 新增点控</span></div></div>
         </div>
-      </div><div class="cap">功能结构图：点控列表的组成</div></div></div>
+      </div><div class="cap">功能结构图：点控记录页签的组成</div></div></div>
 
       <div class="req-block">
         <h2>筛选项</h2>
@@ -484,7 +545,8 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>点控类型</b></td><td>全部 / 送分 / 杀分</td><td>全部</td><td>按类型筛选</td></tr>
             <tr><td><b>剧本</b></td><td>全部 + 6 个剧本，只显示剧本名称</td><td>全部</td><td>按剧本筛选</td></tr>
             <tr><td><b>状态</b></td><td>全部 / 执行中 / 已结束</td><td><strong>执行中</strong></td><td>进入页面默认只看正在执行的点控；切到「全部」或「已结束」查看历史</td></tr>
-            <tr><td><b>来源</b></td><td>全部 / 手动新增 / 自动点控</td><td>全部</td><td>按点控的创建方式筛选</td></tr>
+            <tr><td><b>来源</b></td><td>全部 / 手动新增 / 点控策略</td><td>全部</td><td>按点控的创建方式筛选</td></tr>
+            <tr><td><b>策略名称</b></td><td>输入框</td><td>空</td><td>模糊匹配生成该记录的策略名称；从策略列表点击生成人数跳转时自动带入</td></tr>
             <tr><td><b>重置 / 查询</b></td><td>重置恢复全部默认值并重新查询；查询按当前条件刷新列表</td><td>—</td><td>查询后回到第 1 页</td></tr>
           </tbody>
         </table></div>
@@ -498,16 +560,16 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>勾选框</b></td><td>用于批量终止</td><td>表头勾选框 = 选中本页全部；底部「选择全部」= 选中当前筛选结果全部</td></tr>
             <tr><td><b>会员ID / 账号</b></td><td>两行展示，上为会员ID，下为会员账号</td><td>会员ID 蓝色可点击，打开该会员的会员详情（现有页面）</td></tr>
             <tr><td><b>点控类型</b></td><td>送分 / 杀分；对应接口字段 control_type（1 送分 / 2 杀分）</td><td>送分绿色标签，杀分红色标签</td></tr>
-            <tr><td><b>剧本</b></td><td>新增时选择的剧本；对应接口字段 script_id，页面按剧本 ID 显示名称</td><td>只显示剧本名称，如「快送」</td></tr>
+            <tr><td><b>剧本</b></td><td>新增或策略设置的剧本；对应接口字段 script_id，页面按剧本 ID 显示名称</td><td>只显示剧本名称，如「快送」</td></tr>
             <tr><td><b>默认货币</b></td><td>平台默认计算货币</td><td>表头带「?」，鼠标悬停或点击显示：平台默认计算货币，金额均按该币种计算和展示</td></tr>
-            <tr><td><b>目标金额</b></td><td>新增时填写的金额；对应接口字段 target_value（分）÷100</td><td>千分位，两位小数</td></tr>
+            <tr><td><b>目标金额</b></td><td>新增或策略设置的金额；对应接口字段 target_value（分）÷100</td><td>千分位，两位小数</td></tr>
             <tr><td><b>进行中金额</b></td><td>剧本已完成的金额；取自接口 SpecCtrl/Query 返回的 actual_value（分）÷100</td><td>两位小数；正数绿色带「+」，负数红色带「-」；表头「?」鼠标悬停或点击显示正负含义与结束条件；已结束的记录保留结束时的值，不再更新</td></tr>
             <tr><td><b>状态</b></td><td>执行中 / 已结束；对应接口字段 status：0 为执行中，1、2 为已结束</td><td>执行中蓝色标签，已结束灰色标签</td></tr>
-            <tr><td><b>结束原因</b></td><td>达成目标 / 手动终止 / 新点控覆盖 / 清理自动点控；接口无此字段，由后台在终止、覆盖、清理时记录，其余结束为达成目标</td><td>执行中的记录显示「-」</td></tr>
-            <tr><td><b>来源</b></td><td>手动新增 / 自动点控</td><td>自动点控为橙色标签</td></tr>
+            <tr><td><b>结束原因</b></td><td>达成目标 / 手动终止 / 新点控覆盖 / 停用策略；接口无此字段，由后台在终止、覆盖、停用策略时记录，其余结束为达成目标</td><td>执行中的记录显示「-」</td></tr>
+            <tr><td><b>来源</b></td><td>手动新增 / 点控策略</td><td>点控策略为橙色标签，下方显示策略名称</td></tr>
             <tr><td><b>申请时间</b></td><td>点控创建时间；对应接口字段 created_time（UTC）</td><td>年月日时分秒，按后台时区展示</td></tr>
-            <tr><td><b>备注</b></td><td>新增时填写的操作备注</td><td>无备注显示「-」；超长换行展示</td></tr>
-            <tr><td><b>操作人</b></td><td>最后一次操作该记录的后台账号</td><td>自动点控创建的记录显示「系统」；被手动终止、清理后显示操作账号；被新点控覆盖后显示发起新点控的账号</td></tr>
+            <tr><td><b>备注</b></td><td>手动新增时填写的操作备注；策略生成的记录显示策略备注</td><td>无备注显示「-」；超长换行展示</td></tr>
+            <tr><td><b>操作人</b></td><td>最后一次操作该记录的后台账号</td><td>策略生成的记录显示「系统」；被手动终止、停用策略终止后显示操作账号；被手动新增覆盖后显示发起账号，被策略生成覆盖后显示「系统」</td></tr>
             <tr><td><b>最后操作时间</b></td><td>最后一次操作或状态变化的时间</td><td>年月日时分秒</td></tr>
             <tr><td><b>操作</b></td><td>终止</td><td>仅执行中的记录显示「终止」；已结束显示「-」</td></tr>
           </tbody>
@@ -546,17 +608,18 @@ table.mini th{background:var(--th-bg);font-weight:500;}
       </div>
 
       <div class="req-block">
-        <h2>其他规则说明</h2>
+        <h2>列表规则</h2>
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>规则项</th><th>说明</th></tr></thead>
           <tbody>
-            <tr><td><b>排序</b></td><td>按申请时间倒序，最新在最前</td></tr>
-            <tr><td><b>分页</b></td><td>每页 10 / 20 / 30 条，默认 10 条；支持页码切换与跳页</td></tr>
-            <tr><td><b>数据更新</b></td><td>进入页面、查询、刷新、新增与终止后，进行中金额与状态均为最新值</td></tr>
-            <tr><td><b>历史记录</b></td><td>所有点控记录（含已结束）完整保留，不删除，可按时间查询历史</td></tr>
+            <tr><td><b>排序</b></td><td>点控记录按申请时间倒序；点控策略按发布时间倒序</td></tr>
+            <tr><td><b>分页</b></td><td>两个页签都是每页 10 / 20 / 30 条，默认 10 条；支持页码切换与跳页</td></tr>
+            <tr><td><b>数据更新</b></td><td>进入页面、查询、刷新、新增与终止后，进行中金额与状态均为最新值；策略的生成情况随生成进度更新</td></tr>
+            <tr><td><b>历史记录</b></td><td>所有点控记录（含已结束）与策略（含已停用）完整保留，不删除</td></tr>
             <tr><td><b>时区</b></td><td>所有时间按后台时区展示</td></tr>
-            <tr><td><b>权限</b></td><td>菜单查看、新增点控、终止、自动点控设置纳入现有角色权限体系，按菜单与功能分配，不新增独立权限点</td></tr>
-            <tr><td><b>操作日志</b></td><td>新增点控、终止、批量终止、清理旧数据、保存自动点控配置均写入现有后台操作日志</td></tr>
+            <tr><td><b>页签</b></td><td>进入页面默认「点控记录」；切换页签保留各自的筛选条件</td></tr>
+            <tr><td><b>权限</b></td><td>菜单查看、新增点控、终止、新增策略、编辑策略、停用策略纳入现有角色权限体系，按菜单与功能分配，不新增独立权限点</td></tr>
+            <tr><td><b>操作日志</b></td><td>新增点控、终止、批量终止、新增策略、编辑策略、停用策略均写入现有后台操作日志</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -564,13 +627,13 @@ table.mini th{background:var(--th-bg);font-weight:500;}
 
     <!-- ===== 2 新增点控 ===== -->
     <div class="dh-panel" data-panel="add">
-      <button type="button" class="proto-jump" data-goto="proto" data-open="addModal">在交互原型中打开「新增点控」 →</button>
+      <button type="button" class="proto-jump" data-goto="proto" data-view="rec" data-open="addModal">在交互原型中打开「新增点控」 →</button>
 
       <div class="req-block"><h2>功能结构图</h2><div class="dh-mind"><div class="mm">
         <div class="mm-root">新增点控</div>
         <div class="mm-branches">
-          <div class="mm-b"><div class="mm-node">入口</div><div class="mm-leaves"><span class="mm-leaf">工具栏「+ 新增点控」</span></div></div>
-          <div class="mm-b"><div class="mm-node">选择会员</div><div class="mm-leaves"><span class="mm-leaf">自定义会员 + 校验会员</span><span class="mm-leaf">会员层级</span><span class="mm-leaf">VIP等级</span><span class="mm-leaf">代理ID（直属层）</span><span class="mm-leaf">代理ID（代理线）</span><span class="mm-leaf">单次上限 10,000 人</span></div></div>
+          <div class="mm-b"><div class="mm-node">入口</div><div class="mm-leaves"><span class="mm-leaf">点控记录工具栏「+ 新增点控」</span><span class="mm-leaf">一次性下发</span></div></div>
+          <div class="mm-b"><div class="mm-node">选择会员</div><div class="mm-leaves"><span class="mm-leaf">自定义会员 + 校验会员</span><span class="mm-leaf">单次上限 10,000 人</span></div></div>
           <div class="mm-b"><div class="mm-node">点控设置</div><div class="mm-leaves"><span class="mm-leaf">点控类型</span><span class="mm-leaf">剧本（随类型联动）</span><span class="mm-leaf">目标金额</span><span class="mm-leaf">操作备注</span></div></div>
           <div class="mm-b"><div class="mm-node">提交与反馈</div><div class="mm-leaves"><span class="mm-leaf">字段校验</span><span class="mm-leaf">已有执行中点控 → 覆盖确认</span><span class="mm-leaf">后台下发，列表上方显示进度</span><span class="mm-leaf">下发结果：成功 / 失败明细、复制失败会员ID</span></div></div>
         </div>
@@ -578,16 +641,12 @@ table.mini th{background:var(--th-bg);font-weight:500;}
 
       <div class="req-block">
         <h2>字段说明</h2>
+        <div class="dh-callout">弹窗顶部说明：「手动新增为一次性下发；如需对层级、VIP、代理或新注册会员持续生效，请到「点控策略」新增策略。」</div>
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
           <tbody>
-            <tr><td><b>选择会员 *</b></td><td>单选五种方式：自定义会员 / 会员层级 / VIP等级 / 代理ID（直属层）/ 代理ID（代理线）</td><td>自定义会员</td><td>切换方式后下方输入区随之切换，其他方式已填内容不参与提交</td></tr>
-            <tr><td><b>自定义会员</b></td><td>文本框输入会员ID，多个用英文逗号隔开（兼容中文逗号、空格、换行）</td><td>空</td><td>重复ID自动去重，实时显示「已输入 N 个」；单次最多 10,000 个</td></tr>
-            <tr><td><b>校验会员</b></td><td>自定义会员下的按钮，提交前可主动校验</td><td>—</td><td>显示「共 N 个：有效 X 个；不存在 Y 个（红字列出ID）；试玩会员 W 个（不支持点控，红字列出ID）」；已有执行中点控的会员单独提示「其中 Z 个已有执行中的点控，提交后原点控将终止」</td></tr>
-            <tr><td><b>会员层级</b></td><td>多选，选项为系统已配置的会员层级，带「全选」</td><td>不选</td><td>选中层级下的全部会员；下方显示「已选会员：共 N 人」</td></tr>
-            <tr><td><b>VIP等级</b></td><td>多选，选项为系统已配置的 VIP 等级，带「全选」</td><td>不选</td><td>选中等级下的全部会员；显示已选人数</td></tr>
-            <tr><td><b>代理ID（直属层）</b></td><td>输入 1 个代理ID</td><td>空</td><td>选中该代理的直属下级会员，不含代理本人和更下级；显示已选人数</td></tr>
-            <tr><td><b>代理ID（代理线）</b></td><td>输入 1 个代理ID</td><td>空</td><td>选中该代理整条代理线下的全部会员，不含代理本人；显示已选人数</td></tr>
+            <tr><td><b>会员ID *</b></td><td>文本框输入会员ID，多个用英文逗号隔开（兼容中文逗号、空格、换行）</td><td>空</td><td>重复ID自动去重，实时显示「已输入 N 个」；单次最多 10,000 个</td></tr>
+            <tr><td><b>校验会员</b></td><td>输入框下方按钮，提交前可主动校验</td><td>—</td><td>显示「共 N 个：有效 X 个；不存在 Y 个（红字列出ID）；试玩会员 W 个（不支持点控，红字列出ID）」；已有执行中点控的会员单独提示「其中 Z 个已有执行中的点控，提交后原点控将终止」</td></tr>
             <tr><td><b>点控类型 *</b></td><td>单选：送分 / 杀分</td><td><strong>无默认值</strong></td><td>未选类型时剧本区显示「请先选择点控类型」</td></tr>
             <tr><td><b>剧本 *</b></td><td>单选，随点控类型切换选项，只显示剧本名称，如「快送」</td><td>选类型后默认选中「正常送-通用」或「正常杀-通用」</td><td>切换类型时剧本重置为该类型的默认剧本</td></tr>
             <tr><td><b>目标金额 *</b></td><td>输入框，右侧显示平台默认货币</td><td>空</td><td>0.01 ~ 100,000.00，最多两位小数</td></tr>
@@ -622,12 +681,8 @@ table.mini th{background:var(--th-bg);font-weight:500;}
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>触发条件</th><th>系统反馈</th></tr></thead>
           <tbody>
-            <tr><td><b>自定义会员未输入</b></td><td>红字「请输入会员ID」</td></tr>
-            <tr><td><b>会员层级 / VIP等级未勾选</b></td><td>红字「请选择会员层级」/「请选择VIP等级」</td></tr>
-            <tr><td><b>代理ID未输入</b></td><td>红字「请输入代理ID」</td></tr>
-            <tr><td><b>自定义会员去重后超过 10,000 个</b></td><td>红字「单次最多 10,000 个会员，当前 N 个，请分批提交」</td></tr>
-            <tr><td><b>层级 / VIP / 代理选中人数超过 10,000 人</b></td><td>人数提示变红「超过单次上限 10,000 人」；确定时红字「所选会员共 N 人，超过单次上限 10,000 人，请缩小范围后分批提交」</td></tr>
-            <tr><td><b>所选范围内没有会员（如代理无下级）</b></td><td>红字「所选范围内没有会员」</td></tr>
+            <tr><td><b>会员ID 未输入</b></td><td>红字「请输入会员ID」</td></tr>
+            <tr><td><b>会员ID 去重后超过 10,000 个</b></td><td>红字「单次最多 10,000 个会员，当前 N 个，请分批提交」</td></tr>
             <tr><td><b>未选点控类型</b></td><td>红字「请选择点控类型」</td></tr>
             <tr><td><b>目标金额为空</b></td><td>红字「请输入目标金额」，输入框标红</td></tr>
             <tr><td><b>目标金额小于 0.01、大于 100,000.00 或超过两位小数</b></td><td>红字「请输入 0.01 ~ 100,000.00 之间的金额，最多两位小数」</td></tr>
@@ -637,7 +692,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>下发中</b></td><td>「+ 新增点控」置灰，鼠标悬停提示「上一批正在下发，完成后可再次提交」；查询、终止等其他操作不受影响；离开页面不影响下发</td></tr>
             <tr><td><b>下发完成</b></td><td>进度条变为「下发完成：提交 N，成功 X，失败 Y」+「查看结果」，列表刷新到第 1 页；点进度条右侧「×」关闭进度条</td></tr>
             <tr><td><b>点击「查看结果」</b></td><td>弹出「下发结果」：提交 / 成功 / 失败人数 + 失败明细；有失败时显示「复制失败会员ID」；点「我知道了」关闭</td></tr>
-            <tr><td><b>点击「复制失败会员ID」</b></td><td>失败会员ID用英文逗号连接复制到剪贴板，提示「已复制 N 个会员ID」，可直接粘贴到自定义会员重新提交</td></tr>
+            <tr><td><b>点击「复制失败会员ID」</b></td><td>失败会员ID用英文逗号连接复制到剪贴板，提示「已复制 N 个会员ID」，可直接粘贴到会员ID 重新提交</td></tr>
             <tr><td><b>输入的会员ID不存在</b></td><td>该会员计入失败，原因「会员不存在」</td></tr>
             <tr><td><b>输入的会员为试玩会员</b></td><td>该会员计入失败，原因「试玩会员不支持点控」</td></tr>
             <tr><td><b>会员在 MY 游戏侧没有游戏账号</b></td><td>该会员计入失败，原因「游戏账号不存在」</td></tr>
@@ -653,8 +708,8 @@ table.mini th{background:var(--th-bg);font-weight:500;}
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>规则项</th><th>说明</th></tr></thead>
           <tbody>
-            <tr><td><b>单次上限</b></td><td>每次提交最多 10,000 个会员，五种选择方式统一适用；超出需缩小范围分批提交</td></tr>
-            <tr><td><b>人数口径</b></td><td>层级、VIP、代理三种方式以点击「确定」时的实际会员名单为准；多选的层级或等级之间会员不重复计算；名单自动排除试玩会员；代理两种方式均不含代理本人</td></tr>
+            <tr><td><b>一次性</b></td><td>只对本次输入的会员下发，提交后不再自动生成</td></tr>
+            <tr><td><b>单次上限</b></td><td>每次提交最多 10,000 个会员；超出需分批提交</td></tr>
             <tr><td><b>会员状态</b></td><td>冻结、禁用的会员不拦截，正常下发</td></tr>
             <tr><td><b>下发方式</b></td><td>提交后由后台逐个会员下发，无需停留在页面；列表上方只显示当前账号最近一次下发任务的进度与结果</td></tr>
             <tr><td><b>覆盖顺序</b></td><td>新点控下发成功后，原点控才结束（新点控覆盖）；下发失败时原点控保持执行中</td></tr>
@@ -667,98 +722,191 @@ table.mini th{background:var(--th-bg);font-weight:500;}
       </div>
     </div>
 
-    <!-- ===== 3 自动点控 ===== -->
-    <div class="dh-panel" data-panel="auto">
-      <button type="button" class="proto-jump" data-goto="proto" data-open="auto">在交互原型中打开「自动点控」 →</button>
+    <!-- ===== 3 点控策略 ===== -->
+    <div class="dh-panel" data-panel="stg">
+      <button type="button" class="proto-jump" data-goto="proto" data-view="stg">在交互原型中查看「点控策略」 →</button>
 
       <div class="req-block"><h2>功能结构图</h2><div class="dh-mind"><div class="mm">
-        <div class="mm-root">自动点控</div>
+        <div class="mm-root">点控策略</div>
         <div class="mm-branches">
-          <div class="mm-b"><div class="mm-node">入口</div><div class="mm-leaves"><span class="mm-leaf">工具栏「自动点控」</span></div></div>
-          <div class="mm-b"><div class="mm-node">配置</div><div class="mm-leaves"><span class="mm-leaf">新注册会员自动点控（开关）</span><span class="mm-leaf">点控类型</span><span class="mm-leaf">剧本</span><span class="mm-leaf">目标金额</span><span class="mm-leaf">最后操作人 / 时间</span></div></div>
-          <div class="mm-b"><div class="mm-node">清理旧数据</div><div class="mm-leaves"><span class="mm-leaf">显示执行中的自动点控数量</span><span class="mm-leaf">确认后终止全部执行中的自动点控</span></div></div>
-          <div class="mm-b"><div class="mm-node">生效结果</div><div class="mm-leaves"><span class="mm-leaf">新会员注册成功即生成点控</span><span class="mm-leaf">来源「自动点控」，操作人「系统」</span></div></div>
+          <div class="mm-b"><div class="mm-node">入口</div><div class="mm-leaves"><span class="mm-leaf">MY游戏点控管理 › 「点控策略」页签</span></div></div>
+          <div class="mm-b"><div class="mm-node">筛选</div><div class="mm-leaves"><span class="mm-leaf">策略名称</span><span class="mm-leaf">条件类型</span><span class="mm-leaf">点控类型</span><span class="mm-leaf">状态（默认生效中）</span></div></div>
+          <div class="mm-b"><div class="mm-node">列表字段</div><div class="mm-leaves"><span class="mm-leaf">策略名称</span><span class="mm-leaf">条件类型</span><span class="mm-leaf">条件内容</span><span class="mm-leaf">点控类型</span><span class="mm-leaf">剧本</span><span class="mm-leaf">目标金额</span><span class="mm-leaf">生成情况</span><span class="mm-leaf">状态</span><span class="mm-leaf">备注</span><span class="mm-leaf">发布人 / 发布时间</span><span class="mm-leaf">最后操作人 / 时间</span></div></div>
+          <div class="mm-b"><div class="mm-node">操作</div><div class="mm-leaves"><span class="mm-leaf">+ 新增策略</span><span class="mm-leaf">编辑（名称与备注）</span><span class="mm-leaf">停用</span><span class="mm-leaf">生成人数跳转点控记录</span><span class="mm-leaf">失败人数查看明细</span></div></div>
+          <div class="mm-b"><div class="mm-node">新增策略</div><div class="mm-leaves"><span class="mm-leaf">策略名称</span><span class="mm-leaf">条件类型（五选一）</span><span class="mm-leaf">条件内容</span><span class="mm-leaf">符合条件人数</span><span class="mm-leaf">点控类型</span><span class="mm-leaf">剧本</span><span class="mm-leaf">目标金额</span><span class="mm-leaf">备注</span><span class="mm-leaf">发布前二次确认</span></div></div>
         </div>
-      </div><div class="cap">功能结构图：自动点控的组成</div></div></div>
+      </div><div class="cap">功能结构图：点控策略页签的组成</div></div></div>
 
       <div class="req-block">
-        <h2>字段说明</h2>
+        <h2>筛选项</h2>
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
           <tbody>
-            <tr><td><b>新注册会员自动点控 *</b></td><td>开关，旁边文字说明当前状态</td><td><strong>关闭</strong></td><td>开启：之后注册成功的新会员自动生成一条点控；关闭：不再自动生成</td></tr>
-            <tr><td><b>点控类型 *</b></td><td>单选：送分 / 杀分</td><td>无</td><td>自动生成的点控类型</td></tr>
-            <tr><td><b>剧本 *</b></td><td>随类型联动，同新增点控</td><td>选类型后默认「正常」剧本</td><td>自动生成的点控剧本</td></tr>
-            <tr><td><b>目标金额 *</b></td><td>同新增点控，0.01 ~ 100,000.00</td><td>空</td><td>自动生成的点控目标金额</td></tr>
-            <tr><td><b>最后操作人 / 时间</b></td><td>弹窗底部展示</td><td>—</td><td>每次保存配置后更新</td></tr>
-            <tr><td><b>清理旧数据</b></td><td>右侧红色区域，显示「当前执行中的自动点控：N 条」</td><td>—</td><td>终止所有来源为「自动点控」且执行中的记录，不可撤销</td></tr>
+            <tr><td><b>策略名称</b></td><td>输入框</td><td>空</td><td>模糊匹配</td></tr>
+            <tr><td><b>条件类型</b></td><td>全部 / 新注册会员 / 会员层级 / VIP等级 / 代理（直属层）/ 代理（代理线）</td><td>全部</td><td>按条件类型筛选</td></tr>
+            <tr><td><b>点控类型</b></td><td>全部 / 送分 / 杀分</td><td>全部</td><td>按类型筛选</td></tr>
+            <tr><td><b>状态</b></td><td>全部 / 生效中 / 已停用</td><td><strong>生效中</strong></td><td>进入页签默认只看生效中的策略</td></tr>
+            <tr><td><b>重置 / 查询</b></td><td>同点控记录</td><td>—</td><td>查询后回到第 1 页</td></tr>
           </tbody>
         </table></div>
       </div>
 
       <div class="req-block">
-        <h2>自动生成流程</h2>
+        <h2>列表字段</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>字段</th><th>说明</th><th>展示规则</th></tr></thead>
+          <tbody>
+            <tr><td><b>策略名称</b></td><td>新增时填写</td><td>—</td></tr>
+            <tr><td><b>条件类型</b></td><td>五种之一</td><td>文字</td></tr>
+            <tr><td><b>条件内容</b></td><td>所选层级 / VIP 等级 / 代理ID</td><td>层级、等级多个用「、」连接，超长省略、鼠标悬停显示全部；新注册会员显示「-」</td></tr>
+            <tr><td><b>点控类型</b></td><td>送分 / 杀分</td><td>送分绿色标签，杀分红色标签</td></tr>
+            <tr><td><b>剧本</b></td><td>剧本名称</td><td>—</td></tr>
+            <tr><td><b>目标金额</b></td><td>每个会员的目标金额</td><td>千分位，两位小数</td></tr>
+            <tr><td><b>生成情况</b></td><td>第一行「已生成 X 人（执行中 Y）」，第二行「失败 Z 人」</td><td>X 蓝色可点击：切到「点控记录」，按该策略名称、状态「全部」筛选；Z 大于 0 时红色可点击，打开失败明细；发布后首批生成未完成时显示「生成中：已处理 A / B」</td></tr>
+            <tr><td><b>状态</b></td><td>生效中 / 已停用</td><td>生效中蓝色标签，已停用灰色标签</td></tr>
+            <tr><td><b>备注</b></td><td>策略备注</td><td>无备注显示「-」</td></tr>
+            <tr><td><b>发布人 / 发布时间</b></td><td>新增策略的账号与时间</td><td>两行展示</td></tr>
+            <tr><td><b>最后操作人 / 时间</b></td><td>最后一次编辑或停用的账号与时间</td><td>两行展示</td></tr>
+            <tr><td><b>操作</b></td><td>编辑、停用</td><td>生效中显示「编辑」「停用」；已停用只显示「编辑」</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
+        <h2>新增 / 编辑策略 · 字段说明</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
+          <tbody>
+            <tr><td><b>策略名称 *</b></td><td>输入框，最多 30 字</td><td>空</td><td>不可与其他策略（含已停用）重名</td></tr>
+            <tr><td><b>条件类型 *</b></td><td>单选：新注册会员 / 会员层级 / VIP等级 / 代理（直属层）/ 代理（代理线）</td><td>新注册会员</td><td>切换后下方条件内容随之切换；一条策略只选一种条件类型</td></tr>
+            <tr><td><b>会员层级</b></td><td>多选，选项为系统已配置的会员层级，带「全选」</td><td>不选</td><td>选中任一层级的会员都符合条件</td></tr>
+            <tr><td><b>VIP等级</b></td><td>多选，选项为系统已配置的 VIP 等级，带「全选」</td><td>不选</td><td>选中任一等级的会员都符合条件</td></tr>
+            <tr><td><b>代理ID（直属层）</b></td><td>输入 1 个代理ID</td><td>空</td><td>该代理的直属下级会员符合条件，不含代理本人和更下级</td></tr>
+            <tr><td><b>代理ID（代理线）</b></td><td>输入 1 个代理ID</td><td>空</td><td>该代理整条代理线下的会员符合条件，不含代理本人</td></tr>
+            <tr><td><b>当前符合条件</b></td><td>条件内容下方提示</td><td>—</td><td>层级 / VIP / 代理：「当前符合条件的会员：N 人，发布后立即生成点控」；新注册会员：「只对发布后注册的新会员生效」</td></tr>
+            <tr><td><b>点控类型 *</b></td><td>单选：送分 / 杀分</td><td>无默认值</td><td>同新增点控</td></tr>
+            <tr><td><b>剧本 *</b></td><td>随类型联动</td><td>选类型后默认「正常」剧本</td><td>同新增点控</td></tr>
+            <tr><td><b>目标金额 *</b></td><td>0.01 ~ 100,000.00，最多两位小数</td><td>空</td><td>每个会员的目标金额</td></tr>
+            <tr><td><b>备注</b></td><td>文本框，选填，最多 100 字</td><td>空</td><td>展示在策略列表，并带到该策略生成的点控记录「备注」列</td></tr>
+          </tbody>
+        </table></div>
+        <div class="dh-callout">编辑策略：弹窗相同，只有「策略名称」「备注」可改，其余字段置灰并提示「发布后不可修改，如需调整请停用后新建策略」。修改备注不影响已生成记录的备注。</div>
+      </div>
+
+      <div class="req-block">
+        <h2>新增策略发布</h2>
         <div class="dh-flow">
           <div class="flow-diagram">
-            <div class="flow-step">新会员注册成功<span class="sub">任一注册渠道，同步创建 MY 游戏账号</span></div>
+            <div class="flow-step">填写后点击「发布」</div>
             <div class="flow-arrow">→</div>
-            <div class="flow-step">检查「新注册会员自动点控」开关</div>
+            <div class="flow-step">字段校验<span class="sub">名称、条件、类型、金额</span></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">弹出发布确认</div>
           </div>
           <div class="flow-branches">
-            <div class="flow-branch"><span class="cond">开关开启</span><span class="arr">→</span><span class="result good">MY 游戏账号创建成功后，按当前配置生成一条点控，执行中，来源「自动点控」，操作人「系统」</span></div>
-            <div class="flow-branch"><span class="cond">开关关闭</span><span class="arr">→</span><span class="result neutral">不生成点控</span></div>
-            <div class="flow-branch"><span class="cond">开关开启，但注册的是试玩账号</span><span class="arr">→</span><span class="result neutral">不生成点控</span></div>
-            <div class="flow-branch"><span class="cond">开关开启但游戏账号创建或点控生成失败</span><span class="arr">→</span><span class="result bad">不生成记录，写入系统日志；不影响会员注册与正常游戏</span></div>
+            <div class="flow-branch"><span class="cond">字段校验不通过</span><span class="arr">→</span><span class="result bad">红字提示，弹窗保持打开</span></div>
+            <div class="flow-branch"><span class="cond">确认框点「取消」</span><span class="arr">→</span><span class="result neutral">回到新增弹窗，内容保留</span></div>
+            <div class="flow-branch"><span class="cond">确认框点「确定发布」</span><span class="arr">→</span><span class="result good">策略生效中，出现在策略列表第一行</span></div>
           </div>
-          <div class="cap">图：新注册会员的自动点控</div>
+          <div class="flow-branches">
+            <div class="flow-branch"><span class="cond">层级 / VIP / 代理策略</span><span class="arr">→</span><span class="result good">当前符合条件的会员由后台分批生成点控，生成情况显示进度；已有执行中点控的会员被覆盖</span></div>
+            <div class="flow-branch"><span class="cond">新注册会员策略</span><span class="arr">→</span><span class="result neutral">不处理已注册会员，等待之后的注册</span></div>
+          </div>
+          <div class="cap">图：新增策略从填写到生效</div>
         </div>
       </div>
 
       <div class="req-block">
-        <h2>清理旧数据流程</h2>
+        <h2>策略自动生成</h2>
         <div class="dh-flow">
           <div class="flow-diagram">
-            <div class="flow-step">点击「清理旧数据」</div>
+            <div class="flow-step">会员新符合某条生效中策略的条件<span class="sub">注册、层级变动、VIP 变动、代理关系变动</span></div>
             <div class="flow-arrow">→</div>
-            <div class="flow-step">检查执行中的自动点控数量</div>
+            <div class="flow-step">检查该会员在该策略下是否已生成过</div>
           </div>
           <div class="flow-branches">
-            <div class="flow-branch"><span class="cond">数量为 0</span><span class="arr">→</span><span class="result neutral">提示「当前没有执行中的自动点控」</span></div>
-            <div class="flow-branch"><span class="cond">数量 &gt; 0 → 确定清理</span><span class="arr">→</span><span class="result good">全部变为已结束 · 清理自动点控，提示「已清理，终止 N 条自动点控」</span></div>
-            <div class="flow-branch"><span class="cond">数量 &gt; 0 → 取消</span><span class="arr">→</span><span class="result neutral">不做任何变更</span></div>
+            <div class="flow-branch"><span class="cond">已生成过</span><span class="arr">→</span><span class="result neutral">不生成</span></div>
+            <div class="flow-branch"><span class="cond">未生成过，且只符合这一条</span><span class="arr">→</span><span class="result good">生成一条点控（来源点控策略，操作人系统）；原执行中点控被覆盖</span></div>
+            <div class="flow-branch"><span class="cond">同时符合多条且都未生成过</span><span class="arr">→</span><span class="result good">只按发布时间最新的一条生成，其余视为已处理</span></div>
+            <div class="flow-branch"><span class="cond">试玩会员 / 试玩账号注册</span><span class="arr">→</span><span class="result neutral">不生成</span></div>
+            <div class="flow-branch"><span class="cond">游戏账号不存在、下发失败或超时</span><span class="arr">→</span><span class="result bad">不生成记录，计入该策略失败人数并写系统日志；原执行中点控不变</span></div>
           </div>
-          <div class="cap">图：清理往期自动点控数据</div>
+          <div class="cap">图：策略生效期间，会员新符合条件时的自动生成</div>
+        </div>
+      </div>
+
+      <div class="req-block">
+        <h2>停用策略</h2>
+        <div class="dh-flow">
+          <div class="flow-diagram">
+            <div class="flow-step">点击「停用」</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">弹出确认框<span class="sub">含「同时终止该策略已生成、执行中的点控（N 条）」勾选项，默认不勾</span></div>
+          </div>
+          <div class="flow-branches">
+            <div class="flow-branch"><span class="cond">不勾选，确定</span><span class="arr">→</span><span class="result good">策略已停用，不再生成；已生成的点控继续执行</span></div>
+            <div class="flow-branch"><span class="cond">勾选，确定</span><span class="arr">→</span><span class="result good">策略已停用；该策略生成的执行中点控变为已结束 · 停用策略</span></div>
+            <div class="flow-branch"><span class="cond">取消</span><span class="arr">→</span><span class="result neutral">不做任何变更</span></div>
+          </div>
+          <div class="cap">图：停用策略</div>
         </div>
         <h3>触发条件与反馈</h3>
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>触发条件</th><th>系统反馈</th></tr></thead>
           <tbody>
-            <tr><td><b>打开「自动点控」弹窗</b></td><td>回显当前已保存的配置、执行中的自动点控数量、最后操作人与时间</td></tr>
-            <tr><td><b>保存时未选点控类型</b></td><td>红字「请选择点控类型」</td></tr>
-            <tr><td><b>保存时目标金额为空或不合规</b></td><td>红字提示，规则同新增点控</td></tr>
-            <tr><td><b>开关开启并保存成功</b></td><td>提示「保存成功，之后注册的新会员将自动新增点控」</td></tr>
-            <tr><td><b>开关关闭并保存成功</b></td><td>提示「保存成功，自动点控已关闭」</td></tr>
-            <tr><td><b>点击「取消」或关闭</b></td><td>配置不变</td></tr>
-            <tr><td><b>点击「清理旧数据」且有执行中的自动点控</b></td><td>弹出警告「确认清理往期自动点控数据？将终止 N 条执行中的自动点控，操作不可逆。」</td></tr>
-            <tr><td><b>确定清理</b></td><td>对应记录变为已结束 · 清理自动点控，操作人为当前账号；弹窗内数量变为 0</td></tr>
+            <tr><td><b>策略名称为空 / 重名</b></td><td>红字「请输入策略名称」/「策略名称已存在」</td></tr>
+            <tr><td><b>会员层级 / VIP等级未勾选</b></td><td>红字「请选择会员层级」/「请选择VIP等级」</td></tr>
+            <tr><td><b>代理ID 未输入 / 不存在</b></td><td>红字「请输入代理ID」/「代理不存在」</td></tr>
+            <tr><td><b>未选点控类型、目标金额为空或不合规</b></td><td>红字提示，规则同新增点控</td></tr>
+            <tr><td><b>层级 / VIP / 代理当前没有符合条件的会员</b></td><td>人数提示显示「当前符合条件的会员：0 人，发布后对之后符合条件的会员生效」，允许发布</td></tr>
+            <tr><td><b>点击「发布」且校验通过</b></td><td>弹出确认：层级 / VIP / 代理「发布后立即对当前符合条件的 N 个会员生成点控（其中 M 个已有执行中的点控将被覆盖），之后新符合条件的会员也会自动生成。发布后条件与点控设置不可修改。」；新注册会员「发布后，之后注册的新会员将自动生成点控。发布后条件与点控设置不可修改。」</td></tr>
+            <tr><td><b>确定发布</b></td><td>提示「策略已发布」；策略出现在列表第一行，生效中；有现有会员时生成情况显示「生成中：已处理 A / B」，完成后显示已生成与失败人数</td></tr>
+            <tr><td><b>点击「已生成 X 人」</b></td><td>切到「点控记录」页签，策略名称带入、状态为「全部」，显示该策略生成的全部记录</td></tr>
+            <tr><td><b>点击「失败 Z 人」</b></td><td>弹出「生成失败明细」：会员ID、失败原因、时间；「复制失败会员ID」同下发结果</td></tr>
+            <tr><td><b>点击「编辑」</b></td><td>弹窗回显全部字段，只有名称、备注可改；保存成功提示「保存成功」，最后操作人与时间更新</td></tr>
+            <tr><td><b>点击「停用」</b></td><td>弹出警告「确认停用策略「{策略名称}」？停用后不再生成点控，且不可再启用。」+ 勾选项「同时终止该策略已生成、执行中的点控（N 条）」，默认不勾；N 为 0 时勾选项置灰</td></tr>
+            <tr><td><b>确定停用</b></td><td>提示「策略已停用」或「策略已停用，终止 N 条点控」；状态变为已停用，操作列只剩「编辑」</td></tr>
           </tbody>
         </table></div>
       </div>
 
       <div class="req-block">
-        <h2>其他规则说明</h2>
+        <h2>策略规则</h2>
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>规则项</th><th>说明</th></tr></thead>
           <tbody>
-            <tr><td><b>生效时点</b></td><td>配置保存后立即生效，只作用于保存之后注册的会员，不追溯已注册会员</td></tr>
-            <tr><td><b>已生成的点控</b></td><td>修改配置或关闭开关不影响已生成的自动点控，它们按原设置继续执行</td></tr>
-            <tr><td><b>与手动点控的关系</b></td><td>自动点控执行中的会员再被手动新增点控时，自动点控结束（新点控覆盖）</td></tr>
-            <tr><td><b>清理范围</b></td><td>只终止来源为「自动点控」且执行中的记录；手动新增的点控和已结束的记录不受影响；记录本身保留</td></tr>
-            <tr><td><b>触发范围</b></td><td>所有渠道注册成功的正式会员：前台注册、推广链接注册、后台添加会员、代理开户</td></tr>
-            <tr><td><b>游戏账号</b></td><td>会员注册时同步创建 MY 游戏账号；游戏账号创建成功后才生成自动点控，创建失败不生成</td></tr>
-            <tr><td><b>失败记录</b></td><td>自动点控生成失败写入系统日志（会员ID、时间、失败原因），供排查</td></tr>
-            <tr><td><b>试玩账号</b></td><td>试玩账号注册不生成自动点控</td></tr>
-            <tr><td><b>保存校验</b></td><td>开关关闭时同样校验并保存类型、剧本、金额，便于下次直接开启</td></tr>
+            <tr><td><b>发布即生效</b></td><td>点击「发布」并确认后立即生效，状态为生效中</td></tr>
+            <tr><td><b>现有会员</b></td><td>层级、VIP、代理策略发布时，当前符合条件的会员立即由后台分批生成点控；不受 10,000 人上限限制；新注册会员策略不追溯已注册会员</td></tr>
+            <tr><td><b>之后符合条件的会员</b></td><td>策略生效期间，会员新符合条件时自动生成：新注册（新注册会员策略）、层级变为所选层级、VIP 等级变为所选等级、成为该代理的直属下级或进入该代理线（注册或转线）</td></tr>
+            <tr><td><b>只生成一次</b></td><td>每个会员在一条策略下只生成一次点控（含生成失败）；达成目标、被终止、被覆盖后不再生成；离开条件范围再进入也不再生成；需要继续控制时手动新增</td></tr>
+            <tr><td><b>覆盖</b></td><td>后生成的点控直接覆盖之前执行中的点控，不区分来源；会员在执行较新策略的点控时进入较早策略的范围，同样由较早策略生成并覆盖</td></tr>
+            <tr><td><b>同时命中多条</b></td><td>同一时刻符合多条生效中策略（如注册时同时符合新注册会员策略与代理线策略）时，只按发布时间最新的一条生成；其余策略对该会员视为已处理，之后不再生成</td></tr>
+            <tr><td><b>离开条件范围</b></td><td>已生成的点控继续执行，直到达成目标、被终止或被覆盖</td></tr>
+            <tr><td><b>不可修改</b></td><td>发布后条件类型、条件内容、点控类型、剧本、目标金额不可修改；名称、备注可修改</td></tr>
+            <tr><td><b>停用</b></td><td>停用后不再生成；停用即结束，不可再启用；停用时可勾选「同时终止该策略已生成、执行中的点控」，默认不勾；首批生成未完成时停用，剩余会员不再生成</td></tr>
+            <tr><td><b>条数</b></td><td>生效中的策略条数不限，新注册会员策略也不限</td></tr>
+            <tr><td><b>会员范围</b></td><td>自动排除试玩会员与试玩账号注册；冻结、禁用的会员正常生成；代理两种方式均不含代理本人</td></tr>
+            <tr><td><b>来源与操作人</b></td><td>生成的记录来源「点控策略」并记录策略名称，操作人「系统」</td></tr>
+            <tr><td><b>游戏账号</b></td><td>新注册会员须在 MY 游戏账号创建成功后再生成；游戏账号不存在、下发失败、下发超时均计入该策略的失败人数，不自动重试，写入系统日志</td></tr>
+            <tr><td><b>下发失败与覆盖</b></td><td>策略生成失败时，会员原有执行中的点控保持不变</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
+        <h2>规则明细</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>规则项</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td><b>生效时点</b></td><td>发布确认后立即生效；层级 / VIP / 代理策略同时处理当前符合条件的会员</td></tr>
+            <tr><td><b>只生成一次</b></td><td>以「会员 + 策略」判断；生成成功或失败都算已处理，之后不再生成</td></tr>
+            <tr><td><b>覆盖</b></td><td>后生成覆盖之前的；同一时刻命中多条取发布时间最新的一条</td></tr>
+            <tr><td><b>已生成的点控</b></td><td>编辑策略名称、备注或停用（不勾选终止）都不影响已生成的点控；会员离开条件范围也不影响</td></tr>
+            <tr><td><b>停用终止范围</b></td><td>只终止该策略生成且执行中的记录；被其他点控覆盖、已结束的记录不受影响；记录本身保留</td></tr>
+            <tr><td><b>触发事件</b></td><td>新注册：所有渠道注册成功的正式会员（前台注册、推广链接注册、后台添加会员、代理开户），游戏账号创建成功后生成；层级变动、VIP 变动：手动调整或系统自动调整，变动生效后生成；代理关系：注册挂到该代理下或转线进入，生效后生成</td></tr>
+            <tr><td><b>生成方式</b></td><td>发布时的现有会员与之后的触发均由后台逐个会员下发，不影响会员注册、升级等原有流程</td></tr>
+            <tr><td><b>失败记录</b></td><td>生成失败写入系统日志（会员ID、策略、时间、失败原因），并计入策略失败人数，可在失败明细中复制会员ID 手动新增</td></tr>
+            <tr><td><b>重名</b></td><td>策略名称不可与任何策略（含已停用）重名</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -771,8 +919,8 @@ table.mini th{background:var(--th-bg);font-weight:500;}
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>项目</th><th>说明</th></tr></thead>
           <tbody>
-            <tr><td><b>本期做</b></td><td>新增菜单「MY游戏点控管理」：点控列表（筛选、分页、刷新、终止、批量终止）、新增点控（五种选会员方式、批量下发、结果明细）、自动点控（新注册会员自动点控、清理旧数据）</td></tr>
-            <tr><td><b>本期不做</b></td><td>按单个厂商或游戏设置点控；修改执行中点控的金额或剧本（需终止后重新新增）；删除点控记录；导出</td></tr>
+            <tr><td><b>本期做</b></td><td>新增菜单「MY游戏点控管理」，分「点控记录」「点控策略」两个页签。点控记录：筛选、分页、刷新、终止、批量终止；新增点控（自定义会员，一次性，批量下发与结果明细）。点控策略：策略列表、新增策略（新注册会员 / 会员层级 / VIP 等级 / 代理（直属层）/ 代理（代理线））、编辑名称与备注、停用（可选同时终止已生成的点控）、生成失败明细</td></tr>
+            <tr><td><b>本期不做</b></td><td>按单个厂商或游戏设置点控；修改执行中点控的金额或剧本（需终止后重新新增）；修改策略的条件与点控设置（需停用后新建）；已停用策略重新启用；一条策略组合多种条件；删除点控记录或策略；导出</td></tr>
             <tr><td><b>适用范围</b></td><td>全部商户后台；点控对 MY 系列全部厂商统一生效</td></tr>
           </tbody>
         </table></div>
@@ -783,11 +931,11 @@ table.mini th{background:var(--th-bg);font-weight:500;}
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>项目</th><th>说明</th></tr></thead>
           <tbody>
-            <tr><td><b>使用角色</b></td><td>商户运营 / 风控人员，需「MY游戏点控管理」菜单权限；新增、终止、自动点控设置需对应功能权限</td></tr>
-            <tr><td><b>场景 1</b></td><td>对单个或一批会员送分（如回流、挽留）或杀分（如套利嫌疑），设置目标金额与节奏</td></tr>
-            <tr><td><b>场景 2</b></td><td>按会员层级、VIP 等级或代理线批量下发点控</td></tr>
+            <tr><td><b>使用角色</b></td><td>商户运营 / 风控人员，需「MY游戏点控管理」菜单权限；新增点控、终止、新增 / 编辑 / 停用策略需对应功能权限</td></tr>
+            <tr><td><b>场景 1</b></td><td>对单个或一批指定会员送分（如回流、挽留）或杀分（如套利嫌疑），一次性下发</td></tr>
+            <tr><td><b>场景 2</b></td><td>对某个会员层级、VIP 等级或代理线常驻送分 / 杀分：现有会员立即生效，之后进入的会员自动生效</td></tr>
             <tr><td><b>场景 3</b></td><td>新会员注册后自动进入送分（养客）或杀分</td></tr>
-            <tr><td><b>场景 4</b></td><td>查看点控执行进度，提前终止；结束活动时一键清理全部自动点控</td></tr>
+            <tr><td><b>场景 4</b></td><td>查看点控执行进度，提前终止；活动结束时停用策略，并可一并终止其已生成的点控</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -795,14 +943,15 @@ table.mini th{background:var(--th-bg);font-weight:500;}
       <div class="req-block">
         <h2>功能点清单</h2>
         <div class="dh-prose"><ol>
-          <li><strong>F1【P0】菜单与列表</strong>：商户游戏管理下新增「MY游戏点控管理」；列表 15 列，按申请时间倒序，分页 10/20/30。</li>
-          <li><strong>F2【P0】筛选</strong>：申请时间、会员ID/账号、点控类型、剧本、状态（默认执行中）、来源；重置恢复默认。</li>
+          <li><strong>F1【P0】菜单、页签与列表</strong>：商户游戏管理下新增「MY游戏点控管理」；「点控记录」「点控策略」两个页签；点控记录 15 列，按申请时间倒序，分页 10/20/30。</li>
+          <li><strong>F2【P0】点控记录筛选</strong>：申请时间、会员ID/账号、点控类型、剧本、状态（默认执行中）、来源、策略名称；重置恢复默认。</li>
           <li><strong>F3【P0】终止</strong>：执行中记录可终止，二次确认；成功后状态已结束、原因手动终止、更新操作人与时间。</li>
           <li><strong>F4【P1】批量终止与刷新</strong>：勾选后批量终止，只处理执行中的记录；刷新获取最新进行中金额与状态。</li>
-          <li><strong>F5【P0】新增点控</strong>：自定义会员（含校验）/ 会员层级 / VIP等级 / 代理ID（直属层、代理线）；类型、剧本联动、目标金额、备注；单次最多 10,000 人；字段校验文案见「新增点控」。</li>
+          <li><strong>F5【P0】新增点控</strong>：自定义会员（含校验），一次性下发；类型、剧本联动、目标金额、备注；单次最多 10,000 人；字段校验文案见「新增点控」。</li>
           <li><strong>F6【P0】覆盖确认与下发结果</strong>：已有执行中点控的会员提交前提示将覆盖；提交后后台下发并显示进度，完成后展示成功与失败明细，可复制失败会员ID；防重复提交。</li>
-          <li><strong>F7【P0】自动点控</strong>：开关（默认关闭）+ 类型、剧本、金额；保存后对之后注册的新会员自动生成点控，来源自动点控、操作人系统。</li>
-          <li><strong>F8【P1】清理旧数据</strong>：显示执行中的自动点控数量，确认后全部终止，原因清理自动点控。</li>
+          <li><strong>F7【P0】点控策略列表</strong>：筛选（默认生效中）、列表 12 列、生成情况（已生成 / 执行中 / 失败、生成中进度）、生成人数跳转点控记录、失败明细与复制会员ID。</li>
+          <li><strong>F8【P0】新增策略</strong>：五种条件类型、条件内容与当前符合人数、类型、剧本、金额、备注；发布二次确认；发布后现有会员分批生成、之后符合条件的会员自动生成，每人一次。</li>
+          <li><strong>F9【P1】编辑与停用策略</strong>：编辑只改名称与备注；停用二次确认，可选同时终止该策略已生成、执行中的点控（结束原因停用策略）。</li>
         </ol></div>
       </div>
 
@@ -812,7 +961,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
           <thead><tr><th>项目</th><th>说明</th></tr></thead>
           <tbody>
             <tr><td><b>新增埋点</b></td><td>无</td></tr>
-            <tr><td><b>需记录的数据</b></td><td>每条点控的会员、类型、剧本、目标金额、进行中金额、状态、结束原因、来源、申请时间、备注、操作人、最后操作时间；自动点控配置及其最后操作人、时间</td></tr>
+            <tr><td><b>需记录的数据</b></td><td>每条点控的会员、类型、剧本、目标金额、进行中金额、状态、结束原因、来源、策略、申请时间、备注、操作人、最后操作时间；每条策略的名称、条件类型与内容、类型、剧本、金额、备注、状态、发布人与时间、最后操作人与时间、已生成 / 失败人数；「会员 + 策略」已处理记录；策略生成失败明细</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -822,19 +971,19 @@ table.mini th{background:var(--th-bg);font-weight:500;}
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>项目</th><th>说明</th></tr></thead>
           <tbody>
-            <tr><td><b>依赖</b></td><td>MY 游戏点控接口（新增 / 取消 / 查询），进行中金额取接口返回的实际执行值；会员注册时同步创建的 MY 游戏账号；现有会员详情、会员层级、VIP 等级、代理关系数据</td></tr>
+            <tr><td><b>依赖</b></td><td>MY 游戏点控接口（新增 / 取消 / 查询），进行中金额取接口返回的实际执行值；会员注册时同步创建的 MY 游戏账号；现有会员详情、会员层级、VIP 等级、代理关系数据，以及会员注册、层级变动、VIP 变动、代理关系变动事件</td></tr>
             <tr><td><b>影响</b></td><td>被点控会员在 MY 系列全部厂商的游戏输赢；前台无界面变化</td></tr>
-            <tr><td><b>风险：批量误操作</b></td><td>按层级、代理线批量杀分影响面大，提交前展示人数、覆盖提示与结果明细，供运营核对</td></tr>
-            <tr><td><b>风险：自动点控持续生效</b></td><td>开关开启期间每个新会员都会被点控，配置时需确认类型与金额；可通过关闭开关 + 清理旧数据停止</td></tr>
+            <tr><td><b>风险：策略影响面大</b></td><td>层级、代理线策略发布即对现有会员全部生成并覆盖原点控；发布前展示当前符合人数与将被覆盖人数，二次确认；条件与点控设置发布后不可改</td></tr>
+            <tr><td><b>风险：策略持续生效</b></td><td>策略生效期间新符合条件的会员都会被点控；可通过停用并勾选「同时终止」整体停止</td></tr>
           </tbody>
         </table></div>
         <h3>接口对应</h3>
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>场景</th><th>接口</th><th>传入</th><th>取回与用途</th></tr></thead>
           <tbody>
-            <tr><td><b>新增点控下发（手动、自动）</b></td><td>SpecCtrl/Add</td><td>playerName：会员的 MY 游戏账号名；control_type：1 送分 / 2 杀分；script_id：剧本 ID；target_value：目标金额 ×100（分）</td><td>返回点控记录，新任务 status=0（正在执行）；会员已有执行中任务时，接口自动将旧任务结束并创建新任务</td></tr>
-            <tr><td><b>终止、批量终止、清理旧数据</b></td><td>SpecCtrl/Cancel</td><td>playerName</td><td>任务结束（接口 status=2）；会员没有执行中任务时接口返回失败，按「提交时已自然结束」处理，保持达成目标</td></tr>
-            <tr><td><b>进入页面、查询、刷新</b></td><td>SpecCtrl/Query</td><td>playerName</td><td>actual_value（分）÷100 为进行中金额；status=2 且后台未记录终止、覆盖、清理时，结束原因为达成目标；接口最多返回最新 1,000 条、不分页</td></tr>
+            <tr><td><b>新增点控下发、策略生成</b></td><td>SpecCtrl/Add</td><td>playerName：会员的 MY 游戏账号名；control_type：1 送分 / 2 杀分；script_id：剧本 ID；target_value：目标金额 ×100（分）</td><td>返回点控记录，新任务 status=0（正在执行）；会员已有执行中任务时，接口自动将旧任务结束并创建新任务</td></tr>
+            <tr><td><b>终止、批量终止、停用策略并终止</b></td><td>SpecCtrl/Cancel</td><td>playerName</td><td>任务结束（接口 status=2）；会员没有执行中任务时接口返回失败，按「提交时已自然结束」处理，保持达成目标</td></tr>
+            <tr><td><b>进入页面、查询、刷新</b></td><td>SpecCtrl/Query</td><td>playerName</td><td>actual_value（分）÷100 为进行中金额；status=2 且后台未记录终止、覆盖、停用策略时，结束原因为达成目标；接口最多返回最新 1,000 条、不分页</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -844,55 +993,63 @@ table.mini th{background:var(--th-bg);font-weight:500;}
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>编号</th><th>前置条件与操作</th><th>期望结果</th></tr></thead>
           <tbody>
-            <tr><td><b>A1</b></td><td>有菜单权限的账号进入商户游戏管理</td><td>子菜单最后一项为「MY游戏点控管理」，点击打开列表</td></tr>
-            <tr><td><b>A2</b></td><td>首次进入列表</td><td>状态筛选默认「执行中」，只显示执行中记录，按申请时间倒序</td></tr>
+            <tr><td><b>A1</b></td><td>有菜单权限的账号进入商户游戏管理</td><td>子菜单最后一项为「MY游戏点控管理」，点击打开，默认「点控记录」页签</td></tr>
+            <tr><td><b>A2</b></td><td>首次进入点控记录</td><td>状态筛选默认「执行中」，只显示执行中记录，按申请时间倒序</td></tr>
             <tr><td><b>A3</b></td><td>状态切为「全部」并查询</td><td>显示全部记录，已结束记录展示结束原因，操作列为「-」</td></tr>
-            <tr><td><b>A4</b></td><td>分别按申请时间、会员ID、会员账号、类型、剧本、来源筛选</td><td>结果符合条件；点「重置」恢复默认并重新查询</td></tr>
+            <tr><td><b>A4</b></td><td>分别按申请时间、会员ID、会员账号、类型、剧本、来源、策略名称筛选</td><td>结果符合条件；点「重置」恢复默认并重新查询</td></tr>
             <tr><td><b>A5</b></td><td>点击会员ID</td><td>打开该会员的会员详情</td></tr>
             <tr><td><b>A6</b></td><td>终止一条执行中记录并确认</td><td>提示「已终止 1 条点控」，状态已结束 · 手动终止，操作人与时间更新</td></tr>
             <tr><td><b>A7</b></td><td>终止时点「取消」</td><td>记录不变</td></tr>
             <tr><td><b>A8</b></td><td>勾选 3 条（2 条执行中、1 条已结束）后批量终止</td><td>确认框显示 2 条；确认后仅这 2 条结束</td></tr>
             <tr><td><b>A9</b></td><td>未勾选直接批量终止 / 只勾选已结束记录批量终止</td><td>分别提示「请先勾选记录」/「所选记录中没有执行中的点控」</td></tr>
             <tr><td><b>A10</b></td><td>执行中记录进行中金额已超过目标，点击刷新</td><td>状态变为已结束 · 达成目标</td></tr>
-            <tr><td><b>A11</b></td><td>新增：自定义会员输入 3 个有效ID + 1 个不存在ID，送分，正常送，100.00</td><td>弹窗关闭，列表上方显示下发进度；完成后点「查看结果」：提交 4、成功 3、失败 1（会员不存在）；列表新增 3 条执行中记录，来源手动新增</td></tr>
-            <tr><td><b>A12</b></td><td>自定义会员输入重复ID</td><td>计数与提交按去重后计算</td></tr>
+            <tr><td><b>A11</b></td><td>新增：输入 3 个有效ID + 1 个不存在ID，送分，正常送，100.00</td><td>弹窗关闭，列表上方显示下发进度；完成后点「查看结果」：提交 4、成功 3、失败 1（会员不存在）；列表新增 3 条执行中记录，来源手动新增</td></tr>
+            <tr><td><b>A12</b></td><td>会员ID 输入重复ID</td><td>计数与提交按去重后计算</td></tr>
             <tr><td><b>A13</b></td><td>点击「校验会员」</td><td>显示有效、不存在、试玩会员、已有执行中点控的数量与ID</td></tr>
             <tr><td><b>A14</b></td><td>输入 10,001 个不重复ID后确定</td><td>红字「单次最多 10,000 个会员…」，不提交</td></tr>
-            <tr><td><b>A15</b></td><td>按层级 / VIP 勾选，人数 ≤ 10,000</td><td>显示已选人数，提交后每人一条记录</td></tr>
-            <tr><td><b>A16</b></td><td>按代理线选择，人数 &gt; 10,000</td><td>人数提示变红；确定时红字提示超上限，不提交</td></tr>
-            <tr><td><b>A17</b></td><td>代理ID（直属层）输入代理ID</td><td>只包含直属下级会员，不含代理本人和更下级；代理线方式同样不含代理本人</td></tr>
-            <tr><td><b>A18</b></td><td>不选点控类型 / 金额为空 / 金额 0 / 100000.01 / 1.234</td><td>分别出现对应红字提示，不提交</td></tr>
-            <tr><td><b>A19</b></td><td>选择送分后切换为杀分</td><td>剧本选项变为快杀、正常杀-通用、慢杀-通用，默认正常杀-通用</td></tr>
-            <tr><td><b>A20</b></td><td>对已有执行中点控的会员新增，点「继续提交」</td><td>原记录已结束 · 新点控覆盖；新记录执行中</td></tr>
-            <tr><td><b>A21</b></td><td>同上，点「取消」</td><td>回到新增弹窗，内容保留，不下发</td></tr>
-            <tr><td><b>A22</b></td><td>快速连续点击「确定」</td><td>只提交一次</td></tr>
-            <tr><td><b>A23</b></td><td>自动点控：开启，送分，正常送，50.00，保存；之后注册新会员</td><td>新会员出现一条执行中点控，来源自动点控，操作人系统，目标 50.00</td></tr>
-            <tr><td><b>A24</b></td><td>自动点控：关闭开关并保存，之后注册新会员</td><td>不生成点控；之前生成的自动点控继续执行</td></tr>
-            <tr><td><b>A25</b></td><td>修改自动点控金额并保存</td><td>只影响之后注册的会员；已生成的记录金额不变；最后操作人与时间更新</td></tr>
-            <tr><td><b>A26</b></td><td>有 N 条执行中自动点控，点击清理旧数据并确认</td><td>N 条变为已结束 · 清理自动点控；手动新增的执行中记录不受影响</td></tr>
-            <tr><td><b>A27</b></td><td>无执行中自动点控时点击清理旧数据</td><td>提示「当前没有执行中的自动点控」</td></tr>
-            <tr><td><b>A28</b></td><td>无新增 / 终止 / 自动点控功能权限的账号</td><td>按现有权限体系隐藏或禁用对应按钮</td></tr>
-            <tr><td><b>A29</b></td><td>点击「终止」后、确认前，该记录已达成目标自然结束，再点「确定终止」</td><td>该记录保持已结束 · 达成目标，不改为手动终止；提示中的 N 不计这条</td></tr>
-            <tr><td><b>A30</b></td><td>有执行中自动点控时点击清理旧数据，在确认框点「取消」</td><td>记录与数量均不变</td></tr>
-            <tr><td><b>A31</b></td><td>自动点控开启，新会员注册时 MY 游戏账号创建失败或点控生成失败</td><td>会员正常注册、正常游戏；不生成点控记录；系统日志记录会员ID、时间与失败原因</td></tr>
-            <tr><td><b>A32</b></td><td>自动点控保存时不选点控类型 / 金额为空 / 金额不合规</td><td>分别出现对应红字提示，配置不保存</td></tr>
-            <tr><td><b>A33</b></td><td>新增：会员层级未勾选 / VIP等级未勾选 / 代理ID未填 / 代理下没有会员</td><td>分别红字「请选择会员层级」/「请选择VIP等级」/「请输入代理ID」/「所选范围内没有会员」，不提交</td></tr>
-            <tr><td><b>A34</b></td><td>新增时某个会员在 MY 游戏下发失败</td><td>该会员计入失败，失败明细显示 MY 游戏返回的原因；其他会员正常生效</td></tr>
-            <tr><td><b>A35</b></td><td>操作备注输入超过 100 字</td><td>最多只能输入 100 字，字数统计显示 100/100</td></tr>
-            <tr><td><b>A36</b></td><td>自定义会员输入 1 个试玩会员ID，点「校验会员」后提交</td><td>校验结果单独列出试玩会员；提交后该会员计入失败，原因「试玩会员不支持点控」</td></tr>
-            <tr><td><b>A37</b></td><td>按会员层级选择，层级内含试玩会员</td><td>已选人数与下发名单均不含试玩会员</td></tr>
-            <tr><td><b>A38</b></td><td>自动点控开启，注册一个试玩账号</td><td>不生成点控</td></tr>
-            <tr><td><b>A39</b></td><td>账号 A 创建的点控，被账号 B 新增点控覆盖</td><td>原记录已结束 · 新点控覆盖，操作人为 B，最后操作时间为覆盖时间</td></tr>
-            <tr><td><b>A40</b></td><td>对在 MY 游戏侧没有游戏账号的会员新增点控</td><td>该会员计入失败，原因「游戏账号不存在」；不创建游戏账号；其他会员正常生效</td></tr>
-            <tr><td><b>A41</b></td><td>新增时某个会员下发超时</td><td>该会员计入失败，原因「下发超时」；不自动重发，不生成记录</td></tr>
-            <tr><td><b>A42</b></td><td>对已有执行中点控的会员新增，新点控下发失败</td><td>该会员计入失败；原点控保持执行中，结束原因、操作人不变</td></tr>
-            <tr><td><b>A43</b></td><td>提交新增点控</td><td>弹窗关闭，提示「已提交，正在下发 N 个会员」；列表上方显示「下发中：已处理 X / N」；完成后显示汇总与「查看结果」，列表刷新到第 1 页</td></tr>
-            <tr><td><b>A44</b></td><td>下发中查看「+ 新增点控」；下发中离开页面再回来</td><td>按钮置灰，悬停提示「上一批正在下发，完成后可再次提交」；离开页面不影响下发，回来后仍显示进度或结果</td></tr>
-            <tr><td><b>A45</b></td><td>下发结果有失败会员，点「复制失败会员ID」</td><td>失败会员ID以英文逗号连接复制到剪贴板，提示「已复制 N 个会员ID」</td></tr>
-            <tr><td><b>A46</b></td><td>对冻结、禁用的会员新增点控</td><td>正常下发，计入成功</td></tr>
-            <tr><td><b>A47</b></td><td>自动点控开启，分别通过前台注册、推广链接、后台添加会员、代理开户注册新会员</td><td>每个新会员都生成一条执行中的自动点控</td></tr>
-            <tr><td><b>A48</b></td><td>新增点控、终止、批量终止、清理旧数据、保存自动点控配置</td><td>后台操作日志均有对应记录</td></tr>
-            <tr><td><b>A49</b></td><td>已结束的记录点击刷新</td><td>进行中金额保持结束时的值，不再变化</td></tr>
+            <tr><td><b>A15</b></td><td>打开新增点控</td><td>只有会员ID 输入方式，顶部说明手动新增为一次性，层级等请到点控策略</td></tr>
+            <tr><td><b>A16</b></td><td>不选点控类型 / 金额为空 / 金额 0 / 100000.01 / 1.234</td><td>分别出现对应红字提示，不提交</td></tr>
+            <tr><td><b>A17</b></td><td>选择送分后切换为杀分</td><td>剧本选项变为快杀、正常杀-通用、慢杀-通用，默认正常杀-通用</td></tr>
+            <tr><td><b>A18</b></td><td>对已有执行中点控的会员新增，点「继续提交」</td><td>原记录已结束 · 新点控覆盖；新记录执行中</td></tr>
+            <tr><td><b>A19</b></td><td>同上，点「取消」</td><td>回到新增弹窗，内容保留，不下发</td></tr>
+            <tr><td><b>A20</b></td><td>快速连续点击「确定」或「发布」</td><td>只提交一次</td></tr>
+            <tr><td><b>A21</b></td><td>无新增点控 / 终止 / 新增策略 / 编辑策略 / 停用策略功能权限的账号</td><td>按现有权限体系隐藏或禁用对应按钮</td></tr>
+            <tr><td><b>A22</b></td><td>点击「终止」后、确认前，该记录已达成目标自然结束，再点「确定终止」</td><td>该记录保持已结束 · 达成目标，不改为手动终止；提示中的 N 不计这条</td></tr>
+            <tr><td><b>A23</b></td><td>新增时某个会员在 MY 游戏下发失败</td><td>该会员计入失败，失败明细显示 MY 游戏返回的原因；其他会员正常生效</td></tr>
+            <tr><td><b>A24</b></td><td>操作备注输入超过 100 字</td><td>最多只能输入 100 字，字数统计显示 100/100</td></tr>
+            <tr><td><b>A25</b></td><td>输入 1 个试玩会员ID，点「校验会员」后提交</td><td>校验结果单独列出试玩会员；提交后该会员计入失败，原因「试玩会员不支持点控」</td></tr>
+            <tr><td><b>A26</b></td><td>账号 A 创建的点控，被账号 B 新增点控覆盖</td><td>原记录已结束 · 新点控覆盖，操作人为 B，最后操作时间为覆盖时间</td></tr>
+            <tr><td><b>A27</b></td><td>对在 MY 游戏侧没有游戏账号的会员新增点控</td><td>该会员计入失败，原因「游戏账号不存在」；不创建游戏账号；其他会员正常生效</td></tr>
+            <tr><td><b>A28</b></td><td>新增时某个会员下发超时</td><td>该会员计入失败，原因「下发超时」；不自动重发，不生成记录</td></tr>
+            <tr><td><b>A29</b></td><td>对已有执行中点控的会员新增，新点控下发失败</td><td>该会员计入失败；原点控保持执行中，结束原因、操作人不变</td></tr>
+            <tr><td><b>A30</b></td><td>提交新增点控</td><td>弹窗关闭，提示「已提交，正在下发 N 个会员」；列表上方显示「下发中：已处理 X / N」；完成后显示汇总与「查看结果」，列表刷新到第 1 页</td></tr>
+            <tr><td><b>A31</b></td><td>下发中查看「+ 新增点控」；下发中离开页面再回来</td><td>按钮置灰，悬停提示「上一批正在下发，完成后可再次提交」；离开页面不影响下发，回来后仍显示进度或结果</td></tr>
+            <tr><td><b>A32</b></td><td>下发结果有失败会员，点「复制失败会员ID」</td><td>失败会员ID以英文逗号连接复制到剪贴板，提示「已复制 N 个会员ID」</td></tr>
+            <tr><td><b>A33</b></td><td>对冻结、禁用的会员新增点控</td><td>正常下发，计入成功</td></tr>
+            <tr><td><b>A34</b></td><td>已结束的记录点击刷新</td><td>进行中金额保持结束时的值，不再变化</td></tr>
+            <tr><td><b>A35</b></td><td>切到「点控策略」页签</td><td>状态默认「生效中」，按发布时间倒序；可按名称、条件类型、点控类型、状态筛选</td></tr>
+            <tr><td><b>A36</b></td><td>新增策略：会员层级选 2 个层级（当前共 120 人，其中 5 人已有执行中点控），杀分，正常杀，200.00，发布并确认</td><td>确认框显示 120 人、5 人将被覆盖；策略生效中；生成完成后已生成 120 人；点控记录新增 120 条执行中、来源点控策略、操作人系统；那 5 人的原点控已结束 · 新点控覆盖</td></tr>
+            <tr><td><b>A37</b></td><td>上述策略生效后，一个会员的层级调整为所选层级之一</td><td>该会员自动生成一条点控，策略已生成人数 +1</td></tr>
+            <tr><td><b>A38</b></td><td>该会员的策略点控达成目标后，层级先调出再调回</td><td>不再生成</td></tr>
+            <tr><td><b>A39</b></td><td>手动终止某会员的策略点控</td><td>该会员在该策略下不再生成</td></tr>
+            <tr><td><b>A40</b></td><td>新增策略：新注册会员，送分，正常送，50.00，发布</td><td>已注册会员不生成；之后注册的新会员生成一条执行中点控，来源点控策略，目标 50.00</td></tr>
+            <tr><td><b>A41</b></td><td>新注册会员策略生效，分别通过前台注册、推广链接、后台添加会员、代理开户注册新会员；再注册一个试玩账号</td><td>正式会员各生成一条执行中点控；试玩账号不生成</td></tr>
+            <tr><td><b>A42</b></td><td>VIP 等级策略生效，会员 VIP 升级到所选等级</td><td>自动生成一条点控</td></tr>
+            <tr><td><b>A43</b></td><td>代理（直属层）策略生效，在该代理下注册新会员；代理（代理线）策略生效，会员转线到该代理线下</td><td>各生成一条点控；代理本人不生成</td></tr>
+            <tr><td><b>A44</b></td><td>会员 A 正在执行策略 P（较新发布）的点控，之后 A 进入策略 Q（较早发布）的范围</td><td>Q 生成新点控，P 的点控已结束 · 新点控覆盖</td></tr>
+            <tr><td><b>A45</b></td><td>新会员注册时同时符合新注册会员策略 R1（较早）与代理线策略 R2（较新）</td><td>只按 R2 生成一条；之后 R1 对该会员不再生成</td></tr>
+            <tr><td><b>A46</b></td><td>会员执行中的策略点控期间，手动对其新增点控</td><td>策略点控已结束 · 新点控覆盖；之后该策略不再对其生成</td></tr>
+            <tr><td><b>A47</b></td><td>层级策略生效，会员调出该层级</td><td>已生成的点控继续执行</td></tr>
+            <tr><td><b>A48</b></td><td>编辑策略</td><td>只有名称、备注可改，其余置灰并提示停用后新建；保存后列表更新，最后操作人与时间更新</td></tr>
+            <tr><td><b>A49</b></td><td>新增策略：名称为空 / 与已停用策略重名 / 层级未选 / 代理ID 不存在 / 类型未选 / 金额不合规</td><td>分别出现对应红字提示，不发布</td></tr>
+            <tr><td><b>A50</b></td><td>停用策略，不勾选「同时终止」</td><td>状态已停用，操作列只剩编辑；之后符合条件的会员不再生成；已生成的点控继续执行</td></tr>
+            <tr><td><b>A51</b></td><td>停用策略，勾选「同时终止」（执行中 8 条）</td><td>提示「策略已停用，终止 8 条点控」；这 8 条已结束 · 停用策略，操作人为当前账号；被覆盖或已结束的记录不变</td></tr>
+            <tr><td><b>A52</b></td><td>层级策略发布后首批生成未完成时停用</td><td>剩余会员不再生成；已生成人数停止增长</td></tr>
+            <tr><td><b>A53</b></td><td>点击策略「已生成 X 人」</td><td>切到点控记录，策略名称带入、状态全部，显示该策略生成的全部记录</td></tr>
+            <tr><td><b>A54</b></td><td>策略生成时有会员游戏账号不存在 / 下发失败 / 超时</td><td>不生成记录；策略失败人数增加；点击打开失败明细，可复制会员ID；该会员原执行中点控不变；之后不再自动重试</td></tr>
+            <tr><td><b>A55</b></td><td>层级策略当前 0 人时发布</td><td>允许发布，提示对之后符合条件的会员生效；已生成 0 人</td></tr>
+            <tr><td><b>A56</b></td><td>层级策略当前 15,000 人，发布</td><td>不受 10,000 人上限限制，后台分批生成，生成情况显示进度，完成后已生成 15,000 人（失败的计入失败）</td></tr>
+            <tr><td><b>A57</b></td><td>新增点控、终止、批量终止、新增策略、编辑策略、停用策略</td><td>后台操作日志均有对应记录</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -903,12 +1060,12 @@ table.mini th{background:var(--th-bg);font-weight:500;}
           <thead><tr><th>检查项</th><th>结论</th></tr></thead>
           <tbody>
             <tr><td><b>权限</b></td><td>菜单与功能权限纳入现有角色权限体系</td></tr>
-            <tr><td><b>操作留痕</b></td><td>每条记录保留操作人与最后操作时间；自动点控配置保留最后操作人与时间；新增、终止、清理、保存配置写入后台操作日志；自动点控生成失败写入系统日志</td></tr>
-            <tr><td><b>边界状态</b></td><td>空列表、全部已结束、超人数上限、会员不存在、没有游戏账号、下发超时、覆盖时新点控下发失败、已有执行中点控、提交时已自然结束均已定义</td></tr>
-            <tr><td><b>口径</b></td><td>金额按平台默认货币，两位小数；进行中金额正为赢、负为输；时间按后台时区</td></tr>
-            <tr><td><b>批量操作</b></td><td>批量新增上限 10,000 人并展示明细；批量终止只处理执行中记录</td></tr>
-            <tr><td><b>多语言</b></td><td>后台页面沿用现有后台语言机制，无前台文案</td></tr>
-            <tr><td><b>特殊模式</b></td><td>试玩会员不支持点控：自定义会员中的试玩ID计入失败；层级 / VIP / 代理名单自动排除；试玩账号注册不生成自动点控</td></tr>
+            <tr><td><b>操作留痕</b></td><td>每条记录保留操作人与最后操作时间；策略保留发布人、发布时间、最后操作人与时间；新增、终止、策略新增 / 编辑 / 停用写入后台操作日志；策略生成失败写入系统日志</td></tr>
+            <tr><td><b>边界状态</b></td><td>空列表、全部已结束、超人数上限、会员不存在、没有游戏账号、下发超时、覆盖时新点控下发失败、已有执行中点控、提交时已自然结束；策略 0 人、超 1 万人、首批未完成停用、同时命中多条、离开再进入、重名均已定义</td></tr>
+            <tr><td><b>口径与单位</b></td><td>金额按平台默认货币，两位小数；进行中金额正为赢、负为输；时间按后台时区</td></tr>
+            <tr><td><b>批量操作</b></td><td>手动新增上限 10,000 人并展示明细；批量终止只处理执行中记录；策略分批生成不设上限，展示进度与失败明细</td></tr>
+            <tr><td><b>多语言 / 多环境</b></td><td>后台页面沿用现有后台语言机制，无前台文案</td></tr>
+            <tr><td><b>特殊模式</b></td><td>试玩会员不支持点控：手动新增中的试玩ID计入失败；策略自动排除试玩会员与试玩账号注册</td></tr>
             <tr><td><b>生效范围</b></td><td>MY 系列全部厂商统一生效</td></tr>
           </tbody>
         </table></div>
@@ -917,18 +1074,20 @@ table.mini th{background:var(--th-bg);font-weight:500;}
       <div class="req-block">
         <h2>开发测试重点说明</h2>
         <div class="dh-prose"><ol>
-          <li><strong>游戏账号随注册创建。</strong>点控接口要求游戏账号已存在。会员注册时已同步创建 MY 游戏账号，点控下发不再创建账号；下发时游戏账号不存在的会员计入失败，原因「游戏账号不存在」。自动点控须在 MY 游戏账号创建成功后再生成，账号创建失败则不生成，并写入系统日志。</li>
-          <li><strong>同一会员只有一条执行中点控。</strong>新增前必须识别已有执行中点控并提示覆盖；新点控下发成功后再将原记录结束（原因「新点控覆盖」），下发失败时原记录保持执行中，不能同时存在两条执行中记录。MY 接口新增时会自动顶替该会员的原任务，无需先调用取消接口；后台在新点控下发成功后更新原记录。</li>
-          <li><strong>结束原因要区分清楚。</strong>后台终止 = 手动终止；清理 = 清理自动点控；被新点控替换 = 新点控覆盖；其余结束 = 达成目标。终止时如记录已自然结束，保持达成目标。</li>
+          <li><strong>游戏账号随注册创建。</strong>点控接口要求游戏账号已存在。会员注册时已同步创建 MY 游戏账号，点控下发不再创建账号；游戏账号不存在的会员计入失败，原因「游戏账号不存在」。新注册会员策略须在 MY 游戏账号创建成功后再生成。</li>
+          <li><strong>同一会员只有一条执行中点控，后生成的覆盖之前的。</strong>手动新增与策略生成同等对待；新点控下发成功后再将原记录结束（原因「新点控覆盖」），下发失败时原记录保持执行中。MY 接口新增时会自动顶替该会员的原任务，无需先调用取消接口；后台在新点控下发成功后更新原记录。</li>
+          <li><strong>结束原因要区分清楚。</strong>后台终止 = 手动终止；停用策略并勾选终止 = 停用策略；被新点控替换 = 新点控覆盖；其余结束 = 达成目标。终止时如记录已自然结束，保持达成目标。</li>
+          <li><strong>策略「会员 + 策略」只处理一次。</strong>需保存每条策略已处理过的会员（成功或失败都算），作为是否再生成的唯一判断；不能按「当前有无执行中点控」判断。</li>
+          <li><strong>策略触发事件。</strong>新注册、层级变动、VIP 变动（含系统自动升降级）、代理关系变动（注册挂靠、转线）都要检查生效中的策略；同一时刻命中多条取发布时间最新的一条，其余标记为已处理。</li>
+          <li><strong>策略发布时的现有会员。</strong>发布后按当时实际名单分批下发，不设 10,000 人上限，排除试玩会员与代理本人；进度与失败人数回写策略列表；停用后立即停止剩余生成。</li>
+          <li><strong>策略不可修改。</strong>条件、类型、剧本、金额发布后锁定，接口层也不接受修改；停用不可逆。</li>
           <li><strong>进行中金额正负号。</strong>送分为正（会员赢），杀分为负（会员输）；送分超过 +目标、杀分低于 -目标才结束，等于目标不结束。</li>
-          <li><strong>批量下发异步执行、部分成功。</strong>提交后由后台逐个会员下发，页面显示进度，离开页面不中断；单个会员失败不影响其他会员，结果弹窗必须列出失败会员与原因。</li>
-          <li><strong>10,000 人上限对五种方式统一生效</strong>，层级/VIP/代理以点击确定时的实际名单计数并去重。</li>
-          <li><strong>自动点控不追溯。</strong>只对保存之后注册的会员生效；改配置不改已生成的记录；清理只动来源为自动点控且执行中的记录。</li>
-          <li><strong>状态默认筛选是「执行中」。</strong>测试历史数据时需切到「全部」或「已结束」。</li>
+          <li><strong>手动新增异步执行、部分成功。</strong>提交后由后台逐个会员下发，页面显示进度，离开页面不中断；单个会员失败不影响其他会员，结果弹窗必须列出失败会员与原因。</li>
+          <li><strong>状态默认筛选。</strong>点控记录默认「执行中」，点控策略默认「生效中」；测试历史数据时需切到「全部」。</li>
           <li><strong>目标金额单位。</strong>后台按元输入（最多两位小数），调用接口时按分传整数（×100），范围 1 ~ 10,000,000 分；接口返回的进行中金额同样以分为单位，展示时 ÷100。</li>
-          <li><strong>结束原因由后台记录。</strong>取消点控和被新点控覆盖，接口侧都返回「已完成」，与达成目标无法区分；后台必须在终止、覆盖、清理时自行记录结束原因。</li>
+          <li><strong>结束原因由后台记录。</strong>取消点控和被新点控覆盖，接口侧都返回「已完成」，与达成目标无法区分；后台必须在终止、覆盖、停用策略时自行记录结束原因。</li>
           <li><strong>点控记录以后台保存为准。</strong>查询接口不分页、最多返回最新 1,000 条；列表与历史记录用后台自己保存的数据，刷新时按会员查询并更新进行中金额与状态。</li>
-          <li><strong>新增接口不幂等。</strong>重复调用会创建新任务；超时或结果未知的会员一律计入失败（原因「下发超时」），不得自动重发。</li>
+          <li><strong>新增接口不幂等。</strong>重复调用会创建新任务；超时或结果未知的会员一律计入失败（原因「下发超时」），不得自动重发，策略生成同样适用。</li>
           <li><strong>时间与账号。</strong>接口返回时间为 UTC，列表按后台时区展示；接口按游戏账号名调用，需做会员与游戏账号的对应。</li>
           <li><strong>剧本 ID。</strong>页面只显示剧本名称；调用接口按剧本 ID 传，排查问题时按 ID 对应：快送 604、正常送-通用 603、慢送-通用 602、快杀 601、正常杀-通用 600、慢杀-通用 599。</li>
           <li><strong>菜单名称。</strong>菜单位置示意图为现网名称；若客户端游戏排序需求先上线，「游戏排名」显示为「热门游戏排序」，本菜单仍排在最后。</li>
@@ -940,60 +1099,17 @@ table.mini th{background:var(--th-bg);font-weight:500;}
 </main></div>
 
 <!-- ================= 弹窗 ================= -->
-<div class="modal-mask" id="addModal"><div class="modal-box lg" role="dialog" aria-modal="true" style="width:780px;">
+<div class="modal-mask" id="addModal"><div class="modal-box lg" role="dialog" aria-modal="true" style="width:720px;">
   <div class="modal-hd">新增点控<button class="x" data-close="addModal" type="button" aria-label="关闭">×</button></div>
   <div class="modal-bd"><div class="m-form">
-    <div class="m-row"><label><span class="req">*</span>选择会员</label><div class="ctl">
-      <div class="radio-group" id="modeGroup">
-        <span class="radio on" data-mode="custom"><span class="r"></span>自定义会员</span>
-        <span class="radio" data-mode="level"><span class="r"></span>会员层级</span>
-        <span class="radio" data-mode="vip"><span class="r"></span>VIP等级</span>
-        <span class="radio" data-mode="direct"><span class="r"></span>代理ID（直属层）</span>
-        <span class="radio" data-mode="line"><span class="r"></span>代理ID（代理线）</span>
+    <div class="m-note">手动新增为一次性下发；如需对层级、VIP、代理或新注册会员持续生效，请到「<span class="bk-link" id="toStg">点控策略</span>」新增策略。</div>
+    <div class="m-row"><label for="mIds"><span class="req">*</span>会员ID</label><div class="ctl">
+      <textarea class="bk-input" id="mIds" style="min-height:92px;" placeholder="请输入会员ID，多个会员ID用英文逗号隔开，单次最多 10,000 个"></textarea>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:6px;flex-wrap:wrap;">
+        <button class="bk-btn sm" id="btnVerify" type="button">校验会员</button>
+        <span class="m-help" style="margin:0;">已输入 <b id="idCount">0</b> 个（重复ID自动去重）</span>
       </div>
-      <div class="mode-pane" data-pane="custom" style="margin-top:10px;">
-        <textarea class="bk-input" id="mIds" style="min-height:92px;" placeholder="请输入会员ID，多个会员ID用英文逗号隔开，单次最多 10,000 个"></textarea>
-        <div style="display:flex;align-items:center;gap:10px;margin-top:6px;flex-wrap:wrap;">
-          <button class="bk-btn sm" id="btnVerify" type="button">校验会员</button>
-          <span class="m-help" style="margin:0;">已输入 <b id="idCount">0</b> 个（重复ID自动去重）</span>
-        </div>
-        <div class="verify-box" id="verifyBox"></div>
-      </div>
-      <div class="mode-pane" data-pane="level" style="margin-top:10px;display:none;">
-        <div class="check-group" data-group="level">
-          <label><input type="checkbox" class="chk" data-all="1">全选</label>
-          <label><input type="checkbox" class="chk" value="默认层级" data-n="3200">默认层级</label>
-          <label><input type="checkbox" class="chk" value="层级一" data-n="1260">层级一</label>
-          <label><input type="checkbox" class="chk" value="层级二" data-n="940">层级二</label>
-          <label><input type="checkbox" class="chk" value="层级三" data-n="610">层级三</label>
-          <label><input type="checkbox" class="chk" value="层级四" data-n="350">层级四</label>
-          <label><input type="checkbox" class="chk" value="层级五" data-n="120">层级五</label>
-          <label><input type="checkbox" class="chk" value="层级六" data-n="45">层级六</label>
-        </div>
-        <div class="m-help">选项为系统已配置的会员层级，可多选。</div>
-      </div>
-      <div class="mode-pane" data-pane="vip" style="margin-top:10px;display:none;">
-        <div class="check-group" data-group="vip">
-          <label><input type="checkbox" class="chk" data-all="1">全选</label>
-          <label><input type="checkbox" class="chk" value="VIP0" data-n="8600">VIP0</label>
-          <label><input type="checkbox" class="chk" value="VIP1" data-n="2400">VIP1</label>
-          <label><input type="checkbox" class="chk" value="VIP2" data-n="1100">VIP2</label>
-          <label><input type="checkbox" class="chk" value="VIP3" data-n="520">VIP3</label>
-          <label><input type="checkbox" class="chk" value="VIP4" data-n="230">VIP4</label>
-          <label><input type="checkbox" class="chk" value="VIP5" data-n="96">VIP5</label>
-          <label><input type="checkbox" class="chk" value="VIP6" data-n="40">VIP6</label>
-        </div>
-        <div class="m-help">选项为系统已配置的 VIP 等级，可多选。</div>
-      </div>
-      <div class="mode-pane" data-pane="direct" style="margin-top:10px;display:none;">
-        <input class="bk-input" id="mAgentDirect" style="width:260px;" placeholder="请输入代理ID">
-        <div class="m-help">选中该代理的直属下级会员（不含更下级）。示例：输入任意代理ID，示意直属会员 36 人。</div>
-      </div>
-      <div class="mode-pane" data-pane="line" style="margin-top:10px;display:none;">
-        <input class="bk-input" id="mAgentLine" style="width:260px;" placeholder="请输入代理ID">
-        <div class="m-help">选中该代理整条代理线下的全部会员。示例：输入任意代理ID，示意代理线会员 12,480 人（用于演示超出单次上限）。</div>
-      </div>
-      <div class="m-help" id="grpCount" style="display:none;"></div>
+      <div class="verify-box" id="verifyBox"></div>
       <div class="m-tip hide" id="errMember"></div>
     </div></div>
     <div class="m-row"><label><span class="req">*</span>点控类型</label><div class="ctl">
@@ -1017,39 +1133,78 @@ table.mini th{background:var(--th-bg);font-weight:500;}
   <div class="modal-ft"><button class="bk-btn" data-close="addModal" type="button">取 消</button><button class="bk-btn primary" id="addConfirm" type="button">确 定</button></div>
 </div></div>
 
-<div class="modal-mask" id="autoModal"><div class="modal-box lg" role="dialog" aria-modal="true" style="width:820px;">
-  <div class="modal-hd">自动点控<button class="x" data-close="autoModal" type="button" aria-label="关闭">×</button></div>
-  <div class="modal-bd">
-    <div class="auto-grid">
-      <div class="m-form">
-        <div class="m-row"><label><span class="req">*</span>新注册会员自动点控</label><div class="ctl" style="padding-top:5px;">
-          <span class="switch" id="aSwitch" role="switch" aria-label="新注册会员自动点控"></span>
-          <div class="m-help" id="aSwitchText"></div>
-        </div></div>
-        <div class="m-row"><label><span class="req">*</span>点控类型</label><div class="ctl">
-          <div class="radio-group" id="aTypeGroup">
-            <span class="radio" data-type="give"><span class="r"></span>送分</span>
-            <span class="radio" data-type="kill"><span class="r"></span>杀分</span>
-          </div>
-          <div class="m-tip hide" id="aErrType">请选择点控类型</div>
-        </div></div>
-        <div class="m-row"><label><span class="req">*</span>剧本</label><div class="ctl"><div class="script-box" id="aScriptBox"></div></div></div>
-        <div class="m-row"><label for="aAmt"><span class="req">*</span>目标金额</label><div class="ctl">
-          <input class="bk-input" id="aAmt" style="width:180px;" placeholder="请输入"><span class="unit">BRL</span>
-          <div class="m-help">支持 0.01 ~ 100,000.00，最多两位小数</div>
-          <div class="m-tip hide" id="aErrAmt"></div>
-        </div></div>
+<div class="modal-mask" id="stgModal"><div class="modal-box lg" role="dialog" aria-modal="true" style="width:760px;">
+  <div class="modal-hd"><span id="stgTitle">新增策略</span><button class="x" data-close="stgModal" type="button" aria-label="关闭">×</button></div>
+  <div class="modal-bd"><div class="m-form">
+    <div class="m-note warn hide" id="stgEditNote">发布后不可修改，如需调整请停用后新建策略。</div>
+    <div class="m-row"><label for="gName"><span class="req">*</span>策略名称</label><div class="ctl">
+      <input class="bk-input" id="gName" maxlength="30" style="width:320px;" placeholder="请输入，最多 30 字">
+      <div class="m-tip hide" id="errGName"></div>
+    </div></div>
+    <div class="m-row"><label><span class="req">*</span>条件类型</label><div class="ctl">
+      <div class="radio-group" id="condGroup">
+        <span class="radio on" data-cond="reg"><span class="r"></span>新注册会员</span>
+        <span class="radio" data-cond="level"><span class="r"></span>会员层级</span>
+        <span class="radio" data-cond="vip"><span class="r"></span>VIP等级</span>
+        <span class="radio" data-cond="direct"><span class="r"></span>代理（直属层）</span>
+        <span class="radio" data-cond="line"><span class="r"></span>代理（代理线）</span>
       </div>
-      <div class="stop-box">
-        <div class="t">清理旧数据</div>
-        <div>当前执行中的自动点控：<b id="autoRunCount">0</b> 条</div>
-        <div style="margin-top:10px;"><button class="bk-btn danger" id="btnClean" type="button">清理旧数据</button></div>
-        <div class="n">终止全部来源为「自动点控」且执行中的记录，手动新增的点控和已结束的记录不受影响，操作不可逆。</div>
+      <div class="cond-pane" data-pane="level" style="margin-top:10px;display:none;">
+        <div class="check-group" data-group="level">
+          <label><input type="checkbox" class="chk" data-all="1">全选</label>
+          <label><input type="checkbox" class="chk" value="默认层级" data-n="3200">默认层级</label>
+          <label><input type="checkbox" class="chk" value="层级一" data-n="1260">层级一</label>
+          <label><input type="checkbox" class="chk" value="层级二" data-n="940">层级二</label>
+          <label><input type="checkbox" class="chk" value="层级三" data-n="610">层级三</label>
+          <label><input type="checkbox" class="chk" value="层级四" data-n="350">层级四</label>
+          <label><input type="checkbox" class="chk" value="层级五" data-n="120">层级五</label>
+          <label><input type="checkbox" class="chk" value="层级六" data-n="0">层级六</label>
+        </div>
+        <div class="m-help">选项为系统已配置的会员层级，可多选；选中任一层级的会员都符合条件。示例：层级六当前 0 人。</div>
       </div>
-    </div>
-    <div class="last-op" id="autoLastOp"></div>
-  </div>
-  <div class="modal-ft"><button class="bk-btn" data-close="autoModal" type="button">取 消</button><button class="bk-btn primary" id="autoConfirm" type="button">确 定</button></div>
+      <div class="cond-pane" data-pane="vip" style="margin-top:10px;display:none;">
+        <div class="check-group" data-group="vip">
+          <label><input type="checkbox" class="chk" data-all="1">全选</label>
+          <label><input type="checkbox" class="chk" value="VIP0" data-n="8600">VIP0</label>
+          <label><input type="checkbox" class="chk" value="VIP1" data-n="2400">VIP1</label>
+          <label><input type="checkbox" class="chk" value="VIP2" data-n="1100">VIP2</label>
+          <label><input type="checkbox" class="chk" value="VIP3" data-n="520">VIP3</label>
+          <label><input type="checkbox" class="chk" value="VIP4" data-n="230">VIP4</label>
+          <label><input type="checkbox" class="chk" value="VIP5" data-n="96">VIP5</label>
+          <label><input type="checkbox" class="chk" value="VIP6" data-n="40">VIP6</label>
+        </div>
+        <div class="m-help">选项为系统已配置的 VIP 等级，可多选；选中任一等级的会员都符合条件。</div>
+      </div>
+      <div class="cond-pane" data-pane="direct" style="margin-top:10px;display:none;">
+        <input class="bk-input" id="gAgentDirect" style="width:260px;" placeholder="请输入 1 个代理ID">
+        <div class="m-help">该代理的直属下级会员符合条件，不含代理本人和更下级。示例：输入任意代理ID示意直属会员 36 人，以 9 开头视为代理不存在。</div>
+      </div>
+      <div class="cond-pane" data-pane="line" style="margin-top:10px;display:none;">
+        <input class="bk-input" id="gAgentLine" style="width:260px;" placeholder="请输入 1 个代理ID">
+        <div class="m-help">该代理整条代理线下的会员符合条件，不含代理本人。示例：输入任意代理ID示意代理线会员 15,000 人（不受 10,000 人上限限制），以 9 开头视为代理不存在。</div>
+      </div>
+      <div class="m-count" id="gCount"></div>
+      <div class="m-tip hide" id="errGCond"></div>
+    </div></div>
+    <div class="m-row"><label><span class="req">*</span>点控类型</label><div class="ctl">
+      <div class="radio-group" id="gTypeGroup">
+        <span class="radio" data-type="give"><span class="r"></span>送分</span>
+        <span class="radio" data-type="kill"><span class="r"></span>杀分</span>
+      </div>
+      <div class="m-tip hide" id="errGType">请选择点控类型</div>
+    </div></div>
+    <div class="m-row"><label><span class="req">*</span>剧本</label><div class="ctl"><div class="script-box" id="gScriptBox"></div></div></div>
+    <div class="m-row"><label for="gAmt"><span class="req">*</span>目标金额</label><div class="ctl">
+      <input class="bk-input" id="gAmt" style="width:200px;" placeholder="请输入"><span class="unit">BRL</span>
+      <div class="m-help">每个会员的目标金额，支持 0.01 ~ 100,000.00，最多两位小数</div>
+      <div class="m-tip hide" id="errGAmt"></div>
+    </div></div>
+    <div class="m-row"><label for="gRemark">备注</label><div class="ctl">
+      <textarea class="bk-input" id="gRemark" maxlength="100" placeholder="选填，展示在策略列表，并带到该策略生成的点控记录"></textarea>
+      <div class="cnt"><span id="gRemarkCount">0</span>/100</div>
+    </div></div>
+  </div></div>
+  <div class="modal-ft"><button class="bk-btn" data-close="stgModal" type="button">取 消</button><button class="bk-btn primary" id="stgConfirm" type="button">发 布</button></div>
 </div></div>
 
 <div class="modal-mask top" id="resModal"><div class="modal-box" role="dialog" aria-modal="true">
@@ -1062,7 +1217,16 @@ table.mini th{background:var(--th-bg);font-weight:500;}
   <div class="modal-ft"><button class="bk-btn" id="btnCopyFail" type="button">复制失败会员ID</button><button class="bk-btn primary" data-close="resModal" type="button">我知道了</button></div>
 </div></div>
 
-<div class="modal-mask top" id="mConfirm"><div class="modal-box sm" role="dialog" aria-modal="true">
+<div class="modal-mask top" id="failModal"><div class="modal-box" role="dialog" aria-modal="true" style="width:560px;">
+  <div class="modal-hd">生成失败明细<button class="x" data-close="failModal" type="button" aria-label="关闭">×</button></div>
+  <div class="modal-bd">
+    <div class="m-help" id="failHead" style="margin:0 0 10px;"></div>
+    <table class="mini"><thead><tr><th>会员ID</th><th>失败原因</th><th>时间</th></tr></thead><tbody id="failBody"></tbody></table>
+  </div>
+  <div class="modal-ft"><button class="bk-btn" id="btnCopyStgFail" type="button">复制失败会员ID</button><button class="bk-btn primary" data-close="failModal" type="button">我知道了</button></div>
+</div></div>
+
+<div class="modal-mask top" id="mConfirm"><div class="modal-box sm" role="dialog" aria-modal="true" style="width:460px;">
   <div class="confirm-bd"><div class="confirm-ic">!</div><div><div class="confirm-title" id="cTitle">提示</div><div class="confirm-text" id="cText"></div></div></div>
   <div class="confirm-ft"><button class="bk-btn" id="cCancel" type="button">取 消</button><button class="bk-btn primary" id="cOk" type="button">确 定</button></div>
 </div></div>
@@ -1079,37 +1243,55 @@ table.mini th{background:var(--th-bg);font-weight:500;}
   };
   var SNAME = {};
   ['give','kill'].forEach(function(t){ SCRIPTS[t].forEach(function(s){ SNAME[s.id]=s.name; }); });
+  var COND = {reg:'新注册会员', level:'会员层级', vip:'VIP等级', direct:'代理（直属层）', line:'代理（代理线）'};
   var MAX_MEMBERS = 10000, ME = 'zune01';
 
-  var SEED = [
-    ['3075459862','lucas88','give','603',200,86.4,'run','','manual','2026-10-28 00:42:10','活跃回流会员','zune01','2026-10-28 00:42:10'],
-    ['3421690056','mariaz','kill','600',500,-212.35,'run','','manual','2026-10-27 23:15:37','','zune01','2026-10-27 23:15:37'],
-    ['3979813868','pedro_01','give','603',50,12.6,'run','','auto','2026-10-27 22:08:51','','系统','2026-10-27 22:08:51'],
-    ['3348004197','ana2026','give','603',50,31.2,'run','','auto','2026-10-27 21:40:02','','系统','2026-10-27 21:40:02'],
-    ['3308658180','joao777','kill','601',1000,-640,'run','','manual','2026-10-27 20:11:45','套利嫌疑','ops_li','2026-10-27 20:11:45'],
-    ['3934740434','bia_s','give','604',100,100.85,'end','达成目标','manual','2026-10-27 18:02:19','','zune01','2026-10-27 19:26:44'],
-    ['3079953051','rafa10','kill','599',300,-120.5,'end','手动终止','manual','2026-10-27 16:30:00','','ops_li','2026-10-27 19:05:41'],
-    ['3901453109','carla_m','give','602',80,20.1,'end','新点控覆盖','auto','2026-10-27 15:12:33','','zune01','2026-10-27 17:48:20'],
-    ['3901453109','carla_m','kill','600',150,-44.7,'run','','manual','2026-10-27 17:48:20','','zune01','2026-10-27 17:48:20'],
-    ['3066458713','tiago_r','give','603',50,8.3,'end','清理自动点控','auto','2026-10-26 12:20:11','','zune01','2026-10-27 10:00:05'],
-    ['3873977635','gabi_br','kill','600',2000,-2003.4,'end','达成目标','manual','2026-10-26 09:40:58','','ops_li','2026-10-26 15:07:12'],
-    ['3797573550','nando9','give','604',30,4.2,'run','','auto','2026-10-25 21:33:14','','系统','2026-10-25 21:33:14'],
-    ['3155503975','luiza_p','give','602',60,60.3,'end','达成目标','manual','2026-10-25 14:22:09','','zune01','2026-10-25 20:51:30']
+  // 策略：[编号, 名称, 条件类型, 条件内容, 类型, 剧本, 目标金额, 备注, 状态, 发布人, 发布时间, 最后操作人, 最后操作时间]
+  var SEED_STG = [
+    ['s1','新会员养客送分','reg',[],'give','603',50,'新会员前期送分','on','zune01','2026-10-20 10:00:00','zune01','2026-11-02 14:20:31'],
+    ['s2','层级五杀分','level',['层级五','层级六'],'kill','600',200,'高风险层级','on','ops_li','2026-11-05 10:30:12','ops_li','2026-11-05 10:30:12'],
+    ['s3','国庆活动送分','vip',['VIP3','VIP4'],'give','602',80,'国庆回馈','off','zune01','2026-09-28 09:00:00','zune01','2026-10-08 09:30:00']
   ];
-  var rows, seq, autoCfg, selected, page, pageSize;
+  var SEED_FAIL = {s1:[{id:'6123408871', why:'游戏账号不存在', time:'2026-11-04 16:12:09'}]};
+  // 记录：[会员ID, 账号, 类型, 剧本, 目标金额, 进行中金额, 状态, 结束原因, 来源, 申请时间, 备注, 操作人, 最后操作时间, 策略]
+  var SEED = [
+    ['3075459862','lucas88','give','603',200,86.4,'run','','manual','2026-11-06 20:42:10','活跃回流会员','zune01','2026-11-06 20:42:10',''],
+    ['3421690056','mariaz','kill','600',500,-212.35,'run','','manual','2026-11-06 19:15:37','','zune01','2026-11-06 19:15:37',''],
+    ['3979813868','pedro_01','give','603',50,12.6,'run','','stg','2026-11-06 18:08:51','新会员前期送分','系统','2026-11-06 18:08:51','s1'],
+    ['3348004197','ana2026','give','603',50,31.2,'run','','stg','2026-11-06 17:40:02','新会员前期送分','系统','2026-11-06 17:40:02','s1'],
+    ['3308658180','joao777','kill','601',1000,-640,'run','','manual','2026-11-06 16:11:45','套利嫌疑','ops_li','2026-11-06 16:11:45',''],
+    ['3512847706','caio_x','kill','600',200,-88.2,'run','','stg','2026-11-05 10:30:40','高风险层级','系统','2026-11-05 10:30:40','s2'],
+    ['3797573550','nando9','kill','600',200,-36.8,'run','','stg','2026-11-05 10:30:41','高风险层级','系统','2026-11-05 10:30:41','s2'],
+    ['3934740434','bia_s','give','604',100,100.85,'end','达成目标','manual','2026-11-04 18:02:19','','zune01','2026-11-04 19:26:44',''],
+    ['3079953051','rafa10','kill','599',300,-120.5,'end','手动终止','manual','2026-11-04 16:30:00','','ops_li','2026-11-04 19:05:41',''],
+    ['3901453109','carla_m','give','603',50,20.1,'end','新点控覆盖','stg','2026-11-03 15:12:33','新会员前期送分','zune01','2026-11-04 17:48:20','s1'],
+    ['3901453109','carla_m','kill','600',150,-44.7,'run','','manual','2026-11-04 17:48:20','','zune01','2026-11-04 17:48:20',''],
+    ['3873977635','gabi_br','kill','600',2000,-2003.4,'end','达成目标','manual','2026-11-03 09:40:58','','ops_li','2026-11-03 15:07:12',''],
+    ['3155503975','luiza_p','give','602',60,60.3,'end','达成目标','manual','2026-11-02 14:22:09','','zune01','2026-11-02 20:51:30',''],
+    ['3066458713','tiago_r','give','602',80,8.3,'end','停用策略','stg','2026-10-02 12:20:11','国庆回馈','zune01','2026-10-08 09:30:00','s3'],
+    ['3640021958','duda_m','give','602',80,80.5,'end','达成目标','stg','2026-10-01 11:05:27','国庆回馈','系统','2026-10-04 21:16:02','s3']
+  ];
+  var rows, seq, stgs, stgSeq, selected, rp, sp;
   function seed(){
-    rows = SEED.map(function(a,i){ return {key:'k'+i,id:a[0],acc:a[1],type:a[2],script:a[3],target:a[4],actual:a[5],status:a[6],reason:a[7],src:a[8],apply:a[9],remark:a[10],op:a[11],optime:a[12]}; });
-    seq = rows.length; selected = {}; page = 1; pageSize = 10;
-    autoCfg = {on:false,type:'give',script:'603',amt:'50.00',op:'zune01',time:'2026-10-27 15:02:40'};
+    rows = SEED.map(function(a,i){ return {key:'k'+i,id:a[0],acc:a[1],type:a[2],script:a[3],target:a[4],actual:a[5],status:a[6],reason:a[7],src:a[8],apply:a[9],remark:a[10],op:a[11],optime:a[12],stg:a[13]}; });
+    stgs = SEED_STG.map(function(a){
+      var s = {id:a[0],name:a[1],cond:a[2],items:a[3].slice(),type:a[4],script:a[5],amt:a[6],remark:a[7],status:a[8],pub:a[9],pubTime:a[10],op:a[11],optime:a[12],fails:(SEED_FAIL[a[0]]||[]).slice(),extraEnd:0,gening:null};
+      s.gen = rows.filter(function(r){ return r.stg===s.id; }).length; return s;
+    });
+    seq = rows.length; stgSeq = stgs.length; selected = {};
+    rp = {page:1, size:10}; sp = {page:1, size:10};
   }
-  seed();
 
   function pad(n){ return (n<10?'0':'')+n; }
   function nowStr(){ var d = new Date(Date.now()-3*3600*1000); return d.getUTCFullYear()+'-'+pad(d.getUTCMonth()+1)+'-'+pad(d.getUTCDate())+' '+pad(d.getUTCHours())+':'+pad(d.getUTCMinutes())+':'+pad(d.getUTCSeconds()); }
   function money(v){ return Number(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
   function signed(v){ var s = money(Math.abs(v)); return v>0 ? '+'+s : (v<0 ? '-'+s : '0.00'); }
+  function fmt(n){ return Number(n).toLocaleString('en-US'); }
   function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
   function show(el, on){ el.classList.toggle('hide', !on); }
+  function stgById(id){ return stgs.filter(function(s){ return s.id===id; })[0]; }
+  function randId(head){ var s = head; while(s.length < 10) s += Math.floor(Math.random()*10); return s; }
+  function typeTag(t){ return t==='give' ? '<span class="bk-tag green">送分</span>' : '<span class="bk-tag red">杀分</span>'; }
 
   var toastTimer;
   function toast(msg, warn){
@@ -1122,22 +1304,58 @@ table.mini th{background:var(--th-bg);font-weight:500;}
   function openM(id){ $(id).classList.add('open'); }
   function closeM(id){ $(id).classList.remove('open'); }
   document.querySelectorAll('[data-close]').forEach(function(b){ b.addEventListener('click', function(){ closeM(b.getAttribute('data-close')); }); });
-  document.querySelectorAll('.modal-mask').forEach(function(m){ m.addEventListener('click', function(e){ if(e.target === m) closeM(m.id); }); });
+  document.querySelectorAll('.modal-mask').forEach(function(m){ m.addEventListener('click', function(e){ if(e.target === m){ if(m.id==='mConfirm') $('cCancel').click(); else closeM(m.id); } }); });
 
   // 通用确认框
   var cCb = null;
-  function confirmBox(title, html, okText, danger, cb){
+  function confirmBox(title, html, okText, danger, cb, cancelCb){
     $('cTitle').textContent = title; $('cText').innerHTML = html;
     $('cOk').textContent = okText; $('cOk').className = 'bk-btn ' + (danger ? 'danger' : 'primary');
-    cCb = cb; openM('mConfirm');
+    cCb = cb; cCancelCb = cancelCb || null; openM('mConfirm');
   }
-  $('cOk').addEventListener('click', function(){ closeM('mConfirm'); if(cCb) cCb(); });
-  $('cCancel').addEventListener('click', function(){ closeM('mConfirm'); });
+  var cCancelCb = null;
+  $('cOk').addEventListener('click', function(){ var f = cCb; cCb = null; closeM('mConfirm'); if(f) f(); });
+  $('cCancel').addEventListener('click', function(){ closeM('mConfirm'); if(cCancelCb) cCancelCb(); });
 
-  // ---------- 列表 ----------
+  function copyIds(list){
+    var text = list.join(','), n = list.length;
+    var done = function(){ toast('已复制 '+n+' 个会员ID'); };
+    var fallback = function(){ var ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); done(); };
+    try{ navigator.clipboard.writeText(text).then(done, fallback); }catch(e){ fallback(); }
+  }
+
+  // ---------- 页签 ----------
+  function showView(v){
+    document.querySelectorAll('#pgTabs .pg-tab').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-view')===v); });
+    document.querySelectorAll('[data-view-panel]').forEach(function(p){ p.classList.toggle('active', p.getAttribute('data-view-panel')===v); });
+  }
+  document.querySelectorAll('#pgTabs .pg-tab').forEach(function(b){ b.addEventListener('click', function(){ showView(b.getAttribute('data-view')); }); });
+
+  // ---------- 分页（两个页签共用） ----------
+  function renderPager(el, total, st, rerender){
+    var pages = Math.max(1, Math.ceil(total/st.size));
+    var h = '<span>共 '+total+' 条记录</span><select data-ps aria-label="每页条数">'+[10,20,30].map(function(n){ return '<option value="'+n+'"'+(n===st.size?' selected':'')+'>'+n+'条/页</option>'; }).join('')+'</select>';
+    h += '<span class="pg" data-pg="prev">‹</span>';
+    for(var i=1;i<=pages;i++) h += '<span class="pg'+(i===st.page?' on':'')+'" data-pg="'+i+'">'+i+'</span>';
+    h += '<span class="pg" data-pg="next">›</span><span>跳至</span><input class="jump" data-jump value="'+st.page+'" aria-label="跳至页码"><span>页</span>';
+    el.innerHTML = h;
+    el.querySelectorAll('[data-pg]').forEach(function(x){ x.addEventListener('click', function(){
+      var v = x.getAttribute('data-pg');
+      st.page = v==='prev' ? Math.max(1,st.page-1) : v==='next' ? Math.min(pages,st.page+1) : +v; rerender();
+    }); });
+    el.querySelector('[data-ps]').addEventListener('change', function(e){ st.size = +e.target.value; st.page = 1; rerender(); });
+    el.querySelector('[data-jump]').addEventListener('keydown', function(e){ if(e.key==='Enter'){ var n = parseInt(e.target.value,10); if(n>=1 && n<=pages){ st.page=n; rerender(); } } });
+  }
+  function pageOf(list, st){
+    var pages = Math.max(1, Math.ceil(list.length/st.size));
+    if(st.page > pages) st.page = pages;
+    return list.slice((st.page-1)*st.size, st.page*st.size);
+  }
+
+  // ---------- 点控记录 ----------
   var filtered = [], applied = {};
   function readFilters(){
-    applied = {from:$('fFrom').value, to:$('fTo').value, idType:$('fIdType').value, key:$('fKey').value.trim(), type:$('fType').value, script:$('fScript').value, status:$('fStatus').value, src:$('fSrc').value};
+    applied = {from:$('fFrom').value, to:$('fTo').value, idType:$('fIdType').value, key:$('fKey').value.trim(), type:$('fType').value, script:$('fScript').value, status:$('fStatus').value, src:$('fSrc').value, stg:$('fStg').value.trim()};
   }
   function match(r){
     var d = r.apply.slice(0,10);
@@ -1148,41 +1366,27 @@ table.mini th{background:var(--th-bg);font-weight:500;}
     if(applied.script && r.script !== applied.script) return false;
     if(applied.status && r.status !== applied.status) return false;
     if(applied.src && r.src !== applied.src) return false;
+    if(applied.stg){ var s = r.stg && stgById(r.stg); if(!s || s.name.indexOf(applied.stg) === -1) return false; }
     return true;
   }
-  function render(){
+  function render(flashKeys){
     filtered = rows.filter(match).sort(function(a,b){ return a.apply < b.apply ? 1 : (a.apply > b.apply ? -1 : 0); });
-    var pages = Math.max(1, Math.ceil(filtered.length/pageSize));
-    if(page > pages) page = pages;
-    var slice = filtered.slice((page-1)*pageSize, page*pageSize);
+    var slice = pageOf(filtered, rp);
     $('ctrlBody').innerHTML = !slice.length ? '<tr><td colspan="15" class="bk-empty">暂无数据</td></tr>' : slice.map(function(r){
-      var typeTag = r.type==='give' ? '<span class="bk-tag green">送分</span>' : '<span class="bk-tag red">杀分</span>';
       var st = r.status==='run' ? '<span class="bk-tag blue">执行中</span>' : '<span class="bk-tag gray">已结束</span>';
-      var src = r.src==='auto' ? '<span class="bk-tag gold">自动点控</span>' : '<span class="bk-tag gray">手动新增</span>';
+      var s = r.src==='stg' && stgById(r.stg);
+      var src = s ? '<div class="bk-mem"><span class="bk-tag gold">点控策略</span><small>'+esc(s.name)+'</small></div>' : '<span class="bk-tag gray">手动新增</span>';
       var act = r.actual===0 ? '0.00' : '<span class="'+(r.actual>0?'amt-pos':'amt-neg')+'">'+signed(r.actual)+'</span>';
-      return '<tr><td><input type="checkbox" class="chk row-chk" data-key="'+r.key+'"'+(selected[r.key]?' checked':'')+' aria-label="选择该行"></td>'+
+      return '<tr'+(flashKeys && flashKeys.indexOf(r.key)>-1?' class="row-flash"':'')+'><td><input type="checkbox" class="chk row-chk" data-key="'+r.key+'"'+(selected[r.key]?' checked':'')+' aria-label="选择该行"></td>'+
         '<td><div class="bk-mem"><span class="bk-link" data-mem="'+r.id+'">'+r.id+'</span><small>'+esc(r.acc)+'</small></div></td>'+
-        '<td>'+typeTag+'</td><td>'+SNAME[r.script]+'</td><td>BRL</td><td>'+money(r.target)+'</td><td>'+act+'</td>'+
+        '<td>'+typeTag(r.type)+'</td><td>'+SNAME[r.script]+'</td><td>BRL</td><td>'+money(r.target)+'</td><td>'+act+'</td>'+
         '<td>'+st+'</td><td>'+(r.reason||'<span class="muted">-</span>')+'</td><td>'+src+'</td><td>'+r.apply+'</td>'+
         '<td class="wrap">'+(r.remark?esc(r.remark):'-')+'</td><td>'+r.op+'</td><td>'+r.optime+'</td>'+
         '<td>'+(r.status==='run'?'<span class="bk-link danger" data-stop="'+r.key+'">终止</span>':'<span class="muted">-</span>')+'</td></tr>';
     }).join('');
     var runN = rows.filter(function(r){ return r.status==='run'; }).length;
     $('runInfo').textContent = '当前执行中的点控共 '+runN+' 条';
-    renderPager(pages); syncChecks();
-  }
-  function renderPager(pages){
-    var h = '<span>共 '+filtered.length+' 条记录</span><select id="pageSize" aria-label="每页条数">'+[10,20,30].map(function(n){ return '<option value="'+n+'"'+(n===pageSize?' selected':'')+'>'+n+'条/页</option>'; }).join('')+'</select>';
-    h += '<span class="pg" data-pg="prev">‹</span>';
-    for(var i=1;i<=pages;i++) h += '<span class="pg'+(i===page?' on':'')+'" data-pg="'+i+'">'+i+'</span>';
-    h += '<span class="pg" data-pg="next">›</span><span>跳至</span><input class="jump" id="pageJump" value="'+page+'" aria-label="跳至页码"><span>页</span>';
-    $('pager').innerHTML = h;
-    $('pager').querySelectorAll('[data-pg]').forEach(function(el){ el.addEventListener('click', function(){
-      var v = el.getAttribute('data-pg');
-      page = v==='prev' ? Math.max(1,page-1) : v==='next' ? Math.min(pages,page+1) : +v; render();
-    }); });
-    $('pageSize').addEventListener('change', function(e){ pageSize = +e.target.value; page = 1; render(); });
-    $('pageJump').addEventListener('keydown', function(e){ if(e.key==='Enter'){ var n = parseInt(e.target.value,10); if(n>=1 && n<=pages){ page=n; render(); } } });
+    renderPager($('pager'), filtered.length, rp, function(){ render(); }); syncChecks();
   }
   function selKeys(){ return Object.keys(selected).filter(function(k){ return selected[k]; }); }
   function syncChecks(){
@@ -1199,11 +1403,11 @@ table.mini th{background:var(--th-bg);font-weight:500;}
   });
   $('chkAllHead').addEventListener('change', function(e){ $('ctrlBody').querySelectorAll('.row-chk').forEach(function(c){ selected[c.getAttribute('data-key')] = e.target.checked; }); render(); });
   $('chkAllFoot').addEventListener('change', function(e){ filtered.forEach(function(r){ selected[r.key] = e.target.checked; }); render(); });
-  $('btnQuery').addEventListener('click', function(){ readFilters(); page = 1; render(); });
+  $('btnQuery').addEventListener('click', function(){ readFilters(); rp.page = 1; render(); });
   function resetFilters(){
-    ['fFrom','fTo','fKey'].forEach(function(id){ $(id).value=''; });
+    ['fFrom','fTo','fKey','fStg'].forEach(function(id){ $(id).value=''; });
     $('fIdType').value='id'; $('fType').value=''; $('fScript').value=''; $('fStatus').value='run'; $('fSrc').value='';
-    readFilters(); page = 1;
+    readFilters(); rp.page = 1;
   }
   $('btnReset').addEventListener('click', function(){ resetFilters(); render(); });
   $('btnRefresh').addEventListener('click', function(){
@@ -1214,7 +1418,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
       if(r.type==='give'){ r.actual = +(r.actual+step).toFixed(2); if(r.actual > r.target){ r.status='end'; r.reason='达成目标'; r.optime=t; done++; } }
       else { r.actual = +(r.actual-step).toFixed(2); if(r.actual < -r.target){ r.status='end'; r.reason='达成目标'; r.optime=t; done++; } }
     });
-    render(); toast(done ? '已刷新，'+done+' 条点控达成目标已结束' : '已刷新为最新数据');
+    render(); renderStg(); toast(done ? '已刷新，'+done+' 条点控达成目标已结束' : '已刷新为最新数据');
   });
 
   // ---------- 终止 ----------
@@ -1226,7 +1430,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
     confirmBox('警告', html, '确定终止', true, function(){
       var t = nowStr(), n = 0;
       rows.forEach(function(x){ if(keys.indexOf(x.key)>-1 && x.status==='run'){ x.status='end'; x.reason='手动终止'; x.op=ME; x.optime=t; selected[x.key]=false; n++; } });
-      render(); toast('已终止 '+n+' 条点控');
+      render(); renderStg(); toast('已终止 '+n+' 条点控');
     });
   }
   $('batchSel').addEventListener('change', function(e){
@@ -1239,9 +1443,10 @@ table.mini th{background:var(--th-bg);font-weight:500;}
     askStop(run);
   });
 
-  // ---------- 单选 / 剧本 ----------
+  // ---------- 单选 / 剧本 / 金额 ----------
   function radioGroup(el, attr, cb){
     el.querySelectorAll('.radio').forEach(function(r){ r.addEventListener('click', function(){
+      if(el.classList.contains('dis')) return;
       el.querySelectorAll('.radio').forEach(function(x){ x.classList.toggle('on', x===r); }); cb(r.getAttribute(attr));
     }); });
   }
@@ -1252,6 +1457,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
     box.innerHTML = SCRIPTS[type].map(function(s){ return '<span class="radio'+(s.id===cur?' on':'')+'" data-sid="'+s.id+'"><span class="r"></span>'+s.name+'</span>'; }).join('');
     box.setAttribute('data-cur', cur);
     box.querySelectorAll('.radio').forEach(function(r){ r.addEventListener('click', function(){
+      if(box.classList.contains('dis')) return;
       box.querySelectorAll('.radio').forEach(function(x){ x.classList.toggle('on', x===r); }); box.setAttribute('data-cur', r.getAttribute('data-sid'));
     }); });
   }
@@ -1269,18 +1475,14 @@ table.mini th{background:var(--th-bg);font-weight:500;}
     return !err;
   }
 
-  // ---------- 新增点控 ----------
-  var addState = {mode:'custom', type:''};
-  radioGroup($('modeGroup'), 'data-mode', function(m){
-    addState.mode = m;
-    document.querySelectorAll('#addModal .mode-pane').forEach(function(p){ p.style.display = p.getAttribute('data-pane')===m ? '' : 'none'; });
-    show($('errMember'), false); updateGroupCount();
-  });
+  // ---------- 新增点控（自定义会员，一次性） ----------
+  var addState = {type:''};
   radioGroup($('typeGroup'), 'data-type', function(t){ addState.type = t; show($('errType'), false); renderScripts($('scriptBox'), t, $('scriptBox').getAttribute('data-cur')); });
   function parseIds(){ var seen={}, list=[]; $('mIds').value.split(/[,，\s]+/).forEach(function(s){ s=s.trim(); if(s && !seen[s]){ seen[s]=1; list.push(s); } }); return list; }
   $('mIds').addEventListener('input', function(){ $('idCount').textContent = parseIds().length; $('verifyBox').classList.remove('show'); show($('errMember'), false); });
+  function runMap(){ var run = {}; rows.forEach(function(r){ if(r.status==='run') run[r.id]=1; }); return run; }
   function classify(ids){
-    var run = {}; rows.forEach(function(r){ if(r.status==='run') run[r.id]=1; });
+    var run = runMap();
     var ok=[], bad=[], busy=[], trial=[], timeout=[], noacct=[];
     ids.forEach(function(id){
       if(!/^\d{10}$/.test(id) || id.charAt(0)==='9') bad.push(id);
@@ -1301,38 +1503,14 @@ table.mini th{background:var(--th-bg);font-weight:500;}
       (c.busy.length ? '<br><span class="warnc">其中 '+c.busy.length+' 个已有执行中的点控：'+c.busy.slice(0,20).join('、')+(c.busy.length>20?' 等':'')+'，提交后原点控将终止</span>' : '');
     $('verifyBox').classList.add('show');
   });
-  document.querySelectorAll('#addModal .check-group').forEach(function(g){
-    g.addEventListener('change', function(e){
-      if(e.target.getAttribute('data-all')) g.querySelectorAll('input[value]').forEach(function(c){ c.checked = e.target.checked; });
-      else g.querySelector('[data-all]').checked = Array.prototype.every.call(g.querySelectorAll('input[value]'), function(c){ return c.checked; });
-      show($('errMember'), false); updateGroupCount();
-    });
-  });
-  ['mAgentDirect','mAgentLine'].forEach(function(id){ $(id).addEventListener('input', function(){ show($('errMember'), false); updateGroupCount(); }); });
-  function groupTotal(){
-    var m = addState.mode;
-    if(m==='level' || m==='vip'){ var n=0; document.querySelectorAll('#addModal [data-group="'+m+'"] input[value]:checked').forEach(function(c){ n += +c.getAttribute('data-n'); }); return n; }
-    if(m==='direct') return $('mAgentDirect').value.trim() ? 36 : 0;
-    if(m==='line') return $('mAgentLine').value.trim() ? 12480 : 0;
-    return 0;
-  }
-  function updateGroupCount(){
-    var g = $('grpCount');
-    if(addState.mode==='custom'){ g.style.display='none'; return; }
-    var n = groupTotal(); g.style.display='';
-    g.innerHTML = '已选会员：共 <b>'+n.toLocaleString('en-US')+'</b> 人'+(n>MAX_MEMBERS ? '<span style="color:var(--danger);">，超过单次上限 10,000 人</span>' : '');
-  }
   $('mRemark').addEventListener('input', function(){ $('remarkCount').textContent = $('mRemark').value.length; });
   $('mAmt').addEventListener('input', function(){ show($('errAmt'), false); $('mAmt').style.borderColor=''; });
+  $('toStg').addEventListener('click', function(){ closeM('addModal'); showView('stg'); });
 
   function resetAdd(){
-    addState = {mode:'custom', type:''};
-    setRadio($('modeGroup'),'data-mode','custom');
-    document.querySelectorAll('#addModal .mode-pane').forEach(function(p){ p.style.display = p.getAttribute('data-pane')==='custom' ? '' : 'none'; });
+    addState = {type:''};
     setRadio($('typeGroup'),'data-type','');
     $('mIds').value=''; $('idCount').textContent='0'; $('verifyBox').classList.remove('show');
-    document.querySelectorAll('#addModal .check-group input').forEach(function(c){ c.checked=false; });
-    $('mAgentDirect').value=''; $('mAgentLine').value=''; $('grpCount').style.display='none';
     renderScripts($('scriptBox'), '');
     $('mAmt').value=''; $('mAmt').style.borderColor=''; $('mRemark').value=''; $('remarkCount').textContent='0';
     ['errMember','errType','errAmt'].forEach(function(id){ show($(id), false); });
@@ -1342,30 +1520,18 @@ table.mini th{background:var(--th-bg);font-weight:500;}
 
   var pending = null;
   $('addConfirm').addEventListener('click', function(){
-    var ok = true, ids = [], groupN = 0, em = $('errMember');
-    if(addState.mode==='custom'){
-      ids = parseIds();
-      if(!ids.length){ em.textContent='请输入会员ID'; ok=false; }
-      else if(ids.length > MAX_MEMBERS){ em.textContent='单次最多 10,000 个会员，当前 '+ids.length.toLocaleString('en-US')+' 个，请分批提交'; ok=false; }
-    } else {
-      groupN = groupTotal();
-      if(!groupN){ em.textContent = {level:'请选择会员层级',vip:'请选择VIP等级',direct:'请输入代理ID',line:'请输入代理ID'}[addState.mode]; ok=false; }
-      else if(groupN > MAX_MEMBERS){ em.textContent='所选会员共 '+groupN.toLocaleString('en-US')+' 人，超过单次上限 10,000 人，请缩小范围后分批提交'; ok=false; }
-    }
+    if($('addConfirm').disabled) return;
+    var ok = true, ids = parseIds(), em = $('errMember');
+    if(!ids.length){ em.textContent='请输入会员ID'; ok=false; }
+    else if(ids.length > MAX_MEMBERS){ em.textContent='单次最多 10,000 个会员，当前 '+fmt(ids.length)+' 个，请分批提交'; ok=false; }
     show(em, !ok);
     if(!addState.type){ show($('errType'), true); ok=false; }
     if(!amtCheck('mAmt','errAmt')) ok=false;
     if(!ok) return;
-    pending = {mode:addState.mode, ids:ids, groupN:groupN, type:addState.type, script:$('scriptBox').getAttribute('data-cur'), amt:parseFloat($('mAmt').value), remark:$('mRemark').value.trim()};
-    var busyN;
-    if(pending.mode==='custom') busyN = classify(ids).busy.length;
-    else {
-      var runIds = rows.filter(function(r){ return r.status==='run'; }).map(function(r){ return r.id; });
-      pending.sample = runIds.slice(0,1);
-      while(pending.sample.length < 3) pending.sample.push(String(3600000000+Math.floor(Math.random()*399999999)));
-      busyN = runIds.length ? 1 : 0;
-    }
-    if(busyN) confirmBox('提示', '本次提交中有 <b>'+busyN+'</b> 个会员已有执行中的点控。<br>继续提交后，这些会员的原点控将终止，并按本次设置重新开始。', '继续提交', false, submitAdd);
+    $('addConfirm').disabled = true;
+    pending = {ids:ids, type:addState.type, script:$('scriptBox').getAttribute('data-cur'), amt:parseFloat($('mAmt').value), remark:$('mRemark').value.trim()};
+    var busyN = classify(ids).busy.length;
+    if(busyN) confirmBox('提示', '本次提交中有 <b>'+busyN+'</b> 个会员已有执行中的点控。<br>继续提交后，这些会员的原点控将终止，并按本次设置重新开始。', '继续提交', false, submitAdd, function(){ $('addConfirm').disabled = false; });
     else submitAdd();
   });
   // ---------- 后台下发任务（进度条 + 下发结果） ----------
@@ -1377,10 +1543,9 @@ table.mini th{background:var(--th-bg);font-weight:500;}
     bar.classList.toggle('done', !task.running);
     $('btnAdd').disabled = task.running;
     $('btnAdd').title = task.running ? '上一批正在下发，完成后可再次提交' : '';
-    var f = function(n){ return n.toLocaleString('en-US'); };
     bar.innerHTML = task.running
-      ? '<span>下发中：已处理 <b>'+f(task.done)+'</b> / '+f(task.total)+'</span><span class="bar"><i style="width:'+Math.round(task.done/task.total*100)+'%"></i></span>'
-      : '<span>下发完成：提交 <b>'+f(task.total)+'</b>，成功 <b style="color:#389e0d;">'+f(task.okN)+'</b>，失败 <b style="color:var(--danger);">'+f(task.fail.length)+'</b></span><button class="lk" id="taskView" type="button">查看结果</button><button class="x" id="taskClose" type="button" aria-label="关闭">×</button>';
+      ? '<span>下发中：已处理 <b>'+fmt(task.done)+'</b> / '+fmt(task.total)+'</span><span class="bar"><i style="width:'+Math.round(task.done/task.total*100)+'%"></i></span>'
+      : '<span>下发完成：提交 <b>'+fmt(task.total)+'</b>，成功 <b style="color:#389e0d;">'+fmt(task.okN)+'</b>，失败 <b style="color:var(--danger);">'+fmt(task.fail.length)+'</b></span><button class="lk" id="taskView" type="button">查看结果</button><button class="x" id="taskClose" type="button" aria-label="关闭">×</button>';
     if(!task.running){
       $('taskView').addEventListener('click', openResult);
       $('taskClose').addEventListener('click', function(){ task = null; paintTask(); });
@@ -1388,35 +1553,32 @@ table.mini th{background:var(--th-bg);font-weight:500;}
   }
   function openResult(){
     var fail = task.fail;
-    $('resAll').textContent = task.total.toLocaleString('en-US'); $('resOk').textContent = task.okN.toLocaleString('en-US'); $('resFail').textContent = fail.length;
+    $('resAll').textContent = fmt(task.total); $('resOk').textContent = fmt(task.okN); $('resFail').textContent = fail.length;
     $('resFailWrap').style.display = fail.length ? '' : 'none';
     show($('btnCopyFail'), fail.length > 0);
     $('resFailBody').innerHTML = fail.map(function(f){ return '<tr><td>'+esc(f.id)+'</td><td style="color:var(--danger);">'+f.why+'</td></tr>'; }).join('');
-    $('resNote').textContent = task.mode==='custom' ? '成功的会员已出现在列表中，状态为「执行中」。' : '成功的会员已出现在列表中，状态为「执行中」（原型仅插入 3 条示意记录）。';
+    $('resNote').textContent = '成功的会员已出现在列表中，状态为「执行中」。';
     openM('resModal');
   }
-  $('btnCopyFail').addEventListener('click', function(){
-    var text = task.fail.map(function(f){ return f.id; }).join(','), n = task.fail.length;
-    var done = function(){ toast('已复制 '+n+' 个会员ID'); };
-    var fallback = function(){ var ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); done(); };
-    try{ navigator.clipboard.writeText(text).then(done, fallback); }catch(e){ fallback(); }
-  });
+  $('btnCopyFail').addEventListener('click', function(){ copyIds(task.fail.map(function(f){ return f.id; })); });
 
+  // 新点控生成：同一会员原执行中点控结束（新点控覆盖），操作人为发起方
+  function addRecord(id, o, t){
+    var ex = rows.filter(function(r){ return r.id===id; })[0];
+    rows.forEach(function(r){ if(r.id===id && r.status==='run'){ r.status='end'; r.reason='新点控覆盖'; r.op=o.op; r.optime=t; } });
+    var key = 'k'+(seq++);
+    rows.push({key:key, id:id, acc: ex ? ex.acc : 'user'+id.slice(-4), type:o.type, script:o.script, target:o.amt, actual:0, status:'run', reason:'', src:o.src, apply:t, remark:o.remark, op:o.op, optime:t, stg:o.stg||''});
+    return key;
+  }
   function submitAdd(){
-    $('addConfirm').disabled = true;
-    var p = pending, okIds, fail = [];
-    if(p.mode==='custom'){
-      var c = classify(p.ids); okIds = c.ok;
-      fail = c.bad.map(function(id){ return {id:id, why:'会员不存在'}; })
-        .concat(c.trial.map(function(id){ return {id:id, why:'试玩会员不支持点控'}; }))
-        .concat(c.noacct.map(function(id){ return {id:id, why:'游戏账号不存在'}; }))
-        .concat(c.timeout.map(function(id){ return {id:id, why:'下发超时'}; }));
-    }
-    else okIds = p.sample.slice();
-    var total = p.mode==='custom' ? p.ids.length : p.groupN;
-    task = {running:true, mode:p.mode, total:total, done:0, okN: p.mode==='custom' ? okIds.length : p.groupN - fail.length, fail:fail};
+    var p = pending, c = classify(p.ids), okIds = c.ok;
+    var fail = c.bad.map(function(id){ return {id:id, why:'会员不存在'}; })
+      .concat(c.trial.map(function(id){ return {id:id, why:'试玩会员不支持点控'}; }))
+      .concat(c.noacct.map(function(id){ return {id:id, why:'游戏账号不存在'}; }))
+      .concat(c.timeout.map(function(id){ return {id:id, why:'下发超时'}; }));
+    task = {running:true, total:p.ids.length, done:0, okN:okIds.length, fail:fail};
     closeM('addModal');
-    toast('已提交，正在下发 '+total.toLocaleString('en-US')+' 个会员');
+    toast('已提交，正在下发 '+fmt(task.total)+' 个会员');
     paintTask();
     // 演示：约 3 秒内逐步处理完成；成功后才结束原点控（新点控覆盖），失败的会员原点控保持执行中
     clearInterval(taskTimer);
@@ -1424,70 +1586,246 @@ table.mini th{background:var(--th-bg);font-weight:500;}
       task.done = Math.min(task.total, task.done + Math.max(1, Math.ceil(task.total/12)));
       if(task.done < task.total){ paintTask(); return; }
       clearInterval(taskTimer);
-      var t = nowStr();
-      okIds.forEach(function(id){
-        rows.forEach(function(r){ if(r.id===id && r.status==='run'){ r.status='end'; r.reason='新点控覆盖'; r.op=ME; r.optime=t; } });
-        var ex = rows.filter(function(r){ return r.id===id; })[0];
-        rows.push({key:'k'+(seq++), id:id, acc: ex ? ex.acc : 'user'+id.slice(-4), type:p.type, script:p.script, target:p.amt, actual:0, status:'run', reason:'', src:'manual', apply:t, remark:p.remark, op:ME, optime:t});
-      });
+      var t = nowStr(), keys = [];
+      okIds.forEach(function(id){ keys.push(addRecord(id, {type:p.type, script:p.script, amt:p.amt, remark:p.remark, src:'manual', op:ME}, t)); });
       task.running = false; paintTask();
-      readFilters(); page = 1; render();
+      readFilters(); rp.page = 1; render(keys); renderStg();
     }, 250);
   }
 
-  // ---------- 自动点控 ----------
-  var aState = {};
-  function paintSwitch(){
-    $('aSwitch').classList.toggle('on', aState.on);
-    $('aSwitchText').textContent = aState.on ? '已开启：新会员注册成功后自动新增一条点控' : '已关闭：新会员不自动新增点控';
+  // ---------- 点控策略 · 列表 ----------
+  var sApplied = {};
+  function readStgFilters(){ sApplied = {name:$('sName').value.trim(), cond:$('sCond').value, type:$('sType').value, status:$('sStatus').value}; }
+  function stgEnded(s){ return rows.filter(function(r){ return r.stg===s.id && r.status==='end'; }).length; }
+  function stgRun(s){ return rows.filter(function(r){ return r.stg===s.id && r.status==='run'; }).length + Math.max(0, (s.gening ? s.gening.done : s.gen) - s.extraEnd - rows.filter(function(r){ return r.stg===s.id; }).length); }
+  function condText(s){ return s.cond==='reg' ? '-' : s.items.join('、'); }
+  function renderStg(flashId){
+    var list = stgs.filter(function(s){
+      if(sApplied.name && s.name.indexOf(sApplied.name) === -1) return false;
+      if(sApplied.cond && s.cond !== sApplied.cond) return false;
+      if(sApplied.type && s.type !== sApplied.type) return false;
+      if(sApplied.status && s.status !== sApplied.status) return false;
+      return true;
+    }).sort(function(a,b){ return a.pubTime < b.pubTime ? 1 : (a.pubTime > b.pubTime ? -1 : 0); });
+    var slice = pageOf(list, sp);
+    $('stgBody').innerHTML = !slice.length ? '<tr><td colspan="12" class="bk-empty">暂无数据</td></tr>' : slice.map(function(s){
+      var gen;
+      if(s.gening) gen = '<div class="gen"><span>生成中：已处理 <b>'+fmt(s.gening.done)+'</b> / '+fmt(s.gening.total)+'</span><span class="bar"><i style="width:'+Math.round(s.gening.done/s.gening.total*100)+'%"></i></span></div>';
+      else gen = '<div class="gen"><span>已生成 <span class="bk-link" data-gen="'+s.id+'">'+fmt(s.gen)+'</span> 人（执行中 '+fmt(stgRun(s))+'）</span>'+
+        '<span>失败 '+(s.fails.length ? '<span class="bk-link danger" data-fail="'+s.id+'">'+s.fails.length+'</span>' : '<span class="muted">0</span>')+' 人</span></div>';
+      var ct = condText(s);
+      return '<tr'+(flashId===s.id?' class="row-flash"':'')+'><td>'+esc(s.name)+'</td><td>'+COND[s.cond]+'</td>'+
+        '<td class="ell"'+(s.cond!=='reg'?' title="'+esc(ct)+'"':'')+'>'+(ct==='-'?'<span class="muted">-</span>':esc(ct))+'</td>'+
+        '<td>'+typeTag(s.type)+'</td><td>'+SNAME[s.script]+'</td><td>'+money(s.amt)+'</td><td>'+gen+'</td>'+
+        '<td>'+(s.status==='on'?'<span class="bk-tag blue">生效中</span>':'<span class="bk-tag gray">已停用</span>')+'</td>'+
+        '<td class="wrap">'+(s.remark?esc(s.remark):'-')+'</td>'+
+        '<td><div class="bk-mem"><span>'+s.pub+'</span><small>'+s.pubTime+'</small></div></td>'+
+        '<td><div class="bk-mem"><span>'+s.op+'</span><small>'+s.optime+'</small></div></td>'+
+        '<td><div class="bk-ops"><span class="bk-link" data-sedit="'+s.id+'">编辑</span>'+(s.status==='on'?'<span class="bk-link danger" data-soff="'+s.id+'">停用</span>':'')+'</div></td></tr>';
+    }).join('');
+    $('stgInfo').textContent = '生效中的策略共 '+stgs.filter(function(s){ return s.status==='on'; }).length+' 条';
+    renderPager($('stgPager'), list.length, sp, function(){ renderStg(); });
   }
-  $('aSwitch').addEventListener('click', function(){ aState.on = !aState.on; paintSwitch(); });
-  radioGroup($('aTypeGroup'), 'data-type', function(t){ aState.type = t; show($('aErrType'), false); renderScripts($('aScriptBox'), t, $('aScriptBox').getAttribute('data-cur')); });
-  $('aAmt').addEventListener('input', function(){ show($('aErrAmt'), false); $('aAmt').style.borderColor=''; });
-  function autoRunN(){ return rows.filter(function(r){ return r.src==='auto' && r.status==='run'; }).length; }
-  $('btnAuto').addEventListener('click', function(){
-    aState = {on:autoCfg.on, type:autoCfg.type}; paintSwitch();
-    setRadio($('aTypeGroup'),'data-type',autoCfg.type);
-    renderScripts($('aScriptBox'), autoCfg.type, autoCfg.script);
-    $('aAmt').value = autoCfg.amt; $('aAmt').style.borderColor=''; show($('aErrAmt'), false); show($('aErrType'), false);
-    $('autoRunCount').textContent = autoRunN();
-    $('autoLastOp').textContent = '最后操作人：'+autoCfg.op+'　最后操作时间：'+autoCfg.time;
-    openM('autoModal');
+  $('sQuery').addEventListener('click', function(){ readStgFilters(); sp.page = 1; renderStg(); });
+  function resetStgFilters(){ $('sName').value=''; $('sCond').value=''; $('sType').value=''; $('sStatus').value='on'; readStgFilters(); sp.page = 1; }
+  $('sReset').addEventListener('click', function(){ resetStgFilters(); renderStg(); });
+  $('stgBody').addEventListener('click', function(e){
+    var t = e.target, id;
+    if((id = t.getAttribute('data-gen'))){
+      var s = stgById(id);
+      resetFilters(); $('fStg').value = s.name; $('fStatus').value = ''; readFilters();
+      showView('rec'); render(); toast('已筛选策略「'+s.name+'」生成的全部点控记录');
+    }
+    if((id = t.getAttribute('data-fail'))) openFail(stgById(id));
+    if((id = t.getAttribute('data-sedit'))) openStg(stgById(id));
+    if((id = t.getAttribute('data-soff'))) askStgOff(stgById(id));
   });
-  $('autoConfirm').addEventListener('click', function(){
-    var ok = true;
-    if(!aState.type){ show($('aErrType'), true); ok=false; }
-    if(!amtCheck('aAmt','aErrAmt')) ok=false;
-    if(!ok) return;
-    autoCfg = {on:aState.on, type:aState.type, script:$('aScriptBox').getAttribute('data-cur'), amt:parseFloat($('aAmt').value).toFixed(2), op:ME, time:nowStr()};
-    closeM('autoModal');
-    toast(autoCfg.on ? '保存成功，之后注册的新会员将自动新增点控' : '保存成功，自动点控已关闭');
+
+  // ---------- 生成失败明细 ----------
+  var failStg = null;
+  function openFail(s){
+    failStg = s;
+    $('failHead').textContent = '策略「'+s.name+'」生成失败 '+s.fails.length+' 人；失败的会员不生成记录、不自动重试，可复制会员ID 后手动新增。';
+    $('failBody').innerHTML = s.fails.map(function(f){ return '<tr><td>'+esc(f.id)+'</td><td style="color:var(--danger);">'+f.why+'</td><td>'+f.time+'</td></tr>'; }).join('');
+    openM('failModal');
+  }
+  $('btnCopyStgFail').addEventListener('click', function(){ copyIds(failStg.fails.map(function(f){ return f.id; })); });
+
+  // ---------- 新增 / 编辑策略 ----------
+  var gState = {cond:'reg', type:'', edit:null};
+  radioGroup($('condGroup'), 'data-cond', function(c){
+    gState.cond = c;
+    document.querySelectorAll('#stgModal .cond-pane').forEach(function(p){ p.style.display = p.getAttribute('data-pane')===c ? '' : 'none'; });
+    show($('errGCond'), false); updateStgCount();
   });
-  $('btnClean').addEventListener('click', function(){
-    var n = autoRunN();
-    if(!n){ toast('当前没有执行中的自动点控', true); return; }
-    confirmBox('警告', '确认清理往期自动点控数据？<br>将终止 <b>'+n+'</b> 条执行中的自动点控，操作不可逆。', '确定清理', true, function(){
-      var t = nowStr(), k = 0;
-      rows.forEach(function(r){ if(r.src==='auto' && r.status==='run'){ r.status='end'; r.reason='清理自动点控'; r.op=ME; r.optime=t; k++; } });
-      $('autoRunCount').textContent = 0; render(); toast('已清理，终止 '+k+' 条自动点控');
+  radioGroup($('gTypeGroup'), 'data-type', function(t){ gState.type = t; show($('errGType'), false); renderScripts($('gScriptBox'), t, $('gScriptBox').getAttribute('data-cur')); });
+  document.querySelectorAll('#stgModal .check-group').forEach(function(g){
+    g.addEventListener('change', function(e){
+      if(e.target.getAttribute('data-all')) g.querySelectorAll('input[value]').forEach(function(c){ c.checked = e.target.checked; });
+      else g.querySelector('[data-all]').checked = Array.prototype.every.call(g.querySelectorAll('input[value]'), function(c){ return c.checked; });
+      show($('errGCond'), false); updateStgCount();
     });
   });
+  ['gAgentDirect','gAgentLine'].forEach(function(id){ $(id).addEventListener('input', function(){ show($('errGCond'), false); updateStgCount(); }); });
+  $('gName').addEventListener('input', function(){ show($('errGName'), false); $('gName').style.borderColor=''; });
+  $('gAmt').addEventListener('input', function(){ show($('errGAmt'), false); $('gAmt').style.borderColor=''; });
+  $('gRemark').addEventListener('input', function(){ $('gRemarkCount').textContent = $('gRemark').value.length; });
+  function condItems(){
+    var c = gState.cond;
+    if(c==='level' || c==='vip'){ var a=[]; document.querySelectorAll('#stgModal [data-group="'+c+'"] input[value]:checked').forEach(function(x){ a.push(x.value); }); return a; }
+    if(c==='direct'){ var v = $('gAgentDirect').value.trim(); return v ? [v] : []; }
+    if(c==='line'){ var w = $('gAgentLine').value.trim(); return w ? [w] : []; }
+    return [];
+  }
+  function agentBad(){ var it = condItems(); return (gState.cond==='direct' || gState.cond==='line') && it.length && it[0].charAt(0)==='9'; }
+  function stgTotal(){
+    var c = gState.cond;
+    if(c==='level' || c==='vip'){ var n=0; document.querySelectorAll('#stgModal [data-group="'+c+'"] input[value]:checked').forEach(function(x){ n += +x.getAttribute('data-n'); }); return n; }
+    if(agentBad()) return 0;
+    if(c==='direct') return condItems().length ? 36 : 0;
+    if(c==='line') return condItems().length ? 15000 : 0;
+    return 0;
+  }
+  function updateStgCount(){
+    var g = $('gCount');
+    if(gState.edit){ g.innerHTML = ''; return; }
+    if(gState.cond==='reg'){ g.innerHTML = '只对发布后注册的新会员生效'; return; }
+    if(!condItems().length){ g.innerHTML = ''; return; }
+    if(agentBad()){ g.innerHTML = '<span style="color:var(--danger);">代理不存在</span>'; return; }
+    var n = stgTotal();
+    g.innerHTML = n ? '当前符合条件的会员：<b>'+fmt(n)+'</b> 人，发布后立即生成点控' : '当前符合条件的会员：<b>0</b> 人，发布后对之后符合条件的会员生效';
+  }
+  function setCondUI(c, items){
+    setRadio($('condGroup'),'data-cond',c); gState.cond = c;
+    document.querySelectorAll('#stgModal .cond-pane').forEach(function(p){ p.style.display = p.getAttribute('data-pane')===c ? '' : 'none'; });
+    document.querySelectorAll('#stgModal .check-group input').forEach(function(x){ x.checked = !!x.value && items.indexOf(x.value) > -1; });
+    document.querySelectorAll('#stgModal .check-group').forEach(function(g){ var all = g.querySelectorAll('input[value]'); g.querySelector('[data-all]').checked = Array.prototype.every.call(all, function(x){ return x.checked; }); });
+    $('gAgentDirect').value = c==='direct' ? (items[0]||'') : ''; $('gAgentLine').value = c==='line' ? (items[0]||'') : '';
+  }
+  function lockStg(lock){
+    ['condGroup','gTypeGroup','gScriptBox'].forEach(function(id){ $(id).classList.toggle('dis', lock); });
+    document.querySelectorAll('#stgModal .check-group').forEach(function(g){ g.classList.toggle('dis', lock); g.querySelectorAll('input').forEach(function(x){ x.disabled = lock; }); });
+    ['gAgentDirect','gAgentLine','gAmt'].forEach(function(id){ $(id).disabled = lock; });
+    show($('stgEditNote'), lock);
+  }
+  function openStg(s){
+    gState = {cond:s ? s.cond : 'reg', type:s ? s.type : '', edit:s || null};
+    $('stgTitle').textContent = s ? '编辑策略' : '新增策略';
+    $('stgConfirm').textContent = s ? '保 存' : '发 布'; $('stgConfirm').disabled = false;
+    $('gName').value = s ? s.name : ''; $('gName').style.borderColor='';
+    setCondUI(gState.cond, s ? s.items : []);
+    setRadio($('gTypeGroup'),'data-type', gState.type);
+    renderScripts($('gScriptBox'), gState.type, s ? s.script : '');
+    $('gAmt').value = s ? s.amt.toFixed(2) : ''; $('gAmt').style.borderColor='';
+    $('gRemark').value = s ? s.remark : ''; $('gRemarkCount').textContent = $('gRemark').value.length;
+    ['errGName','errGCond','errGType','errGAmt'].forEach(function(id){ show($(id), false); });
+    lockStg(!!s); updateStgCount();
+    openM('stgModal');
+  }
+  $('btnAddStg').addEventListener('click', function(){ openStg(null); });
+  $('stgConfirm').addEventListener('click', function(){
+    if($('stgConfirm').disabled) return;
+    var ok = true, name = $('gName').value.trim(), ed = gState.edit;
+    var nameErr = !name ? '请输入策略名称' : (stgs.some(function(s){ return s.name===name && s !== ed; }) ? '策略名称已存在' : '');
+    $('errGName').textContent = nameErr; show($('errGName'), !!nameErr); $('gName').style.borderColor = nameErr ? 'var(--danger)' : ''; if(nameErr) ok = false;
+    if(ed){
+      if(!ok) return;
+      ed.name = name; ed.remark = $('gRemark').value.trim(); ed.op = ME; ed.optime = nowStr();
+      closeM('stgModal'); renderStg(ed.id); render(); toast('保存成功'); return;
+    }
+    var items = condItems(), ce = '';
+    if(gState.cond!=='reg'){
+      if(!items.length) ce = {level:'请选择会员层级', vip:'请选择VIP等级', direct:'请输入代理ID', line:'请输入代理ID'}[gState.cond];
+      else if(agentBad()) ce = '代理不存在';
+    }
+    $('errGCond').textContent = ce; show($('errGCond'), !!ce); if(ce) ok = false;
+    if(!gState.type){ show($('errGType'), true); ok = false; }
+    if(!amtCheck('gAmt','errGAmt')) ok = false;
+    if(!ok) return;
+    $('stgConfirm').disabled = true;
+    var draft = {name:name, cond:gState.cond, items:items, type:gState.type, script:$('gScriptBox').getAttribute('data-cur'), amt:parseFloat($('gAmt').value), remark:$('gRemark').value.trim()};
+    var n = stgTotal(), html;
+    if(draft.cond==='reg') html = '发布后，之后注册的新会员将自动生成点控。<br>发布后条件与点控设置不可修改。';
+    else {
+      var runIds = Object.keys(runMap()), m = n ? Math.max(Math.min(runIds.length, 1), Math.round(n*0.04)) : 0;
+      draft.n = n; draft.m = m;
+      html = '发布后立即对当前符合条件的 <b>'+fmt(n)+'</b> 个会员生成点控（其中 <b>'+fmt(m)+'</b> 个已有执行中的点控将被覆盖），之后新符合条件的会员也会自动生成。<br>发布后条件与点控设置不可修改。';
+    }
+    confirmBox('提示', html, '确定发布', false, function(){ publishStg(draft); }, function(){ $('stgConfirm').disabled = false; });
+  });
+  var genTimers = {};
+  function publishStg(d){
+    var t = nowStr();
+    var s = {id:'s'+(++stgSeq), name:d.name, cond:d.cond, items:d.items, type:d.type, script:d.script, amt:d.amt, remark:d.remark, status:'on', pub:ME, pubTime:t, op:ME, optime:t, fails:[], gen:0, extraEnd:0, gening:null};
+    stgs.push(s);
+    closeM('stgModal'); toast('策略已发布');
+    resetStgFilters(); sp.page = 1;
+    if(d.cond!=='reg' && d.n){
+      s.gening = {done:0, total:d.n};
+      // 演示：首批生成约 3 秒完成；只插入 3 条示意记录，其中 1 条为已有执行中点控的会员（被覆盖）；另演示 2 人失败
+      var busy = Object.keys(runMap()).filter(function(id){ return !rows.some(function(r){ return r.id===id && r.stg===s.id; }); });
+      var sample = busy.slice(0, d.m ? 1 : 0);
+      while(sample.length < 3) sample.push(randId('35'));
+      s.demo = {sample:sample, fails:(d.n >= 5 ? [{id:randId('6'), why:'游戏账号不存在'}, {id:randId('7'), why:'下发超时'}] : [])};
+      genTimers[s.id] = setInterval(function(){
+        if(!s.gening){ clearInterval(genTimers[s.id]); return; }
+        s.gening.done = Math.min(s.gening.total, s.gening.done + Math.max(1, Math.ceil(s.gening.total/12)));
+        if(s.gening.done >= s.gening.total) finishGen(s, s.gening.total);
+        renderStg();
+      }, 250);
+    }
+    renderStg(s.id);
+  }
+  function finishGen(s, processed){
+    var sample = s.demo.sample, fails = s.demo.fails;
+    clearInterval(genTimers[s.id]);
+    var t = nowStr(), keys = [];
+    var f = processed >= s.gening.total ? fails : fails.slice(0, processed >= s.gening.total/2 ? 1 : 0);
+    f.forEach(function(x){ x.time = t; });
+    s.fails = f;
+    s.gen = Math.max(0, processed - f.length);
+    sample.slice(0, Math.min(3, s.gen)).forEach(function(id){ keys.push(addRecord(id, {type:s.type, script:s.script, amt:s.amt, remark:s.remark, src:'stg', stg:s.id, op:'系统'}, t)); });
+    s.gening = null;
+    render(keys);
+  }
+
+  // ---------- 停用策略 ----------
+  function askStgOff(s){
+    var n = stgRun(s);
+    var html = '确认停用策略「<b>'+esc(s.name)+'</b>」？停用后不再生成点控，且不可再启用。'+
+      '<label class="stop-chk'+(n?'':' dis')+'"><input type="checkbox" class="chk" id="cStopAll"'+(n?'':' disabled')+'><span>同时终止该策略已生成、执行中的点控（'+fmt(n)+' 条）</span></label>';
+    confirmBox('警告', html, '确定停用', true, function(){
+      var all = $('cStopAll').checked, t = nowStr(), k = 0;
+      if(s.gening){ var done = s.gening.done; finishGen(s, done); }
+      if(all){
+        rows.forEach(function(r){ if(r.stg===s.id && r.status==='run'){ r.status='end'; r.reason='停用策略'; r.op=ME; r.optime=t; k++; } });
+        var hidden = Math.max(0, s.gen - s.extraEnd - rows.filter(function(r){ return r.stg===s.id; }).length);
+        s.extraEnd += hidden; k += hidden;
+      }
+      s.status = 'off'; s.op = ME; s.optime = t;
+      render(); renderStg(); toast(all ? '策略已停用，终止 '+fmt(k)+' 条点控' : '策略已停用');
+    });
+  }
 
   // ---------- 标注开关 / 重置 ----------
   $('markToggle').addEventListener('change', function(){ $('protoSec').classList.toggle('hide-marks', !this.checked); });
-  $('resetDemo').addEventListener('click', function(){ clearInterval(taskTimer); task = null; paintTask(); seed(); resetFilters(); render(); toast('已重置演示数据'); });
+  function resetAll(){
+    clearInterval(taskTimer); task = null; Object.keys(genTimers).forEach(function(k){ clearInterval(genTimers[k]); }); genTimers = {};
+    seed(); paintTask(); resetFilters(); resetStgFilters(); render(); renderStg();
+  }
+  $('resetDemo').addEventListener('click', function(){ resetAll(); showView('rec'); toast('已重置演示数据'); });
 
   // ---------- 表头「?」提示：悬停或点击显示，点击其他位置关闭 ----------
   var tipEl = $('bkTip'), tipFor = null;
   function placeTip(el){
-    tipEl.textContent = el.getAttribute('data-tip'); tipEl.classList.add('open');
+    tipEl.textContent = el.getAttribute('data-hint'); tipEl.classList.add('open');
     var r = el.getBoundingClientRect(), w = tipEl.offsetWidth, h = tipEl.offsetHeight;
     var left = Math.min(Math.max(8, r.left + r.width/2 - w/2), window.innerWidth - w - 8);
     var top = r.top - h - 8 < 8 ? r.bottom + 8 : r.top - h - 8;
     tipEl.style.left = left + 'px'; tipEl.style.top = top + 'px';
   }
   function hideTip(){ tipEl.classList.remove('open'); if(tipFor) tipFor.classList.remove('on'); tipFor = null; }
-  document.querySelectorAll('.bk-th-tip[data-tip]').forEach(function(el){
+  document.querySelectorAll('.bk-th-tip[data-hint]').forEach(function(el){
     el.addEventListener('mouseenter', function(){ if(!tipFor) placeTip(el); });
     el.addEventListener('mouseleave', function(){ if(!tipFor) tipEl.classList.remove('open'); });
     el.addEventListener('click', function(e){
@@ -1501,7 +1839,8 @@ table.mini th{background:var(--th-bg);font-weight:500;}
   window.addEventListener('scroll', hideTip, true);
   window.addEventListener('resize', hideTip);
 
-  readFilters(); render();
+  window.__pc = {showView:showView, openStg:openStg};
+  seed(); readFilters(); readStgFilters(); render(); renderStg(); paintTask();
 })();
 (function(){
   var primBtns = document.querySelectorAll('.dh-primary-btn');
@@ -1527,9 +1866,10 @@ table.mini th{background:var(--th-bg);font-weight:500;}
   document.querySelectorAll('.proto-jump').forEach(function(b){
     b.addEventListener('click', function(){
       showPrimary('proto');
-      var o = b.getAttribute('data-open');
+      var v = b.getAttribute('data-view'), o = b.getAttribute('data-open');
+      if(v) window.__pc.showView(v);
       if(o === 'addModal') document.getElementById('btnAdd').click();
-      if(o === 'auto') document.getElementById('btnAuto').click();
+      if(o === 'stgModal') window.__pc.openStg(null);
     });
   });
 
@@ -1545,4 +1885,36 @@ table.mini th{background:var(--th-bg);font-weight:500;}
   lb.addEventListener('click', function(){ lb.classList.remove('open'); });
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape') lb.classList.remove('open'); });
 })();
-</script></body></html>
+</script>
+<style id="tipCss">
+[data-tip]{cursor:help;}
+[data-tip]:hover,[data-tip]:focus{filter:brightness(1.12);text-decoration:underline dotted;outline:none;}
+#chgTip{position:fixed;z-index:9999;max-width:340px;width:calc(100vw - 32px);box-sizing:border-box;background:#1f2433;color:#eef1f7;border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.65;box-shadow:0 8px 28px rgba(0,0,0,.28);display:none;text-align:left;font-weight:400;white-space:normal;}
+#chgTip .tt{font-weight:600;font-size:13px;margin-bottom:6px;display:flex;align-items:center;gap:8px;padding-right:18px;}
+#chgTip .tt i{font-style:normal;font-size:11px;padding:1px 6px;border-radius:3px;background:#ff8a00;color:#fff;font-weight:500;white-space:nowrap;}
+#chgTip .tt i.n{background:#19be6b;}
+#chgTip p{margin:0 0 4px;white-space:pre-wrap;}
+#chgTip p b{color:#ffcf70;font-weight:500;}
+#chgTip .x{position:absolute;right:8px;top:6px;cursor:pointer;color:#9aa3b5;font-size:16px;line-height:1;background:none;border:0;padding:2px;}
+</style>
+<div id="chgTip" role="tooltip"><button class="x" type="button" aria-label="关闭">×</button><div class="tt"></div><div class="bd"></div></div>
+<script>(function(){var TIPS={
+ 'menu': ['商户游戏管理 · MY游戏点控管理', '原：商户后台无法对单个会员做输赢控制，「商户游戏管理」下没有点控菜单。\n现：子菜单最后新增「MY游戏点控管理」，页面分「点控记录」「点控策略」两个页签：点控记录可查看、手动新增（一次性）、终止点控；点控策略可按新注册会员、会员层级、VIP 等级或代理设置常驻策略，当前和之后符合条件的会员自动生成点控。\n点控对 MY 系列全部厂商统一生效。'],
+};
+var box=document.getElementById('chgTip'),cur=null,pinned=false,ht=null;
+function esc(t){return t.replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+function place(){if(!cur)return;var r=cur.getBoundingClientRect(),w=box.offsetWidth,h=box.offsetHeight,vw=document.documentElement.clientWidth,vh=innerHeight;if(r.bottom<0||r.top>vh||!r.width){hide();return;}var x=Math.min(Math.max(16,r.left),vw-w-16),y=r.bottom+6;if(y+h>vh-8)y=Math.max(8,r.top-h-6);box.style.left=x+'px';box.style.top=y+'px';}
+function show(el){var d=TIPS[el.getAttribute('data-tip')];if(!d)return;clearTimeout(ht);cur=el;var lab=el.textContent.trim();
+box.querySelector('.tt').innerHTML='<i class="'+(lab.indexOf('新增')>-1?'n':'')+'">'+esc(lab)+'</i>'+esc(d[0]);
+box.querySelector('.bd').innerHTML=d[1].split('\n').map(function(l){var m=l.match(/^(原|现)：/);return '<p>'+(m?'<b>'+m[0]+'</b>'+esc(l.slice(2)):esc(l))+'</p>';}).join('');
+box.style.display='block';place();}
+function hide(){box.style.display='none';cur=null;pinned=false;}
+function tipOf(t){return t&&t.closest?t.closest('[data-tip]'):null;}
+document.addEventListener('mouseover',function(e){var el=tipOf(e.target);if(el&&!pinned)show(el);else if(!el&&!pinned&&cur&&!(e.target.closest&&e.target.closest('#chgTip'))){clearTimeout(ht);ht=setTimeout(function(){if(!pinned)hide();},150);}});
+document.addEventListener('click',function(e){var el=tipOf(e.target);
+if(el){e.preventDefault();e.stopPropagation();show(el);pinned=box.style.display==='block';return;}
+if(e.target.closest&&e.target.closest('#chgTip')&&!e.target.closest('.x'))return;hide();},true);
+document.addEventListener('focusin',function(e){var el=tipOf(e.target);if(el)show(el);});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')hide();});
+addEventListener('scroll',place,true);addEventListener('resize',place);})();</script>
+</body></html>
