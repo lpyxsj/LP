@@ -378,7 +378,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
           <div class="bk-field"><label>申请时间</label><span class="bk-range"><input type="date" id="fFrom" aria-label="开始日期"><span class="to">至</span><input type="date" id="fTo" aria-label="结束日期"></span></div>
           <div class="bk-field"><span class="bk-combo"><select class="bk-select" id="fIdType" aria-label="查询维度"><option value="id">会员ID</option><option value="acc">会员账号</option></select><input class="bk-input" id="fKey" placeholder="请输入"></span></div>
           <div class="bk-field"><label for="fType">点控类型</label><select class="bk-select sm" id="fType"><option value="">全部</option><option value="give">送分</option><option value="kill">杀分</option></select></div>
-          <div class="bk-field"><label for="fScript">剧本</label><select class="bk-select" id="fScript"><option value="">全部</option><option value="604">快送</option><option value="603">正常送-通用</option><option value="602">慢送-通用</option><option value="601">快杀</option><option value="600">正常杀-通用</option><option value="599">慢杀-通用</option></select></div>
+          <div class="bk-field"><label for="fScript">剧本</label><select class="bk-select" id="fScript"><option value="">全部</option><option value="604">快送</option><option value="603">正常送</option><option value="602">慢送</option><option value="601">快杀</option><option value="600">正常杀</option><option value="599">慢杀</option></select></div>
           <div class="bk-field"><label for="fStatus">状态</label><select class="bk-select sm" id="fStatus"><option value="">全部</option><option value="run" selected>执行中</option><option value="end">已结束</option></select></div>
           <div class="bk-field"><label for="fSrc">来源</label><select class="bk-select sm" id="fSrc"><option value="">全部</option><option value="manual">手动新增</option><option value="stg">点控策略</option></select></div>
           <div class="bk-field"><label for="fStg">策略名称</label><input class="bk-input" id="fStg" placeholder="请输入"></div>
@@ -507,7 +507,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
           <tbody>
             <tr><td><b>送分</b></td><td>让会员赢分。进行中金额（会员累计赢，正数）超过 +目标金额时，点控结束</td></tr>
             <tr><td><b>杀分</b></td><td>让会员输分。进行中金额以负数展示（会员累计输），低于 -目标金额时，点控结束</td></tr>
-            <tr><td><b>剧本</b></td><td>控制输赢节奏。送分：快送、正常送-通用、慢送-通用；杀分：快杀、正常杀-通用、慢杀-通用。页面只显示剧本名称，剧本 ID 仅供开发对接与排查，见开发测试重点</td></tr>
+            <tr><td><b>剧本</b></td><td>控制输赢节奏。送分：快送、正常送、慢送；杀分：快杀、正常杀、慢杀。页面只显示剧本名称，剧本 ID 仅供开发对接与排查，见开发测试重点</td></tr>
             <tr><td><b>目标金额</b></td><td>本次点控要送出或杀掉的金额，按平台默认货币计，0.01 ~ 100,000.00</td></tr>
             <tr><td><b>进行中金额</b></td><td>剧本已完成的金额，正数为会员赢、负数为会员输</td></tr>
             <tr><td><b>状态</b></td><td>执行中 / 已结束。已结束有四种结束原因：达成目标、手动终止、新点控覆盖、停用策略</td></tr>
@@ -668,7 +668,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
             <tr><td><b>会员ID *</b></td><td>文本框输入会员ID，多个用英文逗号隔开（兼容中文逗号、空格、换行）</td><td>空</td><td>重复ID自动去重，实时显示「已输入 N 个」；单次最多 10,000 个</td></tr>
             <tr><td><b>校验会员</b></td><td>输入框下方按钮，提交前可主动校验</td><td>—</td><td>显示「共 N 个：有效 X 个；不存在 Y 个（红字列出ID）；试玩会员 W 个（不支持点控，红字列出ID）」；已有执行中点控的会员单独提示「其中 Z 个已有执行中的点控，提交后原点控将终止」</td></tr>
             <tr><td><b>点控类型 *</b></td><td>单选：送分 / 杀分</td><td><strong>无默认值</strong></td><td>未选类型时剧本下拉置灰，显示「请先选择点控类型」</td></tr>
-            <tr><td><b>剧本 *</b></td><td>下拉单选，随点控类型切换选项，只显示剧本名称，如「快送」；未选点控类型时下拉置灰，显示「请先选择点控类型」</td><td>选类型后默认选中「正常送-通用」或「正常杀-通用」</td><td>切换类型时剧本重置为该类型的默认剧本</td></tr>
+            <tr><td><b>剧本 *</b></td><td>下拉单选，随点控类型切换选项，只显示剧本名称，如「快送」；未选点控类型时下拉置灰，显示「请先选择点控类型」</td><td>选类型后默认选中「正常送」或「正常杀」</td><td>切换类型时剧本重置为该类型的默认剧本</td></tr>
             <tr><td><b>目标金额 *</b></td><td>输入框，右侧显示平台默认货币</td><td>空</td><td>0.01 ~ 100,000.00，最多两位小数</td></tr>
             <tr><td><b>操作备注</b></td><td>文本框，选填</td><td>空</td><td>最多 100 字，带字数统计；展示在列表「备注」列</td></tr>
           </tbody>
@@ -1040,7 +1040,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
             <tr><td><b>A14</b></td><td>输入 10,001 个不重复ID后确定</td><td>红字「单次最多 10,000 个会员…」，不提交</td></tr>
             <tr><td><b>A15</b></td><td>打开新增点控</td><td>只有会员ID 输入方式，顶部说明手动新增为一次性，层级等请到点控策略</td></tr>
             <tr><td><b>A16</b></td><td>不选点控类型 / 金额为空 / 金额 0 / 100000.01 / 1.234</td><td>分别出现对应红字提示，不提交</td></tr>
-            <tr><td><b>A17</b></td><td>选择送分后切换为杀分</td><td>剧本选项变为快杀、正常杀-通用、慢杀-通用，默认正常杀-通用</td></tr>
+            <tr><td><b>A17</b></td><td>选择送分后切换为杀分</td><td>剧本选项变为快杀、正常杀、慢杀，默认正常杀</td></tr>
             <tr><td><b>A18</b></td><td>对已有执行中点控的会员新增，点「继续提交」</td><td>原记录已结束 · 新点控覆盖；新记录执行中</td></tr>
             <tr><td><b>A19</b></td><td>同上，点「取消」</td><td>回到新增弹窗，内容保留，不下发</td></tr>
             <tr><td><b>A20</b></td><td>快速连续点击「确定」或「发布」</td><td>只提交一次</td></tr>
@@ -1122,7 +1122,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
           <li><strong>点控记录以后台保存为准。</strong>查询接口不分页、最多返回最新 1,000 条；列表与历史记录用后台自己保存的数据，刷新时按会员查询并更新进行中金额与状态。</li>
           <li><strong>新增接口不幂等。</strong>重复调用会创建新任务；超时或结果未知的会员一律计入失败（原因「下发超时」），不得自动重发，策略生成同样适用。</li>
           <li><strong>时间与账号。</strong>接口返回时间为 UTC，列表按后台时区展示；接口按游戏账号名调用，需做会员与游戏账号的对应。</li>
-          <li><strong>剧本 ID。</strong>页面只显示剧本名称；调用接口按剧本 ID 传，排查问题时按 ID 对应：快送 604、正常送-通用 603、慢送-通用 602、快杀 601、正常杀-通用 600、慢杀-通用 599。</li>
+          <li><strong>剧本 ID。</strong>页面只显示剧本名称；调用接口按剧本 ID 传，排查问题时按 ID 对应：快送 604、正常送 603、慢送 602、快杀 601、正常杀 600、慢杀 599。</li>
           <li><strong>菜单名称。</strong>菜单位置示意图为现网名称；若客户端游戏排序需求先上线，「游戏排名」显示为「热门游戏排序」，本菜单仍排在最后。</li>
         </ol></div>
       </div>
@@ -1272,8 +1272,8 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
 (function(){
   function $(id){ return document.getElementById(id); }
   var SCRIPTS = {
-    give:[{id:'604',name:'快送'},{id:'603',name:'正常送-通用'},{id:'602',name:'慢送-通用'}],
-    kill:[{id:'601',name:'快杀'},{id:'600',name:'正常杀-通用'},{id:'599',name:'慢杀-通用'}]
+    give:[{id:'604',name:'快送'},{id:'603',name:'正常送'},{id:'602',name:'慢送'}],
+    kill:[{id:'601',name:'快杀'},{id:'600',name:'正常杀'},{id:'599',name:'慢杀'}]
   };
   var SNAME = {};
   ['give','kill'].forEach(function(t){ SCRIPTS[t].forEach(function(s){ SNAME[s.id]=s.name; }); });
