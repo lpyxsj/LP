@@ -620,7 +620,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td><b>4. 总控停用过滤</b><span class="tag-new" data-tip="fstop" tabindex="0">本期修改</span></td><td>场馆配置总控、游戏配置总控的「停用」</td><td>停用的场馆 / 游戏，各站点前台与热门游戏排序、场馆游戏排序列表都不再显示；已置顶的自动取消，其后前移；停用当下生效</td></tr>
         <tr><td><b>5. 序号排序</b><span class="tag-new" data-tip="hseq" tabindex="0">本期新增</span></td><td>热门游戏排序、场馆游戏排序弹窗、游戏配置总控</td><td>每款游戏有两个序号：热门序号（站点全站一条）、场馆序号（每个场馆一条），都从 1 连续。前台顺序为 置顶 → 序号。序号旁点「编辑」可改，改成 X 就排到第 X 位，其他依次顺延；序号按热门值生成，「对齐平台排序」时按最新热门值重排</td></tr>
         <tr><td><b>6. 维护 / 启用 / 停用可选范围</b><span class="tag-new" data-tip="stsc" tabindex="0">本期修改</span></td><td>场馆配置总控、游戏配置总控</td><td>点维护 / 启用 / 停用后，在确认框里选「只改本站点」或「全部站点」，不默认、必须选。只改本站点改该站点的站点状态（与商户后台同一份），全部站点改总控状态。底部批量操作同样处理</td></tr>
-        <tr><td><b>不在本期</b></td><td>—</td><td>场馆的序号排序；商户后台本期不改</td></tr>
+        <tr><td><b>不在本期</b></td><td>—</td><td>场馆不加序号排序，场馆顺序仍为 场馆置顶 → 热门游戏数量；商户后台本期不改</td></tr>
       </tbody></table></div></div>
     <div class="req-block"><h2>交互与文案要求</h2>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>要求</th><th>说明</th></tr></thead><tbody>
@@ -824,7 +824,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
     <div class="req-block"><h2>范围</h2>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>项目</th><th>说明</th></tr></thead><tbody>
         <tr><td><b>本期做</b></td><td>场馆配置总控、游戏配置总控：站点选择（必选），删除热门游戏数量手工编辑；场馆置顶、场馆内置顶（场馆游戏排序弹窗）、热门置顶（新增菜单热门游戏排序）移到总控；原厂 / MY 切换由总控控制；总控停用过滤；前台游戏对只显示当前版本、停用不显示</td></tr>
-        <tr><td><b>本期不做</b></td><td>场馆（厂商）的序号排序；商户后台任何改动；新站默认数据；跨站点批量；总控按站点编辑场馆、入场余额限制、场馆排序规则设置、对齐平台排序；修改或解除对应关系；热门值来源与对齐平台排序逻辑</td></tr>
+        <tr><td><b>本期不做</b></td><td>场馆（厂商）的序号排序（场馆顺序靠场馆置顶 + 热门游戏数量）；商户后台任何改动；新站默认数据；跨站点批量；总控按站点编辑场馆、入场余额限制、场馆排序规则设置、对齐平台排序；修改或解除对应关系；热门值来源与对齐平台排序逻辑</td></tr>
         <tr><td><b>适用范围</b></td><td>全部站点、全部场馆类型；按站点的操作只作用于所选站点；维护 / 启用 / 停用按确认框所选范围生效</td></tr>
       </tbody></table></div></div>
     <div class="req-block"><h2>用户与场景</h2>
@@ -878,7 +878,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <li><strong>前台缓存</strong>：沿用现网，本需求不提刷新要求。</li>
         <li><strong>待开发确认</strong>：场馆手工热门游戏数量删除前、现网游戏「排序」字段改为按站点的场馆序号前，确认没有其他地方在用。</li>
         <li><strong>序号</strong>：两套序号互不影响；任何时候 1 到 N 连续；同款原厂 / MY 共用一个；对齐平台排序按热门值重排。</li>
-        <li><strong>后续</strong>：场馆（厂商）是否也要序号排序另行确定；商户后台是否做切换、显示序号下期再定。</li>
+        <li><strong>后续</strong>：商户后台是否做切换、显示序号下期再定。</li>
       </ol></div></div>
   </div>
 </section>
