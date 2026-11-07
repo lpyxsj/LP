@@ -418,7 +418,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
       <div class="bk-card">
         <div class="bk-form">
           <div class="bk-field"><label for="sName">策略名称</label><input class="bk-input" id="sName" placeholder="请输入"></div>
-          <div class="bk-field"><label for="sCond">条件类型</label><select class="bk-select" id="sCond"><option value="">全部</option><option value="reg">新注册会员</option><option value="level">会员层级</option><option value="vip">VIP等级</option><option value="direct">代理（直属层）</option><option value="line">代理（代理线）</option></select></div>
+          <div class="bk-field"><label for="sCond">条件类型</label><select class="bk-select" id="sCond"><option value="">全部</option><option value="reg">新注册会员</option><option value="level">会员层级</option><option value="vip">VIP等级</option><option value="direct">代理直属会员</option><option value="line">代理线全部会员</option></select></div>
           <div class="bk-field"><label for="sType">点控类型</label><select class="bk-select sm" id="sType"><option value="">全部</option><option value="give">送分</option><option value="kill">杀分</option></select></div>
           <div class="bk-field"><label for="sStatus">状态</label><select class="bk-select sm" id="sStatus"><option value="">全部</option><option value="on" selected>生效中</option><option value="off">已停用</option></select></div>
           <div class="bk-actions"><button class="bk-btn" id="sReset" type="button">重 置</button><button class="bk-btn primary" id="sQuery" type="button">查 询</button></div>
@@ -774,7 +774,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
           <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
           <tbody>
             <tr><td><b>策略名称</b></td><td>输入框</td><td>空</td><td>模糊匹配</td></tr>
-            <tr><td><b>条件类型</b></td><td>全部 / 新注册会员 / 会员层级 / VIP等级 / 代理（直属层）/ 代理（代理线）</td><td>全部</td><td>按条件类型筛选</td></tr>
+            <tr><td><b>条件类型</b></td><td>全部 / 新注册会员 / 会员层级 / VIP等级 / 代理直属会员/ 代理线全部会员</td><td>全部</td><td>按条件类型筛选</td></tr>
             <tr><td><b>点控类型</b></td><td>全部 / 送分 / 杀分</td><td>全部</td><td>按类型筛选</td></tr>
             <tr><td><b>状态</b></td><td>全部 / 生效中 / 已停用</td><td><strong>生效中</strong></td><td>进入页签默认只看生效中的策略</td></tr>
             <tr><td><b>重置 / 查询</b></td><td>同点控记录</td><td>—</td><td>查询后回到第 1 页</td></tr>
@@ -793,7 +793,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
             <tr><td><b>点控类型</b></td><td>送分 / 杀分</td><td>送分绿色标签，杀分红色标签</td></tr>
             <tr><td><b>剧本</b></td><td>剧本名称</td><td>—</td></tr>
             <tr><td><b>目标金额</b></td><td>每个会员的目标金额</td><td>千分位，两位小数</td></tr>
-            <tr><td><b>生成情况</b></td><td>第一行「已生成 X 人（执行中 Y）」，第二行「失败 Z 人」</td><td>X 蓝色可点击：切到「点控记录」，按该策略名称、状态「全部」筛选；Z 大于 0 时红色可点击，打开失败明细；发布后首批生成未完成时显示「生成中：已处理 A / B」</td></tr>
+            <tr><td><b>生成情况</b></td><td>第一行「已生成 X 人（执行中 Y）」，第二行「失败 Z 人」（有失败时才显示）</td><td>X 蓝色可点击：切到「点控记录」，按该策略名称、状态「全部」筛选；Z 大于 0 时红色可点击，打开失败明细；发布后首批生成未完成时显示「生成中：已处理 A / B」</td></tr>
             <tr><td><b>状态</b></td><td>生效中 / 已停用</td><td>生效中蓝色标签，已停用灰色标签</td></tr>
             <tr><td><b>备注</b></td><td>策略备注</td><td>无备注显示「-」</td></tr>
             <tr><td><b>发布人 / 发布时间</b></td><td>新增策略的账号与时间</td><td>两行展示</td></tr>
@@ -809,11 +809,11 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
           <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
           <tbody>
             <tr><td><b>策略名称 *</b></td><td>输入框，最多 30 字</td><td>空</td><td>不可与其他策略（含已停用）重名</td></tr>
-            <tr><td><b>条件类型 *</b></td><td>单选：新注册会员 / 会员层级 / VIP等级 / 代理（直属层）/ 代理（代理线）</td><td>新注册会员</td><td>切换后下方条件内容随之切换；一条策略只选一种条件类型</td></tr>
+            <tr><td><b>条件类型 *</b></td><td>单选：新注册会员 / 会员层级 / VIP等级 / 代理直属会员/ 代理线全部会员</td><td>新注册会员</td><td>切换后下方条件内容随之切换；一条策略只选一种条件类型</td></tr>
             <tr><td><b>会员层级</b></td><td>多选，选项为系统已配置的会员层级，带「全选」</td><td>不选</td><td>选中任一层级的会员都符合条件</td></tr>
             <tr><td><b>VIP等级</b></td><td>多选，选项为系统已配置的 VIP 等级，带「全选」</td><td>不选</td><td>选中任一等级的会员都符合条件</td></tr>
-            <tr><td><b>代理ID（直属层）</b></td><td>输入 1 个代理ID</td><td>空</td><td>该代理的直属下级会员符合条件，不含代理本人和更下级</td></tr>
-            <tr><td><b>代理ID（代理线）</b></td><td>输入 1 个代理ID</td><td>空</td><td>该代理整条代理线下的会员符合条件，不含代理本人</td></tr>
+            <tr><td><b>代理直属会员</b></td><td>输入 1 个代理ID</td><td>空</td><td>该代理的直属下级会员符合条件，不含代理本人和更下级</td></tr>
+            <tr><td><b>代理线全部会员</b></td><td>输入 1 个代理ID</td><td>空</td><td>该代理整条代理线下的会员符合条件，不含代理本人</td></tr>
             <tr><td><b>当前符合条件</b></td><td>条件内容下方提示</td><td>—</td><td>层级 / VIP / 代理：「当前符合条件的会员：N 人，发布后立即生成点控」；新注册会员：「只对发布后注册的新会员生效」</td></tr>
             <tr><td><b>点控类型 *</b></td><td>单选：送分 / 杀分</td><td>无默认值</td><td>同新增点控</td></tr>
             <tr><td><b>剧本 *</b></td><td>随类型联动</td><td>选类型后默认「正常」剧本</td><td>同新增点控</td></tr>
@@ -950,7 +950,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>项目</th><th>说明</th></tr></thead>
           <tbody>
-            <tr><td><b>本期做</b></td><td>新增菜单「MY游戏点控管理」，分「点控记录」「点控策略」两个页签。点控记录：筛选、分页、刷新、终止、批量终止；新增点控（自定义会员，一次性，批量下发与结果明细）。点控策略：策略列表、新增策略（新注册会员 / 会员层级 / VIP 等级 / 代理（直属层）/ 代理（代理线））、编辑名称与备注、停用（可选同时终止已生成的点控）、生成失败明细</td></tr>
+            <tr><td><b>本期做</b></td><td>新增菜单「MY游戏点控管理」，分「点控记录」「点控策略」两个页签。点控记录：筛选、分页、刷新、终止、批量终止；新增点控（自定义会员，一次性，批量下发与结果明细）。点控策略：策略列表、新增策略（新注册会员 / 会员层级 / VIP 等级 / 代理直属会员/ 代理线全部会员）、编辑名称与备注、停用（可选同时终止已生成的点控）、生成失败明细</td></tr>
             <tr><td><b>本期不做</b></td><td>按单个厂商或游戏设置点控；修改执行中点控的金额或剧本（需终止后重新新增）；修改策略的条件与点控设置（需停用后新建）；已停用策略重新启用；一条策略组合多种条件；删除点控记录或策略；导出</td></tr>
             <tr><td><b>适用范围</b></td><td>全部商户后台；点控对 MY 系列全部厂商统一生效</td></tr>
           </tbody>
@@ -1066,7 +1066,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
             <tr><td><b>A40</b></td><td>新增策略：新注册会员，送分，正常送，50.00，发布</td><td>已注册会员不生成；之后注册的新会员生成一条执行中点控，来源点控策略，目标 50.00</td></tr>
             <tr><td><b>A41</b></td><td>新注册会员策略生效，分别通过前台注册、推广链接、后台添加会员、代理开户注册新会员；再注册一个试玩账号</td><td>正式会员各生成一条执行中点控；试玩账号不生成</td></tr>
             <tr><td><b>A42</b></td><td>VIP 等级策略生效，会员 VIP 升级到所选等级</td><td>自动生成一条点控</td></tr>
-            <tr><td><b>A43</b></td><td>代理（直属层）策略生效，在该代理下注册新会员；代理（代理线）策略生效，会员转线到该代理线下</td><td>各生成一条点控；代理本人不生成</td></tr>
+            <tr><td><b>A43</b></td><td>代理直属会员策略生效，在该代理下注册新会员；代理线全部会员策略生效，会员转线到该代理线下</td><td>各生成一条点控；代理本人不生成</td></tr>
             <tr><td><b>A44</b></td><td>会员 A 正在执行策略 P（较新发布）的点控，之后 A 进入策略 Q（较早发布）的范围</td><td>Q 生成新点控，P 的点控已结束 · 新点控覆盖</td></tr>
             <tr><td><b>A45</b></td><td>新会员注册时同时符合新注册会员策略 R1（较早）与代理线策略 R2（较新）</td><td>只按 R2 生成一条；之后 R1 对该会员不再生成</td></tr>
             <tr><td><b>A46</b></td><td>会员执行中的策略点控期间，手动对其新增点控</td><td>策略点控已结束 · 新点控覆盖；之后该策略不再对其生成</td></tr>
@@ -1180,8 +1180,8 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
         <span class="radio on" data-cond="reg"><span class="r"></span>新注册会员</span>
         <span class="radio" data-cond="level"><span class="r"></span>会员层级</span>
         <span class="radio" data-cond="vip"><span class="r"></span>VIP等级</span>
-        <span class="radio" data-cond="direct"><span class="r"></span>代理（直属层）</span>
-        <span class="radio" data-cond="line"><span class="r"></span>代理（代理线）</span>
+        <span class="radio" data-cond="direct"><span class="r"></span>代理直属会员</span>
+        <span class="radio" data-cond="line"><span class="r"></span>代理线全部会员</span>
       </div>
       <div class="cond-pane" data-pane="level" style="margin-top:10px;display:none;">
         <div class="check-group" data-group="level">
@@ -1277,7 +1277,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
   };
   var SNAME = {};
   ['give','kill'].forEach(function(t){ SCRIPTS[t].forEach(function(s){ SNAME[s.id]=s.name; }); });
-  var COND = {reg:'新注册会员', level:'会员层级', vip:'VIP等级', direct:'代理（直属层）', line:'代理（代理线）'};
+  var COND = {reg:'新注册会员', level:'会员层级', vip:'VIP等级', direct:'代理直属会员', line:'代理线全部会员'};
   var MAX_MEMBERS = 10000, ME = 'zune01';
 
   // 策略：[编号, 名称, 条件类型, 条件内容, 类型, 剧本, 目标金额, 备注, 状态, 发布人, 发布时间, 最后操作人, 最后操作时间]
@@ -1665,7 +1665,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
       var gen;
       if(s.gening) gen = '<div class="gen"><span>生成中：已处理 <b>'+fmt(s.gening.done)+'</b> / '+fmt(s.gening.total)+'</span><span class="bar"><i style="width:'+Math.round(s.gening.done/s.gening.total*100)+'%"></i></span></div>';
       else gen = '<div class="gen"><span>已生成 <span class="bk-link" data-gen="'+s.id+'">'+fmt(s.gen)+'</span> 人（执行中 '+fmt(stgRun(s))+'）</span>'+
-        '<span>失败 '+(s.fails.length ? '<span class="bk-link danger" data-fail="'+s.id+'">'+s.fails.length+'</span>' : '<span class="muted">0</span>')+' 人</span></div>';
+        (s.fails.length ? '<span>失败 <span class="bk-link danger" data-fail="'+s.id+'">'+s.fails.length+'</span> 人</span>' : '')+'</div>';
       var ct = condText(s);
       return '<tr'+(flashId===s.id?' class="row-flash"':'')+'><td>'+esc(s.name)+'</td><td>'+COND[s.cond]+'</td>'+
         '<td class="ell"'+(s.cond!=='reg'?' title="'+esc(ct)+'"':'')+'>'+(ct==='-'?'<span class="muted">-</span>':esc(ct))+'</td>'+
