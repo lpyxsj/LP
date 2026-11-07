@@ -342,6 +342,10 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
 .bk-table th.site-col{background:#e1efff !important;}
 .zk-tab[data-zk]{cursor:pointer;}
 .zk-tab[data-zk]:not(.on):hover{color:#1677ff;background:#f0f6ff;}
+.bk-foot{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-top:12px;font-size:13px;}
+.bk-foot .bk-pager{margin:0 0 0 auto;flex-wrap:wrap;}
+.sel-hint{margin-bottom:8px;padding:6px 12px;background:#e6f7ff;border:1px solid #91d5ff;border-radius:2px;font-size:13px;text-align:center;}
+.hide{display:none !important;}
 .grp-all{display:inline-flex;align-items:center;gap:4px;padding:2px 6px 2px 4px;border:1px dashed #f0b6b6;border-radius:4px;background:#fff8f8;}
 .grp-all small{font-size:11px;color:#c0392b;white-space:nowrap;}
 .pin-cell{display:inline-flex;align-items:center;gap:8px;}
@@ -386,17 +390,16 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <div class="bk-card">
           <div class="bk-toolbar">
             <span class="left" id="vSiteTools">
-              <button class="bk-btn primary" id="vBatchPin" type="button" disabled>批量置顶</button><span class="mk" data-tip="vbatch" tabindex="0">本期新增</span>
-              <button class="bk-btn" id="vBatchUnpin" type="button" disabled>批量取消置顶</button>
-              <span class="hint">已选 <b id="vSelCount" style="color:var(--text-primary);">0</b> 项</span>
+              <span class="hide"><button class="bk-btn primary" id="vBatchPin" type="button" disabled>批量置顶</button><button class="bk-btn" id="vBatchUnpin" type="button" disabled>批量取消置顶</button><b id="vSelCount">0</b></span>
               <span class="hint" id="vPinHint"></span>
             </span>
             
             <span id="vSwWrap"><button class="bk-btn primary" id="vSwitch" type="button">原厂 / MY 切换</button><span class="mk" data-tip="vsw" tabindex="0">本期新增</span></span>
             <span class="ico-btns"><span title="刷新" id="vRefresh">⟳</span><span title="密度">☰</span><span title="列设置">⚙</span></span>
           </div>
+          <div class="sel-hint hide" id="vSelHint" role="status"></div>
           <div class="bk-table-wrap"><table class="bk-table" id="vTable"><thead id="vHead"></thead><tbody id="vBody"></tbody></table></div>
-          <div class="bk-pager"><span id="vCount">共 0 条数据</span></div>
+          <div class="bk-foot"><label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="chk" id="vAllFoot"><span id="vAllLabel">选择全部（共 0 条）</span></label><select class="bk-select" id="vBatchSel" style="width:150px;height:28px;padding:0 8px;" aria-label="批量操作"><option value="">批量操作</option><option value="pin">批量置顶</option><option value="unpin">批量取消置顶</option></select><span class="mk" data-tip="bfoot" tabindex="0">本期新增</span><span class="muted" id="vSelText">已选择 0 条</span><div class="bk-pager"><span id="vCount">共 0 条数据</span></div></div>
         </div>
       </div>
     </div>
@@ -419,17 +422,16 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <div class="bk-card">
           <div class="bk-toolbar">
             <span class="left">
-              <button class="bk-btn primary" id="hBatchPin" type="button" disabled>批量置顶</button>
-              <button class="bk-btn" id="hBatchUnpin" type="button" disabled>批量取消置顶</button>
-              <span class="hint">已选 <b id="hSelCount" style="color:var(--text-primary);">0</b> 项</span>
+              <span class="hide"><button class="bk-btn primary" id="hBatchPin" type="button" disabled>批量置顶</button><button class="bk-btn" id="hBatchUnpin" type="button" disabled>批量取消置顶</button><b id="hSelCount">0</b></span>
               <span class="hint" id="hPinHint"></span>
             </span>
           </div>
+          <div class="sel-hint hide" id="hSelHint" role="status"></div>
           <div class="bk-table-wrap"><table class="bk-table" style="min-width:1100px;">
             <thead><tr><th style="width:36px;"><input type="checkbox" class="chk" id="hChkAll" aria-label="全选当前查询结果"></th><th>序号</th><th>站点</th><th>场馆</th><th>游戏名称</th><th>前台显示<span class="mk" data-tip="hshow" tabindex="0">本期新增</span></th><th>置顶<span class="mk" data-tip="pincol" tabindex="0">本期修改</span></th></tr></thead>
             <tbody id="hBody"></tbody>
           </table></div>
-          <div class="bk-pager"><span id="hCount">共 0 条数据</span><span class="pg">1</span><span>50 条/页</span></div>
+          <div class="bk-foot"><label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="chk" id="hAllFoot"><span id="hAllLabel">选择全部（共 0 条）</span></label><select class="bk-select" id="hBatchSel" style="width:150px;height:28px;padding:0 8px;" aria-label="批量操作"><option value="">批量操作</option><option value="pin">批量置顶</option><option value="unpin">批量取消置顶</option></select><span class="mk" data-tip="bfoot" tabindex="0">本期新增</span><span class="muted" id="hSelText">已选择 0 条</span><div class="bk-pager"><span id="hCount">共 0 条数据</span><span class="pg">1</span><span>50 条/页</span></div></div>
         </div>
       </div>
     </div>
@@ -456,15 +458,14 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
             <span class="left">
               <button class="bk-btn primary" id="gBulkBet" type="button">批量修改有效注单</button>
               <span id="gSiteTools">
-                <button class="bk-btn primary" id="gBatchOrig" type="button" disabled>批量显示原厂</button>
-                <button class="bk-btn primary" id="gBatchMy" type="button" disabled>批量显示 MY</button><span class="mk" data-tip="gbsw" tabindex="0">本期新增</span>
-                <span class="hint">已选 <b id="gSelCount" style="color:var(--text-primary);">0</b> 项</span>
+                <span class="hide"><button class="bk-btn primary" id="gBatchOrig" type="button" disabled>批量显示原厂</button><button class="bk-btn primary" id="gBatchMy" type="button" disabled>批量显示 MY</button><b id="gSelCount">0</b></span>
               </span>
             </span>
             <span class="ico-btns"><span title="刷新" id="gRefresh">⟳</span><span title="密度">☰</span><span title="列设置">⚙</span></span>
           </div>
+          <div class="sel-hint hide" id="gSelHint" role="status"></div>
           <div class="bk-table-wrap"><table class="bk-table" id="gTable"><thead id="gHead"></thead><tbody id="gBody"></tbody></table></div>
-          <div class="bk-pager"><span id="gCount">共 0 条数据</span><span class="pg">1</span><span>50 条/页</span></div>
+          <div class="bk-foot"><label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="chk" id="gAllFoot"><span id="gAllLabel">选择全部（共 0 条）</span></label><select class="bk-select" id="gBatchSel" style="width:150px;height:28px;padding:0 8px;" aria-label="批量操作"><option value="">批量操作</option><option value="orig">批量改为原厂</option><option value="my">批量改为 MY</option></select><span class="mk" data-tip="bfoot" tabindex="0">本期新增</span><span class="muted" id="gSelText">已选择 0 条</span><div class="bk-pager"><span id="gCount">共 0 条数据</span><span class="pg">1</span><span>50 条/页</span></div></div>
         </div>
       </div>
     </div>
@@ -526,7 +527,8 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td><b>全部站点的操作分开放</b><span class="tag-new" data-tip="gops" tabindex="0">本期修改</span></td><td>维护 / 启用 / 停用放在标有「全部站点」的框里；停用确认框第一行红字「对所有站点生效」</td></tr>
         <tr><td><b>按钮写结果</b><span class="tag-new" data-tip="gsw" tabindex="0">本期新增</span></td><td>切换按钮写「改为原厂」/「改为 MY」；不能切时写「原厂已停用」并置灰</td></tr>
         <tr><td><b>置顶一列看完</b><span class="tag-new" data-tip="pincol" tabindex="0">本期修改</span></td><td>已置顶显示「第 N 位」+「取消」，未置顶显示「置顶」；隐藏版本置顶时加小字「前台不显示（当前显示 MY 版）」</td></tr>
-        <tr><td><b>提示写清结果</b></td><td>成功提示写做了什么（如「已置顶到第 3 位」「已改为显示原厂版」「已停用，所有站点不再显示」）；确认框第一行写要做的事，第二行灰字写影响范围；批量按钮置灰时提示「请先勾选」</td></tr>
+        <tr><td><b>提示写清结果</b></td><td>成功提示写做了什么（如「已置顶到第 3 位」「已改为显示原厂版」「已停用，所有站点不再显示」）；确认框第一行写要做的事，第二行灰字写影响范围；批量操作统一在列表底部（见下）</td></tr>
+        <tr><td><b>批量操作在列表底部</b><span class="tag-new" data-tip="bfoot" tabindex="0">本期新增</span></td><td>按项目统一规范：工具栏不放批量按钮；列表底部依次为「选择全部（共 N 条）」「批量操作」下拉「已选择 X 条」。表头勾选只选本页；选择全部 = 当前筛选结果全部；未勾选提示「请先勾选记录」；确认框写实际处理条数；全部状态下取消一行退回本页选择，翻页、查询、重置清空已选</td></tr>
         <tr><td><b>叫法统一</b><span class="tag-new" data-tip="stname" tabindex="0">本期修改</span></td><td>对应版本 / 对应游戏 / 无对应版本；总控状态（全部站点）/ 站点状态（本站点）；前台位置；热门游戏数；全站统一叫「场馆」「前台显示」</td></tr>
       </tbody></table></div></div>
     <div class="req-block"><h2>基本概念</h2>
@@ -574,7 +576,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
       <div class="mm-root">场馆配置总控</div>
       <div class="mm-branches">
         <div class="mm-b"><div class="mm-node">搜索区</div><div class="mm-leaves"><span class="mm-leaf">场馆名称、总控状态、场馆类型、重置 / 查询（保留）</span><span class="mm-leaf">站点（必选）<span class="tag-new" data-tip="site" tabindex="0">本期新增</span></span></div></div>
-        <div class="mm-b"><div class="mm-node">工具栏</div><div class="mm-leaves"><span class="mm-leaf">刷新 / 密度 / 列设置（保留）</span><span class="mm-leaf">批量置顶、批量取消置顶、已选、置顶数量提示<span class="tag-new" data-tip="vbatch" tabindex="0">本期新增</span></span><span class="mm-leaf">原厂 / MY 切换<span class="tag-new" data-tip="vsw" tabindex="0">本期新增</span></span></div></div>
+        <div class="mm-b"><div class="mm-node">工具栏</div><div class="mm-leaves"><span class="mm-leaf">刷新 / 密度 / 列设置（保留）</span><span class="mm-leaf">置顶数量提示；底部批量操作（批量置顶 / 取消）<span class="tag-new" data-tip="vbatch" tabindex="0">本期新增</span></span><span class="mm-leaf">原厂 / MY 切换<span class="tag-new" data-tip="vsw" tabindex="0">本期新增</span></span></div></div>
         <div class="mm-b"><div class="mm-node">列表</div><div class="mm-leaves"><span class="mm-leaf">序号、场馆名称、场馆类型、总控状态（保留）</span><span class="mm-leaf">热门游戏数、置顶（三列合一）<span class="tag-new" data-tip="hcnt" tabindex="0">本期修改</span></span><span class="mm-leaf">勾选、前台位置、站点状态、置顶、对应 MY 场馆<span class="tag-new" data-tip="vcols" tabindex="0">本期新增</span></span></div></div>
         <div class="mm-b"><div class="mm-node">操作列</div><div class="mm-leaves"><span class="mm-leaf">维护 / 启用、停用（保留，停用后按停用过滤处理）</span><span class="mm-leaf">场馆游戏排序<span class="tag-new" data-tip="vcmd" tabindex="0">本期新增</span></span></div></div>
         <div class="mm-b"><div class="mm-node">弹窗</div><div class="mm-leaves"><span class="mm-leaf">编辑排序数值（删除）<span class="tag-new" data-tip="hcnt" tabindex="0">本期修改</span></span><span class="mm-leaf">置顶位置修改<span class="tag-new" data-tip="vpos" tabindex="0">本期新增</span></span><span class="mm-leaf">场馆游戏排序<span class="tag-new" data-tip="corder" tabindex="0">本期新增</span></span><span class="mm-leaf">原厂 / MY 切换与确认框<span class="tag-new" data-tip="vswc" tabindex="0">本期新增</span></span><span class="mm-leaf">对应游戏弹窗<span class="tag-new" data-tip="vpairs" tabindex="0">本期新增</span></span></div></div>
@@ -586,7 +588,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td>搜索区</td><td>站点<span class="tag-new" data-tip="site" tabindex="0">本期新增</span></td><td>新增</td><td>单选下拉，必选，默认空；进入页面不加载数据；未选站点点查询提示「请选择站点」；重置清空场馆条件，站点保持</td></tr>
         <tr><td>搜索区</td><td>置顶（筛选）<span class="tag-new" data-tip="vfil" tabindex="0">本期新增</span></td><td>新增</td><td>单选下拉，可清空：置顶 / 自动排序；只显示该站点已置顶 / 未置顶的场馆（总控停用的不显示）；不影响置顶位置计算</td></tr>
         <tr><td>分页 / 工具栏</td><td>无分页；刷新 / 密度 / 列设置</td><td>保留</td><td>—</td></tr>
-        <tr><td>工具栏</td><td>批量置顶 / 批量取消置顶 / 已选 X 项 / 置顶数量提示<span class="tag-new" data-tip="vbatch" tabindex="0">本期新增</span></td><td>新增</td><td>批量置顶按列表当前顺序追加到置顶区末尾；批量取消后其余前移；已置顶 / 未置顶自动跳过；总控停用的场馆不可勾选</td></tr>
+        <tr><td>工具栏</td><td>置顶数量提示；列表底部批量操作（批量置顶 / 批量取消置顶）<span class="tag-new" data-tip="vbatch" tabindex="0">本期新增</span></td><td>新增</td><td>批量置顶按列表当前顺序追加到置顶区末尾；批量取消后其余前移；已置顶 / 未置顶自动跳过；总控停用的场馆不可勾选</td></tr>
         <tr><td>工具栏</td><td>原厂 / MY 切换<span class="tag-new" data-tip="vsw" tabindex="0">本期新增</span></td><td>新增</td><td>弹窗列出有游戏对的场馆对：原厂场馆 / MY 场馆 / 游戏对数量 / 前台显示 /「全部显示原厂」「全部显示 MY」；目标版本已被总控停用的跳过</td></tr>
         <tr><td>列表</td><td>序号、场馆名称、场馆类型、总控状态（平台级）</td><td>保留</td><td>列表按该站点 前台位置排列</td></tr>
         <tr><td>列表</td><td>热门游戏数，点击「编辑排序数值」<span class="tag-new" data-tip="hcnt" tabindex="0">本期修改</span></td><td>修改</td><td>显示所选站点的热门游戏数量，只读，用于场馆自动排序；删除「编辑排序数值」弹窗</td></tr>
@@ -631,7 +633,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
       <div class="mm-root">游戏配置总控</div>
       <div class="mm-branches">
         <div class="mm-b"><div class="mm-node">搜索区</div><div class="mm-leaves"><span class="mm-leaf">游戏ID、游戏名称、场馆名称、重置 / 查询（保留）</span><span class="mm-leaf">站点（必选）、前台显示<span class="tag-new" data-tip="gshow" tabindex="0">本期新增</span></span></div></div>
-        <div class="mm-b"><div class="mm-node">工具栏</div><div class="mm-leaves"><span class="mm-leaf">批量修改有效注单、刷新 / 密度 / 列设置（保留）</span><span class="mm-leaf">批量显示原厂 / MY、已选<span class="tag-new" data-tip="gbsw" tabindex="0">本期新增</span></span></div></div>
+        <div class="mm-b"><div class="mm-node">工具栏</div><div class="mm-leaves"><span class="mm-leaf">批量修改有效注单、刷新 / 密度 / 列设置（保留）</span><span class="mm-leaf">底部批量操作（批量改为原厂 / MY）<span class="tag-new" data-tip="gbsw" tabindex="0">本期新增</span></span></div></div>
         <div class="mm-b"><div class="mm-node">列表</div><div class="mm-leaves"><span class="mm-leaf">现网各列（保留）</span><span class="mm-leaf">勾选、站点状态、热门排名<span class="tag-new" data-tip="grank" tabindex="0">本期新增</span></span><span class="mm-leaf">关联、前台显示<span class="tag-new" data-tip="grel" tabindex="0">本期新增</span></span></div></div>
         <div class="mm-b"><div class="mm-node">操作列</div><div class="mm-leaves"><span class="mm-leaf">维护 / 启用、停用、排序（保留）</span><span class="mm-leaf">前台切换<span class="tag-new" data-tip="gsw" tabindex="0">本期新增</span></span></div></div>
       </div></div></div></div>
@@ -643,7 +645,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td>搜索区</td><td>前台显示<span class="tag-new" data-tip="gshow" tabindex="0">本期新增</span></td><td>新增</td><td>显示 / 隐藏 / 无对应版本</td></tr>
         <tr><td>搜索区</td><td>游戏状态、站点状态<span class="tag-new" data-tip="gfil" tabindex="0">本期新增</span></td><td>新增</td><td>单选下拉，可清空：总控状态维护 / 启用 / 停用；站点状态 开启 / 维护 / 关闭。与其他条件同时生效；重置清空，站点保持</td></tr>
         <tr><td>分页 / 工具栏</td><td>每页 50 条可跳页；批量修改有效注单（批量配置 / 批量上传）；刷新 / 密度 / 列设置</td><td>保留</td><td>平台级</td></tr>
-        <tr><td>工具栏</td><td>批量显示原厂 / 批量显示 MY / 已选 X 项</td><td>新增</td><td>见下</td></tr>
+        <tr><td>工具栏</td><td>列表底部批量操作（批量改为原厂 / 批量改为 MY）</td><td>新增</td><td>见下</td></tr>
         <tr><td>列表</td><td>序号、游戏ID、游戏名称、场馆名称、游戏状态（平台级）、游戏图片、创建时间、最近操作人、最近操作时间、备注、有效注单、前1小时有效注单、当前小时注单量</td><td>保留</td><td>列表按该站点热门排名排列</td></tr>
         <tr><td>列表</td><td>勾选、站点状态、热门排名、关联、前台显示、前台切换</td><td>新增</td><td>见下</td></tr>
         <tr><td>操作列</td><td>维护 / 启用、停用（备注必填 30 字）、排序（编辑排列顺序）</td><td>保留</td><td>维护 / 启用 / 停用为平台级，停用后各站点按停用过滤处理；排序沿用现网</td></tr>
@@ -653,7 +655,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td><b>站点状态 / 热门排名</b><span class="tag-new" data-tip="grank" tabindex="0">本期新增</span></td><td>站点状态：商户设置的开启 / 维护 / 关闭，只读。热门排名：该站点热门顺序中的名次，只读；总控停用的显示「-」</td></tr>
         <tr><td><b>对应版本 / 前台显示</b><span class="tag-new" data-tip="grel" tabindex="0">本期新增</span></td><td>关联：游戏对显示「游戏对」及对方游戏「场馆名称 · 游戏名称（游戏ID）」，有场馆对但无对应游戏「无对应版本」，否则「-」。前台显示：显示 / 隐藏，隐藏的整行置灰</td></tr>
         <tr><td><b>前台切换</b><span class="tag-new" data-tip="gsw" tabindex="0">本期新增</span></td><td>游戏对每行「改为原厂 / 改为 MY」，下方小字当前版本；确认框「确认将 {站点} 的 {游戏名称} 切换为显示 {场馆名称} 版本？只影响该站点前台。」；目标版本已被总控停用时置灰，悬停提示「该版本已被总控停用」</td></tr>
-        <tr><td><b>批量显示原厂 / MY</b><span class="tag-new" data-tip="gbsw" tabindex="0">本期新增</span></td><td>只处理可切换的游戏对；确认框写明不变的数量（已是目标版本、不是游戏对或目标版本已停用）；游戏对两行都勾选算 1 个；无可切换项提示「所选项均无需切换」</td></tr>
+        <tr><td><b>批量改为原厂 / MY</b><span class="tag-new" data-tip="gbsw" tabindex="0">本期新增</span></td><td>只处理可切换的游戏对；确认框写明不变的数量（已是目标版本、不是游戏对或目标版本已停用）；游戏对两行都勾选算 1 个；无可切换项提示「所选项均无需切换」</td></tr>
       </tbody></table></div>
       <div class="dh-callout">搜索命中游戏对任一行（游戏ID、游戏名称、场馆名称）时两行一起返回；按「前台显示」筛选时只返回符合的那一行。</div></div>
   </div>
@@ -756,8 +758,9 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
   <div class="modal-hd"><span id="cTitle">场馆游戏排序</span><button class="x" data-close type="button" aria-label="关闭">✕</button></div>
   <div class="modal-bd">
     <div class="bk-form" style="margin-bottom:12px;"><input class="bk-input" id="cName" placeholder="游戏名称"><select class="bk-select" id="cPinF" style="width:130px;"><option value="">置顶</option><option value="pin">已置顶</option><option value="auto">未置顶</option></select><select class="bk-select" id="cShowF" style="width:130px;"><option value="">前台显示</option><option value="show">显示</option><option value="hide">隐藏</option><option value="none">无对应版本</option></select><span class="mk" data-tip="cfil" tabindex="0">本期新增</span><button class="bk-btn" id="cReset" type="button">重 置</button><button class="bk-btn primary" id="cQuery" type="button">查 询</button></div>
-    <div class="bk-toolbar"><span class="left"><button class="bk-btn primary" id="cBatchPin" type="button" disabled>批量置顶</button><button class="bk-btn" id="cBatchUnpin" type="button" disabled>批量取消置顶</button><span class="hint">已选 <b id="cSelCount" style="color:var(--text-primary);">0</b> 项</span><span class="hint" id="cHint"></span></span><span class="hint">顺序：场馆内置顶 → 热门值<span class="mk" data-tip="corder" tabindex="0">本期新增</span></span></div>
+    <div class="bk-toolbar"><span class="left"><span class="hide"><button class="bk-btn primary" id="cBatchPin" type="button" disabled>批量置顶</button><button class="bk-btn" id="cBatchUnpin" type="button" disabled>批量取消置顶</button><b id="cSelCount">0</b></span><span class="hint" id="cHint"></span></span><span class="hint">顺序：场馆内置顶 → 热门值<span class="mk" data-tip="corder" tabindex="0">本期新增</span></span></div>
     <div class="bk-table-wrap"><table class="bk-table" style="min-width:900px;"><thead><tr><th style="width:36px;"><input type="checkbox" class="chk" id="cChkAll" aria-label="全选"></th><th>序号</th><th>游戏名称</th><th>所属场馆</th><th>站点状态</th><th>前台显示<span class="mk" data-tip="cshow" tabindex="0">本期新增</span></th><th>置顶<span class="mk" data-tip="cpin" tabindex="0">本期新增</span></th></tr></thead><tbody id="cBody"></tbody></table></div>
+    <div class="bk-foot"><label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="chk" id="cAllFoot"><span id="cAllLabel">选择全部（共 0 条）</span></label><select class="bk-select" id="cBatchSel" style="width:150px;height:28px;padding:0 8px;" aria-label="批量操作"><option value="">批量操作</option><option value="pin">批量置顶</option><option value="unpin">批量取消置顶</option></select><span class="mk" data-tip="bfoot" tabindex="0">本期新增</span><span class="muted" id="cSelText">已选择 0 条</span></div>
     <div class="muted" style="font-size:12.5px;margin-top:10px;">与该站点商户后台同一份置顶数据；隐藏的版本可置顶，前台不显示、不占位；总控停用、站点关闭的游戏不收录。</div>
   </div>
   <div class="modal-ft"><button class="bk-btn" data-close type="button">关 闭</button></div>
@@ -997,14 +1000,14 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
   function moveIn(arr,key,x){ var i=arr.indexOf(key); if(i<0) return; arr.splice(i,1); arr.splice(x-1,0,key); }
   function batchPin(arr,keysInOrder,unit,after){
     var todo=keysInOrder.filter(function(k){ return arr.indexOf(k)<0; }),skip=keysInOrder.length-todo.length;
-    if(!todo.length){ toast('选中的'+unit+'都已经置顶了'); return; }
+    if(!todo.length){ toast('选中的'+unit+'都已经置顶了，没有需要置顶的'); return; }
     var n=arr.length;
-    confirmBox('提示','把选中的 '+todo.length+' 个'+unit+'置顶？会按列表顺序排在第 '+(n+1)+' 到第 '+(n+todo.length)+' 位。'+(skip?'<div class="muted" style="font-size:12.5px;">另有 '+skip+' 个已置顶，位置不变</div>':''),function(){ todo.forEach(function(k){ arr.push(k); }); after(); toast('已置顶 '+todo.length+' 个，排在第 '+(n+1)+' 到第 '+(n+todo.length)+' 位'); });
+    confirmBox('提示','把选中的 '+todo.length.toLocaleString('en-US')+' 个'+unit+'置顶？会按列表顺序排在第 '+(n+1)+' 到第 '+(n+todo.length)+' 位。'+(skip?'<div class="muted" style="font-size:12.5px;">另有 '+skip+' 个已置顶，位置不变</div>':''),function(){ todo.forEach(function(k){ arr.push(k); }); after(); toast('已置顶 '+todo.length+' 个，排在第 '+(n+1)+' 到第 '+(n+todo.length)+' 位'); });
   }
   function batchUnpin(arr,keys,unit,after){
     var todo=keys.filter(function(k){ return arr.indexOf(k)>-1; }),skip=keys.length-todo.length;
     if(!todo.length){ toast('选中的'+unit+'都没有置顶'); return; }
-    confirmBox('提示','取消选中的 '+todo.length+' 个'+unit+'的置顶？其余置顶会往前补位，先后不变。'+(skip?'<div class="muted" style="font-size:12.5px;">另有 '+skip+' 个本来就没置顶，不处理</div>':''),function(){ todo.forEach(function(k){ arr.splice(arr.indexOf(k),1); }); after(); toast('已取消 '+todo.length+' 个置顶'); });
+    confirmBox('提示','取消选中的 '+todo.length.toLocaleString('en-US')+' 个'+unit+'的置顶？其余置顶会往前补位，先后不变。'+(skip?'<div class="muted" style="font-size:12.5px;">另有 '+skip+' 个本来就没置顶，不处理</div>':''),function(){ todo.forEach(function(k){ arr.splice(arr.indexOf(k),1); }); after(); toast('已取消 '+todo.length+' 个置顶'); });
   }
 
   /* 行内编辑（本期未使用） */
@@ -1069,6 +1072,32 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
     else if(id==='pReset'){ $('pName').value=''; $('pShowF').value=''; $('pCanF').value=''; XF.p={name:'',show:'',can:''}; renderP(); }
     else if(id==='resetDemo'){ ['vPinF','hPinF','hShowF','gPstF','gSstF','cPinF','cShowF'].forEach(function(x){ $(x).value=''; }); XF={v:{pin:''},h:{pin:'',show:''},g:{pst:'',sst:''},c:{pin:'',show:''},p:{name:'',show:'',can:''}}; }
   },true);
+
+  /* ---------- 列表批量操作：底部「选择全部」+「批量操作」下拉（项目批量规范） ---------- */
+  var AM={v:false,h:false,g:false,c:false};
+  function fmt(n){ return Number(n).toLocaleString('en-US'); }
+  var LST={
+    v:{rows:function(){ return VM.q&&VM.site?vRows().filter(function(v){ return !vStop(v.name); }).map(function(v){ return v.name; }):[]; }, total:function(){ return VM.q&&VM.site?vRows().length:0; }, sel:function(){ return VM.sel; }, set:function(o){ VM.sel=o; }, render:function(){ renderVendor(); }, act:{pin:'vBatchPin',unpin:'vBatchUnpin'}},
+    h:{rows:function(){ return HM.q?hRows().filter(function(g){ return g.status!=='off'; }).map(function(g){ return g.id; }):[]; }, total:function(){ return HM.q?hRows().length:0; }, sel:function(){ return HM.sel; }, set:function(o){ HM.sel=o; }, render:function(){ renderHot(); }, act:{pin:'hBatchPin',unpin:'hBatchUnpin'}},
+    g:{rows:function(){ return GM.q&&GM.site?gRows().map(function(g){ return g.id; }):[]; }, total:function(){ return GM.q&&GM.site?gRows().length:0; }, sel:function(){ return GM.sel; }, set:function(o){ GM.sel=o; }, render:function(){ renderGame(); }, act:{orig:'gBatchOrig',my:'gBatchMy'}},
+    c:{rows:function(){ return CM.fv&&VM.site?cRows().map(function(g){ return g.id; }):[]; }, total:function(){ return CM.fv&&VM.site?cRows().length:0; }, sel:function(){ return CM.sel; }, set:function(o){ CM.sel=o; }, render:function(){ renderC(); }, act:{pin:'cBatchPin',unpin:'cBatchUnpin'}}
+  };
+  function selKeys(p){ var s=LST[p].sel(); return Object.keys(s).filter(function(k){ return s[k]; }); }
+  function syncFoot(p){
+    var L=LST[p],n=L.total(),x=selKeys(p).length; if(!$(p+'AllFoot')) return;
+    $(p+'AllFoot').checked=AM[p]&&n>0; $(p+'AllLabel').textContent='选择全部（共 '+fmt(n)+' 条）';
+    $(p+'SelText').textContent=AM[p]?'已选择全部 '+fmt(n)+' 条':'已选择 '+fmt(x)+' 条';
+    var h=$(p+'SelHint'); if(h){ if(AM[p]){ h.innerHTML='已选择全部 <b>'+fmt(n)+'</b> 条，<span class="bk-link" data-selclr="'+p+'">清除选择</span>'; h.classList.remove('hide'); } else h.classList.add('hide'); }
+  }
+  function syncFoots(){ ['v','h','g','c'].forEach(syncFoot); }
+  ['v','h','g','c'].forEach(function(p){
+    var L=LST[p];
+    $(p+'AllFoot').addEventListener('change',function(e){ var o={}; if(e.target.checked){ L.rows().forEach(function(k){ o[k]=true; }); AM[p]=true; } else AM[p]=false; L.set(o); L.render(); syncFoot(p); });
+    $(p+'BatchSel').addEventListener('change',function(e){ var v=e.target.value; e.target.value=''; if(!v) return; if(!selKeys(p).length){ toast('请先勾选记录'); return; } var b=$(L.act[v]); b.disabled=false; b.click(); });
+    var hint=$(p+'SelHint'); if(hint) hint.addEventListener('click',function(e){ if(e.target.getAttribute('data-selclr')){ AM[p]=false; L.set({}); L.render(); syncFoot(p); } });
+  });
+  document.addEventListener('change',function(e){ var c=e.target; if(c.matches&&c.matches('[data-vsel],[data-hsel],[data-gsel],[data-csel]')){ var p=c.hasAttribute('data-vsel')?'v':c.hasAttribute('data-hsel')?'h':c.hasAttribute('data-gsel')?'g':'c'; if(AM[p]&&!c.checked) AM[p]=false; } setTimeout(syncFoots,0); });
+  document.addEventListener('click',function(e){ var t=e.target.closest&&e.target.closest('button'); if(t&&/Query$|Reset$/.test(t.id||'')){ var p=t.id.charAt(0); if(AM[p]!==undefined) AM[p]=false; } setTimeout(syncFoots,0); });
 
   /* ---------- 站点下拉 ---------- */
   function siteOpts(withEmpty){ return (withEmpty?'<option value="">站点</option>':'')+SITES.map(function(x){ return '<option value="'+x[0]+'">'+esc(x[1])+'</option>'; }).join(''); }
@@ -1341,7 +1370,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
   $('fSite').addEventListener('change',function(){ FE.venue=null; renderFront(); });
   $('fVenue').addEventListener('click',function(e){ var t=e.target.closest('[data-fv]'); if(t){ FE.venue=t.getAttribute('data-fv'); renderFront(); return; } var f=e.target.closest('[data-ft]'); if(f){ FE.tab=f.getAttribute('data-ft'); renderFront(); } });
 
-  function renderAll(){ renderVendor(); if($('cModal').classList.contains('open')) renderC(); if($('swModal').classList.contains('open')) renderSw(); if($('pModal').classList.contains('open')) renderP(); renderHot(); renderGame(); renderFront(); }
+  function renderAll(){ setTimeout(syncFoots,0); renderVendor(); if($('cModal').classList.contains('open')) renderC(); if($('swModal').classList.contains('open')) renderSw(); if($('pModal').classList.contains('open')) renderP(); renderHot(); renderGame(); renderFront(); }
 
   /* 子页切换与通用 */
   var subBtns=document.querySelectorAll('.sub-btn');
@@ -1359,8 +1388,8 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
     ['A3','站点 A 无场馆置顶时置顶场馆 X','X 为位置1，前台位置 1；站点 A 商户后台厂商管理刷新后一致；站点 B 不变'],
     ['A4','站点 A 已有 4 个场馆置顶，把位置4 改到位置1','该场馆为位置1，原位置1–3 变为位置2–4（插入，不是对调）'],
     ['A5','站点 A 4 个置顶，取消位置2','原位置3、4 变为位置2、3；该场馆回到自动排序区'],
-    ['A6','已有 2 个置顶，勾选 3 个未置顶场馆点「批量置顶」并确定','确认框写明「位置3 至 位置5」；3 个场馆按列表原先后成为位置3–5，勾选清空'],
-    ['A7','勾选的场馆全部已置顶点「批量置顶」；全部未置顶点「批量取消置顶」','分别提示「所选场馆均已置顶」「所选场馆均未置顶」，不弹确认框'],
+    ['A6','已有 2 个置顶，勾选 3 个未置顶场馆，在底部「批量操作」选「批量置顶」并确定','确认框写明「位置3 至 位置5」；3 个场馆按列表原先后成为位置3–5，勾选清空'],
+    ['A7','勾选的场馆全部已置顶选「批量置顶」；全部未置顶选「批量取消置顶」','分别提示「所选场馆均已置顶」「所选场馆均未置顶」，不弹确认框'],
     ['A8','打开「置顶位置修改」，输入数字','筛出位置号包含该数字的位置，完全相同 → 开头 → 中间包含，自动选中第一条；回车弹出二次确认；无匹配时「确认」不提交'],
     ['A9','站点下拉切换后未查询，点工具栏按钮','提示「请先查询」，不执行'],
     ['A10','站点 A 点 PG电子「场馆游戏排序」','标题「场馆游戏排序 - PG电子」；含 PG电子 与 MyPG电子 的站点开启、维护中游戏，不含总控停用的；游戏对两个版本各占一行，标显示 / 隐藏；顺序为 场馆内置顶 → 热门值 → 上线时间；显示「共 X 个游戏，已置顶 N 个」'],
@@ -1377,7 +1406,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
     ['A21','前台显示筛选 显示 / 隐藏 / 无对应版本','分别只返回对应的行'],
     ['A22','按游戏名称或游戏ID搜索游戏对中任一款','两行一起返回'],
     ['A23','游戏对目标版本已被总控停用','「切换」置灰，悬停提示「该版本已被总控停用」'],
-    ['A24','勾选游戏对与非游戏对，点「批量显示原厂」','只处理可切换的游戏对；确认框写明不变的数量；游戏对两行都勾选算 1 个；所选都无需切换时提示「所选项均无需切换」'],
+    ['A24','勾选游戏对与非游戏对，在底部「批量操作」选「批量改为原厂」','只处理可切换的游戏对；确认框写明不变的数量；游戏对两行都勾选算 1 个；所选都无需切换时提示「所选项均无需切换」'],
     ['A25','游戏对点「切换」并确定','确认框含站点名称；显示 / 隐藏互换，两行最近操作人 / 时间更新；两个版本各自的置顶不变；站点 A 前台只显示新版本，按新版本自己的位置展示；站点 B 不变'],
     ['A26','游戏对前台显示的版本被站点关闭','该版本的热门置顶与场馆内置顶自动取消，其后前移；前台该游戏对不显示，不自动换版本'],
     ['A27','游戏对隐藏版本被维护、关闭或开启','前台不变；关闭时该版本的置顶按商户规则自动取消'],
@@ -1404,8 +1433,11 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
     ['A48','选站点后查看操作列，点「停用」','维护 / 启用 / 停用在标有「全部站点」的框内；停用确认框第一行红字「对所有站点生效」'],
     ['A49','查看前台切换按钮；目标版本已被总控停用的行','按钮写「改为原厂」/「改为 MY」；不能切换的按钮写「原厂已停用」/「MY 已停用」并置灰'],
     ['A50','置顶、取消置顶、改位置、批量置顶、切换、停用后看提示','提示写清结果，如「已置顶到第 3 位」「已取消置顶」「已改到第 2 位」「已改为显示原厂版」「已停用，所有站点不再显示」'],
-    ['A51','未勾选时鼠标移到批量按钮上','按钮置灰并提示「请先勾选」'],
-    ['A52','查看场馆配置总控、热门游戏排序、场馆游戏排序弹窗的置顶','三列合并为一列「置顶」：已置顶显示「第 N 位」+「取消」，未置顶显示「置顶」；隐藏版本已置顶时显示「前台不显示（当前显示 MY 版）」']
+    ['A51','未勾选任何记录，在底部「批量操作」选一个动作','提示「请先勾选记录」，不弹确认框，下拉恢复为「批量操作」'],
+    ['A52','查看场馆配置总控、热门游戏排序、场馆游戏排序弹窗的置顶','三列合并为一列「置顶」：已置顶显示「第 N 位」+「取消」，未置顶显示「置顶」；隐藏版本已置顶时显示「前台不显示（当前显示 MY 版）」'],
+    ['A53','四个列表勾选底部「选择全部（共 N 条）」','已选显示「已选择全部 N 条」，列表上方提示「已选择全部 N 条，清除选择」；不可操作的行不选中；确认框写实际处理条数'],
+    ['A54','全部状态下取消勾选一行；再修改筛选并查询','取消后退回为本页选择（该行除外）；查询后已选清空'],
+    ['A55','工具栏','不再出现批量置顶、批量取消置顶、批量改为原厂 / MY 按钮']
   ];
   $('accBody').innerHTML=ACC.map(function(a){ return '<tr><td>'+a[0]+'</td><td>'+esc(a[1])+'</td><td>'+esc(a[2])+'</td></tr>'; }).join('');
 
@@ -1446,10 +1478,11 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
  'hcnt': ['热门游戏数', '原：平台级数值，可点击「编辑排序数值」手工修改。\n现：显示所选站点的热门游戏数量（该站点热门前 N 名中属于该场馆的游戏数），只读，用于场馆自动排序；删除「编辑排序数值」，场馆顺序通过置顶调整。'],
  'vcols': ['新增的按站点列', '原：无。\n现：勾选、前台位置、站点状态、置顶、对应 MY 场馆。前台位置从 1 连续，置顶占 1–N，其余按热门游戏数量；总控停用的场馆显示「-」不计入。站点状态为商户设置的开启 / 维护 / 关闭，只读。'],
  'vrule': ['场馆置顶', '原：总控无场馆置顶。\n现：与商户后台同一套规则、同一份数据——置顶区从位置1起连续，新置顶放在末尾，修改位置为插入，取消置顶后其后前移，不限数量；只作用于所选站点；总控停用的场馆不能置顶。'],
- 'vbatch': ['批量置顶 / 批量取消置顶', '原：无。\n现：工具栏新增「批量置顶」「批量取消置顶」「已选 X 项」和置顶数量提示。批量置顶按列表当前顺序依次排在置顶区末尾；批量取消后其余前移、先后不变；已置顶 / 未置顶自动跳过；总控停用的场馆不可勾选。'],
+ 'vbatch': ['批量置顶 / 批量取消置顶', '原：无。\n现：在列表底部「批量操作」下拉中选「批量置顶」「批量取消置顶」（按项目统一批量规范）；工具栏保留置顶数量提示。批量置顶按列表当前顺序依次排在置顶区末尾；批量取消后其余置顶前移、先后不变；已置顶 / 未置顶的自动跳过；总控停用的场馆不可勾选。'],
  'vpos': ['置顶位置修改 · 输入数字筛选', '原：总控无此弹窗。\n现：输入框 + 位置列表，每行显示位置号和该位置当前的场馆 / 游戏，当前位置标「当前」；输入数字筛出位置号包含该数字的位置，支持 ↑ ↓、回车；选其他位置二次确认后插入。场馆配置总控、热门游戏排序通用。'],
  'vcmd': ['操作列「场馆游戏排序」', '原：总控没有场馆内游戏顺序入口；操作列只有维护 / 启用、停用。\n现：每行新增按钮（总控停用的场馆没有），打开该场馆的「场馆游戏排序」弹窗，做场馆内置顶，与该站点商户后台同一份数据。维护 / 启用、停用保留。'],
  'vrel': ['「对应 MY 场馆」列', '原：看不出前台场馆合并了哪个 MY 场馆。\n现：有场馆对的场馆显示对应 MY 场馆及游戏对数量（如「MyPG电子 · 14 款对应游戏」），点击数量打开对应游戏弹窗；没有的显示「-」。对应关系由开发预置，不可修改。'],
+ 'bfoot': ['列表批量操作（底部）', '原：工具栏放「批量置顶」「批量取消置顶」「批量显示原厂 / MY」按钮和「已选 X 项」。\n现：按项目统一规范，工具栏不放批量按钮；列表底部依次为「选择全部（共 N 条）」勾选框、「批量操作」下拉、「已选择 X 条」。表头勾选框只选本页；「选择全部」选当前筛选结果全部（跨页），列表上方提示「已选择全部 N 条，清除选择」。在下拉中选动作即执行，未勾选提示「请先勾选记录」；确认框写实际处理条数；全部状态下取消任一行退回本页选择，翻页、查询、重置清空已选。'],
  'vfil': ['场馆配置总控 · 搜索「排序类型」', '原：没有按置顶筛选的条件。\n现：新增单选下拉 置顶 / 自动排序，可清空；只显示该站点已置顶 / 未置顶的场馆（总控停用的不显示）；不影响置顶位置计算。'],
  'hfil': ['热门游戏排序 · 搜索「排序类型」「前台显示」', '原：商户后台该页只有地区、商户号、平台、游戏名称。\n现：新增「排序类型」（置顶 / 自动排序）与「前台显示」（显示 / 隐藏 / 无对应版本），单选可清空，与其他条件同时生效；不影响置顶位置计算。'],
  'gfil': ['游戏配置总控 · 搜索「游戏状态」「站点状态」', '原：搜索区只有游戏ID、游戏名称、场馆名称。\n现：新增「游戏状态」（平台：维护 / 启用 / 停用）与「站点状态」（开启 / 维护 / 关闭），单选可清空，与其他条件同时生效。'],
@@ -1467,7 +1500,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
  'grank': ['新增 · 站点状态、热门排名', '原：页面不分站点，没有这两列。\n现：站点状态为商户设置的开启 / 维护 / 关闭，只读；热门排名为该站点热门顺序中的名次，与商户后台游戏管理一致，只读；总控停用的显示「-」。列表按热门排名排列。'],
  'grel': ['新增 · 关联、前台显示', '原：看不出原厂与 MY 的对应关系，也看不出前台显示哪一款。\n现：「对应版本」显示「游戏对」及对方游戏「场馆名称 · 游戏名称（游戏ID）」，或「无对应版本」/「-」；「前台显示」显示该行是「显示」还是「隐藏」，隐藏的整行置灰。'],
  'gsw': ['前台切换', '原：无法选择前台显示原厂版还是 MY 版。\n现：新增「前台切换」列，游戏对每行一个「改为原厂 / 改为 MY」，下方小字显示当前版本；确认后只影响所选站点。目标版本已被总控停用时置灰，悬停提示「该版本已被总控停用」。切换不改置顶，前台按新版本自己的置顶位置 / 热门值展示。'],
- 'gbsw': ['批量显示原厂 / 批量显示 MY', '原：无。\n现：勾选后批量切换，只处理可切换的游戏对；已是目标版本、不是游戏对或目标版本已被总控停用的不变，并在确认框写明数量。'],
+ 'gbsw': ['批量改为原厂 / 批量改为 MY', '原：无。\n现：在列表底部「批量操作」下拉中选「批量改为原厂」「批量改为 MY」，只处理可切换的游戏；已是目标版本、没有对应版本或另一版本已被总控停用的不变，并在确认框写明数量；只影响所选站点。'],
  'fpair': ['前台 · 游戏对只显示一款', '原：同一款游戏的原厂版与 MY 版同时出现，位置不同。\n现：已关联的游戏对在该站点前台只显示当前选定的版本，按它自己的置顶位置 / 热门值排列；隐藏版本的置顶保留但不显示、不占位；最近、收藏也只出现一次。'],
  'fstop': ['总控停用过滤', '原：总控停用的游戏、场馆仍下发到站点，出现在站点排序列表里，已置顶的没有处理规则；站点点「对齐平台排序」后才拿到最新列表。\n现：停用当下生效（下发数据立即过滤，前台展示按现网缓存更新）：各站点前台不显示，总控与商户后台的热门游戏排序、场馆游戏排序列表不显示；相关置顶自动取消，其后前移；重新启用后回到自动排序。维护沿用现网。'],
 };
