@@ -314,6 +314,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
 .m-note ul{margin:4px 0 0;padding-left:1.3em;}
 .m-note li{margin:2px 0;}
 .stg-rule{margin-bottom:12px;}
+.sel-hint{margin-bottom:8px;padding:6px 12px;background:#e6f7ff;border:1px solid #91d5ff;border-radius:2px;font-size:13px;text-align:center;}
 .m-count{font-size:13px;margin-top:8px;color:var(--text-primary);}
 .m-count:empty{display:none;}
 .radio-group.dis,.check-group.dis,.script-box.dis{opacity:.55;cursor:not-allowed;}
@@ -386,6 +387,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
           <button class="bk-btn" id="btnRefresh" type="button" title="获取最新的进行中金额与状态">刷 新</button>
           <button class="bk-btn primary" id="btnAdd" type="button">+ 新增点控</button>
         </div>
+        <div class="sel-hint hide" id="selHint" role="status"></div>
         <div class="bk-table-wrap"><table class="bk-table wide" style="min-width:1560px;">
           <thead><tr>
             <th style="width:40px;"><input type="checkbox" class="chk" id="chkAllHead" aria-label="全选本页"></th>
@@ -398,9 +400,9 @@ table.mini th{background:var(--th-bg);font-weight:500;}
           <tbody id="ctrlBody"></tbody>
         </table></div>
         <div class="bk-foot">
-          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="chk" id="chkAllFoot">选择全部</label>
+          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="chk" id="chkAllFoot"><span id="allLabel">选择全部（共 0 条）</span></label>
           <select class="bk-select" id="batchSel" style="width:130px;height:28px;padding:0 8px;" aria-label="批量操作"><option value="">批量操作</option><option value="stop">批量终止</option></select>
-          <span class="muted">已选择 <b id="selCount" style="color:var(--text-primary);">0</b> 条记录</span>
+          <span class="muted" id="selCount">已选择 0 条</span>
           <div class="bk-pager" id="pager"></div>
         </div>
       </div>
@@ -570,7 +572,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>字段</th><th>说明</th><th>展示规则</th></tr></thead>
           <tbody>
-            <tr><td><b>勾选框</b></td><td>用于批量终止</td><td>表头勾选框 = 选中本页全部；底部「选择全部」= 选中当前筛选结果全部</td></tr>
+            <tr><td><b>勾选框</b></td><td>用于批量终止</td><td>表头勾选框 = 只选本页；列表底部依次为「选择全部（共 N 条）」勾选框（选中当前筛选结果全部，跨页）、「批量操作」下拉（批量终止）、已选数量（「已选择 X 条」/「已选择全部 N 条」）；勾选表头后列表上方提示「已选本页 X 条，选择全部 N 条」，已是全部时提示「已选择全部 N 条，清除选择」</td></tr>
             <tr><td><b>会员ID / 账号</b></td><td>两行展示，上为会员ID，下为会员账号</td><td>会员ID 蓝色可点击，打开该会员的会员详情（现有页面）</td></tr>
             <tr><td><b>点控类型</b></td><td>送分 / 杀分；对应接口字段 control_type（1 送分 / 2 杀分）</td><td>送分绿色标签，杀分红色标签</td></tr>
             <tr><td><b>剧本</b></td><td>新增或策略设置的剧本；对应接口字段 script_id，页面按剧本 ID 显示名称</td><td>只显示剧本名称，如「快送」</td></tr>
@@ -612,7 +614,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>点击执行中记录的「终止」</b></td><td>弹出警告：「确认终止会员 {会员ID} 的{送分/杀分}点控？终止后不可恢复，如需继续控制请重新新增点控。」</td></tr>
             <tr><td><b>确认终止成功</b></td><td>提示「已终止 N 条点控」；该记录状态变为已结束，结束原因「手动终止」，操作人为当前账号，「终止」按钮消失</td></tr>
             <tr><td><b>勾选多条（含已结束）后批量终止</b></td><td>警告文案「确认终止选中的 N 条执行中点控？」，N 只统计执行中的记录；已结束记录不受影响</td></tr>
-            <tr><td><b>批量终止未勾选</b></td><td>提示「请先勾选记录」</td></tr>
+            <tr><td><b>批量终止未勾选</b></td><td>提示「请先勾选记录」</td></tr><tr><td><b>「全部」状态下取消勾选任意一行</b></td><td>退回为只选本页（该行除外），已选数量按实际条数显示</td></tr><tr><td><b>翻页、修改每页条数、查询、重置</b></td><td>清空已选</td></tr><tr><td><b>选择全部后批量终止且条数较多</b></td><td>后台按当前筛选条件分批执行，列表上方显示进度，完成后提示「已终止 N 条点控」；确认框条数按千分位显示</td></tr>
             <tr><td><b>勾选的记录均已结束</b></td><td>提示「所选记录中没有执行中的点控」</td></tr>
             <tr><td><b>终止的记录在提交时已自然结束</b></td><td>该记录保持「达成目标」，不改为手动终止；提示中的 N 只统计实际被终止的条数</td></tr>
             <tr><td><b>点击工具栏「刷新」</b></td><td>列表获取最新的进行中金额与状态；已达成目标的记录变为已结束 · 达成目标</td></tr>
@@ -1075,6 +1077,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
             <tr><td><b>A56</b></td><td>层级策略当前 15,000 人，发布</td><td>不受 10,000 人上限限制，后台分批生成，生成情况显示进度，完成后已生成 15,000 人（失败的计入失败）</td></tr>
             <tr><td><b>A57</b></td><td>新增点控、终止、批量终止、新增策略、编辑策略、停用策略</td><td>后台操作日志均有对应记录</td></tr>
             <tr><td><b>A58</b></td><td>进入「点控策略」页签；打开新增策略；打开编辑策略</td><td>列表上方常驻显示「策略生效规则」6 条；新增弹窗顶部显示生效规则说明条；编辑弹窗不显示该说明条，只显示不可修改提示</td></tr>
+            <tr><td><b>A59</b></td><td>筛选结果共 15 条、每页 10 条：勾选表头 → 点上方「选择全部 15 条」→ 取消勾选其中一行 → 翻到第 2 页</td><td>依次显示「已选择 10 条」+ 提示「已选本页 10 条，选择全部 15 条」；「已选择全部 15 条」+「清除选择」；退回「已选择 9 条」；翻页后清空为「已选择 0 条」</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -1304,7 +1307,7 @@ table.mini th{background:var(--th-bg);font-weight:500;}
       var s = {id:a[0],name:a[1],cond:a[2],items:a[3].slice(),type:a[4],script:a[5],amt:a[6],remark:a[7],status:a[8],pub:a[9],pubTime:a[10],op:a[11],optime:a[12],fails:(SEED_FAIL[a[0]]||[]).slice(),extraEnd:0,gening:null};
       s.gen = rows.filter(function(r){ return r.stg===s.id; }).length; return s;
     });
-    seq = rows.length; stgSeq = stgs.length; selected = {};
+    seq = rows.length; stgSeq = stgs.length; selected = {}; allMode = false;
     rp = {page:1, size:10}; sp = {page:1, size:10};
   }
 
@@ -1412,28 +1415,45 @@ table.mini th{background:var(--th-bg);font-weight:500;}
     }).join('');
     var runN = rows.filter(function(r){ return r.status==='run'; }).length;
     $('runInfo').textContent = '当前执行中的点控共 '+runN+' 条';
-    renderPager($('pager'), filtered.length, rp, function(){ render(); }); syncChecks();
+    renderPager($('pager'), filtered.length, rp, function(){ clearSel(); render(); }); syncChecks();
   }
+  // 批量选择：表头 = 本页；底部「选择全部」= 当前筛选结果全部（K-UI-004 3.14）
+  var allMode = false;
   function selKeys(){ return Object.keys(selected).filter(function(k){ return selected[k]; }); }
+  function pageKeys(){ return Array.prototype.map.call($('ctrlBody').querySelectorAll('.row-chk'), function(c){ return c.getAttribute('data-key'); }); }
+  function clearSel(){ selected = {}; allMode = false; }
   function syncChecks(){
-    $('selCount').textContent = selKeys().length;
-    var boxes = $('ctrlBody').querySelectorAll('.row-chk');
-    $('chkAllHead').checked = boxes.length > 0 && Array.prototype.every.call(boxes, function(c){ return c.checked; });
-    $('chkAllFoot').checked = filtered.length > 0 && filtered.every(function(r){ return selected[r.key]; });
+    var n = filtered.length, x = selKeys().length, pk = pageKeys();
+    var pageAll = pk.length > 0 && pk.every(function(k){ return selected[k]; });
+    $('chkAllHead').checked = pageAll;
+    $('chkAllFoot').checked = allMode;
+    $('allLabel').textContent = '选择全部（共 '+n.toLocaleString('en-US')+' 条）';
+    $('selCount').textContent = allMode ? '已选择全部 '+n.toLocaleString('en-US')+' 条' : '已选择 '+x+' 条';
+    var hint = $('selHint');
+    if(allMode){ hint.innerHTML = '已选择全部 <b>'+n.toLocaleString('en-US')+'</b> 条，<span class="bk-link" data-sel="clear">清除选择</span>'; show(hint, true); }
+    else if(pageAll && n > pk.length){ hint.innerHTML = '已选本页 <b>'+pk.length+'</b> 条，<span class="bk-link" data-sel="all">选择全部 '+n.toLocaleString('en-US')+' 条</span>'; show(hint, true); }
+    else show(hint, false);
   }
-  $('ctrlBody').addEventListener('change', function(e){ if(e.target.classList.contains('row-chk')){ selected[e.target.getAttribute('data-key')] = e.target.checked; syncChecks(); } });
+  function selectAll(on){ clearSel(); if(on){ allMode = true; filtered.forEach(function(r){ selected[r.key] = true; }); } render(); }
+  $('selHint').addEventListener('click', function(e){ var a = e.target.getAttribute('data-sel'); if(a) selectAll(a==='all'); });
+  $('ctrlBody').addEventListener('change', function(e){
+    if(!e.target.classList.contains('row-chk')) return;
+    var k = e.target.getAttribute('data-key');
+    if(allMode && !e.target.checked){ clearSel(); pageKeys().forEach(function(p){ if(p!==k) selected[p] = true; }); render(); return; }
+    selected[k] = e.target.checked; syncChecks();
+  });
   $('ctrlBody').addEventListener('click', function(e){
     var t = e.target;
     if(t.hasAttribute('data-stop')) askStop([t.getAttribute('data-stop')]);
     if(t.hasAttribute('data-mem')) toast('打开会员 '+t.getAttribute('data-mem')+' 的会员详情（现有页面）');
   });
-  $('chkAllHead').addEventListener('change', function(e){ $('ctrlBody').querySelectorAll('.row-chk').forEach(function(c){ selected[c.getAttribute('data-key')] = e.target.checked; }); render(); });
-  $('chkAllFoot').addEventListener('change', function(e){ filtered.forEach(function(r){ selected[r.key] = e.target.checked; }); render(); });
-  $('btnQuery').addEventListener('click', function(){ readFilters(); rp.page = 1; render(); });
+  $('chkAllHead').addEventListener('change', function(e){ var on = e.target.checked, pk = pageKeys(); clearSel(); if(on) pk.forEach(function(k){ selected[k] = true; }); render(); });
+  $('chkAllFoot').addEventListener('change', function(e){ selectAll(e.target.checked); });
+  $('btnQuery').addEventListener('click', function(){ readFilters(); rp.page = 1; clearSel(); render(); });
   function resetFilters(){
     ['fFrom','fTo','fKey','fStg'].forEach(function(id){ $(id).value=''; });
     $('fIdType').value='id'; $('fType').value=''; $('fScript').value=''; $('fStatus').value='run'; $('fSrc').value='';
-    readFilters(); rp.page = 1;
+    readFilters(); rp.page = 1; clearSel();
   }
   $('btnReset').addEventListener('click', function(){ resetFilters(); render(); });
   $('btnRefresh').addEventListener('click', function(){
@@ -1452,11 +1472,12 @@ table.mini th{background:var(--th-bg);font-weight:500;}
     var r = rows.filter(function(x){ return x.key===keys[0]; })[0];
     var html = keys.length===1
       ? '确认终止会员 <b>'+r.id+'</b> 的'+(r.type==='give'?'送分':'杀分')+'点控？<br>终止后不可恢复，如需继续控制请重新新增点控。'
-      : '确认终止选中的 <b>'+keys.length+'</b> 条执行中点控？<br>终止后不可恢复，已结束的记录不受影响。';
+      : '确认终止选中的 <b>'+keys.length.toLocaleString('en-US')+'</b> 条执行中点控？<br>终止后不可恢复，已结束的记录不受影响。';
     confirmBox('警告', html, '确定终止', true, function(){
       var t = nowStr(), n = 0;
-      rows.forEach(function(x){ if(keys.indexOf(x.key)>-1 && x.status==='run'){ x.status='end'; x.reason='手动终止'; x.op=ME; x.optime=t; selected[x.key]=false; n++; } });
-      render(); renderStg(); toast('已终止 '+n+' 条点控');
+      rows.forEach(function(x){ if(keys.indexOf(x.key)>-1 && x.status==='run'){ x.status='end'; x.reason='手动终止'; x.op=ME; x.optime=t; n++; } });
+      if(keys.length > 1) clearSel(); else delete selected[keys[0]];
+      render(); renderStg(); toast('已终止 '+n.toLocaleString('en-US')+' 条点控');
     });
   }
   $('batchSel').addEventListener('change', function(e){
