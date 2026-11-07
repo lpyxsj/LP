@@ -340,6 +340,8 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
 .img-ph{display:inline-block;width:34px;height:34px;border-radius:4px;background:#f0f0f0;color:#bfbfbf;font-size:11px;line-height:34px;}
 .bk-table td.site-col{background:#f0f7ff;}
 .bk-table th.site-col{background:#e1efff !important;}
+.zk-tab[data-zk]{cursor:pointer;}
+.zk-tab[data-zk]:not(.on):hover{color:#1677ff;background:#f0f6ff;}
 .grp-all{display:inline-flex;align-items:center;gap:4px;padding:2px 6px 2px 4px;border:1px dashed #f0b6b6;border-radius:4px;background:#fff8f8;}
 .grp-all small{font-size:11px;color:#c0392b;white-space:nowrap;}
 .pin-cell{display:inline-flex;align-items:center;gap:8px;}
@@ -371,7 +373,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
   <div class="bk-page active" data-page-panel="vendor">
     <div class="proto-window">
       <div class="bk-top"><span class="bk-crumb">站点场馆管理 / <b>场馆配置总控</b></span><span class="sp"></span></div>
-      <div class="zk-tabs"><span class="zk-tab on">场馆配置总控 ×</span><span class="zk-tab">热门游戏排序</span><span class="zk-tab">游戏配置总控</span></div>
+      <div class="zk-tabs"><span class="zk-tab on" data-zk="vendor">场馆配置总控 ×</span><span class="zk-tab" data-zk="hot">热门游戏排序</span><span class="zk-tab" data-zk="game">游戏配置总控</span></div>
       <div class="bk-body">
         <div class="bk-card"><div class="bk-form">
           <input class="bk-input" id="vName" placeholder="场馆名称" style="width:162px;">
@@ -398,14 +400,14 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         </div>
       </div>
     </div>
-    <div class="proto-tip">进入页面不加载数据，选站点并查询后显示该站点的场馆；现网列保留，浅蓝底为本期新增的按站点列。场馆状态与维护 / 启用 / 停用为平台级，在这里操作也对全平台生效。「编辑排序数值」已删除。刷新 / 密度 / 列设置沿用现网。</div>
+    <div class="proto-tip">顶部标签可直接点击切换页面，切过去自动带出同一站点。进入页面不加载数据，选站点后显示该站点的场馆；现网列保留，浅蓝底为本期新增的按站点列。场馆状态与维护 / 启用 / 停用为平台级，在这里操作也对全平台生效。「编辑排序数值」已删除。刷新 / 密度 / 列设置沿用现网。</div>
   </div>
 
   <!-- ===== 总控 · 热门游戏排序 ===== -->
   <div class="bk-page" data-page-panel="hot">
     <div class="proto-window">
       <div class="bk-top"><span class="bk-crumb">站点场馆管理 / <b>热门游戏排序</b><span class="mk" data-tip="hpage" tabindex="0">本期新增</span></span><span class="sp"></span></div>
-      <div class="zk-tabs"><span class="zk-tab">场馆配置总控</span><span class="zk-tab on">热门游戏排序 ×</span><span class="zk-tab">游戏配置总控</span></div>
+      <div class="zk-tabs"><span class="zk-tab" data-zk="vendor">场馆配置总控</span><span class="zk-tab on" data-zk="hot">热门游戏排序 ×</span><span class="zk-tab" data-zk="game">游戏配置总控</span></div>
       <div class="bk-body">
         <div class="bk-card"><div class="bk-form">
           <select class="bk-select site" id="hSite" aria-label="站点"></select>
@@ -438,7 +440,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
   <div class="bk-page" data-page-panel="game">
     <div class="proto-window">
       <div class="bk-top"><span class="bk-crumb">站点场馆管理 / <b>游戏配置总控</b></span><span class="sp"></span></div>
-      <div class="zk-tabs"><span class="zk-tab">场馆配置总控</span><span class="zk-tab">热门游戏排序</span><span class="zk-tab on">游戏配置总控 ×</span></div>
+      <div class="zk-tabs"><span class="zk-tab" data-zk="vendor">场馆配置总控</span><span class="zk-tab" data-zk="hot">热门游戏排序</span><span class="zk-tab on" data-zk="game">游戏配置总控 ×</span></div>
       <div class="bk-body">
         <div class="bk-card"><div class="bk-form">
           <input class="bk-input" id="gId" placeholder="游戏ID" style="width:150px;">
@@ -520,7 +522,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
       </tbody></table></div></div>
     <div class="req-block"><h2>交互与文案要求</h2>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>要求</th><th>说明</th></tr></thead><tbody>
-        <tr><td><b>选站点即加载</b><span class="tag-new" data-tip="site" tabindex="0">本期新增</span></td><td>三个总控页选完站点直接加载，不用再点查询；记住上次选的站点，下次进入自动带出。未选站点时表格显示「请先在上方选择站点」</td></tr>
+        <tr><td><b>选站点即加载</b><span class="tag-new" data-tip="site" tabindex="0">本期新增</span></td><td>三个总控页选完站点直接加载，不用再点查询；记住上次选的站点，下次进入或从顶部标签切到另一页时自动带出同一站点并加载。未选站点时表格显示「请先在上方选择站点」</td></tr>
         <tr><td><b>全部站点的操作分开放</b><span class="tag-new" data-tip="gops" tabindex="0">本期修改</span></td><td>维护 / 启用 / 停用放在标有「全部站点」的框里；停用确认框第一行红字「对所有站点生效」</td></tr>
         <tr><td><b>按钮写结果</b><span class="tag-new" data-tip="gsw" tabindex="0">本期新增</span></td><td>切换按钮写「改为原厂」/「改为 MY」；不能切时写「原厂已停用」并置灰</td></tr>
         <tr><td><b>置顶一列看完</b><span class="tag-new" data-tip="pincol" tabindex="0">本期修改</span></td><td>已置顶显示「第 N 位」+「取消」，未置顶显示「置顶」；隐藏版本置顶时加小字「前台不显示（当前显示 MY 版）」</td></tr>
@@ -1072,7 +1074,8 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
   function siteOpts(withEmpty){ return (withEmpty?'<option value="">站点</option>':'')+SITES.map(function(x){ return '<option value="'+x[0]+'">'+esc(x[1])+'</option>'; }).join(''); }
   $('vSite').innerHTML=siteOpts(true); $('gSite').innerHTML=siteOpts(true);
   ['hSite','fSite'].forEach(function(id){ $(id).innerHTML=siteOpts(false); });
-  function lastSite(v){ try{ if(v) localStorage.setItem('zk_last_site',v); return localStorage.getItem('zk_last_site')||''; }catch(e){ return v||''; } }
+  var LAST_SITE='';
+  function lastSite(v){ if(v) LAST_SITE=v; try{ if(v) localStorage.setItem('zk_last_site',v); return localStorage.getItem('zk_last_site')||LAST_SITE; }catch(e){ return LAST_SITE; } }
   ['vSite','gSite','hSite'].forEach(function(id){ $(id).addEventListener('change',function(){ var v=$(id).value; if(v) lastSite(v); var q={vSite:'vQuery',gSite:'gQuery',hSite:'hQuery'}[id]; if(v) $(q).click(); }); });
 
   /* ---------- 总控 · 场馆配置总控 ---------- */
@@ -1343,6 +1346,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
   /* 子页切换与通用 */
   var subBtns=document.querySelectorAll('.sub-btn');
   window.__showPage=function(name){ subBtns.forEach(function(b){ b.classList.toggle('active',b.dataset.page===name); }); document.querySelectorAll('.bk-page').forEach(function(p){ p.classList.toggle('active',p.getAttribute('data-page-panel')===name); }); if(name==='front'){ renderFront(); } };
+  document.addEventListener('click',function(e){ var t=e.target.closest&&e.target.closest('[data-zk]'); if(!t) return; var pg=t.getAttribute('data-zk'); window.__showPage(pg); var map={vendor:['vSite','vQuery'],hot:['hSite','hQuery'],game:['gSite','gQuery']}[pg]; var ls=lastSite(''); var cur=$(map[0]).value; if(ls&&SS[ls]&&(!cur||cur!==ls)){ $(map[0]).value=ls; $(map[1]).click(); } });
   subBtns.forEach(function(b){ b.addEventListener('click',function(){ window.__showPage(b.dataset.page); }); });
   $('markToggle').addEventListener('change',function(e){ $('protoSec').classList.toggle('hide-marks',!e.target.checked); });
   $('resetDemo').addEventListener('click',function(){ resetAll(); VM={q:false,site:'',name:'',status:'',type:'',sel:{}}; HM={q:null,venue:'',name:'',sel:{}}; GM={q:false,site:'',id:'',name:'',venue:'',show:'',sel:{},edit:null,err:''}; FE={venue:null,tab:'all'}; document.querySelectorAll('#protoSec input.bk-input').forEach(function(el){ el.value=''; }); ['vStatus','vType','hVenue','gShow','vSite','gSite'].forEach(function(id){ $(id).value=''; }); ['hSite','fSite'].forEach(function(id){ $(id).value='888'; }); renderAll(); toast('已重置演示数据'); });
