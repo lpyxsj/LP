@@ -429,7 +429,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
 </style></head><body>
 <header class="dh-header"><div class="dh-header-inner">
   <h1>总控站点游戏管理调整优化（站点选择、置顶、原厂 / MY 切换）</h1>
-  <div class="dh-meta"><span>模块：<b>总控 · 站点场馆管理（场馆配置总控、热门游戏排序、游戏配置总控）· 前台站点</b></span><span>产品经理：<b>Zuno</b></span><span>更新日期：<b>2026-11-09</b></span></div>
+  <div class="dh-meta"><span>模块：<b>总控 · 站点场馆管理（场馆配置总控、游戏配置总控、热门游戏排序）· 前台站点</b></span><span>产品经理：<b>Zuno</b></span><span>更新日期：<b>2026-11-09</b></span></div>
 </div></header>
 <nav class="dh-navbar" id="dhNavbar"><div class="dh-navbar-inner dh-primary" id="dhPrimary">
   <button class="dh-primary-btn active" data-primary="proto" type="button">交互原型 <small>选站点后置顶、原厂 / MY 切换，总控停用，前台同步</small></button>
@@ -481,8 +481,8 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
   </div>
   <div class="sub-bar" role="tablist">
     <button class="sub-btn active" data-page="vendor" type="button">总控 · 场馆配置总控<small>场馆置顶、场馆内置顶、切换</small></button>
-    <button class="sub-btn" data-page="hot" type="button">总控 · 热门游戏排序<small>热门置顶（新增菜单）</small></button>
     <button class="sub-btn" data-page="game" type="button">总控 · 游戏配置总控<small>切换、停用</small></button>
+    <button class="sub-btn" data-page="hot" type="button">总控 · 热门游戏排序<small>热门置顶（新增菜单）</small></button>
     <button class="sub-btn" data-page="front" type="button">前台效果<small>首页、场馆页</small></button>
   </div>
 
@@ -490,7 +490,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
   <div class="bk-page active" data-page-panel="vendor">
     <div class="proto-window">
       <div class="bk-top"><span class="bk-crumb">站点场馆管理 / <b>场馆配置总控</b></span><span class="sp"></span></div>
-      <div class="zk-tabs"><span class="zk-tab on" data-zk="vendor">场馆配置总控 ×</span><span class="zk-tab" data-zk="hot">热门游戏排序</span><span class="zk-tab" data-zk="game">游戏配置总控</span></div>
+      <div class="zk-tabs"><span class="zk-tab on" data-zk="vendor">场馆配置总控 ×</span><span class="zk-tab" data-zk="game">游戏配置总控</span><span class="zk-tab" data-zk="hot">热门游戏排序</span></div>
       <div class="bk-body">
         <div class="bk-card"><div class="bk-form">
           <input class="bk-input" id="vName" placeholder="场馆名称" style="width:162px;">
@@ -519,43 +519,11 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
     <div class="proto-tip">顶部标签可直接点击切换页面，切过去自动带出同一站点。进入页面不加载数据，选站点后显示该站点的场馆；现网列保留，浅蓝底为本期新增的按站点列。维护 / 启用 / 停用点开后在确认框里选「只改本站点」或「全部站点」，不默认。「编辑排序数值」已删除。刷新 / 密度 / 列设置沿用现网。</div>
   </div>
 
-  <!-- ===== 总控 · 热门游戏排序 ===== -->
-  <div class="bk-page" data-page-panel="hot">
-    <div class="proto-window">
-      <div class="bk-top"><span class="bk-crumb">站点场馆管理 / <b>热门游戏排序</b><span class="mk" data-tip="hpage" tabindex="0">本期新增</span></span><span class="sp"></span></div>
-      <div class="zk-tabs"><span class="zk-tab" data-zk="vendor">场馆配置总控</span><span class="zk-tab on" data-zk="hot">热门游戏排序 ×</span><span class="zk-tab" data-zk="game">游戏配置总控</span></div>
-      <div class="bk-body">
-        <div class="bk-card"><div class="bk-form">
-          <select class="bk-select site" id="hSite" aria-label="站点"></select>
-          <select class="bk-select" id="hVenue" style="width:162px;" aria-label="场馆"></select>
-          <input class="bk-input" id="hName" placeholder="游戏名称" style="width:162px;">
-          <span style="display:inline-flex;align-items:center;"><select class="bk-select" id="hPinF" style="width:130px;"><option value="">置顶</option><option value="pin">已置顶</option><option value="auto">未置顶</option></select><select class="bk-select" id="hShowF" style="width:130px;margin-left:8px;"><option value="">前台显示</option><option value="show">显示</option><option value="hide">隐藏</option><option value="none">无对应版本</option></select><span class="mk" data-tip="hfil" tabindex="0">本期新增</span></span>
-          <div class="bk-actions"><button class="bk-btn" id="hReset" type="button">重 置</button><button class="bk-btn primary" id="hQuery" type="button">查 询</button></div>
-        </div></div>
-        <div class="bk-card">
-          <div class="bk-toolbar">
-            <span class="left">
-              <span class="hide"><button class="bk-btn primary" id="hBatchPin" type="button" disabled>批量置顶</button><button class="bk-btn" id="hBatchUnpin" type="button" disabled>批量取消置顶</button><b id="hSelCount">0</b></span>
-              <span class="hint" id="hPinHint"></span>
-            </span>
-          </div>
-          <div class="sel-hint hide" id="hSelHint" role="status"></div>
-          <div class="bk-table-wrap"><table class="bk-table" style="min-width:1100px;">
-            <thead><tr><th style="width:36px;"><input type="checkbox" class="chk" id="hChkAll" aria-label="全选当前查询结果"></th><th style="min-width:120px;">热门序号<span class="mk" data-tip="hseq" tabindex="0">本期新增</span></th><th>站点</th><th>场馆</th><th>游戏名称</th><th>前台显示<span class="mk" data-tip="hshow" tabindex="0">本期新增</span></th><th>置顶<span class="mk" data-tip="pincol" tabindex="0">本期修改</span></th></tr></thead>
-            <tbody id="hBody"></tbody>
-          </table></div>
-          <div class="bk-foot"><label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="chk" id="hAllFoot"><span id="hAllLabel">选择全部（共 0 条）</span></label><select class="bk-select" id="hBatchSel" style="width:150px;height:28px;padding:0 8px;" aria-label="批量操作"><option value="">批量操作</option><option value="pin">批量置顶</option><option value="unpin">批量取消置顶</option></select><span class="mk" data-tip="bfoot" tabindex="0">本期新增</span><span class="muted" id="hSelText">已选择 0 条</span><div class="bk-pager"><span id="hCount">共 0 条数据</span><span class="pg">1</span><span>50 条/页</span></div></div>
-        </div>
-      </div>
-    </div>
-    <div class="proto-tip">照商户后台「热门游戏排序」页，以「站点」代替地区、商户号；与该站点商户后台同一份置顶数据。总控停用的游戏不收录；游戏对两个版本各占一行、各自置顶，隐藏的版本前台不显示、不占位。</div>
-  </div>
-
   <!-- ===== 总控 · 游戏配置总控 ===== -->
   <div class="bk-page" data-page-panel="game">
     <div class="proto-window">
       <div class="bk-top"><span class="bk-crumb">站点场馆管理 / <b>游戏配置总控</b></span><span class="sp"></span></div>
-      <div class="zk-tabs"><span class="zk-tab" data-zk="vendor">场馆配置总控</span><span class="zk-tab" data-zk="hot">热门游戏排序</span><span class="zk-tab on" data-zk="game">游戏配置总控 ×</span></div>
+      <div class="zk-tabs"><span class="zk-tab" data-zk="vendor">场馆配置总控</span><span class="zk-tab on" data-zk="game">游戏配置总控 ×</span><span class="zk-tab" data-zk="hot">热门游戏排序</span></div>
       <div class="bk-body">
         <div class="bk-card"><div class="bk-form">
           <input class="bk-input" id="gId" placeholder="游戏ID" style="width:150px;">
@@ -583,6 +551,38 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
       </div>
     </div>
     <div class="proto-tip">进入页面不加载数据，选站点并查询后按该站点热门排名列出游戏；现网列保留，浅蓝底为本期新增的按站点列。维护 / 启用 / 停用点开后在确认框里选「只改本站点」或「全部站点」，不默认；全部站点停用当下对所有站点生效（前台与排序列表不显示，置顶取消）。操作列「排序」已删除，改用场馆序号旁「编辑」。游戏图片为占位；有效注单为热门值来源，前1小时、当前小时数值为示例；批量修改有效注单沿用现网。</div>
+  </div>
+
+  <!-- ===== 总控 · 热门游戏排序 ===== -->
+  <div class="bk-page" data-page-panel="hot">
+    <div class="proto-window">
+      <div class="bk-top"><span class="bk-crumb">站点场馆管理 / <b>热门游戏排序</b><span class="mk" data-tip="hpage" tabindex="0">本期新增</span></span><span class="sp"></span></div>
+      <div class="zk-tabs"><span class="zk-tab" data-zk="vendor">场馆配置总控</span><span class="zk-tab" data-zk="game">游戏配置总控</span><span class="zk-tab on" data-zk="hot">热门游戏排序 ×</span></div>
+      <div class="bk-body">
+        <div class="bk-card"><div class="bk-form">
+          <select class="bk-select site" id="hSite" aria-label="站点"></select>
+          <select class="bk-select" id="hVenue" style="width:162px;" aria-label="场馆"></select>
+          <input class="bk-input" id="hName" placeholder="游戏名称" style="width:162px;">
+          <span style="display:inline-flex;align-items:center;"><select class="bk-select" id="hPinF" style="width:130px;"><option value="">置顶</option><option value="pin">已置顶</option><option value="auto">未置顶</option></select><select class="bk-select" id="hShowF" style="width:130px;margin-left:8px;"><option value="">前台显示</option><option value="show">显示</option><option value="hide">隐藏</option><option value="none">无对应版本</option></select><span class="mk" data-tip="hfil" tabindex="0">本期新增</span></span>
+          <div class="bk-actions"><button class="bk-btn" id="hReset" type="button">重 置</button><button class="bk-btn primary" id="hQuery" type="button">查 询</button></div>
+        </div></div>
+        <div class="bk-card">
+          <div class="bk-toolbar">
+            <span class="left">
+              <span class="hide"><button class="bk-btn primary" id="hBatchPin" type="button" disabled>批量置顶</button><button class="bk-btn" id="hBatchUnpin" type="button" disabled>批量取消置顶</button><b id="hSelCount">0</b></span>
+              <span class="hint" id="hPinHint"></span>
+            </span>
+          </div>
+          <div class="sel-hint hide" id="hSelHint" role="status"></div>
+          <div class="bk-table-wrap"><table class="bk-table" style="min-width:1100px;">
+            <thead><tr><th style="width:36px;"><input type="checkbox" class="chk" id="hChkAll" aria-label="全选当前查询结果"></th><th style="min-width:120px;">热门序号<span class="mk" data-tip="hseq" tabindex="0">本期新增</span></th><th>站点</th><th>场馆</th><th>游戏名称</th><th>前台显示<span class="mk" data-tip="hshow" tabindex="0">本期新增</span></th><th>置顶<span class="mk" data-tip="pincol" tabindex="0">本期修改</span></th></tr></thead>
+            <tbody id="hBody"></tbody>
+          </table></div>
+          <div class="bk-foot"><label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="chk" id="hAllFoot"><span id="hAllLabel">选择全部（共 0 条）</span></label><select class="bk-select" id="hBatchSel" style="width:150px;height:28px;padding:0 8px;" aria-label="批量操作"><option value="">批量操作</option><option value="pin">批量置顶</option><option value="unpin">批量取消置顶</option></select><span class="mk" data-tip="bfoot" tabindex="0">本期新增</span><span class="muted" id="hSelText">已选择 0 条</span><div class="bk-pager"><span id="hCount">共 0 条数据</span><span class="pg">1</span><span>50 条/页</span></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="proto-tip">照商户后台「热门游戏排序」页，以「站点」代替地区、商户号；与该站点商户后台同一份置顶数据。总控停用的游戏不收录；游戏对两个版本各占一行、各自置顶，隐藏的版本前台不显示、不占位。</div>
   </div>
 
   <!-- ===== 前台效果 ===== -->
@@ -616,8 +616,8 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
   <nav class="dh-tabs" id="dhTabs">
     <button class="dh-tab active" data-tab="overview" type="button"><span class="n">0</span>总览</button>
     <button class="dh-tab" data-tab="vendor" type="button"><span class="n">1</span>场馆配置总控</button>
-    <button class="dh-tab" data-tab="hot" type="button"><span class="n">2</span>热门游戏排序</button>
-    <button class="dh-tab" data-tab="game" type="button"><span class="n">3</span>游戏配置总控</button>
+    <button class="dh-tab" data-tab="game" type="button"><span class="n">2</span>游戏配置总控</button>
+    <button class="dh-tab" data-tab="hot" type="button"><span class="n">3</span>热门游戏排序</button>
     <button class="dh-tab" data-tab="front" type="button"><span class="n">4</span>停用过滤、前台与商户后台</button>
     <button class="dh-tab" data-tab="qa" type="button"><span class="n">5</span>验收与开发测试</button>
   </nav>
@@ -705,8 +705,8 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
     <div class="req-block"><h2>各端关系</h2>
       <div class="illus-grid" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr));">
         <div class="illus-col"><h4>场馆配置总控</h4><div class="illus-item new">站点选择；场馆置顶、场馆内置顶、原厂 / MY 切换<span class="tag" data-tip="ozk" tabindex="0">本期修改</span></div><div class="who">维护 / 启用 / 停用可选本站点或全部站点</div></div>
-        <div class="illus-col"><h4>热门游戏排序</h4><div class="illus-item new">热门置顶，照商户后台<span class="tag" data-tip="hpage" tabindex="0">本期新增</span></div><div class="who">按站点</div></div>
         <div class="illus-col"><h4>游戏配置总控</h4><div class="illus-item new">站点选择；单个 / 批量切换<span class="tag" data-tip="ozk" tabindex="0">本期修改</span></div><div class="who">维护 / 启用 / 停用可选本站点或全部站点</div></div>
+        <div class="illus-col"><h4>热门游戏排序</h4><div class="illus-item new">热门置顶，照商户后台<span class="tag" data-tip="hpage" tabindex="0">本期新增</span></div><div class="who">按站点</div></div>
         <div class="illus-col"><h4>商户后台</h4><div class="illus-item">本期不改，按已开发版本上线</div><div class="who">置顶与总控同一份数据</div></div>
         <div class="illus-col"><h4>前台</h4><div class="illus-item new">游戏对只显示一款；停用不显示<span class="tag" data-tip="fstop" tabindex="0">本期修改</span></div><div class="who">前台缓存沿用现网</div></div>
       </div>
@@ -771,23 +771,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
       </tbody></table></div></div>
   </div>
 
-  <!-- ===== 2 热门游戏排序 ===== -->
-  <div class="dh-panel" data-panel="hot">
-    <div class="dh-callout">新增菜单，位于「站点场馆管理」下、场馆配置总控与游戏配置总控之间。照商户后台「热门游戏排序」页做：搜索区以「站点」代替地区、商户号，新增「前台显示」列；与该站点商户后台同一份置顶数据、同一套规则。</div>
-    <button type="button" class="proto-jump" data-goto="hot">在交互原型中查看「热门游戏排序」 →</button>
-    <div class="req-block"><h2>字段说明</h2>
-      <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>字段</th><th>说明</th></tr></thead><tbody>
-        <tr><td><b>站点 / 平台 / 游戏名称</b></td><td>站点单选必选，进入页面不加载列表；平台「全部」+ 已接入平台；游戏名称模糊匹配；重置时站点保持</td></tr>
-        <tr><td><b>排序类型 / 前台显示（搜索）</b><span class="tag-new" data-tip="hfil" tabindex="0">本期新增</span></td><td>单选下拉，可清空：置顶 已置顶 / 未置顶；前台显示 显示 / 隐藏 / 无对应版本。与其他条件同时生效；不影响置顶位置计算</td></tr>
-        <tr><td><b>收录范围</b></td><td>同商户后台：站点全部游戏（开启、维护中、站点关闭）；总控停用的游戏、场馆不收录；全站一个队列；游戏对两个版本各占一行</td></tr>
-        <tr><td><b>列表顺序</b></td><td>热门置顶按位置在前，其余按热门序号；站点关闭的排在最后；无筛选时置顶区后显示分隔线</td></tr>
-        <tr><td><b>热门序号</b><span class="tag-new" data-tip="hseq" tabindex="0">本期新增</span></td><td>序号旁「编辑」可改，规则见「序号排序」；只在本页修改，与场馆序号互不影响</td></tr>
-        <tr><td><b>前台显示</b><span class="tag-new" data-tip="hshow" tabindex="0">本期新增</span></td><td>游戏对前台显示的版本「显示」，另一版本「隐藏」；隐藏的版本可置顶、置顶保留，前台不显示、不占位</td></tr>
-        <tr><td><b>置顶 / 批量</b></td><td>规则同场馆置顶；位置按全站计算，与筛选无关；站点关闭的游戏后显示「已关闭」，无置顶按钮、不可勾选</td></tr>
-      </tbody></table></div></div>
-  </div>
-
-  <!-- ===== 3 游戏配置总控 ===== -->
+  <!-- ===== 2 游戏配置总控 ===== -->
   <div class="dh-panel" data-panel="game">
     <div class="dh-callout">现网页面改版：进入页面不加载数据，选站点并查询后显示该站点的数据；现网列保留，其后追加按站点的列与操作；维护 / 启用 / 停用在确认框里选只改本站点或全部站点；操作列「排序」删除；批量修改有效注单沿用现网。热门置顶在「热门游戏排序」操作，本页不做置顶。</div>
     <button type="button" class="proto-jump" data-goto="game">在交互原型中查看「游戏配置总控」 →</button>
@@ -822,6 +806,22 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td><b>批量改为原厂 / MY</b><span class="tag-new" data-tip="gbsw" tabindex="0">本期新增</span></td><td>只处理可切换的游戏对；确认框写明不变的数量（已是目标版本、不是游戏对或目标版本已停用）；游戏对两行都勾选算 1 个；无可切换项提示「所选项均无需切换」</td></tr>
       </tbody></table></div>
       <div class="dh-callout">搜索命中游戏对任一行（游戏ID、游戏名称、场馆名称）时两行一起返回；按「前台显示」筛选时只返回符合的那一行。</div></div>
+  </div>
+
+  <!-- ===== 3 热门游戏排序 ===== -->
+  <div class="dh-panel" data-panel="hot">
+    <div class="dh-callout">新增菜单，位于「站点场馆管理」下、游戏配置总控之后。照商户后台「热门游戏排序」页做：搜索区以「站点」代替地区、商户号，新增「前台显示」列；与该站点商户后台同一份置顶数据、同一套规则。</div>
+    <button type="button" class="proto-jump" data-goto="hot">在交互原型中查看「热门游戏排序」 →</button>
+    <div class="req-block"><h2>字段说明</h2>
+      <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>字段</th><th>说明</th></tr></thead><tbody>
+        <tr><td><b>站点 / 平台 / 游戏名称</b></td><td>站点单选必选，进入页面不加载列表；平台「全部」+ 已接入平台；游戏名称模糊匹配；重置时站点保持</td></tr>
+        <tr><td><b>排序类型 / 前台显示（搜索）</b><span class="tag-new" data-tip="hfil" tabindex="0">本期新增</span></td><td>单选下拉，可清空：置顶 已置顶 / 未置顶；前台显示 显示 / 隐藏 / 无对应版本。与其他条件同时生效；不影响置顶位置计算</td></tr>
+        <tr><td><b>收录范围</b></td><td>同商户后台：站点全部游戏（开启、维护中、站点关闭）；总控停用的游戏、场馆不收录；全站一个队列；游戏对两个版本各占一行</td></tr>
+        <tr><td><b>列表顺序</b></td><td>热门置顶按位置在前，其余按热门序号；站点关闭的排在最后；无筛选时置顶区后显示分隔线</td></tr>
+        <tr><td><b>热门序号</b><span class="tag-new" data-tip="hseq" tabindex="0">本期新增</span></td><td>序号旁「编辑」可改，规则见「序号排序」；只在本页修改，与场馆序号互不影响</td></tr>
+        <tr><td><b>前台显示</b><span class="tag-new" data-tip="hshow" tabindex="0">本期新增</span></td><td>游戏对前台显示的版本「显示」，另一版本「隐藏」；隐藏的版本可置顶、置顶保留，前台不显示、不占位</td></tr>
+        <tr><td><b>置顶 / 批量</b></td><td>规则同场馆置顶；位置按全站计算，与筛选无关；站点关闭的游戏后显示「已关闭」，无置顶按钮、不可勾选</td></tr>
+      </tbody></table></div></div>
   </div>
 
   <!-- ===== 4 停用过滤、前台与商户后台 ===== -->
@@ -1804,7 +1804,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
  'corder': ['场馆游戏排序弹窗 · 收录与顺序', '原：总控没有此弹窗。\n现：同商户后台：收录前台该场馆展示的游戏（含并入的 MY 系列），站点开启、维护中，不含站点关闭与总控停用；游戏对两个版本各占一行；顺序为 场馆内置顶 → 场馆序号。'],
  'cpin': ['场馆游戏排序弹窗 · 场馆内置顶', '原：总控不能做场馆内置顶，只在商户后台操作。\n现：总控可置顶、改位置、取消置顶、批量置顶 / 取消，规则同商户后台；位置按该场馆整体计算，与名称筛选无关；与该站点商户后台同一份数据。'],
  'cshow': ['场馆游戏排序弹窗 · 「前台显示」列', '原：无。\n现：有对应版本的游戏，前台显示的版本「显示」，另一版本「隐藏」且整行置灰；其余「-」。隐藏的版本可置顶，前台不显示、不占位。'],
- 'hpage': ['新增菜单「热门游戏排序」', '原：无。\n现：「站点场馆管理」下新增，放在场馆配置总控与游戏配置总控之间：选站点后做热门置顶、批量、位置筛选，规则与该站点商户后台热门游戏排序相同、同一份数据；总控停用的游戏不收录；需在角色权限中分配。'],
+ 'hpage': ['新增菜单「热门游戏排序」', '原：无。\n现：「站点场馆管理」下新增，放在游戏配置总控之后：选站点后做热门置顶、批量、位置筛选，规则与该站点商户后台热门游戏排序相同、同一份数据；总控停用的游戏不收录；需在角色权限中分配。'],
  'hshow': ['热门游戏排序 · 「前台显示」列', '原：无。\n现：有对应版本的游戏，前台显示的版本「显示」，另一版本「隐藏」（整行置灰）；其余「-」。隐藏的版本可置顶、置顶保留，但前台不显示、不占位；改为显示后按其置顶位置展示。'],
  'gshow': ['搜索 · 「前台显示」', '原：无（搜索区只有游戏ID、游戏名称、场馆名称）。\n现：新增单选下拉：显示 / 隐藏 / 无对应版本。显示＝两个版本中前台显示的那个；隐藏＝另一个；无对应版本＝所属场馆有 MY 场馆、但本游戏没有对应版本。'],
  'grank': ['新增 · 站点状态、热门排名', '原：无。\n现：站点状态为开启 / 维护 / 关闭，与商户后台同一份；在操作列点维护 / 启用 / 停用并选「只改本站点」可修改；热门排名为该站点热门顺序中的名次，只读；总控停用的显示「-」。列表按热门排名排列。'],
