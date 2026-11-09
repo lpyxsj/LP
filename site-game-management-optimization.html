@@ -480,7 +480,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
     <button class="doc-btn" id="resetDemo" type="button">重置演示数据</button>
   </div>
   <div class="sub-bar" role="tablist">
-    <button class="sub-btn active" data-page="vendor" type="button">总控 · 场馆配置总控<small>场馆置顶、场馆内置顶、切换</small></button>
+    <button class="sub-btn active" data-page="vendor" type="button">总控 · 场馆配置总控<small>场馆内置顶与序号、切换</small></button>
     <button class="sub-btn" data-page="game" type="button">总控 · 游戏配置总控<small>切换、停用</small></button>
     <button class="sub-btn" data-page="hot" type="button">总控 · 热门游戏排序<small>热门置顶（新增菜单）</small></button>
     <button class="sub-btn" data-page="front" type="button">前台效果<small>首页、场馆页</small></button>
@@ -512,7 +512,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
           </div>
           <div class="sel-hint hide" id="vSelHint" role="status"></div>
           <div class="bk-table-wrap"><table class="bk-table" id="vTable"><thead id="vHead"></thead><tbody id="vBody"></tbody></table></div>
-          <div class="bk-foot"><label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="chk" id="vAllFoot"><span id="vAllLabel">选择全部（共 0 条）</span></label><select class="bk-select" id="vBatchSel" style="width:150px;height:28px;padding:0 8px;" aria-label="批量操作"><option value="">批量操作</option><option value="pin">批量置顶</option><option value="unpin">批量取消置顶</option><option value="mt">批量维护</option><option value="on">批量启用</option><option value="off">批量停用</option></select><span class="mk" data-tip="bfoot" tabindex="0">本期新增</span><span class="muted" id="vSelText">已选择 0 条</span><div class="bk-pager"><span id="vCount">共 0 条数据</span></div></div>
+          <div class="bk-foot"><label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="chk" id="vAllFoot"><span id="vAllLabel">选择全部（共 0 条）</span></label><select class="bk-select" id="vBatchSel" style="width:150px;height:28px;padding:0 8px;" aria-label="批量操作"><option value="">批量操作</option><option value="mt">批量维护</option><option value="on">批量启用</option><option value="off">批量停用</option></select><span class="mk" data-tip="bfoot" tabindex="0">本期新增</span><span class="muted" id="vSelText">已选择 0 条</span><div class="bk-pager"><span id="vCount">共 0 条数据</span></div></div>
         </div>
       </div>
     </div>
@@ -599,9 +599,9 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>前台位置</th><th>顺序</th></tr></thead>
           <tbody>
-            <tr><td><b>场馆 Tab、场馆区块先后</b></td><td>场馆置顶 → 热门游戏数量</td></tr>
+            <tr><td><b>场馆 Tab、场馆区块先后</b></td><td>场馆置顶 → 热门游戏数量（场馆置顶在商户后台设置）</td></tr>
             <tr><td><b>首页热门区、场馆页「热门」</b></td><td>热门置顶 → 热门序号</td></tr>
-            <tr><td><b>场馆区块内、场馆页「全部」</b></td><td>场馆内置顶 → 场馆序号（场馆配置总控 → 场馆游戏排序，或游戏配置总控）</td></tr>
+            <tr><td><b>场馆区块内、场馆页「全部」</b></td><td>场馆内置顶 → 场馆序号（场馆配置总控 → 场馆游戏排序）</td></tr>
             <tr><td><b>游戏对</b><span class="tag-new" data-tip="fpair" tabindex="0">本期修改</span></td><td>只显示该站点当前选定的版本，按它自己的置顶位置排列；未置顶的按两个版本共用的序号排列</td></tr>
             <tr><td><b>总控停用</b><span class="tag-new" data-tip="fstop" tabindex="0">本期修改</span></td><td>停用的游戏、场馆各站点都不显示</td></tr>
           </tbody>
@@ -631,17 +631,17 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
           <div class="pri-col"><h4>热门列表</h4><div class="where">首页热门区、侧边菜单热门、搜索页「热门」、场馆页「热门」</div>
             <div class="pri-l pin"><b>① 热门置顶</b>人工指定第 1 ~ N 位，最优先</div>
             <div class="pri-a">↓ 其余游戏</div>
-            <div class="pri-l seq"><b>② 热门序号</b>人工「编辑」调整位置；每个站点一条，从 1 连续</div>
+            <div class="pri-l seq"><b>② 热门序号</b>人工「编辑」调整位置；每个站点一条，从 1 连续；在「热门游戏排序」页改</div>
             <div class="pri-a up">↑ 生成 / 插入 / 重排</div>
             <div class="pri-l hot"><b>③ 热门值（自动）</b>不直接排序，只用来生成序号</div></div>
           <div class="pri-col"><h4>场馆内游戏</h4><div class="where">首页场馆区块内、场馆页「全部」</div>
             <div class="pri-l pin"><b>① 场馆内置顶</b>人工指定第 1 ~ N 位，最优先</div>
             <div class="pri-a">↓ 其余游戏</div>
-            <div class="pri-l seq"><b>② 场馆序号</b>人工「编辑」调整位置；每个场馆一条，从 1 连续</div>
+            <div class="pri-l seq"><b>② 场馆序号</b>人工「编辑」调整位置；每个场馆一条，从 1 连续；在「场馆游戏排序」弹窗改</div>
             <div class="pri-a up">↑ 生成 / 插入 / 重排</div>
             <div class="pri-l hot"><b>③ 热门值（自动）</b>不直接排序，只用来生成序号</div></div>
           <div class="pri-col"><h4>场馆</h4><div class="where">场馆 Tab、首页场馆区块先后、侧边菜单场馆、场馆页左侧</div>
-            <div class="pri-l pin"><b>① 场馆置顶</b>人工指定第 1 ~ N 位，最优先</div>
+            <div class="pri-l pin"><b>① 场馆置顶</b>人工指定第 1 ~ N 位，最优先；只在商户后台「厂商管理」设置</div>
             <div class="pri-a">↓ 其余场馆</div>
             <div class="pri-l hot"><b>② 热门游戏数量（自动）</b>按数量从多到少；场馆没有序号</div></div>
         </div>
@@ -657,12 +657,12 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
       <div class="dh-prose">
         <p>总控「站点场馆管理」下只有「场馆配置总控」「游戏配置总控」两个平台级页面，不分站点：可维护 / 启用 / 停用场馆和游戏、手工改场馆热门游戏数量、批量修改有效注单，但不能按站点调整顺序。场馆置顶、热门置顶、场馆内置顶只在商户后台操作，总控要替站点调整只能登录商户后台或提工单。</p>
         <p>另外：总控停用的游戏、场馆仍下发到站点，会出现在站点排序列表里，已置顶的没有处理规则；同一款游戏的原厂版与 MY 版在前台同时出现、位置不同。</p>
-        <p>本期做三件事：<strong>站点选择</strong>（现网两页选站点后显示该站点数据）；<strong>置顶移到总控</strong>（场馆置顶、热门置顶、场馆内置顶都能在总控按站点操作，与商户后台同一份数据）；<strong>原厂 / MY 切换由总控控制</strong>。同时处理<strong>总控停用过滤</strong>。商户后台不改。</p>
+        <p>本期做三件事：<strong>站点选择</strong>（现网两页选站点后显示该站点数据）；<strong>置顶移到总控</strong>（热门置顶、场馆内置顶能在总控按站点操作，与商户后台同一份数据；场馆置顶仍在商户后台，总控只读显示）；<strong>原厂 / MY 切换由总控控制</strong>。同时处理<strong>总控停用过滤</strong>。商户后台不改。</p>
       </div></div>
     <div class="req-block"><h2>需求说明</h2>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>需求点</th><th>位置</th><th>说明</th></tr></thead><tbody>
         <tr><td><b>1. 站点选择</b><span class="tag-new" data-tip="site" tabindex="0">本期新增</span></td><td>场馆配置总控、游戏配置总控</td><td>搜索区新增「站点」（必选）。进入页面不加载数据，选站点并查询后显示该站点的场馆 / 游戏，并追加该站点的列（前台位置、站点状态、置顶、关联、前台显示等）。现网的列与平台级操作（维护 / 启用 / 停用、批量修改有效注单、游戏「排序」）保留，仍对全平台生效。场馆「编辑排序数值」删除，热门游戏数量改为显示该站点的值、只读</td></tr>
-        <tr><td><b>2. 置顶移到总控</b><span class="tag-new" data-tip="ozk" tabindex="0">本期修改</span></td><td>场馆配置总控、场馆游戏排序弹窗、热门游戏排序（新增菜单）</td><td>商户后台的三类置顶都能在总控按站点操作：场馆置顶（场馆配置总控）、场馆内置顶（场馆配置总控 → 场馆游戏排序）、热门置顶（新增菜单「热门游戏排序」）。规则与商户后台一致：位置从 1 连续、新置顶放末尾、改位置为插入、取消后前移、批量置顶 / 取消、位置快速筛选；与该站点商户后台同一份数据，任一端修改另一端可见</td></tr>
+        <tr><td><b>2. 置顶移到总控</b><span class="tag-new" data-tip="ozk" tabindex="0">本期修改</span></td><td>场馆游戏排序弹窗、热门游戏排序（新增菜单）</td><td>商户后台的两类游戏置顶能在总控按站点操作：场馆内置顶（场馆配置总控 → 场馆游戏排序）、热门置顶（新增菜单「热门游戏排序」）。场馆置顶不在总控做，场馆配置总控只读显示「排序类型」「前台位置」。规则与商户后台一致：位置从 1 连续、新置顶放末尾、改位置为插入、取消后前移、批量置顶 / 取消、位置快速筛选；与该站点商户后台同一份数据，任一端修改另一端可见</td></tr>
         <tr><td><b>3. 原厂 / MY 切换由总控控制</b><span class="tag-new" data-tip="gsw" tabindex="0">本期新增</span></td><td>场馆配置总控、游戏配置总控</td><td>按站点选择游戏对在前台显示原厂版还是 MY 版，默认 MY：场馆配置总控「原厂 / MY 切换」按场馆对一键切换，「对应 MY 场馆」点击「N 款对应游戏」可查看该场馆对的游戏对并逐个切换；游戏配置总控新增关联（显示对方游戏）、前台显示列与筛选，单个「改为原厂 / 改为 MY」与批量切换。前台同一游戏对只显示一款；目标版本已被总控停用时不能切换</td></tr>
         <tr><td><b>4. 总控停用过滤</b><span class="tag-new" data-tip="fstop" tabindex="0">本期修改</span></td><td>场馆配置总控、游戏配置总控的「停用」</td><td>停用的场馆 / 游戏，各站点前台与热门游戏排序、场馆游戏排序列表都不再显示；已置顶的自动取消，其后前移；停用当下生效</td></tr>
         <tr><td><b>5. 序号排序</b><span class="tag-new" data-tip="hseq" tabindex="0">本期新增</span></td><td>热门游戏排序、场馆游戏排序弹窗、游戏配置总控</td><td>每款游戏有两个序号：热门序号（站点全站一条）、场馆序号（每个场馆一条），都从 1 连续。前台顺序为 置顶 → 序号。序号旁点「编辑」可改，改成 X 就排到第 X 位，其他依次顺延；序号按热门值生成，「对齐平台排序」时按最新热门值重排</td></tr>
@@ -693,10 +693,10 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
     <div class="req-block"><h2>基本概念</h2>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>概念</th><th>说明</th></tr></thead><tbody>
         <tr><td><b>总控状态 / 站点状态</b></td><td>总控状态：总控设置的维护 / 启用 / 停用，对全平台生效。站点状态：商户设置的开启 / 维护 / 关闭，只影响该站点</td></tr>
-        <tr><td><b>场馆置顶</b></td><td>前台场馆 Tab、首页场馆区块先后、侧边菜单、场馆页左侧的顺序。每个站点一个队列：场馆置顶 → 热门游戏数量</td></tr>
+        <tr><td><b>场馆置顶</b></td><td>前台场馆 Tab、首页场馆区块先后、侧边菜单、场馆页左侧的顺序。每个站点一个队列：场馆置顶 → 热门游戏数量；场馆置顶在商户后台设置，总控只读显示</td></tr>
         <tr><td><b>热门置顶</b></td><td>首页热门区、侧边菜单热门、搜索页「热门」、场馆页「热门」的顺序。每个站点一个全站队列：热门置顶 → 热门序号</td></tr>
         <tr><td><b>场馆内置顶</b></td><td>首页场馆区块内游戏、场馆页「全部」的顺序。每个站点每个场馆一个队列：场馆内置顶 → 场馆序号</td></tr>
-        <tr><td><b>置顶规则</b></td><td>位置从 1 连续编号，新置顶放末尾，改位置为插入，取消后其后前移，不限数量；三类置顶总控与商户都能操作，同一份数据</td></tr>
+        <tr><td><b>置顶规则</b></td><td>位置从 1 连续编号，新置顶放末尾，改位置为插入，取消后其后前移，不限数量；热门置顶、场馆内置顶总控与商户都能操作，同一份数据；场馆置顶只在商户后台</td></tr>
         <tr><td><b>序号</b><span class="tag-new" data-tip="hseq" tabindex="0">本期新增</span></td><td>热门序号、场馆序号，每条从 1 连续；同款原厂 / MY 共用一个；按热门值生成，可人工编辑；规则见「停用过滤、前台与商户后台」页签的「序号排序」</td></tr>
         <tr><td><b>热门值</b></td><td>来自游戏配置总控的有效注单，全平台一份，沿用现有逻辑</td></tr>
         <tr><td><b>场馆对 / 游戏对</b></td><td>本期场馆对只有 PG电子 ↔ MyPG电子、TaDa 电子 ↔ MyTaDa电子；游戏对为两个厂商都有的游戏（按三方游戏 ID 对应），开发预置，不可修改。只有一方有的游戏为「无对应版本」；其他场馆没有场馆对，相关列显示「-」</td></tr>
@@ -704,7 +704,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
       </tbody></table></div></div>
     <div class="req-block"><h2>各端关系</h2>
       <div class="illus-grid" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr));">
-        <div class="illus-col"><h4>场馆配置总控</h4><div class="illus-item new">站点选择；场馆置顶、场馆内置顶、原厂 / MY 切换<span class="tag" data-tip="ozk" tabindex="0">本期修改</span></div><div class="who">维护 / 启用 / 停用可选本站点或全部站点</div></div>
+        <div class="illus-col"><h4>场馆配置总控</h4><div class="illus-item new">站点选择；场馆内置顶与序号（场馆游戏排序）、原厂 / MY 切换<span class="tag" data-tip="ozk" tabindex="0">本期修改</span></div><div class="who">维护 / 启用 / 停用可选本站点或全部站点</div></div>
         <div class="illus-col"><h4>游戏配置总控</h4><div class="illus-item new">站点选择；单个 / 批量切换<span class="tag" data-tip="ozk" tabindex="0">本期修改</span></div><div class="who">维护 / 启用 / 停用可选本站点或全部站点</div></div>
         <div class="illus-col"><h4>热门游戏排序</h4><div class="illus-item new">热门置顶，照商户后台<span class="tag" data-tip="hpage" tabindex="0">本期新增</span></div><div class="who">按站点</div></div>
         <div class="illus-col"><h4>商户后台</h4><div class="illus-item">本期不改，按已开发版本上线</div><div class="who">置顶与总控同一份数据</div></div>
@@ -752,18 +752,17 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td>工具栏</td><td>原厂 / MY 切换<span class="tag-new" data-tip="vsw" tabindex="0">本期新增</span></td><td>新增</td><td>弹窗列出有游戏对的场馆对：原厂场馆 / MY 场馆 / 游戏对数量 / 前台显示 /「全部显示原厂」「全部显示 MY」；目标版本已被总控停用的跳过</td></tr>
         <tr><td>列表</td><td>序号、场馆名称、场馆类型、总控状态（平台级）</td><td>保留</td><td>列表按该站点 前台位置排列</td></tr>
         <tr><td>列表</td><td>热门游戏数，点击「编辑排序数值」<span class="tag-new" data-tip="hcnt" tabindex="0">本期修改</span></td><td>修改</td><td>显示所选站点的热门游戏数量，只读，用于场馆自动排序；删除「编辑排序数值」弹窗</td></tr>
-        <tr><td>列表</td><td>排序类型（现网全部自动排序）<span class="tag-new" data-tip="pincol" tabindex="0">本期修改</span></td><td>合并</td><td>与新增的置顶位置、是否置顶合并为一列「置顶」：已置顶显示「第 N 位」+「取消」，未置顶显示「置顶」</td></tr>
-        <tr><td>列表</td><td>勾选、前台位置、站点状态、置顶、对应 MY 场馆<span class="tag-new" data-tip="vcols" tabindex="0">本期新增</span></td><td>新增</td><td>前台位置从 1 连续，置顶占 1–N，其余按热门游戏数量，总控停用的显示「-」；站点状态只读；对应 MY 场馆显示对应 MY 场馆及游戏对数量，点击数量打开对应游戏弹窗</td></tr>
+        <tr><td>列表</td><td>排序类型（现网全部自动排序）<span class="tag-new" data-tip="vsort" tabindex="0">本期修改</span></td><td>修改</td><td>显示本站点的「置顶 · 第 N 位」或「自动排序」，只读；场馆置顶在商户后台厂商管理设置</td></tr>
+        <tr><td>列表</td><td>勾选、前台位置、站点状态、对应 MY 场馆<span class="tag-new" data-tip="vcols" tabindex="0">本期新增</span></td><td>新增</td><td>前台位置从 1 连续，商户置顶的在前，其余按热门游戏数量，总控停用的显示「-」；站点状态只读；对应 MY 场馆显示对应 MY 场馆及游戏对数量，点击数量打开对应游戏弹窗</td></tr>
         <tr><td>操作列</td><td>维护 / 启用、停用（备注必填 30 字），只改总控状态<span class="tag-new" data-tip="stsc" tabindex="0">本期修改</span></td><td>修改</td><td>确认框新增影响范围：只改本站点 / 全部站点，不默认；按钮按总控状态与本站点状态显示；规则见总览「维护 / 启用 / 停用」</td></tr>
-        <tr><td>操作列</td><td>场馆游戏排序<span class="tag-new" data-tip="vcmd" tabindex="0">本期新增</span></td><td>新增</td><td>打开该场馆的场馆游戏排序弹窗，可做场馆内置顶（总控停用的场馆没有此按钮）</td></tr>
+        <tr><td>操作列</td><td>场馆游戏排序<span class="tag-new" data-tip="vcmd" tabindex="0">本期新增</span></td><td>新增</td><td>打开该场馆的场馆游戏排序弹窗，可做场馆内置顶、编辑场馆序号（总控停用的场馆没有此按钮）</td></tr>
       </tbody></table></div></div>
     <div class="req-block"><h2>置顶与弹窗规则</h2>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>项目</th><th>规则</th></tr></thead><tbody>
-        <tr><td><b>场馆置顶</b><span class="tag-new" data-tip="vrule" tabindex="0">本期新增</span></td><td>与商户后台同一套规则、同一份数据：新置顶放置顶区末尾；改位置为插入，其余依次顺移；取消后其后前移；不限数量；只作用于所选站点</td></tr>
-        <tr><td><b>置顶位置修改</b><span class="tag-new" data-tip="vpos" tabindex="0">本期新增</span></td><td>输入框 + 位置列表，每行「位置N」及当前场馆 / 游戏，当前位置标「当前」；输入数字筛出位置号包含该数字的位置（完全相同 → 开头 → 中间包含）；↑ ↓、回车；选其他位置二次确认后插入。三类置顶通用</td></tr>
+        <tr><td><b>置顶位置修改</b><span class="tag-new" data-tip="vpos" tabindex="0">本期新增</span></td><td>输入框 + 位置列表，每行「位置N」及当前场馆 / 游戏，当前位置标「当前」；输入数字筛出位置号包含该数字的位置（完全相同 → 开头 → 中间包含）；↑ ↓、回车；选其他位置二次确认后插入。热门置顶、场馆内置顶通用</td></tr>
         <tr><td><b>场馆游戏排序 · 收录与顺序</b><span class="tag-new" data-tip="corder" tabindex="0">本期新增</span></td><td>同商户后台：前台该场馆展示的游戏（含并入的 MY 系列），站点开启、维护中，不含站点关闭与总控停用；游戏对两个版本各占一行；顺序 场馆内置顶 → 场馆序号</td></tr>
         <tr><td><b>场馆游戏排序 · 场馆序号</b><span class="tag-new" data-tip="cseq" tabindex="0">本期新增</span></td><td>序号旁「编辑」可改，规则见「序号排序」；与游戏配置总控「场馆序号」是同一个值</td></tr>
-        <tr><td><b>场馆游戏排序 · 场馆内置顶</b><span class="tag-new" data-tip="cpin" tabindex="0">本期新增</span></td><td>置顶 / 改位置 / 取消 / 批量，规则同场馆置顶；位置按该场馆整体计算，与名称筛选无关；与商户后台同一份数据</td></tr>
+        <tr><td><b>场馆游戏排序 · 场馆内置顶</b><span class="tag-new" data-tip="cpin" tabindex="0">本期新增</span></td><td>置顶 / 改位置 / 取消 / 批量，规则与商户后台一致：新置顶放末尾，改位置为插入，取消后其后前移，不限数量；位置按该场馆整体计算，与名称筛选无关；与商户后台同一份数据</td></tr>
         <tr><td><b>场馆游戏排序 · 前台显示</b><span class="tag-new" data-tip="cshow" tabindex="0">本期新增</span></td><td>游戏对标显示 / 隐藏，隐藏的整行置灰；隐藏的版本可置顶，前台不显示、不占位</td></tr>
         <tr><td><b>切换确认框</b><span class="tag-new" data-tip="vswc" tabindex="0">本期新增</span></td><td>「确认将 {站点} 的 {原厂场馆} / {MY 场馆} 下 {N} 款对应游戏全部切换为显示 {原厂 / MY}？只影响该站点前台。」，有目标版本已被总控停用的追加「其中 Y 个目标版本已被总控停用，不切换。」</td></tr>
         <tr><td><b>对应游戏弹窗</b><span class="tag-new" data-tip="vpairs" tabindex="0">本期新增</span></td><td>点击「对应 MY 场馆」中的「N 款对应游戏」打开「游戏对 - {原厂场馆} / {MY 场馆}」：列出该站点该场馆对的全部游戏对，列 原厂游戏（名称、游戏ID、总控状态、站点状态）/ MY 游戏（同上）/ 前台显示 / 操作；顶部「共 N 对，显示 MY X 对 · 显示原厂 Y 对，其中 Z 对目标版本已被总控停用」。每行「改为原厂 / 改为 MY」规则同游戏配置总控：确认框写明站点，目标版本已被总控停用时置灰并提示「该版本已被总控停用」；切换后弹窗、列表与前台同步</td></tr>
@@ -793,14 +792,13 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td>分页 / 工具栏</td><td>每页 50 条可跳页；批量修改有效注单（批量配置 / 批量上传）；刷新 / 密度 / 列设置</td><td>保留</td><td>平台级</td></tr>
         <tr><td>工具栏</td><td>列表底部批量操作（批量改为原厂 / 批量改为 MY）</td><td>新增</td><td>见下</td></tr>
         <tr><td>列表</td><td>序号、游戏ID、游戏名称、场馆名称、游戏状态（平台级）、游戏图片、创建时间、最近操作人、最近操作时间、备注、有效注单、前1小时有效注单、当前小时注单量</td><td>保留</td><td>列表按该站点热门排名排列</td></tr>
-        <tr><td>列表</td><td>勾选、站点状态、热门排名、场馆序号、关联、前台显示、前台切换</td><td>新增</td><td>见下</td></tr>
+        <tr><td>列表</td><td>勾选、站点状态、热门排名、关联、前台显示、前台切换</td><td>新增</td><td>见下</td></tr>
         <tr><td>操作列</td><td>维护 / 启用、停用（备注必填 30 字），只改总控状态<span class="tag-new" data-tip="stsc" tabindex="0">本期修改</span></td><td>修改</td><td>同场馆配置总控</td></tr>
         <tr><td>操作列</td><td>排序（点开录入排列顺序，平台级）<span class="tag-new" data-tip="gsort" tabindex="0">本期修改</span></td><td>删除</td><td>改为在「场馆序号」列点序号旁「编辑」修改，按站点生效、插入补位</td></tr>
       </tbody></table></div></div>
     <div class="req-block"><h2>新增字段</h2>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>字段</th><th>说明</th></tr></thead><tbody>
         <tr><td><b>站点状态 / 热门排名</b><span class="tag-new" data-tip="grank" tabindex="0">本期新增</span></td><td>站点状态：开启 / 维护 / 关闭，与商户后台同一份；在操作列点维护 / 启用 / 停用并选「只改本站点」可修改。热门排名：该站点热门顺序中的名次，只读；总控停用的显示「-」</td></tr>
-        <tr><td><b>场馆序号</b><span class="tag-new" data-tip="gseq" tabindex="0">本期新增</span></td><td>该游戏在所属场馆的序号；旁边「编辑」可改，与场馆游戏排序弹窗同一个值；站点关闭、总控停用的显示「-」。规则见「序号排序」</td></tr>
         <tr><td><b>对应版本 / 前台显示</b><span class="tag-new" data-tip="grel" tabindex="0">本期新增</span></td><td>关联：游戏对显示「游戏对」及对方游戏「场馆名称 · 游戏名称（游戏ID）」，有场馆对但无对应游戏「无对应版本」，否则「-」。前台显示：显示 / 隐藏，隐藏的整行置灰</td></tr>
         <tr><td><b>前台切换</b><span class="tag-new" data-tip="gsw" tabindex="0">本期新增</span></td><td>游戏对每行「改为原厂 / 改为 MY」，下方小字当前版本；确认框「确认将 {站点} 的 {游戏名称} 切换为显示 {场馆名称} 版本？只影响该站点前台。」；目标版本已被总控停用时置灰，悬停提示「该版本已被总控停用」</td></tr>
         <tr><td><b>批量改为原厂 / MY</b><span class="tag-new" data-tip="gbsw" tabindex="0">本期新增</span></td><td>只处理可切换的游戏对；确认框写明不变的数量（已是目标版本、不是游戏对或目标版本已停用）；游戏对两行都勾选算 1 个；无可切换项提示「所选项均无需切换」</td></tr>
@@ -820,7 +818,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td><b>列表顺序</b></td><td>热门置顶按位置在前，其余按热门序号；站点关闭的排在最后；无筛选时置顶区后显示分隔线</td></tr>
         <tr><td><b>热门序号</b><span class="tag-new" data-tip="hseq" tabindex="0">本期新增</span></td><td>序号旁「编辑」可改，规则见「序号排序」；只在本页修改，与场馆序号互不影响</td></tr>
         <tr><td><b>前台显示</b><span class="tag-new" data-tip="hshow" tabindex="0">本期新增</span></td><td>游戏对前台显示的版本「显示」，另一版本「隐藏」；隐藏的版本可置顶、置顶保留，前台不显示、不占位</td></tr>
-        <tr><td><b>置顶 / 批量</b></td><td>规则同场馆置顶；位置按全站计算，与筛选无关；站点关闭的游戏后显示「已关闭」，无置顶按钮、不可勾选</td></tr>
+        <tr><td><b>置顶 / 批量</b></td><td>规则同场馆内置顶；位置按全站计算，与筛选无关；站点关闭的游戏后显示「已关闭」，无置顶按钮、不可勾选</td></tr>
       </tbody></table></div></div>
   </div>
 
@@ -845,7 +843,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td><b>修改</b></td><td>序号本身不可点击，旁边「编辑」按钮点开后输入数字，✓ 保存、✕ 放弃，回车保存；只能填 1 ~ N 的整数，否则提示「请输入 1–N 的整数」。改成 X 就排到第 X 位，原来第 X 位及之后的依次 +1，原位置之后的依次 −1；保存后提示「已改到第 X 位，后面的依次顺延」</td></tr>
         <tr><td><b>新增 / 重新开启</b></td><td>新上的游戏、重新开启的游戏，按热门值插到对应位置（排在热门值比它低的第一款游戏之前）</td></tr>
         <tr><td><b>关闭 / 停用</b></td><td>站点关闭或总控停用的游戏移出序号，后面的依次 −1；列表中显示「-」</td></tr>
-        <tr><td><b>修改入口</b></td><td>热门序号：只在「热门游戏排序」页；场馆序号：「场馆游戏排序」弹窗与「游戏配置总控」，两处同一个值</td></tr>
+        <tr><td><b>修改入口</b></td><td>热门序号：只在「热门游戏排序」页；场馆序号：只在「场馆游戏排序」弹窗；游戏配置总控不做排序，只管游戏本身</td></tr>
       </tbody></table></div></div>
     <div class="req-block"><h2>前台规则</h2>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>前台位置</th><th>顺序来源</th><th>本期</th></tr></thead><tbody>
@@ -870,8 +868,8 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
   <div class="dh-panel" data-panel="qa">
     <div class="req-block"><h2>范围</h2>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>项目</th><th>说明</th></tr></thead><tbody>
-        <tr><td><b>本期做</b></td><td>场馆配置总控、游戏配置总控：站点选择（必选），删除热门游戏数量手工编辑；场馆置顶、场馆内置顶（场馆游戏排序弹窗）、热门置顶（新增菜单热门游戏排序）移到总控；原厂 / MY 切换由总控控制；总控停用过滤；前台游戏对只显示当前版本、停用不显示</td></tr>
-        <tr><td><b>本期不做</b></td><td>场馆（厂商）的序号排序（场馆顺序靠场馆置顶 + 热门游戏数量）；商户后台任何改动；新站默认数据；跨站点批量；总控按站点编辑场馆、入场余额限制、场馆排序规则设置、对齐平台排序；修改或解除对应关系；热门值来源与对齐平台排序逻辑</td></tr>
+        <tr><td><b>本期做</b></td><td>场馆配置总控、游戏配置总控：站点选择（必选），删除热门游戏数量手工编辑；场馆内置顶与场馆序号（场馆游戏排序弹窗）、热门置顶与热门序号（新增菜单热门游戏排序）在总控按站点操作；原厂 / MY 切换由总控控制；总控停用过滤；前台游戏对只显示当前版本、停用不显示</td></tr>
+        <tr><td><b>本期不做</b></td><td>总控场馆置顶（场馆顺序在商户后台靠场馆置顶 + 热门游戏数量）；场馆（厂商）的序号排序；游戏配置总控排序；商户后台任何改动；新站默认数据；跨站点批量；总控按站点编辑场馆、入场余额限制、场馆排序规则设置、对齐平台排序；修改或解除对应关系；热门值来源与对齐平台排序逻辑</td></tr>
         <tr><td><b>适用范围</b></td><td>全部站点、全部场馆类型；按站点的操作只作用于所选站点；维护 / 启用 / 停用按确认框所选范围生效</td></tr>
       </tbody></table></div></div>
     <div class="req-block"><h2>用户与场景</h2>
@@ -882,7 +880,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
     <div class="req-block"><h2>功能点清单</h2>
       <div class="dh-prose"><ol>
         <li><strong>F1【P0】站点选择</strong>：两页站点必选，进入不加载数据；维护 / 启用 / 停用可选影响范围；删除热门游戏数量手工编辑。</li>
-        <li><strong>F2【P0】场馆置顶移到总控</strong>：新规则、批量、位置筛选，按站点。</li>
+        <li><strong>F2【P1】场馆置顶只读</strong>：总控不做场馆置顶，场馆配置总控只读显示本站点的排序类型、前台位置。</li>
         <li><strong>F3【P0】热门置顶移到总控</strong>：新菜单热门游戏排序，按站点。</li>
         <li><strong>F4【P0】场馆内置顶移到总控</strong>：场馆游戏排序弹窗，按站点。</li>
         <li><strong>F5【P0】原厂 / MY 切换由总控控制</strong>：场馆配置总控按场馆对一键、游戏配置总控单个与批量；前台只显示当前版本；目标版本停用不能切。</li>
@@ -906,7 +904,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
     <div class="req-block"><h2>需求完整性自查</h2>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>检查项</th><th>结论</th></tr></thead><tbody>
         <tr><td><b>权限</b></td><td>沿用现网两页菜单权限；新增「热门游戏排序」菜单权限；不新增按钮权限点</td></tr>
-        <tr><td><b>操作留痕</b></td><td>场馆置顶更新场馆最后操作人 / 时间；切换更新游戏最近操作人 / 时间（游戏对两行同时更新）；总控记总控账号；平台级维护 / 停用沿用现网</td></tr>
+        <tr><td><b>操作留痕</b></td><td>切换更新游戏最近操作人 / 时间（游戏对两行同时更新）；总控记总控账号；平台级维护 / 停用沿用现网</td></tr>
         <tr><td><b>边界状态</b></td><td>停用取消相关置顶且不显示；站点关闭取消游戏两层置顶；场馆站点关闭保留置顶；维护中可置顶；显示版本维护 / 关闭 / 停用不自动换版本；目标版本停用不能切换；隐藏版本置顶不占位</td></tr>
         <tr><td><b>口径与单位</b></td><td>置顶位置 1–N 连续，按站点、按队列</td></tr>
         <tr><td><b>批量操作</b></td><td>场馆、热门、场馆内批量置顶 / 取消；批量切换、场馆一键切换；只作用于所选站点。批量维护 / 启用 / 停用按确认框所选范围</td></tr>
@@ -918,7 +916,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
       <div class="dh-prose"><ol>
         <li><strong>站点必选</strong>：进入不加载数据，选站点查询后显示该站点数据；维护 / 启用 / 停用按确认框所选范围生效，只改本站点时检查其他站点未被改动。</li>
         <li><strong>按站点的数据</strong>：所有接口带站点参数，取已查询站点；验证时检查其他站点未被改动。</li>
-        <li><strong>三类置顶与商户后台同一份数据</strong>：位置任何时候 1 到 N 连续；新增 = N+1；取消 = 其后 −1；修改 = 插入。</li>
+        <li><strong>热门置顶、场馆内置顶与商户后台同一份数据</strong>：位置任何时候 1 到 N 连续；新增 = N+1；取消 = 其后 −1；修改 = 插入。</li>
         <li><strong>三类队列互相独立</strong>：筛选不影响位置计算。</li>
         <li><strong>游戏对置顶按版本</strong>：前台只取当前版本，隐藏版本不占位；切换不改置顶；目标版本停用不能切。</li>
         <li><strong>总控停用过滤</strong>：下发数据统一过滤，前台与两类排序列表不显示，置顶取消，当下生效；维护沿用现网。</li>
@@ -1380,7 +1378,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
   function renderVendor(){
     var site=VM.q?VM.site:'',sc=' class="site-col"',cols=11;
     $('vTable').style.minWidth='1500px';
-    $('vHead').innerHTML='<tr><th style="width:36px;"'+sc+'><input type="checkbox" class="chk" id="vChkAll" aria-label="全选当前查询结果"></th><th>序号</th><th'+sc+'>前台位置<span class="mk" data-tip="vcols" tabindex="0">本期新增</span></th><th>场馆名称</th><th>场馆类型</th><th>总控状态（全部站点）<span class="mk" data-tip="stname" tabindex="0">本期修改</span></th><th>热门游戏数<span class="mk" data-tip="hcnt" tabindex="0">本期修改</span></th><th'+sc+'>站点状态（本站点）</th><th'+sc+'>置顶<span class="mk" data-tip="pincol" tabindex="0">本期修改</span></th><th'+sc+'>对应 MY 场馆<span class="mk" data-tip="vrel" tabindex="0">本期新增</span></th><th style="min-width:300px;" class="op-fix">操作<span class="mk" data-tip="vcmd" tabindex="0">本期新增</span></th></tr>';
+    $('vHead').innerHTML='<tr><th style="width:36px;"'+sc+'><input type="checkbox" class="chk" id="vChkAll" aria-label="全选当前查询结果"></th><th>序号</th><th'+sc+'>前台位置<span class="mk" data-tip="vcols" tabindex="0">本期新增</span></th><th>场馆名称</th><th>场馆类型</th><th>总控状态（全部站点）<span class="mk" data-tip="stname" tabindex="0">本期修改</span></th><th>热门游戏数<span class="mk" data-tip="hcnt" tabindex="0">本期修改</span></th><th'+sc+'>站点状态（本站点）</th><th'+sc+'>排序类型<span class="mk" data-tip="vsort" tabindex="0">本期修改</span></th><th'+sc+'>对应 MY 场馆<span class="mk" data-tip="vrel" tabindex="0">本期新增</span></th><th style="min-width:300px;" class="op-fix">操作<span class="mk" data-tip="vcmd" tabindex="0">本期新增</span></th></tr>';
     if(!VM.q||!site){ $('vBody').innerHTML=emptyRow(cols,'请先在上方选择站点'); $('vCount').textContent='共 0 条数据'; return; }
     var s=SS[site],rows=vRows(),noFilter=!VM.name&&!VM.status&&!VM.type&&!XF.v.pin,html='',np=s.vPins.length;
     rows.forEach(function(v,i){
@@ -1389,12 +1387,12 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
       var ops=st+(!dead?'<button class="bk-btn sm primary" data-va="csort" data-v="'+esc(v.name)+'" type="button">场馆游戏排序</button>':'');
       var rel=VPAIR[v.name]?'<span class="bk-link">'+esc(VPAIR[v.name])+'</span> · <button class="lk" data-va="pairs" data-v="'+esc(v.name)+'" type="button">'+pairCount(s,v.name)+' 款对应游戏</button>':'-';
       html+='<tr class="'+(pin?'row-pin':'')+'"><td'+sc+'><input type="checkbox" class="chk" data-vsel="'+esc(v.name)+'"'+(VM.sel[v.name]?' checked':'')+(dead?' disabled':'')+'></td><td>'+(i+1)+'</td><td'+sc+'>'+(dead?'-':v.h5)+'</td>'+
-        '<td>'+esc(v.name)+'</td><td>'+v.type+'</td><td>'+pTag(pst)+'</td><td>'+(dead?'-':v.hc)+'</td><td'+sc+'>'+stTag(v.status)+'</td><td'+sc+'>'+pinCell('data-va',v.name,v.vp,!dead)+'</td><td'+sc+'>'+rel+'</td><td class="op-fix"><div class="bk-ops">'+ops+'</div></td></tr>';
+        '<td>'+esc(v.name)+'</td><td>'+v.type+'</td><td>'+pTag(pst)+'</td><td>'+(dead?'-':v.hc)+'</td><td'+sc+'>'+stTag(v.status)+'</td><td'+sc+'>'+(dead?'-':v.vp?'<span class="bk-tag blue">置顶 · 第 '+v.vp+' 位</span>':'<span class="muted">自动排序</span>')+'</td><td'+sc+'>'+rel+'</td><td class="op-fix"><div class="bk-ops">'+ops+'</div></td></tr>';
       if(noFilter&&pin&&v.vp===np&&i<rows.length-1) html+='<tr class="bk-sep"><td colspan="'+cols+'"></td></tr>';
     });
     $('vBody').innerHTML=html||emptyRow(cols,'没有符合条件的场馆');
     $('vCount').textContent='共 '+rows.length+' 条数据';
-    $('vPinHint').textContent=np?'已置顶 '+np+' 个场馆，从第 1 位起连续排列':'';
+    $('vPinHint').textContent=np?'本站点已置顶 '+np+' 个场馆（场馆置顶在商户后台厂商管理设置）':'';
     updVSel(rows);
   }
   function updVSel(rows){
@@ -1547,11 +1545,11 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     return all.filter(function(g){ return keep[g.id]&&(!GM.site||!GM.show||showOf(s,g)===GM.show); });
   }
   function renderGame(){
-    var site=GM.q?GM.site:'',sc=' class="site-col"',cols=21;
+    var site=GM.q?GM.site:'',sc=' class="site-col"',cols=20;
     $('gTable').style.minWidth='2700px';
     $('gHead').innerHTML='<tr><th style="width:36px;"'+sc+'><input type="checkbox" class="chk" id="gChkAll" aria-label="全选当前查询结果"></th><th>序号</th><th>游戏ID</th><th>游戏名称</th><th>场馆名称</th>'+
       '<th'+sc+'>对应版本<span class="mk" data-tip="grel" tabindex="0">本期新增</span></th><th'+sc+'>前台显示</th><th'+sc+' style="min-width:120px;">前台切换<span class="mk" data-tip="gsw" tabindex="0">本期新增</span></th>'+
-      '<th>总控状态（全部站点）<span class="mk" data-tip="stname" tabindex="0">本期修改</span></th><th'+sc+'>站点状态（本站点）</th><th'+sc+'>热门排名<span class="mk" data-tip="grank" tabindex="0">本期新增</span></th><th'+sc+' style="min-width:120px;">场馆序号<span class="mk" data-tip="gseq" tabindex="0">本期新增</span></th>'+
+      '<th>总控状态（全部站点）<span class="mk" data-tip="stname" tabindex="0">本期修改</span></th><th'+sc+'>站点状态（本站点）</th><th'+sc+'>热门排名<span class="mk" data-tip="grank" tabindex="0">本期新增</span></th>'+
       '<th>游戏图片</th><th>创建时间</th><th>最近操作人</th><th>最近操作时间</th><th>备注</th><th>有效注单</th><th>前1小时有效注单</th><th>当前小时注单量</th><th style="min-width:250px;" class="op-fix">操作<span class="mk" data-tip="gops" tabindex="0">本期修改</span></th></tr>';
     if(!GM.q||!site){ $('gBody').innerHTML=emptyRow(cols,'请先在上方选择站点'); $('gCount').textContent='共 0 条数据'; updGSel(); return; }
     var s=SS[site],rows=gRows(),html='',dv={};
@@ -1563,7 +1561,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
       var rel=p?(function(){ var x=G(s,p.my===g.id?p.orig:p.my); return esc(x.venue)+' · '+esc(x.zh)+'<span class="pair-note">'+x.id+'</span>'; })():(sh==='none'?'<span class="bk-tag gray">无对应版本</span>':'-');
       html+='<tr class="'+(sh==='hide'?'p2':'')+'"><td'+sc+'><input type="checkbox" class="chk" data-gsel="'+g.id+'"'+(GM.sel[g.id]?' checked':'')+'></td><td>'+(i+1)+'</td><td>'+g.id+'</td><td class="l">'+esc(nm(g))+'</td><td>'+esc(g.venue)+'</td>'+
         '<td'+sc+'>'+rel+'</td><td'+sc+'>'+showTag(sh)+'</td><td'+sc+'>'+swCell(s,g,'data-ga')+'</td>'+
-        '<td>'+pTag(pst)+'</td><td'+sc+'>'+stTag(g.status)+'</td><td'+sc+'>'+(stopped(g)||!g.rank?'-':g.rank)+'</td><td'+sc+'>'+seqCell('g',svKey(s,g),(g.status==='off'||stopped(g))?null:g.cs,fvOf(g.venue))+'</td>'+
+        '<td>'+pTag(pst)+'</td><td'+sc+'>'+stTag(g.status)+'</td><td'+sc+'>'+(stopped(g)||!g.rank?'-':g.rank)+'</td>'+
         '<td><span class="img-ph">图</span></td><td>2025-12-0'+(g.base%9+1)+' 10:00:00</td><td>'+esc(o.op)+'</td><td>'+o.time+'</td><td>'+esc(o.remark)+'</td><td>'+g.hot+'</td><td>'+Math.round(g.hot/700)+'</td><td>'+Math.round(g.hot/2100)+'</td>'+
         '<td class="op-fix"><div class="bk-ops">'+ops+'</div></td></tr>';
     });
@@ -1678,12 +1676,12 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
   /* 验收标准（与 PRD 第九章一致） */
   var ACC=[
     ['A1','进入场馆配置总控、游戏配置总控；不选站点点查询','进入时不加载数据，显示「暂无数据」；不选站点查询提示「请选择站点」'],
-    ['A2','场馆配置总控选站点 A 并查询','现网列保留，追加 勾选、前台位置、站点状态、置顶位置、是否置顶、对应 MY 场馆；排序类型为站点 A 的置顶 / 自动排序；热门游戏数量为站点 A 的值且不可编辑；工具栏有批量置顶、批量取消置顶、原厂 / MY 切换；维护 / 启用 / 停用仍可用且对全平台生效'],
-    ['A3','站点 A 无场馆置顶时置顶场馆 X','X 为位置1，前台位置 1；站点 A 商户后台厂商管理刷新后一致；站点 B 不变'],
-    ['A4','站点 A 已有 4 个场馆置顶，把位置4 改到位置1','该场馆为位置1，原位置1–3 变为位置2–4（插入，不是对调）'],
-    ['A5','站点 A 4 个置顶，取消位置2','原位置3、4 变为位置2、3；该场馆回到自动排序区'],
-    ['A6','已有 2 个置顶，勾选 3 个未置顶场馆，在底部「批量操作」选「批量置顶」并确定','确认框写明「位置3 至 位置5」；3 个场馆按列表原先后成为位置3–5，勾选清空'],
-    ['A7','勾选的场馆全部已置顶选「批量置顶」；全部未置顶选「批量取消置顶」','分别提示「所选场馆均已置顶」「所选场馆均未置顶」，不弹确认框'],
+    ['A2','场馆配置总控选站点 A 并查询','现网列保留，追加 勾选、前台位置、站点状态、对应 MY 场馆；排序类型显示站点 A 的「置顶 · 第 N 位」/「自动排序」，只读；热门游戏数量为站点 A 的值且不可编辑；工具栏有原厂 / MY 切换；没有置顶操作，批量操作只有批量维护 / 启用 / 停用'],
+    ['A3','站点 A 商户后台厂商管理置顶场馆 X 后，总控场馆配置总控刷新','X 的排序类型为「置顶 · 第 1 位」，前台位置 1；站点 B 不变'],
+    ['A4','场馆配置总控查看排序类型列','只读，没有置顶、取消、改位置按钮；列表上方显示「本站点已置顶 N 个场馆（场馆置顶在商户后台厂商管理设置）」'],
+    ['A5','场馆配置总控「批量操作」下拉','只有批量维护、批量启用、批量停用，没有批量置顶 / 取消置顶'],
+    ['A6','场馆游戏排序弹窗已有 2 个置顶，勾选 3 个未置顶游戏，在底部「批量操作」选「批量置顶」并确定','确认框写明「位置3 至 位置5」；3 个游戏按列表原先后成为位置3–5，勾选清空'],
+    ['A7','场馆游戏排序弹窗勾选的游戏全部已置顶选「批量置顶」；全部未置顶选「批量取消置顶」','分别提示所选均已置顶 / 均未置顶，不弹确认框'],
     ['A8','打开「置顶位置修改」，输入数字','筛出位置号包含该数字的位置，完全相同 → 开头 → 中间包含，自动选中第一条；回车弹出二次确认；无匹配时「确认」不提交'],
     ['A9','站点下拉切换后未查询，点工具栏按钮','提示「请先查询」，不执行'],
     ['A10','站点 A 点 PG电子「场馆游戏排序」','标题「场馆游戏排序 - PG电子」；含 PG电子 与 MyPG电子 的站点开启、维护中游戏，不含总控停用的；游戏对两个版本各占一行，标显示 / 隐藏；顺序为 场馆内置顶 → 场馆序号；显示「共 X 个游戏，已置顶 N 个」'],
@@ -1696,7 +1694,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     ['A17','热门游戏排序置顶一个游戏','成为位置 N+1；站点 A 首页热门区、场馆页「热门」同步；站点 A 商户后台热门游戏排序刷新后一致'],
     ['A18','热门游戏排序查看站点关闭的游戏','游戏名称后显示「已关闭」，无置顶按钮，复选框不可勾选'],
     ['A19','游戏对隐藏的版本有热门置顶（如位置2）','置顶保留；前台热门区不显示该版本，不留空位；切换为显示该版本后，按位置2 展示'],
-    ['A20','游戏配置总控选站点 A 并查询','现网列保留，追加 勾选、站点状态、热门排名、场馆序号、关联、前台显示、前台切换；列表按热门排名排列；维护 / 启用 / 停用、批量修改有效注单仍可用；操作列没有「排序」按钮；没有置顶操作'],
+    ['A20','游戏配置总控选站点 A 并查询','现网列保留，追加 勾选、站点状态、热门排名、关联、前台显示、前台切换；没有「场馆序号」列；列表按热门排名排列；维护 / 启用 / 停用、批量修改有效注单仍可用；操作列没有「排序」按钮；没有置顶操作'],
     ['A21','前台显示筛选 显示 / 隐藏 / 无对应版本','分别只返回对应的行'],
     ['A22','按游戏名称或游戏ID搜索游戏对中任一款','两行一起返回'],
     ['A23','游戏对目标版本已被总控停用','「切换」置灰，悬停提示「该版本已被总控停用」'],
@@ -1707,10 +1705,10 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     ['A28','置顶一个维护中的游戏','允许；前台按位置展示，显示「维护中」'],
     ['A29','商户关闭一个已置顶场馆，再开启','关闭期间保留置顶位置，前台不展示；开启后按原位置展示'],
     ['A30','总控停用一个在站点 A 有热门置顶（位置2）与场馆内置顶的游戏','当下生效：所有站点该游戏的两类置顶取消，其后前移；各站点前台、热门游戏排序、场馆游戏排序都不再显示；重新启用后回到自动排序区'],
-    ['A31','总控停用一个在站点 A 已置顶的场馆','所有站点前台不显示该场馆及其游戏；各站点该场馆置顶取消，其后前移；场馆配置总控中该行 前台位置显示「-」、无置顶按钮'],
+    ['A31','总控停用一个在站点 A 已置顶的场馆','所有站点前台不显示该场馆及其游戏；各站点该场馆置顶取消，其后前移；场馆配置总控中该行 前台位置、排序类型显示「-」'],
     ['A32','游戏对前台显示的版本被总控停用','该游戏对前台不显示，不自动换版本；可切换到另一版本'],
     ['A33','总控维护一个游戏','前台照常显示，标「维护中」'],
-    ['A34','商户后台修改场馆置顶 / 热门置顶 / 场馆内置顶后总控刷新；总控修改后商户后台刷新','两端一致'],
+    ['A34','商户后台修改场馆置顶 / 热门置顶 / 场馆内置顶后总控刷新；总控修改热门置顶 / 场馆内置顶后商户后台刷新','两端一致'],
     ['A35','后台保存任一调整后，查看该站点前台','按现网缓存更新后，按新顺序 / 新版本展示'],
     ['A36','回归商户后台厂商管理、热门游戏排序、场馆游戏排序、游戏管理','与已开发版本一致，没有原厂 / MY 切换'],
     ['A37','试玩模式进入前台','顺序与显示版本与正式模式一致'],
@@ -1728,17 +1726,17 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     ['A49','查看前台切换按钮；目标版本已被总控停用的行','按钮写「改为原厂」/「改为 MY」；不能切换的按钮写「原厂已停用」/「MY 已停用」并置灰'],
     ['A50','置顶、取消置顶、改位置、批量置顶、切换、停用后看提示','提示写清结果，如「已置顶到第 3 位」「已取消置顶」「已改到第 2 位」「已改为显示原厂版」「已停用，所有站点不再显示」'],
     ['A51','未勾选任何记录，在底部「批量操作」选一个动作','提示「请先勾选记录」，不弹确认框，下拉恢复为「批量操作」'],
-    ['A52','查看场馆配置总控、热门游戏排序、场馆游戏排序弹窗的置顶','三列合并为一列「置顶」：已置顶显示「第 N 位」+「取消」，未置顶显示「置顶」；隐藏版本已置顶时显示「前台不显示（当前显示 MY 版）」'],
+    ['A52','查看热门游戏排序、场馆游戏排序弹窗的置顶','三列合并为一列「置顶」：已置顶显示「第 N 位」+「取消」，未置顶显示「置顶」；隐藏版本已置顶时显示「前台不显示（当前显示 MY 版）」'],
     ['A53','四个列表勾选底部「选择全部（共 N 条）」','已选显示「已选择全部 N 条」，列表上方提示「已选择全部 N 条，清除选择」；不可操作的行不选中；确认框写实际处理条数'],
     ['A54','全部状态下取消勾选一行；再修改筛选并查询','取消后退回为本页选择（该行除外）；查询后已选清空'],
     ['A55','工具栏','不再出现批量置顶、批量取消置顶、批量改为原厂 / MY 按钮'],
     ['A56','热门游戏排序查询站点 A','有「热门序号」列，初始按热门值 1 ~ N 连续；同款原厂 / MY 两行同一个序号；站点关闭的显示「-」；列表按 置顶 → 热门序号 排列'],
     ['A57','点某游戏热门序号旁「编辑」，输入 0、N+1、1.5、abc；再输入 2 保存','前四种提示「请输入 1–N 的整数」不保存；输入 2 后该游戏排到第 2 位，原第 2 位及之后依次 +1，序号仍连续；提示「已改到第 2 位，后面的依次顺延」；站点 A 前台热门区同步'],
-    ['A58','场馆游戏排序弹窗或游戏配置总控修改场馆序号','规则同 A57；两处显示同一个值；热门序号不变；前台该场馆区块与场馆页「全部」同步'],
+    ['A58','场馆游戏排序弹窗修改场馆序号','规则同 A57；热门序号不变；前台该场馆区块与场馆页「全部」同步'],
     ['A59','置顶一个序号为 5 的游戏，再取消置顶','置顶期间排在最前，序号仍为 5；取消后回到第 5 位'],
     ['A60','关闭一个序号为 3 的游戏，再开启','关闭后移出序号，原 4 及之后依次 −1；开启后按热门值插到对应位置'],
     ['A61','商户点「对齐平台排序」后查看总控','该站点热门序号、场馆序号按最新热门值重新从 1 排列'],
-    ['A62','游戏配置总控查看操作列','只有维护 / 启用 / 停用，没有「排序」按钮；改顺序在「场馆序号」列点「编辑」'],
+    ['A62','游戏配置总控查看操作列','只有维护 / 启用 / 停用，没有「排序」按钮；本页不做排序，场馆内顺序在场馆游戏排序弹窗改'],
     ['A63','站点 A 停用场馆 X，选「只改站点 A」','站点 A 站点状态为关闭，前台不显示 X，场馆置顶保留；总控状态不变；站点 B 不变；站点 A 商户后台厂商管理刷新后为关闭；提示「已在「站点 A」设为关闭」'],
     ['A64','站点 A 停用游戏 Y，选「只改站点 A」','站点 A 站点状态为关闭，本站点热门 / 场馆内置顶取消，移出序号；站点 B 不变'],
     ['A65','本站点已关闭、总控启用的场馆点「停用」；总控停用且本站点关闭的场馆','前者「只改」选项置灰写「本站点已是关闭」；后者不显示「停用」按钮'],
@@ -1777,20 +1775,19 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
 <script>(function(){var TIPS={
  'hseq': ['热门序号', '原：无。\n现：热门列表每款游戏一个序号（同款原厂 / MY 共用一个），每个站点全站一条、从 1 连续。前台热门顺序为 热门置顶 → 热门序号。序号旁点「编辑」可改：改成 X 就排到第 X 位，原来第 X 位及之后的依次 +1，序号始终连续不重复。初始按热门值生成；商户点「对齐平台排序」时按最新热门值重排；新上或重新开启的游戏按热门值插入；关闭或总控停用的移出，后面的依次 −1。只在本页修改。'],
  'cseq': ['场馆序号', '原：无。\n现：每个场馆单独一条序号（同款原厂 / MY 共用一个），从 1 连续。前台场馆内顺序为 场馆内置顶 → 场馆序号。序号旁点「编辑」可改：改成 X 就排到第 X 位，后面的依次顺延。初始按热门值生成；「对齐平台排序」时按最新热门值重排；新上或重新开启的按热门值插入；关闭或总控停用的移出。与游戏配置总控「场馆序号」是同一个值。'],
- 'gseq': ['场馆序号', '原：无。\n现：显示该游戏在所属场馆内的序号，旁边「编辑」可改，规则同场馆游戏排序弹窗，两处是同一个值；关闭或总控停用的显示「-」。'],
  'stname': ['状态列', '原：列名「场馆状态」/「游戏状态」（维护 / 启用 / 停用），没有站点状态。\n现：改名为「总控状态（全部站点）」；新增「站点状态（本站点）」（开启 / 维护 / 关闭，与商户后台同一份，可在维护 / 启用 / 停用确认框选「只改本站点」修改）；搜索框同名。'],
  'pincol': ['「置顶」列', '原：「排序类型」列全部显示「自动排序」，没有置顶操作。\n现：改为「置顶」列：已置顶显示「第 N 位」（点击可改到其他位置）和「取消」；未置顶显示「置顶」按钮；不能置顶的显示「-」。规则和数据与商户后台一致。'],
  'gsort': ['操作列 · 排序', '原：操作列有「排序」按钮，点开录入排列顺序数字，平台级，不分站点。\n现：删除。改为在「场馆序号」列点序号旁「编辑」修改，按站点生效，改成第 X 位后其他依次顺延。'],
  'gops': ['操作列 · 维护 / 启用 / 停用', '原：操作列为维护 / 启用、停用（游戏另有排序），只改总控状态，对所有站点生效。\n现：点按钮后在确认框里选影响范围：「只改本站点」或「全部站点」，不默认、必须选；本站点与总控都已是该状态时不显示该按钮；操作列固定在表格右侧。'],
  'stsc': ['确认框 · 影响范围', '原：无（维护 / 启用 / 停用只改总控状态，对所有站点生效）。\n现：确认框列出两个选项，不默认，未选时点「确定」提示「请选择影响范围」：\n· 只改「站点」：改该站点的站点状态（维护→维护、停用→关闭、启用→开启），与商户后台厂商管理 / 游戏管理同一份数据，其他站点不变；\n· 全部站点：改总控状态，对所有站点生效；选它时「确定」变红。\n已是该状态的选项置灰并写明；备注必填 30 字；批量时写处理与跳过的条数。'],
- 'ozk': ['总控 · 现网两页改版', '原：场馆配置总控、游戏配置总控只有平台级功能（维护 / 启用 / 停用、热门游戏数量、有效注单），不分站点，不能调整站点顺序；置顶只在商户后台；原厂 / MY 不能选择。\n现：增加站点筛选（必选），进入页面不加载数据；选站点并查询后显示该站点的数据，可做场馆置顶、场馆内置顶和原厂 / MY 切换，置顶与该站点商户后台同一份数据；维护 / 启用 / 停用可选只改本站点或全部站点。删除热门游戏数量手工编辑。'],
+ 'ozk': ['总控 · 现网两页改版', '原：场馆配置总控、游戏配置总控只有平台级功能（维护 / 启用 / 停用、热门游戏数量、有效注单），不分站点，不能调整站点顺序；置顶只在商户后台；原厂 / MY 不能选择。\n现：增加站点筛选（必选），进入页面不加载数据；选站点并查询后显示该站点的数据，可做场馆内置顶与场馆序号（场馆游戏排序弹窗）和原厂 / MY 切换，置顶与该站点商户后台同一份数据；场馆置顶仍在商户后台；维护 / 启用 / 停用可选只改本站点或全部站点。删除热门游戏数量手工编辑。'],
  'site': ['搜索区 · 站点', '原：无站点条件，页面为平台级。\n现：新增站点单选下拉，必选，默认空；进入页面不加载数据，未选站点点查询提示「请选择站点」；选站点并查询后显示该站点数据，新增的列为浅蓝底；重置时站点保持。'],
  'hcnt': ['热门游戏数', '原：平台级数值，可点击「编辑排序数值」手工修改。\n现：显示所选站点的热门游戏数量（该站点热门前 N 名中属于该场馆的游戏数），只读，用于场馆自动排序；删除「编辑排序数值」，场馆顺序通过置顶调整。'],
- 'vcols': ['新增的按站点列', '原：无。\n现：勾选、前台位置、站点状态、置顶、对应 MY 场馆。前台位置从 1 连续，置顶占 1–N，其余按热门游戏数量；总控停用的场馆显示「-」不计入。站点状态为开启 / 维护 / 关闭，与商户后台同一份；在操作列点维护 / 启用 / 停用并选「只改本站点」可修改。'],
- 'vrule': ['场馆置顶', '原：总控无场馆置顶。\n现：与商户后台同一套规则、同一份数据——置顶区从位置1起连续，新置顶放在末尾，修改位置为插入，取消置顶后其后前移，不限数量；只作用于所选站点；总控停用的场馆不能置顶。'],
+ 'vsort': ['排序类型（本站点）', '原：「排序类型」列全部显示「自动排序」。\n现：显示本站点该场馆的「置顶 · 第 N 位」或「自动排序」，只读；场馆置顶在商户后台厂商管理设置，总控不改场馆顺序。'],
+ 'vcols': ['新增的按站点列', '原：无。\n现：勾选、前台位置、站点状态、对应 MY 场馆。前台位置从 1 连续，商户置顶的在前，其余按热门游戏数量；总控停用的场馆显示「-」不计入。站点状态为开启 / 维护 / 关闭，与商户后台同一份；在操作列点维护 / 启用 / 停用并选「只改本站点」可修改。'],
  'vbatch': ['批量置顶 / 批量取消置顶', '原：无。\n现：在列表底部「批量操作」下拉中选「批量置顶」「批量取消置顶」（按项目统一批量规范）；工具栏保留置顶数量提示。批量置顶按列表当前顺序依次排在置顶区末尾；批量取消后其余置顶前移、先后不变；已置顶 / 未置顶的自动跳过；总控停用的场馆不可勾选。'],
- 'vpos': ['置顶位置修改 · 输入数字筛选', '原：总控无此弹窗。\n现：输入框 + 位置列表，每行显示位置号和该位置当前的场馆 / 游戏，当前位置标「当前」；输入数字筛出位置号包含该数字的位置，支持 ↑ ↓、回车；选其他位置二次确认后插入。场馆配置总控、热门游戏排序通用。'],
- 'vcmd': ['操作列「场馆游戏排序」', '原：总控没有场馆内游戏顺序入口；操作列只有维护 / 启用、停用。\n现：每行新增按钮（总控停用的场馆没有），打开该场馆的「场馆游戏排序」弹窗，做场馆内置顶，与该站点商户后台同一份数据。维护 / 启用、停用保留。'],
+ 'vpos': ['置顶位置修改 · 输入数字筛选', '原：总控无此弹窗。\n现：输入框 + 位置列表，每行显示位置号和该位置当前的场馆 / 游戏，当前位置标「当前」；输入数字筛出位置号包含该数字的位置，支持 ↑ ↓、回车；选其他位置二次确认后插入。热门游戏排序、场馆游戏排序弹窗通用。'],
+ 'vcmd': ['操作列「场馆游戏排序」', '原：总控没有场馆内游戏顺序入口；操作列只有维护 / 启用、停用。\n现：每行新增按钮（总控停用的场馆没有），打开该场馆的「场馆游戏排序」弹窗，做场馆内置顶、编辑场馆序号，置顶与该站点商户后台同一份数据。维护 / 启用、停用保留。'],
  'vrel': ['「对应 MY 场馆」列', '原：无。\n现：有 MY 场馆的显示对应 MY 场馆及对应游戏数量（如「MyPG电子 · 14 款对应游戏」），点击数量打开对应游戏弹窗；没有的显示「-」。对应关系由开发预置，不可修改。'],
  'bfoot': ['列表批量操作（底部）', '原：无。\n现：列表底部依次为「选择全部（共 N 条）」勾选框、「批量操作」下拉、「已选择 X 条」。表头勾选框只选本页；「选择全部」选当前筛选结果全部（跨页），列表上方提示「已选择全部 N 条，清除选择」。在下拉中选动作即执行，未勾选提示「请先勾选记录」；确认框写实际处理条数；全部状态下取消任一行退回本页选择，翻页、查询、重置清空已选。'],
  'vfil': ['场馆配置总控 · 搜索「置顶」', '原：无（搜索区只有场馆名称、场馆状态、场馆类型）。\n现：新增单选下拉 已置顶 / 未置顶，可清空；只显示该站点已置顶 / 未置顶的场馆（总控停用的不显示）；不影响置顶位置计算。'],
