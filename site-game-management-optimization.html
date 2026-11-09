@@ -893,7 +893,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
       </ol></div></div>
     <div class="req-block"><h2>数据、依赖与风险</h2>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>项目</th><th>说明</th></tr></thead><tbody>
-        <tr><td><b>新增数据</b></td><td>前台显示版本（按站点、按游戏对，默认 MY）；场馆对、游戏对（平台级，开发预置）；删除场馆手工热门游戏数量；现网游戏「排序」字段改为按站点的场馆序号。不新增埋点</td></tr>
+        <tr><td><b>新增数据</b></td><td>前台显示版本（按站点、按游戏对，默认 MY）；场馆对、游戏对（平台级，开发预置）；删除场馆手工热门游戏数量、游戏「排序」（排列顺序）。不新增埋点</td></tr>
         <tr><td><b>依赖</b></td><td>商户置顶排序已开发版本；对应关系清单（开发预置）；总控下发站点数据的过滤；前台列表接口</td></tr>
         <tr><td><b>风险：上线即变化</b></td><td>已被总控停用的游戏 / 场馆从各站点前台与排序列表消失，相关置顶取消；游戏对从两款变为只显示 MY 版；上线前告知运营</td></tr>
         <tr><td><b>风险：选错影响范围</b></td><td>范围不默认、必须选；选全部站点时「确定」变红；备注必填</td></tr>
@@ -921,7 +921,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <li><strong>游戏对置顶按版本</strong>：前台只取当前版本，隐藏版本不占位；切换不改置顶；目标版本停用不能切。</li>
         <li><strong>总控停用过滤</strong>：下发数据统一过滤，前台与两类排序列表不显示，置顶取消，当下生效；维护沿用现网。</li>
         <li><strong>前台缓存</strong>：沿用现网，本需求不提刷新要求。</li>
-        <li><strong>待开发确认</strong>：场馆手工热门游戏数量删除前、现网游戏「排序」字段改为按站点的场馆序号前，确认没有其他地方在用。</li>
+        <li><strong>待开发确认</strong>：场馆手工热门游戏数量、游戏「排序」（排列顺序）删除前，确认没有其他地方在用。</li>
         <li><strong>序号</strong>：两套序号互不影响；任何时候 1 到 N 连续；同款原厂 / MY 共用一个；对齐平台排序按热门值重排。</li>
         <li><strong>后续</strong>：商户后台是否做切换、显示序号下期再定。</li>
       </ol></div></div>
