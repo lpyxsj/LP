@@ -88,6 +88,24 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .flow-branch .result.good{color:var(--doc-status-done-fg);background:var(--doc-status-done-bg);}
 .flow-branch .result.bad{color:var(--doc-p1);background:var(--doc-p1-soft);}
 .flow-branch .result.neutral{color:var(--doc-ink-soft);background:var(--doc-line-soft);}
+.pri-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;}
+.pri-col{background:var(--doc-paper);border:1px solid var(--doc-line);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:6px;min-width:0;}
+.pri-col h4{margin:0;font-size:14.5px;color:var(--doc-ink);}
+.pri-col .where{font-size:11.5px;color:var(--doc-ink-faint);line-height:1.5;margin-bottom:4px;}
+.pri-l{border-radius:6px;padding:8px 10px;font-size:12.5px;line-height:1.5;border:1px solid;}
+.pri-l b{display:block;font-size:13.5px;margin-bottom:2px;}
+.pri-l.pin{background:#fff7e0;border-color:#f0c24b;color:#5c4400;}
+.pri-l.seq{background:#e9f7ef;border-color:#6cc28f;color:#174d2e;}
+.pri-l.hot{background:#eef4ff;border:1.5px dashed #6c9cf0;color:#1d3f7a;}
+.pri-a{text-align:center;font-size:12px;color:var(--doc-ink-faint);line-height:1.3;}
+.pri-a.up{color:#3d6fd1;}
+.pri-rule{margin-top:12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px;}
+.pri-rule div{background:var(--doc-paper);border:1px solid var(--doc-line);border-radius:6px;padding:8px 10px;font-size:12.5px;line-height:1.55;color:var(--doc-ink-soft);}
+.pri-rule b{color:var(--doc-ink);}
+.dh-lightbox-body .dh-flow.pri{max-width:min(95vw,1180px);}
+.dh-lightbox-body .pri-l{font-size:15px;}
+.dh-lightbox-body .pri-l b{font-size:16px;}
+.dh-lightbox-body .pri-rule div{font-size:14.5px;}
 .cap{font-size:12px;color:var(--doc-ink-faint);margin-top:10px;}
 .dh-illustration{margin:14px 0;max-width:1200px;}
 .illus-list{display:flex;flex-wrap:wrap;align-items:center;gap:6px 0;}
@@ -411,7 +429,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
 </style></head><body>
 <header class="dh-header"><div class="dh-header-inner">
   <h1>总控站点游戏管理调整优化（站点选择、置顶、原厂 / MY 切换）</h1>
-  <div class="dh-meta"><span>模块：<b>总控 · 站点场馆管理（场馆配置总控、热门游戏排序、游戏配置总控）· 前台站点</b></span><span>产品经理：<b>Zuno</b></span><span>更新日期：<b>2026-11-07</b></span></div>
+  <div class="dh-meta"><span>模块：<b>总控 · 站点场馆管理（场馆配置总控、热门游戏排序、游戏配置总控）· 前台站点</b></span><span>产品经理：<b>Zuno</b></span><span>更新日期：<b>2026-11-09</b></span></div>
 </div></header>
 <nav class="dh-navbar" id="dhNavbar"><div class="dh-navbar-inner dh-primary" id="dhPrimary">
   <button class="dh-primary-btn active" data-primary="proto" type="button">交互原型 <small>选站点后置顶、原厂 / MY 切换，总控停用，前台同步</small></button>
@@ -606,6 +624,35 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
 
   <!-- ===== 0 总览 ===== -->
   <div class="dh-panel active" data-panel="overview">
+    <div class="req-block"><h2>排序优先级（核心规则）</h2>
+      <div class="dh-prose"><p><strong>置顶最优先，不受序号、热门值影响；其余按序号排，序号可手动调整位置；热门值是自动的，只用来生成和重排序号。</strong>手动调过之后，想恢复按热门值排，在商户后台点「对齐平台排序」。</p></div>
+      <div class="dh-flow pri">
+        <div class="pri-grid">
+          <div class="pri-col"><h4>热门列表</h4><div class="where">首页热门区、侧边菜单热门、搜索页「热门」、场馆页「热门」</div>
+            <div class="pri-l pin"><b>① 热门置顶</b>人工指定第 1 ~ N 位，最优先</div>
+            <div class="pri-a">↓ 其余游戏</div>
+            <div class="pri-l seq"><b>② 热门序号</b>人工「编辑」调整位置；每个站点一条，从 1 连续</div>
+            <div class="pri-a up">↑ 生成 / 插入 / 重排</div>
+            <div class="pri-l hot"><b>③ 热门值（自动）</b>不直接排序，只用来生成序号</div></div>
+          <div class="pri-col"><h4>场馆内游戏</h4><div class="where">首页场馆区块内、场馆页「全部」</div>
+            <div class="pri-l pin"><b>① 场馆内置顶</b>人工指定第 1 ~ N 位，最优先</div>
+            <div class="pri-a">↓ 其余游戏</div>
+            <div class="pri-l seq"><b>② 场馆序号</b>人工「编辑」调整位置；每个场馆一条，从 1 连续</div>
+            <div class="pri-a up">↑ 生成 / 插入 / 重排</div>
+            <div class="pri-l hot"><b>③ 热门值（自动）</b>不直接排序，只用来生成序号</div></div>
+          <div class="pri-col"><h4>场馆</h4><div class="where">场馆 Tab、首页场馆区块先后、侧边菜单场馆、场馆页左侧</div>
+            <div class="pri-l pin"><b>① 场馆置顶</b>人工指定第 1 ~ N 位，最优先</div>
+            <div class="pri-a">↓ 其余场馆</div>
+            <div class="pri-l hot"><b>② 热门游戏数量（自动）</b>按数量从多到少；场馆没有序号</div></div>
+        </div>
+        <div class="pri-rule">
+          <div><b>手动调整</b>：序号旁点「编辑」，改成 X 就排到第 X 位，后面依次顺延；之后不会被热门值自动改回</div>
+          <div><b>自动变化</b>：新上、重新开启的游戏按热门值插入；站点关闭、总控停用的移出，后面补位</div>
+          <div><b>重置</b>：商户后台「对齐平台排序」，该站点热门序号、场馆序号全部按最新热门值重排，人工调整被覆盖</div>
+          <div><b>置顶不受影响</b>：编辑序号、对齐平台排序都不改置顶；取消置顶后回到自己序号的位置</div>
+        </div>
+        <div class="cap">图：排序优先级——置顶 → 序号；热门值只用来生成和重排序号（点击放大）</div>
+      </div></div>
     <div class="req-block"><h2>背景</h2>
       <div class="dh-prose">
         <p>总控「站点场馆管理」下只有「场馆配置总控」「游戏配置总控」两个平台级页面，不分站点：可维护 / 启用 / 停用场馆和游戏、手工改场馆热门游戏数量、批量修改有效注单，但不能按站点调整顺序。场馆置顶、热门置顶、场馆内置顶只在商户后台操作，总控要替站点调整只能登录商户后台或提工单。</p>
