@@ -979,7 +979,7 @@ function stOps(v){return !v.on?'<button class="bk-btn ok sm" data-act="von" data
   (v.maint?'<button class="bk-btn ok sm" data-act="vunmaint" data-id="'+v.id+'" type="button">取消维护</button>':'<button class="bk-btn warn sm" data-act="vmaint" data-id="'+v.id+'" type="button">维 护</button>')+'<button class="bk-btn danger sm" data-act="voff" data-id="'+v.id+'" type="button">关 闭</button>';}
 function venueGames(vid){return S.games.filter(function(g){return g.v===vid&&g.st!=='off';});}
 function venueRank(vid){return venueGames(vid).sort(byPin('vpin',function(a,b){return a.vsort-b.vsort;}));}
-function hotCount(vid){var n=0;hotRank().filter(function(g){return g.st!=='off';}).slice(0,S.N).forEach(function(g){if(g.v===vid)n++;});return n;}
+function hotCount(vid){var n=0;hotRank().filter(function(g){var v=venueById(g.v);return g.st!=='off'&&!!(v&&v.on);}).slice(0,S.N).forEach(function(g){if(g.v===vid)n++;});return n;}
 function venueOrder(){var hc={};S.venues.forEach(function(v){hc[v.id]=hotCount(v.id);});
   return S.venues.slice().sort(byPin('pin',function(a,b){if(hc[b.id]!==hc[a.id])return hc[b.id]-hc[a.id];if(a.sort!==b.sort)return a.sort-b.sort;return a.id-b.id;})).map(function(v){v._hc=hc[v.id];return v;});}
 function dedupe(list){return list;}/* 前台不去重 */
