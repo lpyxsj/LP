@@ -212,6 +212,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .bk-tag.gold{color:var(--tag-gold-fg);background:var(--tag-gold-bg);border-color:var(--tag-gold-bd);}
 .bk-ops{display:flex;gap:6px;justify-content:center;}
 .bk-pager{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:12px;font-size:13px;color:var(--text-primary);}
+.bk-pager .pg-btn{min-width:28px;height:28px;padding:0 6px;border:1px solid var(--border,#d9d9d9);background:#fff;border-radius:4px;cursor:pointer;font-size:13px;color:inherit}.bk-pager .pg-btn.on{border-color:var(--primary);color:var(--primary);font-weight:600}.bk-pager .pg-btn:disabled{opacity:.4;cursor:not-allowed}.bk-pager .pg-size{height:28px;border:1px solid var(--border,#d9d9d9);border-radius:4px;padding:0 4px;font-size:13px}.bk-pager .pg-gap{padding:0 2px}
 .bk-pager .pg{display:inline-block;min-width:24px;height:24px;line-height:22px;text-align:center;border:1px solid var(--primary);color:var(--primary);border-radius:2px;}
 .bk-th-tip{display:inline-block;width:14px;height:14px;border:1px solid var(--text-secondary);border-radius:50%;font-size:10px;line-height:12px;color:var(--text-secondary);margin-left:4px;vertical-align:1px;cursor:help;}
 .bk-empty{padding:28px;color:var(--text-secondary);text-align:center;}
@@ -455,7 +456,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
               <thead><tr><th class="ck"><input type="checkbox" id="hAll" aria-label="全选"></th><th>序号</th><th>地区</th><th>商户</th><th>平台</th><th>游戏名称</th><th>排序类型</th><th>置顶位置(点击修改)<span class="mk" data-tip="pos">本期调整</span></th><th>是否置顶(点击修改)<span class="mk" data-tip="pin">本期调整</span></th></tr></thead>
               <tbody id="gameBody"></tbody>
             </table></div>
-            <div class="bk-pager"><span id="gameTotal"></span><span class="pg">1</span><span>50 条/页</span></div>
+            <div class="bk-pager" id="gamePager"></div>
           </div>
         </div>
       </div>
@@ -897,6 +898,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
       <thead><tr><th class="ck"><input type="checkbox" id="sAll" aria-label="全选"></th><th>序号</th><th>游戏名称</th><th>所属平台</th><th>游戏状态</th><th>排序类型</th><th>置顶位置(点击修改)</th><th>是否置顶(点击修改)</th></tr></thead>
       <tbody id="vgBody"></tbody>
     </table></div>
+    <div class="bk-pager" id="vgPager"></div>
   </div>
   <div class="modal-ft"><button class="bk-btn" data-close="mVGames" type="button">关 闭</button></div>
 </div></div>
@@ -961,7 +963,7 @@ var FRONTV={'85':19,'90':77,'92':61,'100':79,'101':82};
 function initGames(){return ROWS.map(function(g,i){return {id:i+1,cn:g[0],en:g[1]||'',plat:PLAT[g[2]]||g[2],v:FRONTV[g[2]]||+g[2],st:g[3],heat:g[4],vsort:i,hpin:null,vpin:null};});}
 function gname(g){return g.en&&g.en!==g.cn?g.cn+'('+g.en+')':g.cn;}
 function clone(a){return a.map(function(o){return Object.assign({},o);});}
-var S={venues:clone(VENUES0),games:initGames(),N:100,flashB:{},flashF:{},gFilter:{plat:'',name:''},vFilter:{name:'',status:'',type:''},vgVenue:null,vgName:'',sel:{v:{},h:{},s:{}},fVenue:19,fTab:'all',sub:'back',pending:false,scroll:{back:0,front:0},hidden:[]};
+var S={venues:clone(VENUES0),games:initGames(),N:100,flashB:{},flashF:{},gFilter:{plat:'',name:''},vFilter:{name:'',status:'',type:''},vgVenue:null,vgName:'',sel:{v:{},h:{},s:{}},pg:{h:{p:1,s:50},s:{p:1,s:50}},fVenue:19,fTab:'all',sub:'back',pending:false,scroll:{back:0,front:0},hidden:[]};
 
 /* ---------- 通用置顶算法（本期规则）：list 为同一队列，key 为置顶字段 ---------- */
 function pinCount(list,k){return list.filter(function(x){return x[k]!=null;}).length;}
@@ -1009,24 +1011,28 @@ function renderVenues(){
 }
 function platOptions(){var seen={},o='<option value="">全部</option>';S.games.forEach(function(g){if(!seen[g.plat]){seen[g.plat]=1;o+='<option>'+esc(g.plat)+'</option>';}});$('gPlat').innerHTML=o;}
 function matchName(g,q){q=q.toLowerCase();return !q||g.cn.toLowerCase().indexOf(q)>-1||g.en.toLowerCase().indexOf(q)>-1;}
+function pagerHtml(k,total){var P=S.pg[k],pages=Math.max(1,Math.ceil(total/P.s));if(P.p>pages)P.p=pages;var h='<span>共 '+total+' 条数据</span><button class="pg-btn" data-pg="'+k+'" data-to="'+(P.p-1)+'"'+(P.p<=1?' disabled':'')+' type="button">‹</button>',L=[];for(var i=1;i<=pages;i++){if(i===1||i===pages||Math.abs(i-P.p)<=2)L.push(i);else if(L[L.length-1]!=='…')L.push('…');}L.forEach(function(n){h+=n==='…'?'<span class="pg-gap">…</span>':'<button class="pg-btn'+(n===P.p?' on':'')+'" data-pg="'+k+'" data-to="'+n+'" type="button">'+n+'</button>';});h+='<button class="pg-btn" data-pg="'+k+'" data-to="'+(P.p+1)+'"'+(P.p>=pages?' disabled':'')+' type="button">›</button><select class="pg-size" data-pgs="'+k+'" aria-label="每页条数">'+[10,50,80,100,500].map(function(s){return '<option value="'+s+'"'+(s===P.s?' selected':'')+'>'+s+' 条/页</option>';}).join('')+'</select>';return h;}
+function pageStart(k,len){var P=S.pg[k];var pages=Math.max(1,Math.ceil(len/P.s));if(P.p>pages)P.p=pages;return (P.p-1)*P.s;}
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-pg]');if(!b||b.disabled)return;var k=b.getAttribute('data-pg');S.pg[k].p=+b.getAttribute('data-to');k==='h'?renderGames():renderVGames();});
+document.addEventListener('change',function(e){var t=e.target;if(!t.getAttribute||!t.getAttribute('data-pgs'))return;var k=t.getAttribute('data-pgs');S.pg[k].s=+t.value;S.pg[k].p=1;k==='h'?renderGames():renderVGames();});
 function renderGames(){
   var f=S.gFilter,list=hotRank().filter(function(g){return g.st!=='off'&&(!f.plat||g.plat===f.plat)&&matchName(g,f.name);}),rows='',np=pinCount(S.games,'hpin'),sepDone=false;
-  list.forEach(function(g,i){var pinned=g.hpin!=null;
+  var st0=pageStart('h',list.length);sepDone=st0>0&&list[st0-1].hpin==null;list.slice(st0,st0+S.pg.h.s).forEach(function(g,j){var i=st0+j;var pinned=g.hpin!=null;
     if(!pinned&&!sepDone&&np>0&&!f.plat&&!f.name)rows+='<tr class="bk-sep"><td colspan="9"></td></tr>';
     if(!pinned)sepDone=true;
     var off=g.st==='off',sel=!off&&!!S.sel.h[g.id];rows+='<tr class="'+(pinned?'row-pin ':'')+(sel?'row-sel ':'')+(S.flashB['h'+g.id]?'row-flash':'')+'"><td class="ck"><input type="checkbox" data-sel="h" data-id="'+g.id+'"'+(sel?' checked':'')+(off?' disabled title="已关闭的游戏不能置顶"':'')+' aria-label="选择"></td><td>'+(i+1)+'</td><td>巴西站-测试</td><td>888</td><td>'+esc(g.plat)+'</td><td style="text-align:left">'+esc(g.cn)+'('+esc(g.en)+')</td><td>'+(pinned?'置顶':'自动排序')+'</td>'+(g.st==='off'?'<td>-</td><td><span class="bk-tag red">已关闭</span><span class="mk" data-tip="closedrow">本期调整</span></td>':pinCells('h',g.id,g.hpin))+'</tr>';});
   $('gameBody').innerHTML=rows||'<tr><td colspan="9" class="bk-empty">暂无数据</td></tr>';S.hShown=list.filter(function(g){return g.st!=='off';}).map(function(g){return g.id;});syncSel('h');
-  $('gameTotal').textContent='共 '+list.length+' 条数据';
+  $('gamePager').innerHTML=pagerHtml('h',list.length);
 }
 function renderVGames(){
   if(S.vgVenue==null)return;var v=venueById(S.vgVenue),all=venueRank(v.id),list=all.filter(function(g){return matchName(g,S.vgName);}),rows='',np=pinCount(all,'vpin'),sepDone=false;
   $('vgTitle').textContent='场馆游戏排序 - '+v.name;
-  list.forEach(function(g,i){var pinned=g.vpin!=null;
+  var st0=pageStart('s',list.length);sepDone=st0>0&&list[st0-1].vpin==null;list.slice(st0,st0+S.pg.s.s).forEach(function(g,j){var i=st0+j;var pinned=g.vpin!=null;
     if(!pinned&&!sepDone&&np>0&&!S.vgName)rows+='<tr class="bk-sep"><td colspan="8"></td></tr>';
     if(!pinned)sepDone=true;
     var sel=!!S.sel.s[g.id];rows+='<tr class="'+(pinned?'row-pin ':'')+(sel?'row-sel ':'')+(S.flashB['s'+g.id]?'row-flash':'')+'"><td class="ck"><input type="checkbox" data-sel="s" data-id="'+g.id+'"'+(sel?' checked':'')+' aria-label="选择"></td><td>'+(i+1)+'</td><td style="text-align:left">'+esc(g.cn)+'('+esc(g.en)+')</td><td>'+esc(g.plat)+'</td><td>'+(gMaint(g)?'<span class="bk-tag gold">维护</span>':'<span class="bk-tag green">开启</span>')+'</td><td>'+(pinned?'置顶':'自动排序')+'</td>'+pinCells('s',g.id,g.vpin)+'</tr>';});
   $('vgBody').innerHTML=rows||'<tr><td colspan="8" class="bk-empty">暂无数据</td></tr>';S.sShown=list.map(function(g){return g.id;});syncSel('s');
-  $('vgInfo').textContent='共 '+list.length+' 个游戏，已置顶 '+np+' 个。本列表顺序即前台「'+v.front+'」场馆区与场馆页「全部」的顺序。';
+  $('vgPager').innerHTML=pagerHtml('s',list.length);$('vgInfo').textContent='共 '+list.length+' 个游戏，已置顶 '+np+' 个。本列表顺序即前台「'+v.front+'」场馆区与场馆页「全部」的顺序。';
 }
 
 /* ---------- 前台渲染（按测试环境前台版式） ---------- */
@@ -1186,7 +1192,7 @@ $('sBatPin').addEventListener('click',function(){batPin('s');});$('sBatUnpin').a
 
 function onAct(e){var b=e.target.closest('[data-act]');if(!b)return;var act=b.getAttribute('data-act'),id=+b.getAttribute('data-id');
   if(act==='noop')return;
-  if(act==='vgames'){S.vgVenue=id;S.vgName='';clearSel('s');$('vgName').value='';renderVGames();open('mVGames');S.fVenue=id;S.fTab='all';return;}
+  if(act==='vgames'){S.vgVenue=id;S.vgName='';S.pg.s.p=1;clearSel('s');$('vgName').value='';renderVGames();open('mVGames');S.fVenue=id;S.fTab='all';return;}
   if(act==='vmaint'||act==='vunmaint'){var mv=venueById(id),mon=act==='vmaint';
     confirmBox('确认'+(mon?'维护':'取消维护')+'【'+esc(mv.name)+'】？'+(mon?'维护后前台该场馆入口置灰不可进入，游戏显示「维护中」，正在该场馆游戏中的玩家将被踢出；排序与置顶位置不变。':'取消维护后前台恢复正常展示。'),function(){var sn=snapshot();mv.maint=mon;commit(sn);});return;}
   if(act==='voff'||act==='von'){var vv=venueById(id),on=act==='von';confirmBox('确认'+(on?'开启':'关闭')+'【'+esc(vv.name)+'】？'+(on?'':'关闭后前台不展示该场馆。'),function(){var s=snapshot();vv.on=on;if(on)vv.maint=false;commit(s);});return;}
@@ -1200,10 +1206,10 @@ $('mVGames').addEventListener('click',onAct);
 
 $('vQuery').addEventListener('click',function(){clearSel('v');S.vFilter={name:$('vName').value.trim(),status:$('vStatus').value,type:$('vType').value};renderVenues();});
 $('vReset').addEventListener('click',function(){clearSel('v');$('vName').value='';$('vStatus').value='';$('vType').value='';S.vFilter={name:'',status:'',type:''};renderVenues();});
-$('gQuery').addEventListener('click',function(){clearSel('h');S.gFilter={plat:$('gPlat').value,name:$('gName').value.trim()};renderGames();});
-$('gReset').addEventListener('click',function(){clearSel('h');$('gPlat').value='';$('gName').value='';S.gFilter={plat:'',name:''};renderGames();});
-$('vgQuery').addEventListener('click',function(){clearSel('s');S.vgName=$('vgName').value.trim();renderVGames();});
-$('vgReset').addEventListener('click',function(){clearSel('s');$('vgName').value='';S.vgName='';renderVGames();});
+$('gQuery').addEventListener('click',function(){clearSel('h');S.pg.h.p=1;S.gFilter={plat:$('gPlat').value,name:$('gName').value.trim()};renderGames();});
+$('gReset').addEventListener('click',function(){clearSel('h');S.pg.h.p=1;$('gPlat').value='';$('gName').value='';S.gFilter={plat:'',name:''};renderGames();});
+$('vgQuery').addEventListener('click',function(){clearSel('s');S.pg.s.p=1;S.vgName=$('vgName').value.trim();renderVGames();});
+$('vgReset').addEventListener('click',function(){clearSel('s');S.pg.s.p=1;$('vgName').value='';S.vgName='';renderVGames();});
 [['gName','gQuery'],['vName','vQuery'],['vgName','vgQuery']].forEach(function(p){$(p[0]).addEventListener('keydown',function(e){if(e.key==='Enter')$(p[1]).click();});});
 
 function showBk(k){document.querySelectorAll('.bk-tab').forEach(function(t){t.classList.toggle('active',t.getAttribute('data-bk')===k);});
