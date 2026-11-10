@@ -1081,7 +1081,14 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
   function visible(s,g){ return g.status!=='off'&&!stopped(g)&&showOf(s,g)!=='hide'; }
   function showTag(sh){ return sh==='show'?'<span class="bk-tag green">显示</span>':sh==='hide'?'<span class="bk-tag gray">隐藏</span>':'-'; }
   function pTag(st){ return st==='启用'?'<span class="bk-tag green">启用</span>':st==='维护'?'<span class="bk-tag gold">维护</span>':'<span class="bk-tag red">停用</span>'; }
-  function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">开启</span>':st==='mt'||st==='维护'?'<span class="bk-tag gold">维护</span>':'<span class="bk-tag red">关闭</span>'; }
+  /* 站点状态列显示实际效果：总控停用 / 维护时显示总控的结果（灰色），总控恢复后回到本站点自己的状态 */
+function stPlain(st){ return st==='on'||st==='开启'?'开启':st==='mt'||st==='维护'?'维护':'关闭'; }
+function effTag(pst,st,vStopped){
+  if(pst==='停用'||vStopped) return '<span class="bk-tag gray" title="总控恢复后回到本站点原来的状态：'+stPlain(st)+'">关闭（'+(pst==='停用'?'总控停用':'场馆总控停用')+'）</span>';
+  if(pst==='维护') return '<span class="bk-tag gray" title="总控恢复后回到本站点原来的状态：'+stPlain(st)+'">维护（总控维护）</span>';
+  return stTag(st);
+}
+function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">开启</span>':st==='mt'||st==='维护'?'<span class="bk-tag gold">维护</span>':'<span class="bk-tag red">关闭</span>'; }
   function okSv(v){ return v===''||(/^[1-9]\d*$/.test(v)&&+v<=99999); }
   function touchG(s,g){ var p=pairOf(s,g.id); (p?[G(s,p.my),G(s,p.orig)]:[g]).forEach(function(x){ x.op='admin'; x.time=now(); }); }
   /* 切换目标版本 */
@@ -1380,7 +1387,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
   function mvRow(s,n,parent,sc){
     var m=V(s,n); if(!m) return ''; var pst=PS.v[n];
     return '<tr class="p2"><td'+sc+'><input type="checkbox" class="chk" disabled aria-label="已并入场馆不参与批量"></td><td'+sc+'><span class="muted">并入 '+esc(parent)+'</span></td>'+
-      '<td>'+esc(n)+'</td><td>'+m.type+'</td><td>'+pTag(pst)+'</td><td'+sc+'>'+stTag(m.status)+'</td><td>-</td><td'+sc+'>-</td><td'+sc+'>-</td><td class="op-fix"><div class="bk-ops">'+stBtns('data-va','data-v',n,pst,m.status)+'</div></td></tr>';
+      '<td>'+esc(n)+'</td><td>'+m.type+'</td><td>'+pTag(pst)+'</td><td'+sc+'>'+effTag(pst,m.status)+'</td><td>-</td><td'+sc+'>-</td><td'+sc+'>-</td><td class="op-fix"><div class="bk-ops">'+stBtns('data-va','data-v',n,pst,m.status)+'</div></td></tr>';
   }
   function renderVendor(){
     var site=VM.q?VM.site:'',sc=' class="site-col"',cols=10;
@@ -1394,7 +1401,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
       var ops=st+(!dead&&vMan(v.name)!=null?'<button class="bk-btn sm" data-vcancel="'+esc(v.name)+'" type="button">取消手动排序</button>':'')+(!dead?'<button class="bk-btn sm primary" data-va="csort" data-v="'+esc(v.name)+'" type="button">场馆游戏排序</button>':'');
       var rel=VPAIR[v.name]?'<span class="bk-link">'+esc(VPAIR[v.name])+'</span> · <button class="lk" data-va="pairs" data-v="'+esc(v.name)+'" type="button">'+pairCount(s,v.name)+' 款对应游戏</button>':'-';
       html+='<tr class="'+(pin?'row-pin':'')+'"><td'+sc+'><input type="checkbox" class="chk" data-vsel="'+esc(v.name)+'"'+(VM.sel[v.name]?' checked':'')+(dead?' disabled':'')+'></td><td'+sc+'>'+(dead?'-':v.h5)+'</td>'+
-        '<td>'+esc(v.name)+'</td><td>'+v.type+'</td><td>'+pTag(pst)+'</td><td'+sc+'>'+stTag(v.status)+'</td><td>'+(dead?'-':'<button class="lk" data-vman="'+esc(v.name)+'" type="button">'+v.hc+'</button>'+(vMan(v.name)!=null?' <span class="bk-tag blue">手动</span>':''))+'</td><td'+sc+'>'+pinCell('data-va',v.name,v.vp,!dead)+'</td><td'+sc+'>'+rel+'</td><td class="op-fix"><div class="bk-ops">'+ops+'</div></td></tr>';
+        '<td>'+esc(v.name)+'</td><td>'+v.type+'</td><td>'+pTag(pst)+'</td><td'+sc+'>'+effTag(pst,v.status)+'</td><td>'+(dead?'-':'<button class="lk" data-vman="'+esc(v.name)+'" type="button">'+v.hc+'</button>'+(vMan(v.name)!=null?' <span class="bk-tag blue">手动</span>':''))+'</td><td'+sc+'>'+pinCell('data-va',v.name,v.vp,!dead)+'</td><td'+sc+'>'+rel+'</td><td class="op-fix"><div class="bk-ops">'+ops+'</div></td></tr>';
       if(VPAIR[v.name]) html+=mvRow(s,VPAIR[v.name],v.name,sc);
       if(noFilter&&pin&&v.vp===np&&i<rows.length-1) html+='<tr class="bk-sep"><td colspan="'+cols+'"></td></tr>';
     });
@@ -1438,7 +1445,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     if(!CM.fv||!VM.site) return; var s=SS[VM.site],rows=cRows(),all=cOrder(s,CM.fv),np=all.filter(function(g){ return g.cp; }).length,html='';
     rows.forEach(function(g,i){
       var pin=!!g.cp,sh=showOf(s,g);
-      html+='<tr class="'+(pin?'row-pin ':'')+(sh==='hide'?'p2':'')+'"><td><input type="checkbox" class="chk" data-csel="'+g.id+'"'+(CM.sel[g.id]?' checked':'')+'></td><td>'+(all.indexOf(g)+1)+'</td><td class="l">'+esc(nm(g))+'</td><td>'+esc(g.venue)+'</td><td>'+stTag(g.status)+'</td><td>'+showTag(sh)+'</td><td>'+pinCell('data-ca',g.id,g.cp,true,pin?hidNote(s,g):'')+'</td></tr>';
+      html+='<tr class="'+(pin?'row-pin ':'')+(sh==='hide'?'p2':'')+'"><td><input type="checkbox" class="chk" data-csel="'+g.id+'"'+(CM.sel[g.id]?' checked':'')+'></td><td>'+(all.indexOf(g)+1)+'</td><td class="l">'+esc(nm(g))+'</td><td>'+esc(g.venue)+'</td><td>'+effTag(PS.g[g.id],g.status)+'</td><td>'+showTag(sh)+'</td><td>'+pinCell('data-ca',g.id,g.cp,true,pin?hidNote(s,g):'')+'</td></tr>';
       if(!CM.name&&!XF.c.pin&&!XF.c.show&&pin&&g.cp===np&&i<rows.length-1) html+='<tr class="bk-sep"><td colspan="7"></td></tr>';
     });
     $('cBody').innerHTML=html||emptyRow(7,'没有符合条件的游戏');
@@ -1568,7 +1575,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
       var rel=p?(function(){ var x=G(s,p.my===g.id?p.orig:p.my); return esc(x.venue)+' · '+esc(x.zh)+'<span class="pair-note">'+x.id+'</span>'; })():(sh==='none'?'<span class="bk-tag gray">无对应版本</span>':'-');
       html+='<tr class="'+(sh==='hide'?'p2':'')+'"><td'+sc+'><input type="checkbox" class="chk" data-gsel="'+g.id+'"'+(GM.sel[g.id]?' checked':'')+'></td><td'+sc+'>'+(stopped(g)||!g.rank?'-':g.rank)+'</td><td>'+g.id+'</td><td class="l">'+esc(nm(g))+'</td><td>'+esc(g.venue)+'</td>'+
         '<td'+sc+'>'+rel+'</td><td'+sc+'>'+showTag(sh)+'</td><td'+sc+'>'+swCell(s,g,'data-ga')+'</td>'+
-        '<td>'+pTag(pst)+'</td><td'+sc+'>'+stTag(g.status)+'</td>'+
+        '<td>'+pTag(pst)+'</td><td'+sc+'>'+effTag(pst,g.status,pst!=='停用'&&stopped(g))+'</td>'+
         '<td><span class="img-ph">图</span></td><td>2025-12-0'+(g.base%9+1)+' 10:00:00</td><td>'+esc(o.op)+'</td><td>'+o.time+'</td><td>'+esc(o.remark)+'</td><td>'+g.hot+'</td><td>'+Math.round(g.hot/700)+'</td><td>'+Math.round(g.hot/2100)+'</td>'+
         '<td class="op-fix"><div class="bk-ops">'+ops+'</div></td></tr>';
     });
@@ -1774,6 +1781,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     ['A66','查看站点 A 的 PG电子 热门游戏数','只统计前台显示的版本：一对游戏两个版本都在热门前 100 名时只算 1 个'],
     ['A67','游戏配置总控对有对应版本的游戏点「排序」','弹窗顶部提示「该游戏有对应版本，前台当前显示 MY 版，只有显示的版本在前台生效」'],
     ['A68','场馆配置总控对未置顶场馆点「置顶」','不弹确认框，直接排到置顶末尾，提示「已置顶到第 N 位」；点「取消」仍弹确认框'],
+    ['A69','总控停用场馆 X（选全部站点）后查看站点 A，再把 X 总控启用','停用后站点 A 的站点状态列显示灰色「关闭（总控停用）」，悬停显示原来的状态；启用后自动回到原来的状态（原来是关闭的仍为关闭），商户后台的状态值全程未被改写'],
   ];
   $('accBody').innerHTML=ACC.map(function(a){ return '<tr><td>'+a[0]+'</td><td>'+esc(a[1])+'</td><td>'+esc(a[2])+'</td></tr>'; }).join('');
 
@@ -1806,8 +1814,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
 </style>
 <div id="chgTip" role="tooltip"><button class="x" type="button" aria-label="关闭">×</button><div class="tt"></div><div class="bd"></div></div>
 <script>(function(){var TIPS={
- 'sitest': ['站点状态（本站点）', '原：总控里没有这一列，站点自己的开关只能去商户后台看。
-现：选站点后显示该站点自己的状态：开启 / 维护 / 关闭，和商户后台厂商管理、游戏管理里的「状态」是同一个，任一边改了另一边都能看到。点维护 / 启用 / 停用，在确认框选「只改本站点」就是改这一列；只读显示，不能直接点。'],
+ 'sitest': ['站点状态（本站点）', '原：总控里没有这一列，站点自己的开关只能去商户后台看。\n现：选站点后显示该站点在前台的实际状态。总控是启用时，显示站点自己的开启 / 维护 / 关闭，和商户后台厂商管理、游戏管理里的「状态」是同一个；总控是停用或维护时，显示灰色「关闭（总控停用）」「维护（总控维护）」，悬停可看站点原来的状态，总控恢复启用后自动回到原来的状态，不改写站点自己的设置。站点自己改（确认框选「只改本站点」）只影响本站点，不影响总控。'],
  'stname': ['状态列（两列）', '原：只有一列「场馆状态」（游戏页叫「游戏状态」），显示维护 / 启用 / 停用；在这里改，所有站点一起变。看不到某个站点自己有没有关掉。
 现：分成两列。「总控状态（全部站点）」就是原来那一列，只是改了名字，管所有站点。「站点状态（本站点）」是新加的，显示所选站点自己的开启 / 维护 / 关闭，和商户后台厂商管理、游戏管理里看到的是同一个。点维护 / 启用 / 停用时，在确认框里选「只改本站点」改的是站点状态，选「全部站点」改的是总控状态。两列都允许，前台才会显示。上方搜索条件也一样改名。'],
  'pincol': ['「置顶」列', '原：「排序类型」列全部显示「自动排序」，没有置顶操作。\n现：改为「置顶」列：已置顶显示「第 N 位」（点击原地输入新位置）和「取消」；未置顶显示「置顶」按钮，点击直接置顶到末尾并提示「已置顶到第 N 位」；取消置顶仍需确认；不能置顶的显示「-」。规则和数据与商户后台一致。'],
