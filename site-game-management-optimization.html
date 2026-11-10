@@ -1380,12 +1380,12 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
   function mvRow(s,n,parent,sc){
     var m=V(s,n); if(!m) return ''; var pst=PS.v[n];
     return '<tr class="p2"><td'+sc+'><input type="checkbox" class="chk" disabled aria-label="已并入场馆不参与批量"></td><td'+sc+'><span class="muted">并入 '+esc(parent)+'</span></td>'+
-      '<td>'+esc(n)+'</td><td>'+m.type+'</td><td>'+pTag(pst)+'</td><td>-</td><td'+sc+'>'+stTag(m.status)+'</td><td'+sc+'>-</td><td'+sc+'>-</td><td class="op-fix"><div class="bk-ops">'+stBtns('data-va','data-v',n,pst,m.status)+'</div></td></tr>';
+      '<td>'+esc(n)+'</td><td>'+m.type+'</td><td>'+pTag(pst)+'</td><td'+sc+'>'+stTag(m.status)+'</td><td>-</td><td'+sc+'>-</td><td'+sc+'>-</td><td class="op-fix"><div class="bk-ops">'+stBtns('data-va','data-v',n,pst,m.status)+'</div></td></tr>';
   }
   function renderVendor(){
     var site=VM.q?VM.site:'',sc=' class="site-col"',cols=10;
     $('vTable').style.minWidth='1500px';
-    $('vHead').innerHTML='<tr><th style="width:36px;"'+sc+'><input type="checkbox" class="chk" id="vChkAll" aria-label="全选当前查询结果"></th><th'+sc+'>序号<span class="mk" data-tip="vseqno" tabindex="0">本期修改</span></th><th>场馆名称</th><th>场馆类型</th><th>总控状态（全部站点）<span class="mk" data-tip="stname" tabindex="0">本期修改</span></th><th>排序(热门游戏数量)<span class="mk" data-tip="hcnt" tabindex="0">本期修改</span></th><th'+sc+'>站点状态（本站点）<span class="mk" data-tip="sitest" tabindex="0">本期新增</span></th><th'+sc+'>置顶<span class="mk" data-tip="pincol" tabindex="0">本期修改</span></th><th'+sc+'>对应 MY 场馆<span class="mk" data-tip="vrel" tabindex="0">本期新增</span></th><th style="min-width:300px;" class="op-fix">操作<span class="mk" data-tip="vcmd" tabindex="0">本期新增</span></th></tr>';
+    $('vHead').innerHTML='<tr><th style="width:36px;"'+sc+'><input type="checkbox" class="chk" id="vChkAll" aria-label="全选当前查询结果"></th><th'+sc+'>序号<span class="mk" data-tip="vseqno" tabindex="0">本期修改</span></th><th>场馆名称</th><th>场馆类型</th><th>总控状态（全部站点）<span class="mk" data-tip="stname" tabindex="0">本期修改</span></th><th'+sc+'>站点状态（本站点）<span class="mk" data-tip="sitest" tabindex="0">本期新增</span></th><th>排序(热门游戏数量)<span class="mk" data-tip="hcnt" tabindex="0">本期修改</span></th><th'+sc+'>置顶<span class="mk" data-tip="pincol" tabindex="0">本期修改</span></th><th'+sc+'>对应 MY 场馆<span class="mk" data-tip="vrel" tabindex="0">本期新增</span></th><th style="min-width:300px;" class="op-fix">操作<span class="mk" data-tip="vcmd" tabindex="0">本期新增</span></th></tr>';
     if(!VM.q||!site){ $('vBody').innerHTML=emptyRow(cols,'请先在上方选择站点'); $('vCount').textContent='共 0 条数据'; return; }
     var s=SS[site],rows=vRows(),noFilter=!VM.name&&!VM.status&&!VM.type&&!XF.v.pin,html='',np=s.vPins.length;
     rows.forEach(function(v,i){
@@ -1394,7 +1394,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
       var ops=st+(!dead&&vMan(v.name)!=null?'<button class="bk-btn sm" data-vcancel="'+esc(v.name)+'" type="button">取消手动排序</button>':'')+(!dead?'<button class="bk-btn sm primary" data-va="csort" data-v="'+esc(v.name)+'" type="button">场馆游戏排序</button>':'');
       var rel=VPAIR[v.name]?'<span class="bk-link">'+esc(VPAIR[v.name])+'</span> · <button class="lk" data-va="pairs" data-v="'+esc(v.name)+'" type="button">'+pairCount(s,v.name)+' 款对应游戏</button>':'-';
       html+='<tr class="'+(pin?'row-pin':'')+'"><td'+sc+'><input type="checkbox" class="chk" data-vsel="'+esc(v.name)+'"'+(VM.sel[v.name]?' checked':'')+(dead?' disabled':'')+'></td><td'+sc+'>'+(dead?'-':v.h5)+'</td>'+
-        '<td>'+esc(v.name)+'</td><td>'+v.type+'</td><td>'+pTag(pst)+'</td><td>'+(dead?'-':'<button class="lk" data-vman="'+esc(v.name)+'" type="button">'+v.hc+'</button>'+(vMan(v.name)!=null?' <span class="bk-tag blue">手动</span>':''))+'</td><td'+sc+'>'+stTag(v.status)+'</td><td'+sc+'>'+pinCell('data-va',v.name,v.vp,!dead)+'</td><td'+sc+'>'+rel+'</td><td class="op-fix"><div class="bk-ops">'+ops+'</div></td></tr>';
+        '<td>'+esc(v.name)+'</td><td>'+v.type+'</td><td>'+pTag(pst)+'</td><td'+sc+'>'+stTag(v.status)+'</td><td>'+(dead?'-':'<button class="lk" data-vman="'+esc(v.name)+'" type="button">'+v.hc+'</button>'+(vMan(v.name)!=null?' <span class="bk-tag blue">手动</span>':''))+'</td><td'+sc+'>'+pinCell('data-va',v.name,v.vp,!dead)+'</td><td'+sc+'>'+rel+'</td><td class="op-fix"><div class="bk-ops">'+ops+'</div></td></tr>';
       if(VPAIR[v.name]) html+=mvRow(s,VPAIR[v.name],v.name,sc);
       if(noFilter&&pin&&v.vp===np&&i<rows.length-1) html+='<tr class="bk-sep"><td colspan="'+cols+'"></td></tr>';
     });
