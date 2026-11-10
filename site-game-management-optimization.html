@@ -1385,7 +1385,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
   function renderVendor(){
     var site=VM.q?VM.site:'',sc=' class="site-col"',cols=10;
     $('vTable').style.minWidth='1500px';
-    $('vHead').innerHTML='<tr><th style="width:36px;"'+sc+'><input type="checkbox" class="chk" id="vChkAll" aria-label="全选当前查询结果"></th><th'+sc+'>序号<span class="mk" data-tip="vseqno" tabindex="0">本期修改</span></th><th>场馆名称</th><th>场馆类型</th><th>总控状态（全部站点）<span class="mk" data-tip="stname" tabindex="0">本期修改</span></th><th>排序(热门游戏数量)<span class="mk" data-tip="hcnt" tabindex="0">本期修改</span></th><th'+sc+'>站点状态（本站点）</th><th'+sc+'>置顶<span class="mk" data-tip="pincol" tabindex="0">本期修改</span></th><th'+sc+'>对应 MY 场馆<span class="mk" data-tip="vrel" tabindex="0">本期新增</span></th><th style="min-width:300px;" class="op-fix">操作<span class="mk" data-tip="vcmd" tabindex="0">本期新增</span></th></tr>';
+    $('vHead').innerHTML='<tr><th style="width:36px;"'+sc+'><input type="checkbox" class="chk" id="vChkAll" aria-label="全选当前查询结果"></th><th'+sc+'>序号<span class="mk" data-tip="vseqno" tabindex="0">本期修改</span></th><th>场馆名称</th><th>场馆类型</th><th>总控状态（全部站点）<span class="mk" data-tip="stname" tabindex="0">本期修改</span></th><th>排序(热门游戏数量)<span class="mk" data-tip="hcnt" tabindex="0">本期修改</span></th><th'+sc+'>站点状态（本站点）<span class="mk" data-tip="sitest" tabindex="0">本期新增</span></th><th'+sc+'>置顶<span class="mk" data-tip="pincol" tabindex="0">本期修改</span></th><th'+sc+'>对应 MY 场馆<span class="mk" data-tip="vrel" tabindex="0">本期新增</span></th><th style="min-width:300px;" class="op-fix">操作<span class="mk" data-tip="vcmd" tabindex="0">本期新增</span></th></tr>';
     if(!VM.q||!site){ $('vBody').innerHTML=emptyRow(cols,'请先在上方选择站点'); $('vCount').textContent='共 0 条数据'; return; }
     var s=SS[site],rows=vRows(),noFilter=!VM.name&&!VM.status&&!VM.type&&!XF.v.pin,html='',np=s.vPins.length;
     rows.forEach(function(v,i){
@@ -1556,7 +1556,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     $('gTable').style.minWidth='2700px';
     $('gHead').innerHTML='<tr><th style="width:36px;"'+sc+'><input type="checkbox" class="chk" id="gChkAll" aria-label="全选当前查询结果"></th><th'+sc+'>序号<span class="mk" data-tip="gseqno" tabindex="0">本期修改</span></th><th>游戏ID</th><th>游戏名称</th><th>场馆名称</th>'+
       '<th'+sc+'>对应版本<span class="mk" data-tip="grel" tabindex="0">本期新增</span></th><th'+sc+'>前台显示</th><th'+sc+' style="min-width:120px;">前台切换<span class="mk" data-tip="gsw" tabindex="0">本期新增</span></th>'+
-      '<th>总控状态（全部站点）<span class="mk" data-tip="stname" tabindex="0">本期修改</span></th><th'+sc+'>站点状态（本站点）</th>'+
+      '<th>总控状态（全部站点）<span class="mk" data-tip="stname" tabindex="0">本期修改</span></th><th'+sc+'>站点状态（本站点）<span class="mk" data-tip="sitest" tabindex="0">本期新增</span></th>'+
       '<th>游戏图片</th><th>创建时间</th><th>最近操作人</th><th>最近操作时间</th><th>备注</th><th>有效注单</th><th>前1小时有效注单</th><th>当前小时注单量</th><th style="min-width:250px;" class="op-fix">操作<span class="mk" data-tip="gops" tabindex="0">本期修改</span></th></tr>';
     if(!GM.q||!site){ $('gBody').innerHTML=emptyRow(cols,'请先在上方选择站点'); $('gCount').textContent='共 0 条数据'; updGSel(); return; }
     var s=SS[site],rows=gRows(),html='',dv={};
@@ -1806,6 +1806,8 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
 </style>
 <div id="chgTip" role="tooltip"><button class="x" type="button" aria-label="关闭">×</button><div class="tt"></div><div class="bd"></div></div>
 <script>(function(){var TIPS={
+ 'sitest': ['站点状态（本站点）', '原：总控里没有这一列，站点自己的开关只能去商户后台看。
+现：选站点后显示该站点自己的状态：开启 / 维护 / 关闭，和商户后台厂商管理、游戏管理里的「状态」是同一个，任一边改了另一边都能看到。点维护 / 启用 / 停用，在确认框选「只改本站点」就是改这一列；只读显示，不能直接点。'],
  'stname': ['状态列（两列）', '原：只有一列「场馆状态」（游戏页叫「游戏状态」），显示维护 / 启用 / 停用；在这里改，所有站点一起变。看不到某个站点自己有没有关掉。
 现：分成两列。「总控状态（全部站点）」就是原来那一列，只是改了名字，管所有站点。「站点状态（本站点）」是新加的，显示所选站点自己的开启 / 维护 / 关闭，和商户后台厂商管理、游戏管理里看到的是同一个。点维护 / 启用 / 停用时，在确认框里选「只改本站点」改的是站点状态，选「全部站点」改的是总控状态。两列都允许，前台才会显示。上方搜索条件也一样改名。'],
  'pincol': ['「置顶」列', '原：「排序类型」列全部显示「自动排序」，没有置顶操作。\n现：改为「置顶」列：已置顶显示「第 N 位」（点击原地输入新位置）和「取消」；未置顶显示「置顶」按钮，点击直接置顶到末尾并提示「已置顶到第 N 位」；取消置顶仍需确认；不能置顶的显示「-」。规则和数据与商户后台一致。'],
