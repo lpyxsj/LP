@@ -749,6 +749,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td>列表</td><td>排序(热门游戏数量)，点击「编辑排序数值」<span class="tag-new" data-tip="hcnt" tabindex="0">本期修改</span></td><td>修改</td><td>未手动修改时显示所选站点的热门游戏数量，用于场馆自动排序；「编辑排序数值」「取消手动排序」沿用现网（平台级，对全部站点生效），手动修改后数值旁显示「手动」</td></tr>
         <tr><td>列表</td><td>排序类型（现网全部自动排序）<span class="tag-new" data-tip="pincol" tabindex="0">本期修改</span></td><td>合并</td><td>与新增的置顶位置、是否置顶合并为一列「置顶」：已置顶显示「第 N 位」+「取消」，未置顶显示「置顶」</td></tr>
         <tr><td>列表</td><td>序号（显示前台位置）、勾选、站点状态、置顶、对应 MY 场馆<span class="tag-new" data-tip="vcols" tabindex="0">本期新增</span></td><td>新增</td><td>序号显示所选站点的前台位置：从 1 连续，筛选时不变，置顶占 1–N，其余按热门游戏数量，总控停用的显示「-」；站点状态只读；对应 MY 场馆显示对应 MY 场馆及对应游戏数量，点击数量打开对应游戏弹窗</td></tr>
+        <tr><td>列表</td><td>已并入的 MY 场馆（MyPG电子、MyTaDa电子）<span class="tag-new" data-tip="vmerge" tabindex="0">本期修改</span></td><td>修改</td><td>选站点后仍单独一行，排在所并入场馆之后：序号显示「并入 PG电子」，热门游戏数、置顶显示「-」，没有「编辑排序数值」「场馆游戏排序」，不参与批量；维护 / 启用 / 停用照常，只影响 MY 版游戏</td></tr>
         <tr><td>操作列</td><td>维护 / 启用、停用（备注必填 30 字），只改总控状态<span class="tag-new" data-tip="stsc" tabindex="0">本期修改</span></td><td>修改</td><td>确认框新增影响范围：只改本站点 / 全部站点，不默认；按钮按总控状态与本站点状态显示；规则见总览「维护 / 启用 / 停用」</td></tr>
         <tr><td>操作列</td><td>场馆游戏排序<span class="tag-new" data-tip="vcmd" tabindex="0">本期新增</span></td><td>新增</td><td>打开该场馆的场馆游戏排序弹窗，可做场馆内置顶（总控停用的场馆没有此按钮）</td></tr>
       </tbody></table></div></div>
@@ -836,6 +837,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td><b>最近、收藏</b><span class="tag-new" data-tip="fpair" tabindex="0">本期修改</span></td><td>—</td><td>游戏对显示当前版本，只出现一次；停用不显示</td></tr>
       </tbody></table></div>
       <div class="dh-prose"><ol>
+        <li><strong>合并场馆</strong><span class="tag-new" data-tip="vmerge" tabindex="0">本期修改</span>：PG电子 与 MyPG电子、TaDa 电子 与 MyTaDa电子 在前台合并为一个场馆（名称用原厂场馆）。合并场馆是否显示、排在哪里以原厂场馆为准（场馆置顶、热门游戏数量、排序数值都看原厂场馆那一行）；热门游戏数量把两个场馆的游戏一起算，但对应游戏只算前台显示的版本；MY 场馆关闭或停用只影响 MY 版游戏（显示 MY 版的游戏前台不显示，可切回原厂）。</li>
         <li><strong>游戏对</strong>：两个版本各自的热门值和置顶。前台只显示当前版本，按它自己的置顶位置排列，未置顶的按当前版本自己的热门值排列；隐藏版本的置顶保留，前台不显示、不占位；切换后位置为新版本自己的位置。</li>
         <li><strong>状态</strong>：站点关闭游戏 → 该游戏在该站点的两层置顶取消；维护中可置顶，前台显示「维护中」；场馆站点关闭 → 保留置顶，前台不展示；显示版本维护 / 关闭 / 停用时不自动换版本。</li>
         <li><strong>生效</strong>：前台缓存沿用现网；试玩与正式模式一致。</li>
@@ -1039,6 +1041,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     GAMES0.forEach(function(g){ PS.g[g[0]]='启用'; PS.gop[g[0]]={op:'admin01',time:'2026-10-30 10:12:08',remark:'-'}; });
     FV.forEach(function(v,i){ PS.v[v[0]]='启用'; PS.vcnt[v[0]]=[46,28,22,18,12,9,8,6,5,40,35][i]; });
     ['1361','1354','1410'].forEach(function(id){ PS.g[id]='停用'; PS.gop[id]={op:'admin01',time:'2026-11-01 09:30:00',remark:'三方下架'}; });
+    Object.keys(MERGE).forEach(function(n){ PS.v[n]='启用'; });
     PS.v['JDB电子']='停用';
   }
   /* 站点数据：站点状态、置顶（与商户后台同一份，按游戏）、前台显示版本 */
@@ -1046,7 +1049,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     var s={venues:FV.map(function(v,i){return {name:v[0],type:v[1],status:'开启',base:i,op:'Chris01',time:'2026-10-14 06:21:51'};}),
       games:GAMES0.map(function(g,i){return {id:g[0],zh:g[1],en:g[2],venue:g[3],hot:g[4],status:g[5],base:i,op:'zune01',time:'2026-09-25 22:49:28',remark:'-'};}),
       pairs:PAIRS0.map(function(p){return {my:p[0],orig:p[1],show:'my'};}),
-      vPins:[],hPins:[],cPins:{},sv:{}};
+      mv:Object.keys(MERGE).map(function(n,i){return {name:n,type:'电子',status:'开启',base:90+i,op:'Chris01',time:'2026-10-14 06:21:51'};}),vPins:[],hPins:[],cPins:{},sv:{}};
     if(id==='888'){
       s.vPins=['PG电子','EVO真人'];
       s.hPins=['61006101804853','1411','133'];
@@ -1064,7 +1067,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
   function fvOf(v){ return MERGE[v]||v; }
   function isMy(v){ return /^My/.test(v); }
   function G(s,id){ for(var i=0;i<s.games.length;i++) if(s.games[i].id===id) return s.games[i]; }
-  function V(s,n){ for(var i=0;i<s.venues.length;i++) if(s.venues[i].name===n) return s.venues[i]; }
+  function V(s,n){ for(var i=0;i<s.venues.length;i++) if(s.venues[i].name===n) return s.venues[i]; if(s.mv) for(var j=0;j<s.mv.length;j++) if(s.mv[j].name===n) return s.mv[j]; }
   function pairOf(s,id){ for(var i=0;i<s.pairs.length;i++){ var p=s.pairs[i]; if(p.my===id||p.orig===id) return p; } return null; }
   function nm(g){ return g.zh+'('+g.en+')'; }
   function hasVPair(v){ return !!VPAIR[v]||!!MERGE[v]; }
@@ -1254,6 +1257,8 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
             '停用':'本站点改为「关闭」，前台不显示'+(kind==='游戏'?'，本站点的置顶自动取消':'；场馆置顶保留，开启后回到原位'),
             '启用':'本站点改为「开启」'+(platNot?'；总控不是启用的，前台仍按总控状态处理':'')}[act]+'。其他站点不变';
     var aD={'维护':'总控设为维护：所有站点前台显示维护中','停用':'总控停用：所有站点前台都不显示，相关置顶自动取消','启用':'总控启用：各站点按自己的站点状态显示'}[act];
+    var mvP=one&&kind==='场馆'&&MERGE[x.name];
+    if(mvP){ sD={'维护':'本站点改为「维护」，MY 版游戏前台显示维护中','停用':'本站点改为「关闭」：前台 '+mvP+' 场馆照常显示，其中显示 MY 版的游戏不显示（可切回原厂）','启用':'本站点改为「开启」，MY 版游戏恢复显示'}[act]+'。其他站点不变'; aD={'维护':'总控设为维护：所有站点 MY 版游戏前台显示维护中','停用':'总控停用：所有站点 MY 版游戏都不显示，'+mvP+' 场馆照常显示','启用':'总控启用：各站点按自己的站点状态显示'}[act]; }
     function opt(k,title,desc,todo,done,danger){ var dis=todo===0;
       return '<button type="button" class="sc-opt'+(danger?' danger':'')+'" data-sc="'+k+'" role="radio" aria-checked="false"'+(dis?' disabled':'')+'><b>'+title+'</b><span>'+(dis?done:desc+(one||todo===items.length?'':'（处理 '+todo+' 个，另 '+(items.length-todo)+' 个已是'+(k==='site'?SITE_ST[act]:act)+'，跳过）'))+'</span></button>'; }
     $('stOpts').innerHTML=opt('site','只改「'+esc(sn)+'」',sD,st,(one?'本站点已是':'所选在本站点都已是')+SITE_ST[act],false)+opt('all','全部站点',aD,al,(one?'总控已是':'所选总控都已是')+act,act==='停用');
@@ -1358,6 +1363,12 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
       if(VM.status&&PS.v[v.name]!==VM.status) return false;
       if(VM.type&&v.type!==VM.type) return false; return true; });
   }
+  /* 已并入的 MY 场馆：单独一行，排在所并入场馆之后；只做维护 / 启用 / 停用 */
+  function mvRow(s,n,parent,sc){
+    var m=V(s,n); if(!m) return ''; var pst=PS.v[n];
+    return '<tr class="p2"><td'+sc+'><input type="checkbox" class="chk" disabled aria-label="已并入场馆不参与批量"></td><td'+sc+'><span class="muted">并入 '+esc(parent)+'</span></td>'+
+      '<td>'+esc(n)+'</td><td>'+m.type+'</td><td>'+pTag(pst)+'</td><td>-</td><td'+sc+'>'+stTag(m.status)+'</td><td'+sc+'>-</td><td'+sc+'>-</td><td class="op-fix"><div class="bk-ops">'+stBtns('data-va','data-v',n,pst,m.status)+'</div></td></tr>';
+  }
   function renderVendor(){
     var site=VM.q?VM.site:'',sc=' class="site-col"',cols=10;
     $('vTable').style.minWidth='1500px';
@@ -1371,6 +1382,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
       var rel=VPAIR[v.name]?'<span class="bk-link">'+esc(VPAIR[v.name])+'</span> · <button class="lk" data-va="pairs" data-v="'+esc(v.name)+'" type="button">'+pairCount(s,v.name)+' 款对应游戏</button>':'-';
       html+='<tr class="'+(pin?'row-pin':'')+'"><td'+sc+'><input type="checkbox" class="chk" data-vsel="'+esc(v.name)+'"'+(VM.sel[v.name]?' checked':'')+(dead?' disabled':'')+'></td><td'+sc+'>'+(dead?'-':v.h5)+'</td>'+
         '<td>'+esc(v.name)+'</td><td>'+v.type+'</td><td>'+pTag(pst)+'</td><td>'+(dead?'-':'<button class="lk" data-vman="'+esc(v.name)+'" type="button">'+v.hc+'</button>'+(vMan(v.name)!=null?' <span class="bk-tag blue">手动</span>':''))+'</td><td'+sc+'>'+stTag(v.status)+'</td><td'+sc+'>'+pinCell('data-va',v.name,v.vp,!dead)+'</td><td'+sc+'>'+rel+'</td><td class="op-fix"><div class="bk-ops">'+ops+'</div></td></tr>';
+      if(VPAIR[v.name]) html+=mvRow(s,VPAIR[v.name],v.name,sc);
       if(noFilter&&pin&&v.vp===np&&i<rows.length-1) html+='<tr class="bk-sep"><td colspan="'+cols+'"></td></tr>';
     });
     $('vBody').innerHTML=html||emptyRow(cols,'没有符合条件的场馆');
@@ -1571,7 +1583,8 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     var b=e.target.closest('[data-gpsort]'); if(!b) return; e.stopPropagation();
     var s=SS[GM.site],g=G(s,b.getAttribute('data-gpsort'));
     var list=s.games.filter(function(x){ return x!==g&&PS.g[x.id]!=='停用'; }).sort(function(a,b2){ return b2.hot-a.hot; });
-    confirmBox('排序','<div style="margin-bottom:8px;">「'+esc(nm(g))+'」排到平台热门第几位？</div><input id="gpsIn" class="bk-input" style="width:160px;" placeholder="请输入 1–'+(list.length+1)+'"><div class="muted" style="margin-top:6px;font-size:12.5px;">按前后游戏自动调整有效注单默认值；平台级，对全部站点生效</div>',function(){
+    var pp=pairOf(s,g.id),ph=pp?'<div class="muted" style="margin-bottom:8px;font-size:12.5px;color:#b45309;">该游戏有对应版本，前台当前显示 '+(pp.show==='my'?'MY':'原厂')+' 版，只有显示的版本在前台生效</div>':'';
+    confirmBox('排序',ph+'<div style="margin-bottom:8px;">「'+esc(nm(g))+'」排到平台热门第几位？</div><input id="gpsIn" class="bk-input" style="width:160px;" placeholder="请输入 1–'+(list.length+1)+'"><div class="muted" style="margin-top:6px;font-size:12.5px;">按前后游戏自动调整有效注单默认值；平台级，对全部站点生效</div>',function(){
       var x=parseInt(($('gpsIn')||{}).value,10);
       if(!(x>=1&&x<=list.length+1)){ toast('请输入 1–'+(list.length+1)+' 的整数'); return; }
       var hi=x>1?list[x-2].hot:null,lo=x<=list.length?list[x-1].hot:null;
@@ -1746,6 +1759,11 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     ['A60','游戏配置总控勾选 3 个（其中 1 个本站点已维护），批量操作选「批量维护」','「只改」选项写「处理 2 个，另 1 个已是维护，跳过」；选它并确定后提示「已在「站点」把 2 个游戏设为维护」，勾选清空'],
     ['A61','场馆配置总控点 MG电子「排序(热门游戏数量)」改为 999 并确定','数值旁显示「手动」，操作列出现「取消手动排序」；平台级，所有站点该场馆数值相同；点「取消手动排序」并确定后恢复为自动的热门游戏数量'],
     ['A62','游戏配置总控点某游戏「排序」，输入 3 并确定','该游戏有效注单默认值落在平台热门第 2、3 位之间；下个整点各站点按新热门值重排；商户点「对齐平台排序」可立即同步'],
+    ['A63','场馆配置总控选站点 A，查看 MyPG电子','排在 PG电子 之后；序号显示「并入 PG电子」；热门游戏数、置顶显示「-」；没有编辑排序数值、场馆游戏排序，复选框不可勾选；维护 / 启用 / 停用可用'],
+    ['A64','站点 A 停用 MyPG电子（只改站点 A）','前台 PG 场馆仍显示；显示 MY 版的游戏不显示，原厂版照常；把这些游戏切回原厂后显示'],
+    ['A65','站点 A 关闭 PG电子','前台 PG 合并场馆不显示，含其中的 MY 版游戏'],
+    ['A66','查看站点 A 的 PG电子 热门游戏数','只统计前台显示的版本：一对游戏两个版本都在热门前 100 名时只算 1 个'],
+    ['A67','游戏配置总控对有对应版本的游戏点「排序」','弹窗顶部提示「该游戏有对应版本，前台当前显示 MY 版，只有显示的版本在前台生效」'],
   ];
   $('accBody').innerHTML=ACC.map(function(a){ return '<tr><td>'+a[0]+'</td><td>'+esc(a[1])+'</td><td>'+esc(a[2])+'</td></tr>'; }).join('');
 
@@ -1789,6 +1807,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
  'hcnt': ['排序(热门游戏数量)', '原：平台级数值，可点击「编辑排序数值」手工修改，改后为手动排序，「取消手动排序」恢复自动。\n现：选站点后，未手动修改的场馆显示所选站点的热门游戏数量（该站点热门前 N 名中属于该场馆的游戏数，站点关闭的游戏不计入），用于场馆自动排序；「编辑排序数值」「取消手动排序」沿用现网，平台级，对全部站点生效，手动修改的数值旁显示「手动」。'],
  'hseqno': ['序号', '原：无（新增菜单）；商户后台热门游戏排序的序号为当前查询结果的行号。\n现：显示该游戏在所选站点热门列表中的位置（热门置顶在前，其余按热门值；原厂 / MY 两个版本各占一个号），筛选时数字不变。'],
  'cseqno': ['序号', '原：总控没有此弹窗；商户后台场馆游戏排序的序号为列表行号。\n现：显示该游戏在该场馆内的位置（场馆内置顶在前，其余按热门值；原厂 / MY 两个版本各占一个号），按名称筛选时数字不变。'],
+ 'vmerge': ['已并入的 MY 场馆', '原：现网总控 MyPG电子、MyTaDa电子 是独立场馆行，有自己的排序数值；前台与商户后台已把它们并入 PG电子、TaDa 电子。\n现：选站点后仍单独一行，排在所并入场馆之后，序号显示「并入 PG电子」；热门游戏数、置顶显示「-」，不提供编辑排序数值与场馆游戏排序，不参与批量；维护 / 启用 / 停用照常，只影响 MY 版游戏。合并场馆的显示与位置以原厂场馆为准；热门游戏数量只算前台显示的版本。'],
  'vseqno': ['序号', '原：列表行号，按当前查询结果从 1 编号。\n现：选站点后显示该场馆在所选站点前台的位置（置顶占 1–N，其余按热门游戏数量），筛选时数字不变；总控停用的场馆显示「-」。'],
  'gseqno': ['序号', '原：列表行号，按当前查询结果从 1 编号。\n现：选站点后显示该游戏在所选站点的热门排名，筛选时数字不变；站点关闭、总控停用的显示「-」。'],
  'vcols': ['新增的按站点列', '原：无。\n现：勾选、站点状态、置顶、对应 MY 场馆。站点状态为开启 / 维护 / 关闭，与商户后台同一份；在操作列点维护 / 启用 / 停用并选「只改本站点」可修改。'],
