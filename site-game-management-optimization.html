@@ -561,7 +561,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         </div>
       </div>
     </div>
-    <div class="proto-tip">进入页面不加载数据，选站点并查询后按该站点热门排名列出游戏；现网列保留，浅蓝底为本期新增的按站点列。维护 / 启用 / 停用点开后在确认框里选「只改本站点」或「全部站点」，不默认；全部站点停用当下对所有站点生效（前台与排序列表不显示，置顶取消）。操作列「排序」沿用现网（平台级，按前后游戏调整有效注单默认值，对全部站点生效）。游戏图片为占位；有效注单为热门值来源，前1小时、当前小时数值为示例；批量修改有效注单沿用现网。</div>
+    <div class="proto-tip">进入页面不加载数据，选站点并查询后按该站点热门排名列出游戏；现网列保留，浅蓝底为本期新增的按站点列。维护 / 启用 / 停用点开后在确认框里选「只改本站点」或「全部站点」，不默认；全部站点停用当下对所有站点生效（前台与排序列表不显示，置顶取消）。操作列「排序」沿用现网（平台级，按前后游戏调整有效注单默认值，对全部站点生效）。游戏图片为占位；有效注单为热门值来源，点数值可直接修改默认值（沿用现网，平台级），前1小时、当前小时数值为示例；批量修改有效注单沿用现网。</div>
   </div>
 
   <!-- ===== 总控 · 热门游戏排序 ===== -->
@@ -1604,7 +1604,7 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
       html+='<tr class="'+(sh==='hide'?'p2':'')+'"><td'+sc+'><input type="checkbox" class="chk" data-gsel="'+g.id+'"'+(GM.sel[g.id]?' checked':'')+'></td><td'+sc+'>'+(stopped(g)||!g.rank?'-':g.rank)+'</td><td class="zkc">'+g.id+'</td><td class="l">'+esc(nm(g))+'</td><td>'+esc(g.venue)+'</td>'+
         '<td'+sc+'>'+rel+'</td><td'+sc+'>'+showTag(sh)+'</td><td'+sc+'>'+swCell(s,g,'data-ga')+'</td>'+
         '<td class="zkc">'+pTag(pst)+'</td><td'+sc+'>'+effTag(pst,g.status,pst!=='停用'&&stopped(g))+'</td>'+
-        '<td class="zkc"><span class="img-ph">图</span></td><td class="zkc">2025-12-0'+(g.base%9+1)+' 10:00:00</td><td>'+esc(o.op)+'</td><td>'+o.time+'</td><td>'+esc(o.remark)+'</td><td class="zkc">'+g.hot+'</td><td class="zkc">'+Math.round(g.hot/700)+'</td><td class="zkc">'+Math.round(g.hot/2100)+'</td>'+
+        '<td class="zkc"><span class="img-ph">图</span></td><td class="zkc">2025-12-0'+(g.base%9+1)+' 10:00:00</td><td>'+esc(o.op)+'</td><td>'+o.time+'</td><td>'+esc(o.remark)+'</td><td class="zkc"><button class="lk" data-gbet="'+g.id+'" type="button" title="点击修改有效注单默认值">'+g.hot+'</button></td><td class="zkc">'+Math.round(g.hot/700)+'</td><td class="zkc">'+Math.round(g.hot/2100)+'</td>'+
         '<td class="op-fix"><div class="bk-ops">'+ops+'</div></td></tr>';
     });
     $('gBody').innerHTML=html||emptyRow(cols,'没有符合条件的游戏');
@@ -1626,6 +1626,12 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
   $('gReset').addEventListener('click',function(){ ['gId','gName','gVenue'].forEach(function(id){ $(id).value=''; }); $('gShow').value=''; GM={q:GM.q,site:GM.site,id:'',name:'',venue:'',show:'',sel:{},edit:null,err:''}; renderGame(); });
   $('gRefresh').addEventListener('click',function(){ toast('刷新沿用现网'); });
   $('gBulkBet').addEventListener('click',function(){ toast('批量修改有效注单沿用现网'); });
+  /* 现网保留：有效注单默认值可直接修改（平台级，所有站点生效；之后每小时继续累加新增投注） */
+  $('gBody').addEventListener('click',function(e){
+    var b=e.target.closest('[data-gbet]'); if(!b) return; e.stopPropagation();
+    var id=b.getAttribute('data-gbet'),s=SS[GM.site],g=G(s,id);
+    inlineEdit(b,g.hot,0,999999999,function(x){ Object.keys(SS).forEach(function(k){ var t=G(SS[k],id); if(t) t.hot=x; }); renderAll(); toast('有效注单默认值已改为 '+x.toLocaleString('en-US')+'（平台级，所有站点生效）；之后每小时继续累加新增投注'); });
+  });
   /* 现网保留：游戏「排序」（平台级，按前后游戏倒推有效注单默认值） */
   $('gBody').addEventListener('click',function(e){
     var b=e.target.closest('[data-gpsort]'); if(!b) return; e.stopPropagation();
