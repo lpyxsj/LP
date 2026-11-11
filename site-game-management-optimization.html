@@ -766,7 +766,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td>列表</td><td>排序值（原「排序(热门游戏数量)」），点击「编辑排序数值」<span class="tag-new" data-tip="hcnt" tabindex="0">本期修改</span></td><td>修改</td><td>未手动修改时显示所选站点的热门游戏数量，用于场馆自动排序；「编辑排序数值」「取消手动排序」沿用现网（平台级，对全部站点生效），手动修改后数值旁显示「手动」；编辑改为点数值原地输入（0–99999），回车保存，不弹窗、不二次确认；「取消手动排序」仍需确认</td></tr>
         <tr><td>列表</td><td>排序类型（现网全部自动排序）<span class="tag-new" data-tip="pincol" tabindex="0">本期修改</span></td><td>合并</td><td>与新增的置顶位置、是否置顶合并为一列「置顶」：已置顶显示「第 N 位」+「取消」，未置顶显示「置顶」</td></tr>
         <tr><td>列表</td><td>勾选、站点状态、对应 MY 场馆<span class="tag-new" data-tip="vcols" tabindex="0">本期新增</span></td><td>新增</td><td>序号显示所选站点的前台位置：从 1 连续，筛选时不变，置顶占 1–N，其余按热门游戏数量，总控停用的显示「-」；站点状态只读；对应 MY 场馆显示对应 MY 场馆及对应游戏数量，点击数量打开对应游戏弹窗</td></tr>
-        <tr><td>列表</td><td>已并入的 MY 场馆（MyPG电子、MyTaDa电子）<span class="tag-new" data-tip="vmerge" tabindex="0">本期修改</span></td><td>修改</td><td>选站点后仍单独一行，排在所并入场馆之后：序号显示「并入 PG电子」，排序值、置顶显示「-」，没有「编辑排序数值」「场馆游戏排序」，不参与批量；维护 / 启用 / 停用照常，只影响 MY 版游戏</td></tr>
+        <tr><td>列表</td><td>已并入的 MY 场馆（MyPG电子、MyTaDa电子）<span class="tag-new" data-tip="vmerge" tabindex="0">本期修改</span></td><td>修改</td><td>选站点后仍单独一行，排在所并入场馆之后：和原厂场馆一组，筛选时两行一起出现；序号显示「并入 PG电子」，排序值、置顶显示「-」，没有「编辑排序数值」「场馆游戏排序」，不参与批量；维护 / 启用 / 停用照常，只影响 MY 版游戏</td></tr>
         <tr><td>操作列</td><td>维护 / 启用、停用（备注必填 30 字），只改总控状态<span class="tag-new" data-tip="stsc" tabindex="0">本期新增</span></td><td>修改</td><td>确认框新增影响范围：只改本站点 / 全部站点，不默认；按钮按总控状态与本站点状态显示；规则见总览「维护 / 启用 / 停用」</td></tr>
         <tr><td>操作列</td><td>场馆游戏排序<span class="tag-new" data-tip="vcmd" tabindex="0">本期新增</span></td><td>新增</td><td>打开该场馆的场馆游戏排序弹窗，可做场馆内置顶（总控停用的场馆没有此按钮）</td></tr>
       </tbody></table></div></div>
@@ -1414,8 +1414,10 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
     var list;
     if(VM.site){ list=venueOrder(SS[VM.site]); } else { list=SS['888'].venues.slice(); }
     return list.filter(function(v){
-      if(VM.name&&v.name.toLowerCase().indexOf(VM.name.toLowerCase())<0) return false;
-      if(!isM()&&VM.status&&PS.v[v.name]!==VM.status) return false;
+      /* 原厂场馆和并入它的 MY 场馆视为一组：名称、总控状态任一行命中，两行一起显示 */
+      var mv=(!isM()&&VPAIR[v.name])||null;
+      if(VM.name){ var q=VM.name.toLowerCase(); if(v.name.toLowerCase().indexOf(q)<0&&!(mv&&mv.toLowerCase().indexOf(q)>-1)) return false; }
+      if(!isM()&&VM.status&&PS.v[v.name]!==VM.status&&!(mv&&PS.v[mv]===VM.status)) return false;
       if(isM()&&VM.mst){ var ps=PS.v[v.name],es=ps==='停用'?'关闭':ps==='维护'?'维护':v.status; if(es!==VM.mst) return false; }
       if(VM.type&&v.type!==VM.type) return false; return true; });
   }
@@ -1438,7 +1440,7 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
       var rel=VPAIR[v.name]?'<span class="bk-link">'+esc(VPAIR[v.name])+'</span> · <button class="lk" data-va="pairs" data-v="'+esc(v.name)+'" type="button">'+pairCount(s,v.name)+' 款对应游戏</button>':'-';
       html+='<tr class="'+(pin?'row-pin':'')+'"><td'+sc+'><input type="checkbox" class="chk" data-vsel="'+esc(v.name)+'"'+(VM.sel[v.name]?' checked':'')+(dead?' disabled':'')+'></td><td'+sc+'>'+(dead?'-':v.h5)+'</td>'+
         '<td>'+esc(v.name)+'</td><td>'+v.type+'</td><td class="zkc">'+pTag(pst)+'</td><td'+sc+'>'+effTag(pst,v.status)+'</td><td>'+(dead?'-':'<button class="lk" data-vman="'+esc(v.name)+'" type="button">'+v.hc+'</button>'+(sMan(s,v.name)!=null?' <span class="bk-tag blue">'+(isM()?'手动':'站点手动')+'</span>':(!isM()&&vMan(v.name)!=null?' <span class="bk-tag blue">手动</span>':'')))+'</td><td'+sc+'>'+pinCell('data-va',v.name,v.vp,!dead)+'</td><td'+sc+'>'+rel+'</td><td class="mch-col">0.00</td><td class="mch-col">'+esc(v.op||'-')+'</td><td class="mch-col">'+(v.time||'-')+'</td><td class="op-fix"><div class="bk-ops">'+ops+'</div></td></tr>';
-      if(VPAIR[v.name]&&!isM()&&!XF.v.pin) html+=mvRow(s,VPAIR[v.name],v.name,sc);
+      if(VPAIR[v.name]&&!isM()) html+=mvRow(s,VPAIR[v.name],v.name,sc);
       if(noFilter&&pin&&v.vp===np&&i<rows.length-1) html+='<tr class="bk-sep"><td colspan="'+cols+'"></td></tr>';
     });
     $('vBody').innerHTML=html||emptyRow(cols,'没有符合条件的场馆');
