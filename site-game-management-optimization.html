@@ -859,7 +859,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td><b>菜单</b></td><td>总控厂商管理 / 总控游戏管理 / 热门游戏排序</td><td>厂商管理 / 游戏管理 / 热门游戏排序（结构一样）</td></tr>
         <tr><td><b>站点</b></td><td>必选，可切换</td><td>只有本站点，不显示站点选择</td></tr>
         <tr><td><b>状态</b></td><td>总控状态（全部站点）+ 站点状态（本站点）；维护 / 启用 / 停用时选影响范围</td><td>只有「状态」（本站点）；维护 / 开启 / 关闭直接改本站点。平台停用或维护时显示灰色「关闭（平台停用）」「维护（平台维护）」，按钮换成「平台已停用」「平台维护中」，不能改</td></tr>
-        <tr><td><b>排序值</b></td><td>可编辑（平台级）、取消手动排序</td><td>只读</td></tr>
+        <tr><td><b>排序值</b></td><td>可编辑（平台级）、取消手动排序；站点自己改过的以站点为准</td><td>可编辑，只影响本站点；「取消手动排序」或「对齐平台排序」恢复自动</td></tr>
         <tr><td><b>游戏「排序」、有效注单</b></td><td>有（平台级）</td><td>不显示</td></tr>
         <tr><td><b>置顶（场馆 / 热门 / 场馆内）、改位置、批量</b></td><td>有</td><td>有，同一份数据</td></tr>
         <tr><td><b>序号</b></td><td>前台位置 / 热门排名</td><td>同</td></tr>
@@ -1105,6 +1105,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
   /* 视角：zk 总控后台 / mch 商户后台（只有本站点，去掉总控专属） */
 window.MODE='zk';
 function isM(){ return window.MODE==='mch'; }
+function sMan(s,n){ return (s&&s.vman&&s.vman[n]!=null)?s.vman[n]:null; }
 /* 站点状态列显示实际效果：总控停用 / 维护时显示总控的结果（灰色），总控恢复后回到本站点自己的状态 */
 function stPlain(st){ return st==='on'||st==='开启'?'开启':st==='mt'||st==='维护'?'维护':'关闭'; }
 function effTag(pst,st,vStopped){
@@ -1159,7 +1160,7 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
   function venueOrder(s){
     var live=s.venues.filter(function(v){ return !vStop(v.name); }),dead=s.venues.filter(function(v){ return vStop(v.name); });
     var pinned=s.vPins.map(function(n){ return V(s,n); }).filter(function(v){ return v&&live.indexOf(v)>-1; }),pk={};
-    s.venues.forEach(function(v){ v.vp=null; v.h5=null; v.hc=vMan(v.name)!=null?vMan(v.name):hotCount(s,v.name); });
+    s.venues.forEach(function(v){ v.vp=null; v.h5=null; v.hc=sMan(s,v.name)!=null?sMan(s,v.name):vMan(v.name)!=null?vMan(v.name):hotCount(s,v.name); });
     pinned.forEach(function(v,i){ pk[v.name]=1; v.vp=i+1; });
     var rest=live.filter(function(v){ return !pk[v.name]; }).sort(function(a,b){ return b.hc-a.hc||a.base-b.base; });
     var all=pinned.concat(rest); all.forEach(function(v,i){ v.h5=i+1; });
@@ -1420,16 +1421,16 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
   function renderVendor(){
     var site=VM.q?VM.site:'',sc=' class="site-col"',cols=10;
     $('vTable').style.minWidth='1500px';
-    $('vHead').innerHTML='<tr><th style="width:36px;"'+sc+'><input type="checkbox" class="chk" id="vChkAll" aria-label="全选当前查询结果"></th><th'+sc+'>序号<span class="mk" data-tip="vseqno" tabindex="0">本期修改</span></th><th>场馆名称</th><th>场馆类型</th><th class="zkc">总控状态（全部站点）<span class="mk" data-tip="stname" tabindex="0">本期修改</span></th><th'+sc+'>'+(isM()?'场馆状态':'站点状态（本站点）')+'<span class="mk" data-tip="'+(isM()?'mstat':'sitest')+'" tabindex="0">本期'+(isM()?'修改':'新增')+'</span></th><th>排序值<span class="qm" title="数值越大越靠前（置顶的场馆排在最前）。默认是所选站点的热门游戏数量（热门前 N 名里属于该场馆的游戏数），每小时自动更新。也可以手动修改：改的是平台的值，所有站点一起生效，改过的标「手动」，点「取消手动排序」恢复自动。" style="display:inline-block;width:15px;height:15px;line-height:15px;margin-left:4px;border-radius:50%;background:#e5e7eb;color:#475569;font-size:11px;text-align:center;cursor:help;">?</span><span class="mk" data-tip="hcnt" tabindex="0">本期修改</span></th><th'+sc+'>置顶<span class="mk" data-tip="pincol" tabindex="0">本期修改</span></th><th'+sc+'>对应 MY 场馆<span class="mk" data-tip="vrel" tabindex="0">本期新增</span></th><th class="mch-col">入场余额限制</th><th class="mch-col">最后操作人</th><th class="mch-col">最后操作时间</th><th style="min-width:300px;" class="op-fix">操作<span class="mk" data-tip="vcmd" tabindex="0">本期新增</span></th></tr>';
+    $('vHead').innerHTML='<tr><th style="width:36px;"'+sc+'><input type="checkbox" class="chk" id="vChkAll" aria-label="全选当前查询结果"></th><th'+sc+'>序号<span class="mk" data-tip="vseqno" tabindex="0">本期修改</span></th><th>场馆名称</th><th>场馆类型</th><th class="zkc">总控状态（全部站点）<span class="mk" data-tip="stname" tabindex="0">本期修改</span></th><th'+sc+'>'+(isM()?'场馆状态':'站点状态（本站点）')+'<span class="mk" data-tip="'+(isM()?'mstat':'sitest')+'" tabindex="0">本期'+(isM()?'修改':'新增')+'</span></th><th>排序值<span class="qm" title="'+(isM()?'数值越大越靠前（置顶的场馆排在最前）。默认是本站点的热门游戏数量，每小时自动更新。可以点数值手动改，只影响本站点；改过的标「手动」，点「取消手动排序」或「对齐平台排序」恢复。':'数值越大越靠前（置顶的场馆排在最前）。默认是所选站点的热门游戏数量（热门前 N 名里属于该场馆的游戏数），每小时自动更新。也可以手动修改：改的是平台的值，所有站点一起生效，改过的标「手动」，点「取消手动排序」恢复自动。站点自己改过的，以站点的值为准（标「站点手动」）。')+'" style="display:inline-block;width:15px;height:15px;line-height:15px;margin-left:4px;border-radius:50%;background:#e5e7eb;color:#475569;font-size:11px;text-align:center;cursor:help;">?</span><span class="mk" data-tip="hcnt" tabindex="0">本期修改</span></th><th'+sc+'>置顶<span class="mk" data-tip="pincol" tabindex="0">本期修改</span></th><th'+sc+'>对应 MY 场馆<span class="mk" data-tip="vrel" tabindex="0">本期新增</span></th><th class="mch-col">入场余额限制</th><th class="mch-col">最后操作人</th><th class="mch-col">最后操作时间</th><th style="min-width:300px;" class="op-fix">操作<span class="mk" data-tip="vcmd" tabindex="0">本期新增</span></th></tr>';
     if(!VM.q||!site){ $('vBody').innerHTML=emptyRow(cols,'请先在上方选择站点'); $('vCount').textContent='共 0 条数据'; return; }
     var s=SS[site],rows=vRows(),noFilter=!VM.name&&!VM.status&&!VM.type&&!XF.v.pin,html='',np=s.vPins.length;
     rows.forEach(function(v,i){
       var pst=PS.v[v.name],dead=pst==='停用',pin=!!v.vp;
       var st=stBtns('data-va','data-v',v.name,pst,v.status);
-      var ops=(isM()?'<button class="bk-btn sm" data-mchtoast="1" type="button">编辑</button>':'')+st+(!dead&&!isM()&&vMan(v.name)!=null?'<button class="bk-btn sm" data-vcancel="'+esc(v.name)+'" type="button">取消手动排序</button>':'')+(!dead?'<button class="bk-btn sm primary" data-va="csort" data-v="'+esc(v.name)+'" type="button">场馆游戏排序</button>':'');
+      var ops=(isM()?'<button class="bk-btn sm" data-mchtoast="1" type="button">编辑</button>':'')+st+(!dead&&(isM()?sMan(s,v.name)!=null:vMan(v.name)!=null)?'<button class="bk-btn sm" data-vcancel="'+esc(v.name)+'" type="button">取消手动排序</button>':'')+(!dead?'<button class="bk-btn sm primary" data-va="csort" data-v="'+esc(v.name)+'" type="button">场馆游戏排序</button>':'');
       var rel=VPAIR[v.name]?'<span class="bk-link">'+esc(VPAIR[v.name])+'</span> · <button class="lk" data-va="pairs" data-v="'+esc(v.name)+'" type="button">'+pairCount(s,v.name)+' 款对应游戏</button>':'-';
       html+='<tr class="'+(pin?'row-pin':'')+'"><td'+sc+'><input type="checkbox" class="chk" data-vsel="'+esc(v.name)+'"'+(VM.sel[v.name]?' checked':'')+(dead?' disabled':'')+'></td><td'+sc+'>'+(dead?'-':v.h5)+'</td>'+
-        '<td>'+esc(v.name)+'</td><td>'+v.type+'</td><td class="zkc">'+pTag(pst)+'</td><td'+sc+'>'+effTag(pst,v.status)+'</td><td>'+(dead?'-':isM()?String(v.hc):'<button class="lk" data-vman="'+esc(v.name)+'" type="button">'+v.hc+'</button>'+(vMan(v.name)!=null?' <span class="bk-tag blue">手动</span>':''))+'</td><td'+sc+'>'+pinCell('data-va',v.name,v.vp,!dead)+'</td><td'+sc+'>'+rel+'</td><td class="mch-col">0.00</td><td class="mch-col">'+esc(v.op||'-')+'</td><td class="mch-col">'+(v.time||'-')+'</td><td class="op-fix"><div class="bk-ops">'+ops+'</div></td></tr>';
+        '<td>'+esc(v.name)+'</td><td>'+v.type+'</td><td class="zkc">'+pTag(pst)+'</td><td'+sc+'>'+effTag(pst,v.status)+'</td><td>'+(dead?'-':'<button class="lk" data-vman="'+esc(v.name)+'" type="button">'+v.hc+'</button>'+(sMan(s,v.name)!=null?' <span class="bk-tag blue">'+(isM()?'手动':'站点手动')+'</span>':(!isM()&&vMan(v.name)!=null?' <span class="bk-tag blue">手动</span>':'')))+'</td><td'+sc+'>'+pinCell('data-va',v.name,v.vp,!dead)+'</td><td'+sc+'>'+rel+'</td><td class="mch-col">0.00</td><td class="mch-col">'+esc(v.op||'-')+'</td><td class="mch-col">'+(v.time||'-')+'</td><td class="op-fix"><div class="bk-ops">'+ops+'</div></td></tr>';
       if(VPAIR[v.name]&&!isM()) html+=mvRow(s,VPAIR[v.name],v.name,sc);
       if(noFilter&&pin&&v.vp===np&&i<rows.length-1) html+='<tr class="bk-sep"><td colspan="'+cols+'"></td></tr>';
     });
@@ -1652,9 +1653,9 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
     var m=e.target.closest('[data-vman]'),c=e.target.closest('[data-vcancel]'); if(!m&&!c) return; e.stopPropagation();
     if(!PS.vman) PS.vman={};
     if(c){ var n=c.getAttribute('data-vcancel');
-      confirmBox('确认提示','确认取消「'+esc(n)+'」的手动排序？<div class="muted" style="margin-top:6px;font-size:12.5px;">取消后排序类型恢复为自动排序，按热门游戏数量排序；平台级，对全部站点生效</div>',function(){ delete PS.vman[n]; renderAll(); toast('操作成功'); }); return; }
+      confirmBox('确认提示','确认取消「'+esc(n)+'」的手动排序？<div class="muted" style="margin-top:6px;font-size:12.5px;">'+(isM()?'取消后恢复为自动排序，只影响本站点':'取消后排序类型恢复为自动排序，按热门游戏数量排序；平台级，对全部站点生效')+'</div>',function(){ if(isM()){ var ss=SS[VM.site]; if(ss.vman) delete ss.vman[n]; } else delete PS.vman[n]; renderAll(); toast('操作成功'); }); return; }
     var n2=m.getAttribute('data-vman'),cur=m.textContent;
-    inlineEdit(m,+cur||0,0,99999,function(x){ PS.vman[n2]=x; renderAll(); toast('已改为 '+x+'，排序类型为手动（平台级，所有站点生效）'); });
+    inlineEdit(m,+cur||0,0,99999,function(x){ if(isM()){ var ss=SS[VM.site]; if(!ss.vman) ss.vman={}; ss.vman[n2]=x; renderAll(); toast('已改为 '+x+'，排序类型为手动（只影响本站点）'); return; } PS.vman[n2]=x; renderAll(); toast('已改为 '+x+'，排序类型为手动（平台级，所有站点生效；站点自己改过的不受影响）'); });
   });
   $('gHead').addEventListener('change',function(e){ if(e.target.id!=='gChkAll') return; gRows().forEach(function(g){ GM.sel[g.id]=e.target.checked; }); renderGame(); });
   $('gBody').addEventListener('change',function(e){ var c=e.target.closest('[data-gsel]'); if(!c) return; GM.sel[c.getAttribute('data-gsel')]=c.checked; updGSel(); });
@@ -1816,12 +1817,13 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
     ['A67','总控游戏管理对有对应版本的游戏点「排序」','弹窗顶部提示「该游戏有对应版本，前台当前显示 MY 版，只有显示的版本在前台生效」'],
     ['A68','总控厂商管理对未置顶场馆点「置顶」','不弹确认框，直接排到置顶末尾，提示「已置顶到第 N 位」；点「取消」仍弹确认框'],
     ['A69','总控停用场馆 X（选全部站点）后查看站点 A，再把 X 总控启用','停用后站点 A 的站点状态列显示灰色「关闭（总控停用）」，悬停显示原来的状态；启用后自动回到原来的状态（原来是关闭的仍为关闭），商户后台的状态值全程未被改写'],
-    ['A70','原型右上角切到「商户后台」','菜单为厂商管理 / 游戏管理 / 热门游戏排序；没有站点选择、总控状态列、有效注单列和游戏「排序」按钮；排序值只读'],
+    ['A70','原型右上角切到「商户后台」','菜单为厂商管理 / 游戏管理 / 热门游戏排序；没有站点选择、总控状态列、有效注单列和游戏「排序」按钮；排序值可编辑（只影响本站点）'],
     ['A71','商户厂商管理把某场馆「关闭」','确认框写「只影响本站点前台」，填备注后生效；总控同站点的站点状态同步为关闭，其他站点不变'],
     ['A72','总控停用场馆 X 后看商户厂商管理','X 的状态显示灰色「关闭（平台停用）」，操作列显示「平台已停用」，悬停说明由平台控制、不能改；置顶已取消'],
     ['A73','总控把场馆 X 设为维护后看商户厂商管理','状态显示「维护（平台维护）」，操作列显示「平台维护中」'],
     ['A74','商户置顶、改置顶位置、原厂 / MY 切换','和总控同一份数据，总控同站点刷新后一致'],
     ['A75','商户热门游戏排序','不显示站点关闭的游戏，和总控一致'],
+    ['A76','商户把 MG电子 排序值改为 999','只影响本站点：MG电子 排到置顶之后第一位，标「手动」；总控同站点显示 999 并标「站点手动」，其他站点不变；总控改平台排序值不影响该站点；商户点「取消手动排序」或「对齐平台排序」后恢复自动'],
   ];
   $('accBody').innerHTML=ACC.map(function(a){ return '<tr><td>'+a[0]+'</td><td>'+esc(a[1])+'</td><td>'+esc(a[2])+'</td></tr>'; }).join('');
 
@@ -1836,7 +1838,7 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
     if(k){ ['vSite','gSite','hSite'].forEach(function(id){ $(id).value='888'; }); $('vQuery').click(); $('gQuery').click(); $('hQuery').click(); }
     renderAll(); }
   document.querySelectorAll('.mode-b').forEach(function(b){ b.addEventListener('click',function(){ setMode(b.getAttribute('data-mode')); }); });
-  document.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('[data-mchtoast]'); if(b) toast('「'+b.textContent.trim()+'」沿用现网'); });
+  document.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('[data-mchtoast]'); if(!b) return; if(b.textContent.trim()==='对齐平台排序'&&b.closest('[data-page-panel="vendor"]')){ var ss=SS[VM.site]; if(ss) ss.vman={}; renderAll(); toast('已对齐平台排序：本站点手动排序值已清除，其余沿用现网'); return; } toast('「'+b.textContent.trim()+'」沿用现网'); });
   [$('vSite').parentNode,$('gSite').parentNode,$('hSite'),$('vStatus'),$('gBulkBet')].forEach(function(e){ if(e) e.classList.add('zk-only'); });
   (function(){ var gp=$('gPstF'); if(gp) (gp.parentNode.tagName==='SPAN'?gp.parentNode:gp).classList.add('zk-only'); })();
   resetAll(); renderAll();
@@ -1876,7 +1878,7 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
  'ozk': ['现网两页改版', '原：只能管全平台，不能按站点操作。\n现：先选站点，再查看和修改这个站点的置顶、原厂 / MY 和状态。'],
  'site': ['搜索 · 站点', '原：无。\n现：必选。选了站点并查询后才显示数据。'],
  'vrule': ['场馆置顶', '原：无。\n现：可以给所选站点的场馆置顶，和商户后台同一份数据。'],
- 'hcnt': ['排序值', '原：列名「排序(热门游戏数量)」，显示平台的数值。\n现：改名「排序值」，表头问号说明来源；显示所选站点的热门游戏数量，手动改数值照现网（所有站点生效），改过的旁边标「手动」。'],
+ 'hcnt': ['排序值', '原：列名「排序(热门游戏数量)」，显示平台的数值。\n现：改名「排序值」，表头问号说明来源；手动改数值照现网（平台级），站点自己改过的以站点为准，标「站点手动」。'],
  'vmerge': ['已并入的 MY 场馆', '原：MyPG电子 等是普通场馆行。\n现：排在所并入场馆的后面，序号显示「并入 PG电子」，只能维护 / 启用 / 停用。'],
  'vseqno': ['序号', '原：列表行号。\n现：该场馆在所选站点前台的位置，筛选时不变。'],
  'gseqno': ['序号', '原：列表行号。\n现：该游戏在所选站点的热门排名，筛选时不变。'],
@@ -1897,7 +1899,7 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
  'gbsw': ['批量改为原厂 / MY', '原：无。\n现：勾选后在列表底部「批量操作」里选，不能切换的自动跳过。'],
  'fpair': ['同款游戏只显示一款', '原：原厂版和 MY 版同时出现。\n现：只显示选定的那个版本。'],
  'fstop': ['总控停用', '原：总控停用的游戏、场馆还会出现在站点的排序列表里。\n现：所有站点前台和排序列表都不显示，相关置顶自动取消。'],
- 'mchview': ['商户后台', '原：商户后台和总控页面结构不同。\n现：三个菜单和总控同一结构；商户只管本站点，看不到总控状态，不能改平台的排序值和有效注单。'],
+ 'mchview': ['商户后台', '原：商户后台和总控页面结构不同。\n现：三个菜单和总控同一结构；商户只管本站点，看不到总控状态和有效注单；排序值可以改，只影响本站点。'],
  'mops': ['维护 / 开启 / 关闭', '原：平台停用（禁用）的只剩「编辑」，没有说明。\n现：平台停用或维护时按钮换成灰色「平台已停用」「平台维护中」，不能改，悬停说明由平台控制；其余只改本站点。'],
  'mstat': ['场馆状态 / 游戏状态', '原：显示本站点的开启 / 维护 / 关闭；平台停用的显示「禁用」，没有说明。\n现：平台停用显示灰色「关闭（平台停用）」，平台维护显示「维护（平台维护）」，悬停看本站点原来的状态；平台恢复后自动回到原来的状态。'],
  'zkname': ['菜单名', '原：「站点场馆管理」下的「场馆配置总控」「游戏配置总控」。\n现：改名「厂商管理」「游戏管理」，和商户后台一致；一级菜单「站点场馆管理」改名「站点游戏管理」，和商户「商户游戏管理」对应。'],
@@ -1912,7 +1914,7 @@ var TIPSM={
  'mcseq': ['序号', '原：列表行号。\n现：该游戏在这个场馆里的位置，筛选时不变。'],
  'bfoot': ['底部批量操作', '原：批量按钮在工具栏。\n现：勾选后在列表底部「批量操作」里选；「选择全部」可以跨页全选。'],
  'gseqno': ['序号', '原：「序号」是列表行号，另有一列「热门排名」。\n现：合成一列「序号」，显示本站点的热门排名，筛选时不变。'],
- 'hcnt': ['排序值', '原：列名「排序(热门游戏数量)」。\n现：改名「排序值」，只读；平台手动改过的，显示平台改的值。'],
+ 'hcnt': ['排序值', '原：列名「排序(热门游戏数量)」，只读。\n现：改名「排序值」；可以点数值手动改，只影响本站点，改过的标「手动」；「取消手动排序」或「对齐平台排序」恢复自动。'],
  'pincol': ['置顶', '原：「排序类型」「置顶位置」「是否置顶」三列。\n现：合成一列「置顶」。未置顶的点「置顶」；已置顶的显示「第 N 位」（点数字可改位置）和「取消」。'],
  'vbatch': ['批量置顶 / 取消置顶', '原：工具栏上的两个按钮。\n现：移到列表底部「批量操作」里。'],
  'vpos': ['改置顶位置', '原：弹出位置列表，选好后还要再确认一次。\n现：点「第 N 位」直接输入新位置，回车保存。'],
