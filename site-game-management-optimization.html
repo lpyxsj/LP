@@ -283,6 +283,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .mch-only{display:none!important;}
 .mch-col{display:none;} body.mch .mch-col{display:table-cell;}
 body:not(.mch) .mb{display:none!important;}
+.mch-t{display:none;} body.mch .mch-t{display:inline;} body.mch .zk-t{display:none;}
 body.mch .mch-only{display:inline-flex!important;}
 body.mch .zk-only,body.mch .zkc{display:none!important;}
 body.mch .bk-page [data-tip="stname"],body.mch .bk-page [data-tip="stsc"],body.mch .bk-page [data-tip="site"],body.mch .bk-page [data-tip="vmerge"],body.mch .bk-page [data-tip="vcmd"],body.mch .bk-page [data-tip="vrule"],body.mch .bk-page [data-tip="hpage"],body.mch .bk-page [data-tip="vcols"],body.mch .bk-page [data-tip="gfil"]{display:none!important;}
@@ -547,7 +548,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <div class="bk-card">
           <div class="bk-toolbar">
             <span class="left">
-              <button class="bk-btn primary" id="gBulkBet" type="button">批量修改有效注单</button>
+              <button class="bk-btn mch-only" data-mchtoast="1" type="button">对齐平台排序</button><button class="bk-btn primary" id="gBulkBet" type="button">批量修改有效注单</button>
               <span id="gSiteTools">
                 <span class="hide"><button class="bk-btn primary" id="gBatchOrig" type="button" disabled>批量显示原厂</button><button class="bk-btn primary" id="gBatchMy" type="button" disabled>批量显示 MY</button><b id="gSelCount">0</b></span>
               </span>
@@ -580,12 +581,12 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
           <div class="bk-toolbar">
             <span class="left">
               <span class="hide"><button class="bk-btn primary" id="hBatchPin" type="button" disabled>批量置顶</button><button class="bk-btn" id="hBatchUnpin" type="button" disabled>批量取消置顶</button><b id="hSelCount">0</b></span>
-              <span class="hint" id="hPinHint"></span>
+              <span class="hint" id="hPinHint"></span><button class="bk-btn mch-only" data-mchtoast="1" type="button" style="margin-left:8px;">对齐平台排序</button>
             </span>
           </div>
           <div class="sel-hint hide" id="hSelHint" role="status"></div>
           <div class="bk-table-wrap"><table class="bk-table" style="min-width:1100px;">
-            <thead><tr><th style="width:36px;"><input type="checkbox" class="chk" id="hChkAll" aria-label="全选当前查询结果"></th><th>序号<span class="mk mb" data-tip="mhseq" tabindex="0">本期修改</span></th><th>站点</th><th>场馆</th><th>游戏名称</th><th>前台显示<span class="mk mb" data-tip="mhshow" tabindex="0">本期新增</span></th><th>置顶<span class="mk mb" data-tip="pincol" tabindex="0">本期修改</span></th></tr></thead>
+            <thead><tr><th style="width:36px;"><input type="checkbox" class="chk" id="hChkAll" aria-label="全选当前查询结果"></th><th>序号<span class="mk mb" data-tip="mhseq" tabindex="0">本期修改</span></th><th><span class="zk-t">站点</span><span class="mch-t">地区</span></th><th class="mch-col">商户</th><th><span class="zk-t">场馆</span><span class="mch-t">平台</span></th><th>游戏名称</th><th>前台显示<span class="mk mb" data-tip="mhshow" tabindex="0">本期新增</span></th><th>置顶<span class="mk mb" data-tip="pincol" tabindex="0">本期修改</span></th></tr></thead>
             <tbody id="hBody"></tbody>
           </table></div>
           <div class="bk-foot"><label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="chk" id="hAllFoot"><span id="hAllLabel">选择全部（共 0 条）</span></label><select class="bk-select" id="hBatchSel" style="width:150px;height:28px;padding:0 8px;" aria-label="批量操作"><option value="">批量操作</option><option value="pin">批量置顶</option><option value="unpin">批量取消置顶</option></select><span class="mk" data-tip="bfoot" tabindex="0">本期新增</span><span class="muted" id="hSelText">已选择 0 条</span><div class="bk-pager"><span id="hCount">共 0 条数据</span><span class="pg">1</span><span>50 条/页</span></div></div>
@@ -1548,7 +1549,7 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
     var s=SS[HM.q],rows=hRows(),noFilter=!HM.venue&&!HM.name&&!XF.h.pin&&!XF.h.show,np=s.hPins.length,html='';
     rows.forEach(function(g,i){
       var pin=!!g.hp,off=g.status==='off',sh=showOf(s,g);
-      html+='<tr class="'+(pin?'row-pin ':'')+(sh==='hide'?'p2':'')+'"><td><input type="checkbox" class="chk" data-hsel="'+g.id+'"'+(HM.sel[g.id]?' checked':'')+(off?' disabled':'')+'></td><td>'+(g.rank||'-')+'</td><td>'+esc(siteName(HM.q))+'</td><td>'+esc(g.venue)+'</td><td class="l">'+esc(nm(g))+(off?' <span class="muted">已关闭</span>':'')+'</td><td>'+showTag(sh)+'</td><td>'+pinCell('data-ha',g.id,g.hp,!off,pin?hidNote(s,g):'')+'</td></tr>';
+      html+='<tr class="'+(pin?'row-pin ':'')+(sh==='hide'?'p2':'')+'"><td><input type="checkbox" class="chk" data-hsel="'+g.id+'"'+(HM.sel[g.id]?' checked':'')+(off?' disabled':'')+'></td><td>'+(g.rank||'-')+'</td><td>'+esc(isM()?siteName(HM.q).replace(/\(.*\)$/,''):siteName(HM.q))+'</td><td class="mch-col">'+esc(HM.q)+'</td><td>'+esc(g.venue)+'</td><td class="l">'+esc(nm(g))+(off?' <span class="muted">已关闭</span>':'')+'</td><td>'+showTag(sh)+'</td><td>'+pinCell('data-ha',g.id,g.hp,!off,pin?hidNote(s,g):'')+'</td></tr>';
       if(noFilter&&pin&&g.hp===np&&i<rows.length-1) html+='<tr class="bk-sep"><td colspan="7"></td></tr>';
     });
     body.innerHTML=html||emptyRow(7,'没有符合条件的游戏');
@@ -1588,10 +1589,10 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
   function renderGame(){
     var site=GM.q?GM.site:'',sc=' class="site-col"',cols=19;
     $('gTable').style.minWidth='2700px';
-    $('gHead').innerHTML='<tr><th style="width:36px;"'+sc+'><input type="checkbox" class="chk" id="gChkAll" aria-label="全选当前查询结果"></th><th'+sc+'>序号<span class="mk" data-tip="gseqno" tabindex="0">本期修改</span></th><th>游戏ID</th><th>游戏名称</th><th>场馆名称</th>'+
+    $('gHead').innerHTML='<tr><th style="width:36px;"'+sc+'><input type="checkbox" class="chk" id="gChkAll" aria-label="全选当前查询结果"></th><th'+sc+'>序号<span class="mk" data-tip="gseqno" tabindex="0">本期修改</span></th><th class="zkc">游戏ID</th><th>游戏名称</th><th>场馆名称</th>'+
       '<th'+sc+'>对应版本<span class="mk" data-tip="grel" tabindex="0">本期新增</span></th><th'+sc+'>前台显示</th><th'+sc+' style="min-width:120px;">前台切换<span class="mk" data-tip="gsw" tabindex="0">本期新增</span></th>'+
       '<th class="zkc">总控状态（全部站点）<span class="mk" data-tip="stname" tabindex="0">本期修改</span></th><th'+sc+'>'+(isM()?'游戏状态':'站点状态（本站点）')+'<span class="mk" data-tip="'+(isM()?'mstat':'sitest')+'" tabindex="0">本期'+(isM()?'修改':'新增')+'</span></th>'+
-      '<th>游戏图片</th><th>创建时间</th><th>最近操作人</th><th>最近操作时间</th><th>备注</th><th class="zkc">有效注单</th><th class="zkc">前1小时有效注单</th><th class="zkc">当前小时注单量</th><th style="min-width:250px;" class="op-fix">操作<span class="mk" data-tip="'+(isM()?'mops':'gops')+'" tabindex="0">本期修改</span></th></tr>';
+      '<th class="zkc">游戏图片</th><th class="zkc">创建时间</th><th>最近操作人</th><th>最近操作时间</th><th>备注</th><th class="zkc">有效注单</th><th class="zkc">前1小时有效注单</th><th class="zkc">当前小时注单量</th><th style="min-width:250px;" class="op-fix">操作<span class="mk" data-tip="'+(isM()?'mops':'gops')+'" tabindex="0">本期修改</span></th></tr>';
     if(!GM.q||!site){ $('gBody').innerHTML=emptyRow(cols,'请先在上方选择站点'); $('gCount').textContent='共 0 条数据'; updGSel(); return; }
     var s=SS[site],rows=gRows(),html='',dv={};
     rows.forEach(function(g){ var fv=fvOf(g.venue); if(!dv[fv]){ dv[fv]=1; cOrder(s,fv); } });
@@ -1600,10 +1601,10 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
       var st=stBtns('data-ga','data-id',g.id,pst,siteStOf('游戏',g));
       var ops=st+(pst==='停用'||isM()?'':'<button class="bk-btn sm" data-gpsort="'+g.id+'" type="button">排序</button>');
       var rel=p?(function(){ var x=G(s,p.my===g.id?p.orig:p.my); return esc(x.venue)+' · '+esc(x.zh)+'<span class="pair-note">'+x.id+'</span>'; })():(sh==='none'?'<span class="bk-tag gray">无对应版本</span>':'-');
-      html+='<tr class="'+(sh==='hide'?'p2':'')+'"><td'+sc+'><input type="checkbox" class="chk" data-gsel="'+g.id+'"'+(GM.sel[g.id]?' checked':'')+'></td><td'+sc+'>'+(stopped(g)||!g.rank?'-':g.rank)+'</td><td>'+g.id+'</td><td class="l">'+esc(nm(g))+'</td><td>'+esc(g.venue)+'</td>'+
+      html+='<tr class="'+(sh==='hide'?'p2':'')+'"><td'+sc+'><input type="checkbox" class="chk" data-gsel="'+g.id+'"'+(GM.sel[g.id]?' checked':'')+'></td><td'+sc+'>'+(stopped(g)||!g.rank?'-':g.rank)+'</td><td class="zkc">'+g.id+'</td><td class="l">'+esc(nm(g))+'</td><td>'+esc(g.venue)+'</td>'+
         '<td'+sc+'>'+rel+'</td><td'+sc+'>'+showTag(sh)+'</td><td'+sc+'>'+swCell(s,g,'data-ga')+'</td>'+
         '<td class="zkc">'+pTag(pst)+'</td><td'+sc+'>'+effTag(pst,g.status,pst!=='停用'&&stopped(g))+'</td>'+
-        '<td><span class="img-ph">图</span></td><td>2025-12-0'+(g.base%9+1)+' 10:00:00</td><td>'+esc(o.op)+'</td><td>'+o.time+'</td><td>'+esc(o.remark)+'</td><td class="zkc">'+g.hot+'</td><td class="zkc">'+Math.round(g.hot/700)+'</td><td class="zkc">'+Math.round(g.hot/2100)+'</td>'+
+        '<td class="zkc"><span class="img-ph">图</span></td><td class="zkc">2025-12-0'+(g.base%9+1)+' 10:00:00</td><td>'+esc(o.op)+'</td><td>'+o.time+'</td><td>'+esc(o.remark)+'</td><td class="zkc">'+g.hot+'</td><td class="zkc">'+Math.round(g.hot/700)+'</td><td class="zkc">'+Math.round(g.hot/2100)+'</td>'+
         '<td class="op-fix"><div class="bk-ops">'+ops+'</div></td></tr>';
     });
     $('gBody').innerHTML=html||emptyRow(cols,'没有符合条件的游戏');
