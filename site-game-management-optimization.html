@@ -511,7 +511,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
       <div class="bk-body">
         <div class="bk-card"><div class="bk-form">
           <input class="bk-input" id="vName" placeholder="场馆名称" style="width:162px;">
-          <select class="bk-select" id="vStatus" style="width:150px;"><option value="">总控状态</option><option>维护</option><option>启用</option><option>停用</option></select>
+          <select class="bk-select" id="vStatus" style="width:150px;"><option value="">总控状态</option><option>维护</option><option>启用</option><option>停用</option></select><select class="bk-select mch-only" id="vMSt" style="width:150px;"><option value="">场馆状态</option><option>开启</option><option>维护</option><option>关闭</option></select>
           <select class="bk-select" id="vType" style="width:150px;"><option value="">场馆类型</option><option>视讯</option><option>电子</option><option>捕鱼</option></select>
           <span style="display:inline-flex;align-items:center;"><select class="bk-select" id="vPinF" style="width:130px;"><option value="">置顶</option><option value="pin">已置顶</option><option value="auto">未置顶</option></select><span class="mk" data-tip="vfil" tabindex="0">本期新增</span></span>
           <span style="display:inline-flex;align-items:center;"><select class="bk-select" id="vSite" style="width:190px;" aria-label="站点"></select><span class="mk" data-tip="site" tabindex="0">本期新增</span></span>
@@ -1415,7 +1415,8 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
     if(VM.site){ list=venueOrder(SS[VM.site]); } else { list=SS['888'].venues.slice(); }
     return list.filter(function(v){
       if(VM.name&&v.name.toLowerCase().indexOf(VM.name.toLowerCase())<0) return false;
-      if(VM.status&&PS.v[v.name]!==VM.status) return false;
+      if(!isM()&&VM.status&&PS.v[v.name]!==VM.status) return false;
+      if(isM()&&VM.mst){ var ps=PS.v[v.name],es=ps==='停用'?'关闭':ps==='维护'?'维护':v.status; if(es!==VM.mst) return false; }
       if(VM.type&&v.type!==VM.type) return false; return true; });
   }
   /* 已并入的 MY 场馆：单独一行，排在所并入场馆之后；只做维护 / 启用 / 停用 */
@@ -1427,7 +1428,7 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
   function renderVendor(){
     var site=VM.q?VM.site:'',sc=' class="site-col"',cols=10;
     $('vTable').style.minWidth='1500px';
-    $('vHead').innerHTML='<tr><th style="width:36px;"'+sc+'><input type="checkbox" class="chk" id="vChkAll" aria-label="全选当前查询结果"></th><th'+sc+'>序号<span class="mk" data-tip="vseqno" tabindex="0">本期修改</span></th><th>场馆名称</th><th>场馆类型</th><th class="zkc">总控状态（全部站点）<span class="mk" data-tip="stname" tabindex="0">本期修改</span></th><th'+sc+'>'+(isM()?'场馆状态':'站点状态（本站点）')+'<span class="mk" data-tip="'+(isM()?'mstat':'sitest')+'" tabindex="0">本期'+(isM()?'修改':'新增')+'</span></th><th>排序值<span class="qm" title="'+(isM()?'数值越大越靠前（置顶的场馆排在最前）。默认是本站点的热门游戏数量，每小时自动更新。可以点数值手动改，只影响本站点；改过的标「手动」，点「取消手动排序」或「对齐平台排序」恢复。':'数值越大越靠前（置顶的场馆排在最前）。默认是所选站点的热门游戏数量（热门前 N 名里属于该场馆的游戏数），每小时自动更新。也可以手动修改：改的是平台的值，所有站点一起生效，改过的标「手动」，点「取消手动排序」恢复自动。站点自己改过的，以站点的值为准（标「站点手动」）。')+'" style="display:inline-block;width:15px;height:15px;line-height:15px;margin-left:4px;border-radius:50%;background:#e5e7eb;color:#475569;font-size:11px;text-align:center;cursor:help;">?</span><span class="mk" data-tip="hcnt" tabindex="0">本期修改</span></th><th'+sc+'>置顶<span class="mk" data-tip="pincol" tabindex="0">本期修改</span></th><th'+sc+'>对应 MY 场馆<span class="mk" data-tip="vrel" tabindex="0">本期新增</span></th><th class="mch-col">入场余额限制</th><th class="mch-col">最后操作人</th><th class="mch-col">最后操作时间</th><th style="min-width:300px;" class="op-fix">操作<span class="mk" data-tip="vcmd" tabindex="0">本期新增</span></th></tr>';
+    $('vHead').innerHTML='<tr><th style="width:36px;"'+sc+'><input type="checkbox" class="chk" id="vChkAll" aria-label="全选当前查询结果"></th><th'+sc+'>序号<span class="mk" data-tip="vseqno" tabindex="0">本期修改</span></th><th>场馆名称</th><th>场馆类型</th><th class="zkc">总控状态（全部站点）<span class="mk" data-tip="stname" tabindex="0">本期修改</span></th><th'+sc+'>'+(isM()?'场馆状态':'站点状态（本站点）')+'<span class="mk" data-tip="'+(isM()?'mstat':'sitest')+'" tabindex="0">本期'+(isM()?'修改':'新增')+'</span></th><th>排序值<span class="qm" title="'+(isM()?'数值越大越靠前（置顶的场馆排在最前）。默认是本站点的热门游戏数量，每小时自动更新。可以点数值手动改，只影响本站点；改过的标「手动」，点「取消手动排序」或「对齐平台排序」恢复。':'数值越大越靠前（置顶的场馆排在最前）。默认是所选站点的热门游戏数量（热门前 N 名里属于该场馆的游戏数），每小时自动更新。也可以手动修改：改的是平台的值，所有站点一起生效，改过的标「手动」，点「取消手动排序」恢复自动。站点自己改过的，以站点的值为准（标「站点手动」）。')+'" style="display:inline-block;width:15px;height:15px;line-height:15px;margin-left:4px;border-radius:50%;background:#e5e7eb;color:#475569;font-size:11px;text-align:center;cursor:help;">?</span><span class="mk" data-tip="hcnt" tabindex="0">本期修改</span></th><th'+sc+'>置顶<span class="mk" data-tip="pincol" tabindex="0">本期修改</span></th><th'+sc+'>对应 MY 场馆<span class="mk" data-tip="vrel" tabindex="0">本期新增</span></th><th class="mch-col">入场余额限制</th><th class="mch-col">最后操作人</th><th class="mch-col">最后操作时间</th><th style="min-width:300px;" class="op-fix">操作<span class="mk" data-tip="'+(isM()?'mops':'vcmd')+'" tabindex="0">本期'+(isM()?'修改':'新增')+'</span></th></tr>';
     if(!VM.q||!site){ $('vBody').innerHTML=emptyRow(cols,'请先在上方选择站点'); $('vCount').textContent='共 0 条数据'; return; }
     var s=SS[site],rows=vRows(),noFilter=!VM.name&&!VM.status&&!VM.type&&!XF.v.pin,html='',np=s.vPins.length;
     rows.forEach(function(v,i){
@@ -1437,7 +1438,7 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
       var rel=VPAIR[v.name]?'<span class="bk-link">'+esc(VPAIR[v.name])+'</span> · <button class="lk" data-va="pairs" data-v="'+esc(v.name)+'" type="button">'+pairCount(s,v.name)+' 款对应游戏</button>':'-';
       html+='<tr class="'+(pin?'row-pin':'')+'"><td'+sc+'><input type="checkbox" class="chk" data-vsel="'+esc(v.name)+'"'+(VM.sel[v.name]?' checked':'')+(dead?' disabled':'')+'></td><td'+sc+'>'+(dead?'-':v.h5)+'</td>'+
         '<td>'+esc(v.name)+'</td><td>'+v.type+'</td><td class="zkc">'+pTag(pst)+'</td><td'+sc+'>'+effTag(pst,v.status)+'</td><td>'+(dead?'-':'<button class="lk" data-vman="'+esc(v.name)+'" type="button">'+v.hc+'</button>'+(sMan(s,v.name)!=null?' <span class="bk-tag blue">'+(isM()?'手动':'站点手动')+'</span>':(!isM()&&vMan(v.name)!=null?' <span class="bk-tag blue">手动</span>':'')))+'</td><td'+sc+'>'+pinCell('data-va',v.name,v.vp,!dead)+'</td><td'+sc+'>'+rel+'</td><td class="mch-col">0.00</td><td class="mch-col">'+esc(v.op||'-')+'</td><td class="mch-col">'+(v.time||'-')+'</td><td class="op-fix"><div class="bk-ops">'+ops+'</div></td></tr>';
-      if(VPAIR[v.name]&&!isM()) html+=mvRow(s,VPAIR[v.name],v.name,sc);
+      if(VPAIR[v.name]&&!isM()&&!XF.v.pin) html+=mvRow(s,VPAIR[v.name],v.name,sc);
       if(noFilter&&pin&&v.vp===np&&i<rows.length-1) html+='<tr class="bk-sep"><td colspan="'+cols+'"></td></tr>';
     });
     $('vBody').innerHTML=html||emptyRow(cols,'没有符合条件的场馆');
@@ -1451,8 +1452,8 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
     var can=(rows||[]).filter(function(v){ return !vStop(v.name); }),ca=$('vChkAll'); if(ca) ca.checked=can.length>0&&can.every(function(v){ return VM.sel[v.name]; });
   }
   function vTouch(v){ v.op='admin'; v.time=now(); }
-  $('vQuery').addEventListener('click',function(){ if(!$('vSite').value){ toast('请选择站点'); return; } VM.q=true; VM.site=$('vSite').value; VM.name=$('vName').value.trim(); VM.status=$('vStatus').value; VM.type=$('vType').value; VM.sel={}; renderVendor(); });
-  $('vReset').addEventListener('click',function(){ $('vName').value='';$('vStatus').value='';$('vType').value=''; VM={q:VM.q,site:VM.site,name:'',status:'',type:'',sel:{}}; renderVendor(); });
+  $('vQuery').addEventListener('click',function(){ if(!$('vSite').value){ toast('请选择站点'); return; } VM.q=true; VM.site=$('vSite').value; VM.name=$('vName').value.trim(); VM.status=$('vStatus').value; VM.mst=$('vMSt').value; VM.type=$('vType').value; VM.sel={}; renderVendor(); });
+  $('vReset').addEventListener('click',function(){ $('vName').value='';$('vStatus').value='';$('vMSt').value='';$('vType').value=''; VM={q:VM.q,site:VM.site,name:'',status:'',mst:'',type:'',sel:{}}; renderVendor(); });
   $('vRefresh').addEventListener('click',function(){ toast('刷新沿用现网'); });
   $('vHead').addEventListener('change',function(e){ if(e.target.id!=='vChkAll') return; vRows().forEach(function(v){ if(!vStop(v.name)) VM.sel[v.name]=e.target.checked; }); renderVendor(); });
   $('vBody').addEventListener('change',function(e){ var c=e.target.closest('[data-vsel]'); if(!c) return; VM.sel[c.getAttribute('data-vsel')]=c.checked; updVSel(vRows()); });
@@ -1914,6 +1915,7 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
  'gbet': ['有效注单', '原：鼠标移到数值上出现 ✎，点 ✎ 修改。\n现：直接点数值修改，回车保存；改的是平台默认值，所有站点生效。表头排序照现网。'],
 };
 var TIPSM={
+ 'vsw': ['原厂 / MY 切换', '原：无。\n现：按场馆把对应游戏一次全部改为原厂或 MY，只影响本站点。'],
  'mstat': ['场馆状态 / 游戏状态', '原：显示本站点的开启 / 维护 / 关闭；平台停用的显示「禁用」，没有说明。\n现：平台停用显示灰色「关闭（平台停用）」，平台维护显示「维护（平台维护）」，悬停看本站点原来的状态；平台恢复后自动回到原来的状态。'],
  'mops': ['维护 / 开启 / 关闭', '原：平台停用（禁用）的只剩「编辑」，没有说明。\n现：平台停用或维护时按钮换成灰色「平台已停用」「平台维护中」，不能改，悬停说明由平台控制；其余只改本站点。'],
  'mhshow': ['前台显示', '原：无。\n现：有对应版本的游戏，前台显示的版本标「显示」，另一个标「隐藏」。'],
