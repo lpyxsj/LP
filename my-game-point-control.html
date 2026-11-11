@@ -337,13 +337,24 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
   .m-form .m-row label{flex:none;text-align:left;line-height:1.5;}
   .m-form .m-row .ctl{width:100%;}
 }
+.rtp-hd{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
+.rtp-hd h3{margin:0;font-size:15px;font-weight:600;}
+.rtp-hd .sp{flex:1;}
+.rtp-warn{color:var(--danger);font-size:13px;margin-bottom:10px;}
+.rtp-ft{display:flex;justify-content:flex-end;gap:8px;margin-top:12px;}
+.rtp-err{color:var(--danger);font-size:12px;line-height:1.5;margin-top:2px;}
+.rtp-empty{text-align:center;color:var(--text-secondary);padding:24px 0;font-size:13px;}
+.rtp-add{margin-top:10px;}
+.rtp-table td{vertical-align:top;}
+.rtp-table .bk-input{width:150px;}
+.rtp-log td.l{text-align:left;white-space:normal;line-height:1.7;}
 </style></head><body>
 <header class="dh-header"><div class="dh-header-inner">
   <h1>MY游戏点控管理</h1>
-  <div class="dh-meta"><span>模块：<b>商户游戏管理 · MY游戏点控管理</b></span><span>更新日期：<b>2026-11-07</b></span></div>
+  <div class="dh-meta"><span>模块：<b>商户游戏管理 · MY游戏点控管理</b></span><span>更新日期：<b>2026-11-11</b></span></div>
 </div></header>
 <nav class="dh-navbar" id="dhNavbar"><div class="dh-navbar-inner dh-primary" id="dhPrimary">
-  <button class="dh-primary-btn active" data-primary="proto" type="button">交互原型 <small>点控记录、新增点控、点控策略均可操作</small></button>
+  <button class="dh-primary-btn active" data-primary="proto" type="button">交互原型 <small>点控记录、新增点控、点控策略、返奖率设置均可操作</small></button>
   <button class="dh-primary-btn" data-primary="docs" type="button">需求文档 <small>功能说明、规则与验收</small></button>
 </div></nav>
 
@@ -352,7 +363,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
 <!-- ================= 交互原型 ================= -->
 <section class="dh-primary-panel active" data-primary-panel="proto" id="protoSec">
   <div class="proto-intro">
-    <div class="grow">在「商户游戏管理」下新增菜单，页面分「点控记录」「点控策略」两个页签。点控记录默认只看执行中的点控，点「+ 新增点控」对指定会员一次性下发送分 / 杀分；点控策略默认只看生效中的策略，点「+ 新增策略」按新注册会员、会员层级、VIP 等级或代理常驻生效。数据为示例，操作只影响本页；演示规则：以 9 开头的会员ID视为不存在，以 8 开头的视为试玩会员，以 7 开头的视为下发超时，以 6 开头的视为没有游戏账号；下发与策略首批生成约 3 秒演示完成；策略发布后只插入 3 条示意记录。</div>
+    <div class="grow">在「商户游戏管理」下新增菜单，页面分「点控记录」「点控策略」「返奖率设置」三个页签。点控记录默认只看执行中的点控，点「+ 新增点控」对指定会员一次性下发送分 / 杀分；点控策略默认只看生效中的策略，点「+ 新增策略」按新注册会员、会员层级、VIP 等级或代理常驻生效；返奖率设置按会员层级、押注金额设置 MY 系列游戏的返奖率，点「编辑」修改、「启用 / 关闭」控制是否生效。数据为示例，操作只影响本页；演示规则：以 9 开头的会员ID视为不存在，以 8 开头的视为试玩会员，以 7 开头的视为下发超时，以 6 开头的视为没有游戏账号；下发与策略首批生成约 3 秒演示完成；策略发布后只插入 3 条示意记录；返奖率设置示例为层级返奖率已启用且「层级六」未设置、押注返奖率未启用且没有档位。</div>
     <label class="doc-check" for="markToggle"><input type="checkbox" id="markToggle" checked> 显示本期新增标注</label>
     <button class="doc-btn" id="resetDemo" type="button">重置演示数据</button>
   </div>
@@ -369,6 +380,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
       <div class="pg-tabs" role="tablist" id="pgTabs">
         <button class="pg-tab active" type="button" data-view="rec" role="tab">点控记录</button>
         <button class="pg-tab" type="button" data-view="stg" role="tab">点控策略</button>
+        <button class="pg-tab" type="button" data-view="rtp" role="tab">返奖率设置</button>
       </div>
 
       <!-- ===== 点控记录 ===== -->
@@ -448,6 +460,43 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
         <div class="bk-foot"><div class="bk-pager" id="stgPager"></div></div>
       </div>
       </div>
+
+      <!-- ===== 返奖率设置 ===== -->
+      <div class="bk-view" data-view-panel="rtp">
+      <div class="bk-card">
+        <div class="m-note stg-rule"><b>返奖率设置说明</b>
+          <ul>
+            <li>返奖率是会员在 MY 系列游戏中长期的返还比例：数值越高，会员越容易赢；只能选 94% ~ 97%。</li>
+            <li>层级返奖率按会员所在的会员层级生效；押注返奖率按会员每次押注的金额生效。</li>
+            <li>未启用时，会员按游戏默认返奖率。启用、关闭和保存后立即对本站全部会员生效。</li>
+            <li>和点控不同：点控是对指定会员送分 / 杀分，达成目标就结束；返奖率长期生效，直到再次修改或关闭。</li>
+          </ul>
+        </div>
+        <div class="bk-toolbar" style="margin:12px 0 0;">
+          <span class="info" id="rtpLast"></span>
+          <button class="bk-btn" id="btnRtpLog" type="button">修改记录</button>
+        </div>
+      </div>
+      <div class="bk-card" data-rtp="level">
+        <div class="rtp-hd"><h3>层级返奖率</h3><span data-rtp-tag></span><span class="sp"></span><button class="bk-btn" type="button" data-rtp-toggle></button><button class="bk-btn primary" type="button" data-rtp-edit>编 辑</button></div>
+        <div class="rtp-warn hide" data-rtp-warn></div>
+        <div class="bk-table-wrap"><table class="bk-table rtp-table">
+          <thead><tr><th>会员层级</th><th>会员数</th><th>返奖率</th></tr></thead>
+          <tbody data-rtp-body></tbody>
+        </table></div>
+        <div class="rtp-ft hide" data-rtp-ft><button class="bk-btn" type="button" data-rtp-cancel>取 消</button><button class="bk-btn primary" type="button" data-rtp-save>保 存</button></div>
+      </div>
+      <div class="bk-card" data-rtp="bet">
+        <div class="rtp-hd"><h3>押注返奖率</h3><span data-rtp-tag></span><span class="sp"></span><button class="bk-btn" type="button" data-rtp-toggle></button><button class="bk-btn primary" type="button" data-rtp-edit>编 辑</button></div>
+        <div class="bk-table-wrap"><table class="bk-table rtp-table">
+          <thead><tr><th>档位名称</th><th>押注金额（BRL）<span class="bk-th-tip" data-hint="会员单注押注金额达到该档金额时，按该档返奖率；同时达到多个档位时按金额最高的一档" tabindex="0" role="button" aria-label="押注金额说明">?</span></th><th>返奖率</th><th data-rtp-opth class="hide">操作</th></tr></thead>
+          <tbody data-rtp-body></tbody>
+        </table></div>
+        <div class="rtp-empty hide" data-rtp-empty>暂未设置押注档位，点「编辑」后添加。</div>
+        <div class="rtp-add hide" data-rtp-add><button class="bk-btn" type="button" id="btnRtpAddRow">+ 添加档位</button></div>
+        <div class="rtp-ft hide" data-rtp-ft><button class="bk-btn" type="button" data-rtp-cancel>取 消</button><button class="bk-btn primary" type="button" data-rtp-save>保 存</button></div>
+      </div>
+      </div>
     </div>
   </div>
 </section>
@@ -460,7 +509,8 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
       <button class="dh-tab" data-tab="list" type="button"><span class="n">1</span>点控记录</button>
       <button class="dh-tab" data-tab="add" type="button"><span class="n">2</span>新增点控</button>
       <button class="dh-tab" data-tab="stg" type="button"><span class="n">3</span>点控策略</button>
-      <button class="dh-tab" data-tab="qa" type="button"><span class="n">4</span>验收与开发测试</button>
+      <button class="dh-tab" data-tab="rtp" type="button"><span class="n">4</span>返奖率设置</button>
+      <button class="dh-tab" data-tab="qa" type="button"><span class="n">5</span>验收与开发测试</button>
     </nav>
 
     <!-- ===== 0 总览 ===== -->
@@ -472,12 +522,14 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
           <ol>
             <li>商户后台无法对单个会员做输赢控制。</li>
             <li>MY 游戏提供会员点控能力：对指定会员下发送分或杀分任务，会员在 MY 系列游戏中按所选剧本输赢，累计到目标金额后点控自动结束。</li>
+            <li>MY 游戏还提供返奖率配置能力：可按会员层级、按押注金额设置返奖率，只支持 94% ~ 97% 七档；商户后台目前没有入口。</li>
           </ol>
           <p><strong>目标</strong></p>
           <ol>
             <li>在「商户游戏管理」下新增菜单「MY游戏点控管理」，运营可查看点控记录、对指定会员手动新增点控（一次性）、终止点控。</li>
             <li>支持点控策略：按新注册会员、会员层级、VIP 等级或代理设置常驻策略，当前和之后符合条件的会员自动生成点控，每个会员在一条策略下只点控一次。</li>
-            <li>点控对 MY 系列全部厂商统一生效，不区分厂商与游戏。</li>
+            <li>支持返奖率设置：按会员层级、按押注金额设置 MY 系列游戏的返奖率，长期生效，可随时启用、关闭和修改，并保留修改记录。</li>
+            <li>点控与返奖率对 MY 系列全部厂商统一生效，不区分厂商与游戏。</li>
           </ol>
         </div>
       </div>
@@ -495,7 +547,8 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
         <div class="dh-illustration">
           <div class="illus-list">
             <div class="illus-item">点控记录</div><span class="illus-sep"></span>
-            <div class="illus-item">点控策略</div>
+            <div class="illus-item">点控策略</div><span class="illus-sep"></span>
+            <div class="illus-item">返奖率设置</div>
           </div>
           <div class="cap">示意图：「MY游戏点控管理」页面内的页签，进入页面默认「点控记录」</div>
         </div>
@@ -514,6 +567,10 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
             <tr><td><b>手动新增</b></td><td>对输入的会员ID 一次性下发点控，提交后不再自动生成</td></tr>
             <tr><td><b>点控策略</b></td><td>常驻规则：发布时已符合条件的会员立即生成点控，之后新符合条件的会员自动生成；每个会员在一条策略下只生成一次</td></tr>
             <tr><td><b>唯一性与覆盖</b></td><td>同一会员同一时间只有 1 条执行中的点控。后生成的点控直接覆盖之前执行中的点控（原点控结束原因「新点控覆盖」），不区分手动新增或策略生成</td></tr>
+            <tr><td><b>返奖率</b></td><td>会员在 MY 系列游戏中长期的返还比例，数值越高会员越容易赢。只能选 94%、94.5%、95%、95.5%、96%、96.5%、97% 七档</td></tr>
+            <tr><td><b>层级返奖率</b></td><td>按会员所在的会员层级生效，每个会员层级设置一个返奖率</td></tr>
+            <tr><td><b>押注返奖率</b></td><td>按会员单注押注金额生效，每个押注档位设置一个返奖率</td></tr>
+            <tr><td><b>点控与返奖率的区别</b></td><td>点控针对指定会员，送分 / 杀分达成目标金额即结束；返奖率针对会员层级或押注档位，长期生效，直到修改或关闭</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -633,13 +690,13 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
           <thead><tr><th>规则项</th><th>说明</th></tr></thead>
           <tbody>
             <tr><td><b>排序</b></td><td>点控记录按申请时间倒序；点控策略按发布时间倒序</td></tr>
-            <tr><td><b>分页</b></td><td>两个页签都是每页 20 / 50 / 100 条，默认 20 条；支持页码切换与跳页</td></tr>
+            <tr><td><b>分页</b></td><td>点控记录、点控策略都是每页 20 / 50 / 100 条，默认 20 条；支持页码切换与跳页</td></tr>
             <tr><td><b>数据更新</b></td><td>进入页面、查询、刷新、新增与终止后，进行中金额与状态均为最新值；策略的生成情况随生成进度更新</td></tr>
             <tr><td><b>历史记录</b></td><td>所有点控记录（含已结束）与策略（含已停用）完整保留，不删除</td></tr>
             <tr><td><b>时区</b></td><td>所有时间按后台时区展示</td></tr>
-            <tr><td><b>页签</b></td><td>进入页面默认「点控记录」；切换页签保留各自的筛选条件</td></tr><tr><td><b>固定列</b></td><td>列表较宽需要横向滚动时，两个页签的「操作」列固定在右侧，点控策略的「策略名称」列固定在左侧</td></tr><tr><td><b>空状态</b></td><td>点控记录：状态为执行中且无数据时显示「暂无执行中的点控记录。如需查看历史，请把「状态」改为「全部」后查询。」，其他情况「暂无符合条件的点控记录，请调整筛选条件后查询。」；点控策略：默认条件下无数据时显示「暂无生效中的策略，可点「+ 新增策略」创建；如需查看已停用的策略，请把「状态」改为「全部」后查询。」，其他情况「暂无符合条件的策略，请调整筛选条件后查询。」</td></tr>
-            <tr><td><b>权限</b></td><td>菜单查看、新增点控、终止、新增策略、编辑策略、停用策略纳入现有角色权限体系，按菜单与功能分配，不新增独立权限点</td></tr>
-            <tr><td><b>操作日志</b></td><td>新增点控、终止、批量终止、新增策略、编辑策略、停用策略均写入现有后台操作日志</td></tr>
+            <tr><td><b>页签</b></td><td>进入页面默认「点控记录」；切换页签保留各自的筛选条件；没有返奖率设置查看权限的账号不显示「返奖率设置」页签</td></tr><tr><td><b>固定列</b></td><td>列表较宽需要横向滚动时，两个页签的「操作」列固定在右侧，点控策略的「策略名称」列固定在左侧</td></tr><tr><td><b>空状态</b></td><td>点控记录：状态为执行中且无数据时显示「暂无执行中的点控记录。如需查看历史，请把「状态」改为「全部」后查询。」，其他情况「暂无符合条件的点控记录，请调整筛选条件后查询。」；点控策略：默认条件下无数据时显示「暂无生效中的策略，可点「+ 新增策略」创建；如需查看已停用的策略，请把「状态」改为「全部」后查询。」，其他情况「暂无符合条件的策略，请调整筛选条件后查询。」</td></tr>
+            <tr><td><b>权限</b></td><td>菜单查看、新增点控、终止、新增策略、编辑策略、停用策略纳入现有角色权限体系，按菜单与功能分配；「返奖率设置」单独设「查看」「修改」两个权限点</td></tr>
+            <tr><td><b>操作日志</b></td><td>新增点控、终止、批量终止、新增策略、编辑策略、停用策略、返奖率的启用 / 关闭 / 修改均写入现有后台操作日志</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -944,15 +1001,186 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
     </div>
 
     <!-- ===== 4 验收与开发测试 ===== -->
+    <!-- ===== 4 返奖率设置 ===== -->
+    <div class="dh-panel" data-panel="rtp">
+      <button type="button" class="proto-jump" data-goto="proto" data-view="rtp">在交互原型中查看「返奖率设置」 →</button>
+
+      <div class="req-block"><h2>功能结构图</h2><div class="dh-mind"><div class="mm">
+        <div class="mm-root">返奖率设置</div>
+        <div class="mm-branches">
+          <div class="mm-b"><div class="mm-node">入口</div><div class="mm-leaves"><span class="mm-leaf">MY游戏点控管理 › 「返奖率设置」页签</span></div></div>
+          <div class="mm-b"><div class="mm-node">页面说明</div><div class="mm-leaves"><span class="mm-leaf">返奖率含义</span><span class="mm-leaf">生效范围</span><span class="mm-leaf">与点控的区别</span></div></div>
+          <div class="mm-b"><div class="mm-node">层级返奖率</div><div class="mm-leaves"><span class="mm-leaf">启用状态</span><span class="mm-leaf">启用 / 关闭</span><span class="mm-leaf">编辑</span><span class="mm-leaf">会员层级</span><span class="mm-leaf">会员数</span><span class="mm-leaf">返奖率</span></div></div>
+          <div class="mm-b"><div class="mm-node">押注返奖率</div><div class="mm-leaves"><span class="mm-leaf">启用状态</span><span class="mm-leaf">启用 / 关闭</span><span class="mm-leaf">编辑</span><span class="mm-leaf">档位名称</span><span class="mm-leaf">押注金额</span><span class="mm-leaf">返奖率</span><span class="mm-leaf">添加 / 删除档位</span></div></div>
+          <div class="mm-b"><div class="mm-node">修改记录</div><div class="mm-leaves"><span class="mm-leaf">操作时间</span><span class="mm-leaf">操作人</span><span class="mm-leaf">设置项</span><span class="mm-leaf">操作</span><span class="mm-leaf">修改内容</span></div></div>
+        </div>
+      </div><div class="cap">功能结构图：返奖率设置页签的组成</div></div></div>
+
+      <div class="req-block">
+        <h2>页面结构与说明</h2>
+        <div class="dh-callout">页面结构：页面说明 → 层级返奖率 → 押注返奖率；右上角「修改记录」按钮，旁边显示「最后修改：{操作人} {时间}」。</div>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>位置</th><th>提示内容</th></tr></thead>
+          <tbody>
+            <tr><td><b>页面顶部（常驻，蓝色说明框，标题「返奖率设置说明」）</b></td><td>1. 返奖率是会员在 MY 系列游戏中长期的返还比例：数值越高，会员越容易赢；只能选 94% ~ 97%。<br>2. 层级返奖率按会员所在的会员层级生效；押注返奖率按会员每次押注的金额生效。<br>3. 未启用时，会员按游戏默认返奖率。启用、关闭和保存后立即对本站全部会员生效。<br>4. 和点控不同：点控是对指定会员送分 / 杀分，达成目标就结束；返奖率长期生效，直到再次修改或关闭。</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
+        <h2>层级返奖率 · 字段说明</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
+          <tbody>
+            <tr><td><b>启用状态</b></td><td>标题右侧标签：已启用 / 未启用</td><td>未启用</td><td>已启用绿色标签，未启用灰色标签</td></tr>
+            <tr><td><b>启用 / 关闭</b></td><td>按钮，未启用时显示「启用」，已启用时显示「关闭」</td><td>—</td><td>点击后二次确认，确认后立即生效；编辑中不可操作</td></tr>
+            <tr><td><b>编辑</b></td><td>按钮</td><td>—</td><td>点击后返奖率列变为下拉，下方出现「取消」「保存」</td></tr>
+            <tr><td><b>会员层级</b></td><td>系统已配置的全部会员层级，一行一个，不可增删</td><td>—</td><td>会员层级管理中新增的层级自动出现在列表，显示「未设置」</td></tr>
+            <tr><td><b>会员数</b></td><td>该层级当前会员人数</td><td>—</td><td>千分位；帮助判断影响范围</td></tr>
+            <tr><td><b>返奖率 *</b></td><td>查看时显示百分比；编辑时为下拉单选：94%、94.5%、95%、95.5%、96%、96.5%、97%</td><td><strong>不预填</strong>，显示「请选择」</td><td>未设置的层级显示红字「未设置」；保存时每个层级都必须选择</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
+        <h2>押注返奖率 · 字段说明</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
+          <tbody>
+            <tr><td><b>启用状态、启用 / 关闭、编辑</b></td><td>同层级返奖率</td><td>未启用</td><td>同层级返奖率</td></tr>
+            <tr><td><b>档位名称 *</b></td><td>输入框，最多 20 字，如「小押注」</td><td>空</td><td>仅用于识别档位</td></tr>
+            <tr><td><b>押注金额 *</b></td><td>输入框，右侧显示平台默认货币；表头「?」提示「会员单注押注金额达到该档金额时，按该档返奖率；同时达到多个档位时按金额最高的一档」</td><td>空</td><td>大于 0，最多两位小数；各档位金额不可重复</td></tr>
+            <tr><td><b>返奖率 *</b></td><td>下拉单选，七档</td><td><strong>不预填</strong>，显示「请选择」</td><td>必须选择</td></tr>
+            <tr><td><b>操作</b></td><td>编辑时每行显示「删除」</td><td>—</td><td>删除该档位，保存后生效</td></tr>
+            <tr><td><b>+ 添加档位</b></td><td>编辑时显示在列表下方</td><td>—</td><td>在末尾新增一行空档位</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
+        <h2>修改记录（弹窗）</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>字段</th><th>说明</th><th>展示规则</th></tr></thead>
+          <tbody>
+            <tr><td><b>设置项（筛选）</b></td><td>全部 / 层级返奖率 / 押注返奖率</td><td>默认全部</td></tr>
+            <tr><td><b>操作时间</b></td><td>启用、关闭或保存的时间</td><td>年月日时分秒，倒序</td></tr>
+            <tr><td><b>操作人</b></td><td>后台账号</td><td>—</td></tr>
+            <tr><td><b>设置项</b></td><td>层级返奖率 / 押注返奖率</td><td>—</td></tr>
+            <tr><td><b>操作</b></td><td>启用 / 关闭 / 修改</td><td>启用绿色标签，关闭灰色标签，修改蓝色标签</td></tr>
+            <tr><td><b>修改内容</b></td><td>修改时逐项列出改前 → 改后，如「层级二：95.5% → 96%」「新增档位 大押注 100.00：97%」「删除档位 小押注 1.00：94%」；启用、关闭显示「-」</td><td>多项换行展示</td></tr>
+            <tr><td><b>分页</b></td><td>每页 20 / 50 / 100 条，默认 20 条</td><td>—</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
+        <h2>编辑保存</h2>
+        <div class="dh-flow">
+          <div class="flow-diagram">
+            <div class="flow-step">点击「编辑」</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">修改返奖率<span class="sub">押注返奖率可添加、删除档位</span></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">点击「保存」，字段校验</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">弹出保存确认<span class="sub">逐项列出改前 → 改后</span></div>
+          </div>
+          <div class="flow-branches">
+            <div class="flow-branch"><span class="cond">字段校验不通过</span><span class="arr">→</span><span class="result bad">对应行红字提示，保持编辑状态</span></div>
+            <div class="flow-branch"><span class="cond">没有任何修改</span><span class="arr">→</span><span class="result neutral">提示「没有修改内容」，退出编辑</span></div>
+            <div class="flow-branch"><span class="cond">确认框点「取消」</span><span class="arr">→</span><span class="result neutral">回到编辑状态，内容保留</span></div>
+            <div class="flow-branch"><span class="cond">确认框点「确定保存」，已启用</span><span class="arr">→</span><span class="result good">保存成功，立即生效，退出编辑，记录一条修改记录</span></div>
+            <div class="flow-branch"><span class="cond">确认框点「确定保存」，未启用</span><span class="arr">→</span><span class="result good">保存成功，不生效，启用后按此设置</span></div>
+            <div class="flow-branch"><span class="cond">设置已被其他人修改</span><span class="arr">→</span><span class="result bad">不保存，提示并刷新为最新设置</span></div>
+            <div class="flow-branch"><span class="cond">保存失败</span><span class="arr">→</span><span class="result bad">提示失败，重新读取并显示当前实际设置</span></div>
+            <div class="flow-branch"><span class="cond">编辑中点「取消」</span><span class="arr">→</span><span class="result neutral">恢复为编辑前的内容，不保存</span></div>
+          </div>
+          <div class="cap">图：返奖率从编辑到保存</div>
+        </div>
+      </div>
+
+      <div class="req-block">
+        <h2>启用 / 关闭</h2>
+        <div class="dh-flow">
+          <div class="flow-diagram">
+            <div class="flow-step">点击「启用」或「关闭」</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">检查启用前提<span class="sub">层级：全部层级已设置；押注：至少 1 个档位</span></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">弹出确认框</div>
+          </div>
+          <div class="flow-branches">
+            <div class="flow-branch"><span class="cond">启用时有层级未设置返奖率 / 没有押注档位</span><span class="arr">→</span><span class="result bad">提示先设置，不弹确认框，保持未启用</span></div>
+            <div class="flow-branch"><span class="cond">确认启用</span><span class="arr">→</span><span class="result good">状态变为已启用，立即生效，记录一条修改记录</span></div>
+            <div class="flow-branch"><span class="cond">确认关闭</span><span class="arr">→</span><span class="result good">状态变为未启用，会员按游戏默认返奖率，已设置的返奖率保留，记录一条修改记录</span></div>
+            <div class="flow-branch"><span class="cond">取消</span><span class="arr">→</span><span class="result neutral">不做任何变更</span></div>
+          </div>
+          <div class="cap">图：返奖率启用与关闭</div>
+        </div>
+        <h3>触发条件与反馈</h3>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>触发条件</th><th>系统反馈</th></tr></thead>
+          <tbody>
+            <tr><td><b>点击「编辑」</b></td><td>返奖率变为下拉（押注返奖率的名称、金额变为输入框，出现「删除」「+ 添加档位」）；下方出现「取消」「保存」；本块「启用 / 关闭」置灰，鼠标悬停提示「请先保存或取消编辑」</td></tr>
+            <tr><td><b>保存时有层级未选返奖率</b></td><td>该行红字「请选择返奖率」</td></tr>
+            <tr><td><b>保存时档位名称为空</b></td><td>该行红字「请输入档位名称」</td></tr>
+            <tr><td><b>保存时押注金额为空、等于 0、不是数字或超过两位小数</b></td><td>该行红字「请输入大于 0 的金额，最多两位小数」</td></tr>
+            <tr><td><b>保存时押注金额与其他档位相同</b></td><td>该行红字「押注金额不能重复」</td></tr>
+            <tr><td><b>保存时档位未选返奖率</b></td><td>该行红字「请选择返奖率」</td></tr>
+            <tr><td><b>押注返奖率已启用，保存时没有档位</b></td><td>提示「已启用时至少保留 1 个档位，如需停用请先关闭」，不保存</td></tr>
+            <tr><td><b>点击「保存」且没有任何修改</b></td><td>提示「没有修改内容」，退出编辑</td></tr>
+            <tr><td><b>点击「保存」且校验通过</b></td><td>弹出「确认保存」：第一行「确认保存{层级返奖率/押注返奖率}？」；第二行逐项列出改前 → 改后；第三行已启用时加粗「当前已启用，保存后立即生效。」，未启用时「当前未启用，保存后不生效，启用后按此设置。」</td></tr>
+            <tr><td><b>确定保存成功</b></td><td>提示「保存成功」；退出编辑；「最后修改」更新</td></tr>
+            <tr><td><b>保存时设置已被其他人修改</b></td><td>提示「设置已被其他人修改，已刷新为最新设置，请重新编辑」；退出编辑并显示最新设置</td></tr>
+            <tr><td><b>保存、启用或关闭失败</b></td><td>提示「操作失败：{失败原因}，已重新读取当前设置」；页面按重新读取的结果显示</td></tr>
+            <tr><td><b>点击「启用」，有层级未设置返奖率</b></td><td>提示「请先为全部层级设置返奖率」</td></tr>
+            <tr><td><b>点击「启用」，没有押注档位</b></td><td>提示「请先添加押注档位」</td></tr>
+            <tr><td><b>点击「启用」且前提满足</b></td><td>弹出确认：第一行「确认启用{层级返奖率/押注返奖率}？」；第二行「启用后立即生效：本站会员在 MY 系列游戏中按{所在会员层级/单注押注金额}对应的返奖率。」</td></tr>
+            <tr><td><b>确定启用</b></td><td>提示「{层级返奖率/押注返奖率}已启用」；标签变为已启用，按钮变为「关闭」</td></tr>
+            <tr><td><b>点击「关闭」</b></td><td>弹出警告：第一行「确认关闭{层级返奖率/押注返奖率}？」；第二行「关闭后立即生效，会员按游戏默认返奖率；已设置的返奖率保留，再次启用后继续使用。」</td></tr>
+            <tr><td><b>确定关闭</b></td><td>提示「{层级返奖率/押注返奖率}已关闭」；标签变为未启用，按钮变为「启用」</td></tr>
+            <tr><td><b>押注返奖率没有档位（查看状态）</b></td><td>列表显示「暂未设置押注档位，点「编辑」后添加。」</td></tr>
+            <tr><td><b>点击「修改记录」</b></td><td>弹出修改记录，按操作时间倒序；没有记录时显示「暂无修改记录」</td></tr>
+            <tr><td><b>只有查看权限的账号</b></td><td>不显示「编辑」「启用」「关闭」，可查看设置与修改记录</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
+        <h2>返奖率规则</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>规则项</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td><b>生效范围</b></td><td>对本商户全部会员、MY 系列全部厂商统一生效；不按渠道区分</td></tr>
+            <tr><td><b>默认状态</b></td><td>层级返奖率、押注返奖率默认未启用；未启用时会员按游戏默认返奖率</td></tr>
+            <tr><td><b>两块相互独立</b></td><td>层级返奖率与押注返奖率各自启用、关闭、编辑、保存，互不影响</td></tr>
+            <tr><td><b>查看与编辑</b></td><td>默认只读；点「编辑」后才能修改，「取消」放弃本次修改；编辑中「启用 / 关闭」不可操作</td></tr>
+            <tr><td><b>保存</b></td><td>保存前二次确认，逐项列出改前 → 改后；已启用时保存后立即生效；未启用时只保存设置，启用后才生效</td></tr>
+            <tr><td><b>启用前提</b></td><td>层级返奖率：全部会员层级都已设置返奖率；押注返奖率：至少有 1 个档位</td></tr>
+            <tr><td><b>关闭</b></td><td>关闭后立即生效，会员按游戏默认返奖率；已设置的返奖率保留，再次启用时继续使用</td></tr>
+            <tr><td><b>会员与层级对应</b></td><td>按会员所在的会员层级取返奖率；会员层级变动后，按新层级的返奖率</td></tr>
+            <tr><td><b>新增会员层级</b></td><td>会员层级管理中新增层级后，本页该层级显示「未设置」，层级返奖率上方红字提示「有 N 个层级未设置返奖率，这些层级的会员按游戏默认返奖率，请点「编辑」设置」；设置并保存后生效</td></tr>
+            <tr><td><b>删除会员层级</b></td><td>被删除的层级从列表移除</td></tr>
+            <tr><td><b>押注档位排序</b></td><td>保存后按押注金额从小到大显示</td></tr>
+            <tr><td><b>押注档位数量</b></td><td>已启用时至少保留 1 个档位；未启用时可以为空</td></tr>
+            <tr><td><b>多人同时修改</b></td><td>保存时如设置已被其他人修改，不保存本次内容，提示后刷新为最新设置</td></tr>
+            <tr><td><b>修改记录</b></td><td>每次启用、关闭、保存成功各记录一条；保存失败不记录</td></tr>
+            <tr><td><b>权限</b></td><td>「返奖率设置」单独设「查看」「修改」两个权限点；没有查看权限的账号不显示本页签</td></tr>
+            <tr><td><b>新手保护</b></td><td>本期不做，页面不显示</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
     <div class="dh-panel" data-panel="qa">
       <div class="req-block">
         <h2>范围</h2>
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>项目</th><th>说明</th></tr></thead>
           <tbody>
-            <tr><td><b>本期做</b></td><td>新增菜单「MY游戏点控管理」，分「点控记录」「点控策略」两个页签。点控记录：筛选、分页、刷新、终止、批量终止；新增点控（自定义会员，一次性，批量下发与结果明细）。点控策略：策略列表、新增策略（新注册会员 / 会员层级 / VIP 等级 / 代理直属会员/ 代理线全部会员）、编辑名称与备注、停用（可选同时终止已生成的点控）、生成失败明细</td></tr>
-            <tr><td><b>本期不做</b></td><td>按单个厂商或游戏设置点控；修改执行中点控的金额或剧本（需终止后重新新增）；修改策略的条件与点控设置（需停用后新建）；已停用策略重新启用；一条策略组合多种条件；删除点控记录或策略；导出</td></tr>
-            <tr><td><b>适用范围</b></td><td>全部商户后台；点控对 MY 系列全部厂商统一生效</td></tr>
+            <tr><td><b>本期做</b></td><td>新增菜单「MY游戏点控管理」，分「点控记录」「点控策略」「返奖率设置」三个页签。点控记录：筛选、分页、刷新、终止、批量终止；新增点控（自定义会员，一次性，批量下发与结果明细）。点控策略：策略列表、新增策略（新注册会员 / 会员层级 / VIP 等级 / 代理直属会员/ 代理线全部会员）、编辑名称与备注、停用（可选同时终止已生成的点控）、生成失败明细。返奖率设置：层级返奖率、押注返奖率的查看、编辑、启用 / 关闭，修改记录</td></tr>
+            <tr><td><b>本期不做</b></td><td>按单个厂商或游戏设置点控；修改执行中点控的金额或剧本（需终止后重新新增）；修改策略的条件与点控设置（需停用后新建）；已停用策略重新启用；一条策略组合多种条件；删除点控记录或策略；导出；返奖率的新手保护；按渠道分别设置返奖率；94% ~ 97% 七档以外的返奖率；对单个会员设置返奖率（单个会员用点控）</td></tr>
+            <tr><td><b>适用范围</b></td><td>全部商户后台；点控与返奖率对 MY 系列全部厂商统一生效；返奖率对本商户全部会员生效</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -962,11 +1190,12 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>项目</th><th>说明</th></tr></thead>
           <tbody>
-            <tr><td><b>使用角色</b></td><td>商户运营 / 风控人员，需「MY游戏点控管理」菜单权限；新增点控、终止、新增 / 编辑 / 停用策略需对应功能权限</td></tr>
+            <tr><td><b>使用角色</b></td><td>商户运营 / 风控人员，需「MY游戏点控管理」菜单权限；新增点控、终止、新增 / 编辑 / 停用策略需对应功能权限；「返奖率设置」单独设权限，查看与修改分开</td></tr>
             <tr><td><b>场景 1</b></td><td>对单个或一批指定会员送分（如回流、挽留）或杀分（如套利嫌疑），一次性下发</td></tr>
             <tr><td><b>场景 2</b></td><td>对某个会员层级、VIP 等级或代理线常驻送分 / 杀分：现有会员立即生效，之后进入的会员自动生效</td></tr>
             <tr><td><b>场景 3</b></td><td>新会员注册后自动进入送分（养客）或杀分</td></tr>
             <tr><td><b>场景 4</b></td><td>查看点控执行进度，提前终止；活动结束时停用策略，并可一并终止其已生成的点控</td></tr>
+            <tr><td><b>场景 5</b></td><td>长期调整某个会员层级或某个押注档位的输赢比例：在「返奖率设置」里选返奖率并启用，之后随时修改或关闭</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -974,7 +1203,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
       <div class="req-block">
         <h2>功能点清单</h2>
         <div class="dh-prose"><ol>
-          <li><strong>F1【P0】菜单、页签与列表</strong>：商户游戏管理下新增「MY游戏点控管理」；「点控记录」「点控策略」两个页签；点控记录 15 列，按申请时间倒序，分页 20/50/100。</li>
+          <li><strong>F1【P0】菜单、页签与列表</strong>：商户游戏管理下新增「MY游戏点控管理」；「点控记录」「点控策略」「返奖率设置」三个页签；点控记录 15 列，按申请时间倒序，分页 20/50/100。</li>
           <li><strong>F2【P0】点控记录筛选</strong>：申请时间、会员ID/账号、点控类型、剧本、状态（默认执行中）、来源、策略名称；重置恢复默认。</li>
           <li><strong>F3【P0】终止</strong>：执行中记录可终止，二次确认；成功后状态已结束、原因手动终止、更新操作人与时间。</li>
           <li><strong>F4【P1】批量终止与刷新</strong>：勾选后批量终止，只处理执行中的记录；刷新获取最新进行中金额与状态。</li>
@@ -983,6 +1212,9 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
           <li><strong>F7【P0】点控策略列表</strong>：筛选（默认生效中）、列表 12 列、生成情况（已生成 / 执行中 / 失败、生成中进度）、生成人数跳转点控记录、失败明细与复制会员ID。</li>
           <li><strong>F8【P0】新增策略</strong>：五种条件类型、条件内容与当前符合人数、类型、剧本、金额、备注；发布二次确认；发布后现有会员分批生成、之后符合条件的会员自动生成，每人一次。</li>
           <li><strong>F9【P1】编辑与停用策略</strong>：编辑只改名称与备注；停用二次确认，可选同时终止该策略已生成、执行中的点控（结束原因停用策略）。</li>
+          <li><strong>F10【P0】层级返奖率</strong>：按会员层级逐个设置返奖率（七档下拉），编辑、保存二次确认；启用 / 关闭；会员按所在层级生效，层级变动后同步。</li>
+          <li><strong>F11【P0】押注返奖率</strong>：押注档位的添加、删除、编辑（名称、押注金额、返奖率），保存二次确认；启用 / 关闭。</li>
+          <li><strong>F12【P1】修改记录与页面说明</strong>：返奖率设置说明常驻；修改记录弹窗（按设置项筛选、分页）；最后修改人与时间。</li>
         </ol></div>
       </div>
 
@@ -992,7 +1224,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
           <thead><tr><th>项目</th><th>说明</th></tr></thead>
           <tbody>
             <tr><td><b>新增埋点</b></td><td>无</td></tr>
-            <tr><td><b>需记录的数据</b></td><td>每条点控的会员、类型、剧本、目标金额、进行中金额、状态、结束原因、来源、策略、申请时间、备注、操作人、最后操作时间；每条策略的名称、条件类型与内容、类型、剧本、金额、备注、状态、发布人与时间、最后操作人与时间、已生成 / 失败人数；「会员 + 策略」已处理记录；策略生成失败明细</td></tr>
+            <tr><td><b>需记录的数据</b></td><td>每条点控的会员、类型、剧本、目标金额、进行中金额、状态、结束原因、来源、策略、申请时间、备注、操作人、最后操作时间；每条策略的名称、条件类型与内容、类型、剧本、金额、备注、状态、发布人与时间、最后操作人与时间、已生成 / 失败人数；「会员 + 策略」已处理记录；策略生成失败明细；返奖率的启用状态与各层级、各档位设置；返奖率修改记录（时间、操作人、设置项、操作、改前 / 改后）；会员与 MY 游戏策略层级的对应</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -1002,10 +1234,11 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>项目</th><th>说明</th></tr></thead>
           <tbody>
-            <tr><td><b>依赖</b></td><td>MY 游戏点控接口（新增 / 取消 / 查询），进行中金额取接口返回的实际执行值；会员注册时同步创建的 MY 游戏账号；现有会员详情、会员层级、VIP 等级、代理关系数据，以及会员注册、层级变动、VIP 变动、代理关系变动事件</td></tr>
-            <tr><td><b>影响</b></td><td>被点控会员在 MY 系列全部厂商的游戏输赢；前台无界面变化</td></tr>
+            <tr><td><b>依赖</b></td><td>MY 游戏策略接口（读取 / 写入返奖率配置）与会员策略层级设置；MY 游戏点控接口（新增 / 取消 / 查询），进行中金额取接口返回的实际执行值；会员注册时同步创建的 MY 游戏账号；现有会员详情、会员层级、VIP 等级、代理关系数据，以及会员注册、层级变动、VIP 变动、代理关系变动事件</td></tr>
+            <tr><td><b>影响</b></td><td>被点控会员在 MY 系列全部厂商的游戏输赢；返奖率启用后影响本商户全部会员在 MY 系列游戏的输赢；前台无界面变化</td></tr>
             <tr><td><b>风险：策略影响面大</b></td><td>层级、代理线策略发布即对现有会员全部生成并覆盖原点控；发布前展示当前符合人数与将被覆盖人数，二次确认；条件与点控设置发布后不可改</td></tr>
             <tr><td><b>风险：策略持续生效</b></td><td>策略生效期间新符合条件的会员都会被点控；可通过停用并勾选「同时终止」整体停止</td></tr>
+            <tr><td><b>风险：返奖率影响全部会员</b></td><td>返奖率启用、修改后立即对全部会员生效；默认只读、编辑后保存，保存与启用 / 关闭均二次确认并列出改动；单独权限；保留修改记录</td></tr>
           </tbody>
         </table></div>
         <h3>接口对应</h3>
@@ -1015,6 +1248,17 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
             <tr><td><b>新增点控下发、策略生成</b></td><td>SpecCtrl/Add</td><td>playerName：会员的 MY 游戏账号名；control_type：1 送分 / 2 杀分；script_id：剧本 ID；target_value：目标金额 ×100（分）</td><td>返回点控记录，新任务 status=0（正在执行）；会员已有执行中任务时，接口自动将旧任务结束并创建新任务</td></tr>
             <tr><td><b>终止、批量终止、停用策略并终止</b></td><td>SpecCtrl/Cancel</td><td>playerName</td><td>任务结束（接口 status=2）；会员没有执行中任务时接口返回失败，按「提交时已自然结束」处理，保持达成目标</td></tr>
             <tr><td><b>进入页面、查询、刷新</b></td><td>SpecCtrl/Query</td><td>playerName</td><td>actual_value（分）÷100 为进行中金额；status=2 且后台未记录终止、覆盖、停用策略时，结束原因为达成目标；接口最多返回最新 1,000 条、不分页</td></tr>
+          </tbody>
+        </table></div>
+        <h3>接口对应 · 返奖率设置</h3>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>场景</th><th>接口</th><th>传入</th><th>取回与用途</th></tr></thead>
+          <tbody>
+            <tr><td><b>进入页签、保存或开关失败后重新读取</b></td><td>Strategy/Get</td><td>key：levels（层级）/ bets（押注），各读取一次；不传 channel</td><td>currid_level、currid_bets：0 为未启用，非 0 为已启用；json_data 为当前配置，rpt ÷10 为返奖率百分比</td></tr>
+            <tr><td><b>保存层级返奖率</b></td><td>Strategy/Set</td><td>key=levels；json_data 为完整配置：每项 level（会员层级 ID）、name（层级名称）、rpt（返奖率 ×10，如 95.5% 传 955）；不传 channel</td><td>返回保存后的配置，页面按返回结果显示</td></tr>
+            <tr><td><b>保存押注返奖率</b></td><td>Strategy/Set</td><td>key=bets；json_data 为完整配置：每项 bets（押注金额 ×100，分）、name（档位名称）、rpt</td><td>同上</td></tr>
+            <tr><td><b>启用 / 关闭</b></td><td>Strategy/Set</td><td>层级：currid_level；押注：currid_bets；启用传 1，关闭传 0；同时传对应类别的当前完整配置</td><td>返回开关状态</td></tr>
+            <tr><td><b>会员层级同步</b></td><td>User/Login、User/ModifyPassword</td><td>strategy_level：会员所在会员层级 ID</td><td>会员进入 MY 游戏时随登录传入；会员层级变动时用 ModifyPassword 只传 strategy_level（不传 pwd）</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -1083,6 +1327,27 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
             <tr><td><b>A57</b></td><td>新增点控、终止、批量终止、新增策略、编辑策略、停用策略</td><td>后台操作日志均有对应记录</td></tr>
             <tr><td><b>A58</b></td><td>进入「点控策略」页签；打开新增策略；打开编辑策略</td><td>列表上方常驻显示「策略生效规则」6 条；新增弹窗顶部显示生效规则说明条；编辑弹窗不显示该说明条，只显示不可修改提示</td></tr>
             <tr><td><b>A59</b></td><td>筛选结果共 25 条、每页 20 条：勾选表头 → 点上方「选择全部 25 条」→ 取消勾选其中一行 → 翻到第 2 页</td><td>依次显示「已选择 20 条」+ 提示「已选本页 20 条，选择全部 25 条」；「已选择全部 25 条」+「清除选择」；退回「已选择 19 条」；翻页后清空为「已选择 0 条」</td></tr>
+            <tr><td><b>A60</b></td><td>有返奖率设置查看权限的账号切到「返奖率设置」页签</td><td>顶部显示「返奖率设置说明」4 条；下方为层级返奖率、押注返奖率两块，各显示启用状态与当前设置；右上角显示最后修改人与时间、「修改记录」按钮</td></tr>
+            <tr><td><b>A61</b></td><td>首次上线后进入页签</td><td>两块均为未启用；层级返奖率每个会员层级显示「未设置」；押注返奖率显示空状态</td></tr>
+            <tr><td><b>A62</b></td><td>层级返奖率点「编辑」，再点「取消」</td><td>编辑时返奖率为下拉，选项为 94% ~ 97% 七档，未设置的显示「请选择」；本块「启用 / 关闭」置灰；取消后恢复原值</td></tr>
+            <tr><td><b>A63</b></td><td>编辑时有一个层级未选返奖率，点「保存」</td><td>该行红字「请选择返奖率」，不保存</td></tr>
+            <tr><td><b>A64</b></td><td>已启用状态下修改 2 个层级的返奖率并保存</td><td>确认框列出 2 项改前 → 改后与「当前已启用，保存后立即生效」；确认后提示「保存成功」，最后修改更新，修改记录新增一条「修改」</td></tr>
+            <tr><td><b>A65</b></td><td>未修改任何内容点「保存」</td><td>提示「没有修改内容」，退出编辑，不产生修改记录</td></tr>
+            <tr><td><b>A66</b></td><td>有层级未设置返奖率时点层级返奖率「启用」</td><td>提示「请先为全部层级设置返奖率」，保持未启用</td></tr>
+            <tr><td><b>A67</b></td><td>全部层级已设置后启用，再关闭</td><td>启用：确认后标签变为已启用，提示「层级返奖率已启用」；关闭：确认后标签变为未启用，已设置的返奖率仍显示；修改记录各新增一条</td></tr>
+            <tr><td><b>A68</b></td><td>层级返奖率已启用，层级一 95%、层级二 96%；把一个会员从层级一调到层级二</td><td>该会员在 MY 系列游戏中的返奖率由 95% 变为 96%</td></tr>
+            <tr><td><b>A69</b></td><td>会员层级管理中新增一个会员层级</td><td>本页该层级显示「未设置」，层级返奖率上方红字提示有 1 个层级未设置；设置并保存后提示消失</td></tr>
+            <tr><td><b>A70</b></td><td>押注返奖率没有档位时点「启用」</td><td>提示「请先添加押注档位」，保持未启用</td></tr>
+            <tr><td><b>A71</b></td><td>押注返奖率编辑：依次添加 100.00 / 97%、1.00 / 94%、10.00 / 95.5% 三个档位并保存</td><td>保存成功，列表按押注金额从小到大显示 1.00、10.00、100.00</td></tr>
+            <tr><td><b>A72</b></td><td>押注档位：名称为空 / 金额为空、0、1.234 / 两个档位金额相同 / 返奖率未选，点「保存」</td><td>分别出现对应红字提示，不保存</td></tr>
+            <tr><td><b>A73</b></td><td>押注返奖率已启用，删除全部档位后保存</td><td>提示「已启用时至少保留 1 个档位，如需停用请先关闭」，不保存</td></tr>
+            <tr><td><b>A74</b></td><td>押注返奖率未启用时修改档位并保存</td><td>确认框显示「当前未启用，保存后不生效，启用后按此设置」；保存后会员返奖率不变</td></tr>
+            <tr><td><b>A75</b></td><td>保存或启用时接口返回失败</td><td>提示「操作失败：{失败原因}，已重新读取当前设置」；页面显示的状态与设置和接口读取结果一致；不产生修改记录</td></tr>
+            <tr><td><b>A76</b></td><td>账号 A、B 同时进入编辑，A 先保存，B 再保存</td><td>B 提示「设置已被其他人修改，已刷新为最新设置，请重新编辑」，B 的修改未保存</td></tr>
+            <tr><td><b>A77</b></td><td>点击「修改记录」，按设置项筛选</td><td>弹窗按操作时间倒序显示启用、关闭、修改记录；修改记录逐项显示改前 → 改后；筛选与分页（20 / 50 / 100）正常</td></tr>
+            <tr><td><b>A78</b></td><td>只有返奖率设置查看权限的账号；没有查看权限的账号</td><td>前者可查看设置与修改记录，不显示「编辑」「启用」「关闭」；后者不显示「返奖率设置」页签</td></tr>
+            <tr><td><b>A79</b></td><td>启用、关闭、保存返奖率</td><td>后台操作日志均有对应记录</td></tr>
+            <tr><td><b>A80</b></td><td>层级返奖率、押注返奖率均未启用</td><td>会员按游戏默认返奖率，点控功能不受影响</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -1092,14 +1357,14 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>检查项</th><th>结论</th></tr></thead>
           <tbody>
-            <tr><td><b>权限</b></td><td>菜单与功能权限纳入现有角色权限体系</td></tr>
-            <tr><td><b>操作留痕</b></td><td>每条记录保留操作人与最后操作时间；策略保留发布人、发布时间、最后操作人与时间；新增、终止、策略新增 / 编辑 / 停用写入后台操作日志；策略生成失败写入系统日志</td></tr>
-            <tr><td><b>边界状态</b></td><td>空列表、全部已结束、超人数上限、会员不存在、没有游戏账号、下发超时、覆盖时新点控下发失败、已有执行中点控、提交时已自然结束；策略 0 人、超 1 万人、首批未完成停用、同时命中多条、离开再进入、重名均已定义</td></tr>
-            <tr><td><b>口径与单位</b></td><td>金额按平台默认货币，两位小数；进行中金额正为赢、负为输；时间按后台时区</td></tr>
+            <tr><td><b>权限</b></td><td>菜单与功能权限纳入现有角色权限体系；返奖率设置单独设查看、修改权限</td></tr>
+            <tr><td><b>操作留痕</b></td><td>每条记录保留操作人与最后操作时间；策略保留发布人、发布时间、最后操作人与时间；新增、终止、策略新增 / 编辑 / 停用写入后台操作日志；策略生成失败写入系统日志；返奖率的启用、关闭、修改有页面内修改记录并写入后台操作日志</td></tr>
+            <tr><td><b>边界状态</b></td><td>空列表、全部已结束、超人数上限、会员不存在、没有游戏账号、下发超时、覆盖时新点控下发失败、已有执行中点控、提交时已自然结束；策略 0 人、超 1 万人、首批未完成停用、同时命中多条、离开再进入、重名均已定义；返奖率未设置层级、没有档位、已启用时删空档位、没有修改、多人同时修改、保存失败、新增 / 删除会员层级均已定义</td></tr>
+            <tr><td><b>口径与单位</b></td><td>金额按平台默认货币，两位小数；进行中金额正为赢、负为输；时间按后台时区；返奖率按百分比显示，只有七档；押注金额按平台默认货币，两位小数</td></tr>
             <tr><td><b>批量操作</b></td><td>手动新增上限 10,000 人并展示明细；批量终止只处理执行中记录；策略分批生成不设上限，展示进度与失败明细</td></tr>
             <tr><td><b>多语言 / 多环境</b></td><td>后台页面沿用现有后台语言机制，无前台文案</td></tr>
             <tr><td><b>特殊模式</b></td><td>试玩会员不支持点控：手动新增中的试玩ID计入失败；策略自动排除试玩会员与试玩账号注册</td></tr>
-            <tr><td><b>生效范围</b></td><td>MY 系列全部厂商统一生效</td></tr>
+            <tr><td><b>生效范围</b></td><td>MY 系列全部厂商统一生效；返奖率对本商户全部会员生效，不按渠道区分</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -1124,6 +1389,14 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
           <li><strong>时间与账号。</strong>接口返回时间为 UTC，列表按后台时区展示；接口按游戏账号名调用，需做会员与游戏账号的对应。</li>
           <li><strong>剧本 ID。</strong>页面只显示剧本名称；调用接口按剧本 ID 传，排查问题时按 ID 对应：快送 604、正常送 603、慢送 602、快杀 601、正常杀 600、慢杀 599。</li>
           <li><strong>菜单名称。</strong>菜单位置示意图为现网名称；若客户端游戏排序需求先上线，「游戏排名」显示为「热门游戏排序」，本菜单仍排在最后。</li>
+          <li><strong>返奖率接口。</strong>读取用 Strategy/Get，写入用 Strategy/Set；按类别 levels（层级）、bets（押注）分别读写，写入时传该类别的完整配置（整表覆盖）；不传渠道，对整个商户生效；新手保护（protect）本期不做，不调用。</li>
+          <li><strong>返奖率取值。</strong>接口只接受千分比整数 940、945、950、955、960、965、970；页面显示为 94% ~ 97%，下拉只提供这七档，后端同样校验。</li>
+          <li><strong>启用 / 关闭。</strong>层级用 currid_level、押注用 currid_bets，启用传 1、关闭传 0；关闭不清空已保存的配置。</li>
+          <li><strong>会员层级与策略层级。</strong>levels 中的 level 用我方会员层级 ID（须为大于 0 的整数，否则另建对应关系），name 用层级名称；会员的 strategy_level 为其会员层级 ID。同步时机：会员进入 MY 游戏登录时随登录接口传入；会员层级变动时调用设置密码接口，只传 strategy_level、不传 pwd（传 pwd 会改掉游戏密码）；功能上线时对已有游戏账号的会员同步一次。未设置返奖率的层级不写入 levels。</li>
+          <li><strong>押注金额单位。</strong>页面按元输入，接口按分传整数（×100）。</li>
+          <li><strong>以接口结果为准。</strong>接口说明：配置校验失败时开关可能已改变。保存、启用、关闭失败后必须重新读取并按读取结果显示；进入页签时的启用状态与配置以读取结果为准；修改记录由后台自行保存，只记录成功的操作。</li>
+          <li><strong>多人同时修改。</strong>保存时比对进入编辑时的配置与当前配置，不一致则不保存并刷新。</li>
+          <li><strong>对接核对。</strong>以下内容接口说明书未写明，对接时与 MY 游戏方核对，结果与本文不一致时反馈产品调整：会员有执行中的点控时，点控与返奖率哪个优先；层级返奖率与押注返奖率同时启用时如何叠加；押注档位的匹配方式（本文按「单注押注金额达到该档金额时适用，取金额最高的一档」设计）；会员层级不在配置中、押注未达到任何档位时是否按游戏默认返奖率；保存后是否立即生效。</li>
         </ol></div>
       </div>
     </div>
@@ -1260,7 +1533,21 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
   <div class="modal-ft"><button class="bk-btn" id="btnCopyStgFail" type="button">复制失败会员ID</button><button class="bk-btn primary" data-close="failModal" type="button">我知道了</button></div>
 </div></div>
 
-<div class="modal-mask top" id="mConfirm"><div class="modal-box sm" role="dialog" aria-modal="true" style="width:460px;">
+<div class="modal-mask" id="rtpLogModal"><div class="modal-box lg" role="dialog" aria-modal="true" style="width:820px;">
+  <div class="modal-hd">修改记录<button class="x" data-close="rtpLogModal" type="button" aria-label="关闭">×</button></div>
+  <div class="modal-bd">
+    <div class="bk-form" style="margin-bottom:12px;"><div class="bk-field"><label for="rtpLogItem">设置项</label><select class="bk-select" id="rtpLogItem"><option value="">全部</option><option value="level">层级返奖率</option><option value="bet">押注返奖率</option></select></div></div>
+    <div class="bk-table-wrap"><table class="bk-table rtp-log">
+      <thead><tr><th>操作时间</th><th>操作人</th><th>设置项</th><th>操作</th><th>修改内容</th></tr></thead>
+      <tbody id="rtpLogBody"></tbody>
+    </table></div>
+    <div class="bk-foot"><div class="bk-pager" id="rtpLogPager"></div></div>
+  </div>
+  <div class="modal-ft"><button class="bk-btn primary" data-close="rtpLogModal" type="button">关 闭</button></div>
+</div></div>
+
+<div class="modal-mask top" id="mConfirm">
+<div class="modal-box sm" role="dialog" aria-modal="true" style="width:460px;">
   <div class="confirm-bd"><div class="confirm-ic">!</div><div><div class="confirm-title" id="cTitle">提示</div><div class="confirm-text" id="cText"></div></div></div>
   <div class="confirm-ft"><button class="bk-btn" id="cCancel" type="button">取 消</button><button class="bk-btn primary" id="cOk" type="button">确 定</button></div>
 </div></div>
@@ -1869,7 +2156,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
   $('markToggle').addEventListener('change', function(){ $('protoSec').classList.toggle('hide-marks', !this.checked); });
   function resetAll(){
     clearInterval(taskTimer); task = null; Object.keys(genTimers).forEach(function(k){ clearInterval(genTimers[k]); }); genTimers = {};
-    seed(); paintTask(); resetFilters(); resetStgFilters(); render(); renderStg();
+    seed(); seedRtp(); paintTask(); resetFilters(); resetStgFilters(); render(); renderStg(); renderRtp();
   }
   $('resetDemo').addEventListener('click', function(){ resetAll(); showView('rec'); toast('已重置演示数据'); });
 
@@ -1897,8 +2184,136 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
   window.addEventListener('scroll', hideTip, true);
   window.addEventListener('resize', hideTip);
 
+  // ---------- 返奖率设置 ----------
+  var RATES = [940,945,950,955,960,965,970];
+  var RTP_NAME = {level:'层级返奖率', bet:'押注返奖率'};
+  var RTP_LEVELS = [['默认层级',3200],['层级一',1260],['层级二',940],['层级三',610],['层级四',350],['层级五',120],['层级六',0]];
+  var rtp, rtpLogs, rtpEdit, lp = {page:1, size:20};
+  function pct(v){ return v ? (v/10)+'%' : '未设置'; }
+  function seedRtp(){
+    var init = [950,950,955,960,965,970,0];
+    rtp = {level:{on:true, rows:RTP_LEVELS.map(function(l,i){ return {name:l[0], n:l[1], rpt:init[i]}; })}, bet:{on:false, rows:[]}, last:{by:'zune01', at:'2026-11-10 15:20:11'}};
+    rtpLogs = [
+      {at:'2026-11-10 15:20:11', by:'zune01', item:'level', op:'edit', detail:['层级五：96.5% → 97%']},
+      {at:'2026-11-08 10:02:45', by:'zune01', item:'level', op:'on', detail:[]},
+      {at:'2026-11-08 10:01:30', by:'zune01', item:'level', op:'edit', detail:['默认层级：未设置 → 95%','层级一：未设置 → 95%','层级二：未设置 → 95.5%','层级三：未设置 → 96%','层级四：未设置 → 96.5%','层级五：未设置 → 96.5%']}
+    ];
+    rtpEdit = {level:null, bet:null}; lp.page = 1; lp.size = 20;
+  }
+  function rateSel(v, i){
+    return '<select class="bk-select sm" data-f="rpt" data-i="'+i+'" aria-label="返奖率"><option value="">请选择</option>'+RATES.map(function(r){ return '<option value="'+r+'"'+(+v===r?' selected':'')+'>'+(r/10)+'%</option>'; }).join('')+'</select>';
+  }
+  function errLine(msg){ return msg ? '<div class="rtp-err">'+esc(msg)+'</div>' : ''; }
+  function rtpCard(k){ return document.querySelector('[data-rtp="'+k+'"]'); }
+  function renderRtp(){
+    $('rtpLast').textContent = '最后修改：'+rtp.last.by+' '+rtp.last.at;
+    ['level','bet'].forEach(function(k){
+      var card = rtpCard(k), d = rtp[k], ed = rtpEdit[k], body = card.querySelector('[data-rtp-body]'), h = '';
+      card.querySelector('[data-rtp-tag]').innerHTML = d.on ? '<span class="bk-tag green">已启用</span>' : '<span class="bk-tag gray">未启用</span>';
+      var tg = card.querySelector('[data-rtp-toggle]');
+      tg.textContent = d.on ? '关 闭' : '启 用'; tg.disabled = !!ed; tg.title = ed ? '请先保存或取消编辑' : '';
+      show(card.querySelector('[data-rtp-edit]'), !ed);
+      show(card.querySelector('[data-rtp-ft]'), !!ed);
+      if(k==='level'){
+        var unset = d.rows.filter(function(r){ return !r.rpt; }).length, warn = card.querySelector('[data-rtp-warn]');
+        warn.textContent = '有 '+unset+' 个层级未设置返奖率，这些层级的会员按游戏默认返奖率，请点「编辑」设置。';
+        show(warn, unset>0 && !ed);
+        (ed || d.rows).forEach(function(r, i){
+          h += '<tr><td>'+esc(r.name)+'</td><td>'+fmt(r.n)+'</td><td>'+(ed ? rateSel(r.rpt, i)+errLine(r.eRpt) : (r.rpt ? pct(r.rpt) : '<span style="color:var(--danger);">未设置</span>'))+'</td></tr>';
+        });
+      } else {
+        var list = ed || d.rows;
+        show(card.querySelector('[data-rtp-opth]'), !!ed);
+        show(card.querySelector('[data-rtp-add]'), !!ed);
+        show(card.querySelector('[data-rtp-empty]'), !ed && !list.length);
+        list.forEach(function(r, i){
+          if(ed) h += '<tr><td><input class="bk-input" data-f="name" data-i="'+i+'" maxlength="20" placeholder="如：小押注" value="'+esc(r.name)+'">'+errLine(r.eName)+'</td><td><input class="bk-input" data-f="amt" data-i="'+i+'" placeholder="请输入" value="'+esc(r.amt)+'">'+errLine(r.eAmt)+'</td><td>'+rateSel(r.rpt, i)+errLine(r.eRpt)+'</td><td><span class="bk-link danger" data-del="'+i+'">删除</span></td></tr>';
+          else h += '<tr><td>'+esc(r.name)+'</td><td>'+money(r.amt)+'</td><td>'+pct(r.rpt)+'</td></tr>';
+        });
+      }
+      body.innerHTML = h;
+      body.querySelectorAll('[data-f]').forEach(function(el){
+        el.addEventListener(el.tagName==='SELECT' ? 'change' : 'input', function(){ ed[+el.getAttribute('data-i')][el.getAttribute('data-f')] = el.tagName==='SELECT' ? (+el.value||0) : el.value; });
+      });
+      body.querySelectorAll('[data-del]').forEach(function(el){ el.addEventListener('click', function(){ ed.splice(+el.getAttribute('data-del'), 1); renderRtp(); }); });
+    });
+  }
+  function rtpLog(k, op, detail){
+    var at = nowStr(); rtpLogs.unshift({at:at, by:'zune01', item:k, op:op, detail:detail||[]}); rtp.last = {by:'zune01', at:at};
+  }
+  function rtpStartEdit(k){
+    rtpEdit[k] = rtp[k].rows.map(function(r){ return k==='level' ? {name:r.name, n:r.n, rpt:r.rpt} : {name:r.name, amt:money(r.amt).replace(/,/g,''), rpt:r.rpt}; });
+    renderRtp();
+  }
+  function rtpSave(k){
+    var ed = rtpEdit[k], d = rtp[k], bad = false, diff = [];
+    if(k==='level'){
+      ed.forEach(function(r){ r.eRpt = r.rpt ? '' : '请选择返奖率'; if(r.eRpt) bad = true; });
+      if(bad){ renderRtp(); return; }
+      ed.forEach(function(r, i){ if(r.rpt !== d.rows[i].rpt) diff.push(r.name+'：'+pct(d.rows[i].rpt)+' → '+pct(r.rpt)); });
+    } else {
+      var seen = {};
+      ed.forEach(function(r){
+        r.name = r.name.trim(); r.amt = String(r.amt).trim();
+        r.eName = r.name ? '' : '请输入档位名称';
+        r.eAmt = (/^\d+(\.\d{1,2})?$/.test(r.amt) && +r.amt > 0) ? '' : '请输入大于 0 的金额，最多两位小数';
+        if(!r.eAmt){ var key = (+r.amt).toFixed(2); if(seen[key]) r.eAmt = '押注金额不能重复'; seen[key] = 1; }
+        r.eRpt = r.rpt ? '' : '请选择返奖率';
+        if(r.eName || r.eAmt || r.eRpt) bad = true;
+      });
+      if(bad){ renderRtp(); return; }
+      if(d.on && !ed.length){ toast('已启用时至少保留 1 个档位，如需停用请先关闭', true); return; }
+      var old = {}; d.rows.forEach(function(r){ old[r.amt.toFixed(2)] = r; });
+      ed.forEach(function(r){
+        var key = (+r.amt).toFixed(2), o = old[key];
+        if(!o) diff.push('新增档位 '+r.name+' '+money(+r.amt)+'：'+pct(r.rpt));
+        else {
+          if(o.name !== r.name) diff.push('档位 '+money(+r.amt)+' 名称：'+o.name+' → '+r.name);
+          if(o.rpt !== r.rpt) diff.push('档位 '+r.name+' '+money(+r.amt)+'：'+pct(o.rpt)+' → '+pct(r.rpt));
+          delete old[key];
+        }
+      });
+      Object.keys(old).forEach(function(key){ var o = old[key]; diff.push('删除档位 '+o.name+' '+money(o.amt)+'：'+pct(o.rpt)); });
+    }
+    if(!diff.length){ rtpEdit[k] = null; renderRtp(); toast('没有修改内容'); return; }
+    var html = '确认保存'+RTP_NAME[k]+'？<div style="margin:8px 0;max-height:180px;overflow:auto;">'+diff.map(function(x){ return '<div>'+esc(x)+'</div>'; }).join('')+'</div>'+(d.on ? '<b>当前已启用，保存后立即生效。</b>' : '当前未启用，保存后不生效，启用后按此设置。');
+    confirmBox('确认保存', html, '确定保存', false, function(){
+      d.rows = k==='level' ? ed.map(function(r){ return {name:r.name, n:r.n, rpt:r.rpt}; }) : ed.map(function(r){ return {name:r.name, amt:+r.amt, rpt:r.rpt}; }).sort(function(a,b){ return a.amt-b.amt; });
+      rtpEdit[k] = null; rtpLog(k, 'edit', diff); renderRtp(); toast('保存成功');
+    });
+  }
+  function rtpToggle(k){
+    var d = rtp[k], name = RTP_NAME[k];
+    if(rtpEdit[k]) return;
+    if(d.on){
+      confirmBox('确认关闭'+name+'？', '关闭后立即生效，会员按游戏默认返奖率；已设置的返奖率保留，再次启用后继续使用。', '确定关闭', true, function(){ d.on = false; rtpLog(k, 'off'); renderRtp(); toast(name+'已关闭'); });
+      return;
+    }
+    if(k==='level' && d.rows.some(function(r){ return !r.rpt; })){ toast('请先为全部层级设置返奖率', true); return; }
+    if(k==='bet' && !d.rows.length){ toast('请先添加押注档位', true); return; }
+    confirmBox('确认启用'+name+'？', '启用后立即生效：本站会员在 MY 系列游戏中按'+(k==='level' ? '所在会员层级' : '单注押注金额')+'对应的返奖率。', '确定启用', false, function(){ d.on = true; rtpLog(k, 'on'); renderRtp(); toast(name+'已启用'); });
+  }
+  ['level','bet'].forEach(function(k){
+    var card = rtpCard(k);
+    card.querySelector('[data-rtp-edit]').addEventListener('click', function(){ rtpStartEdit(k); });
+    card.querySelector('[data-rtp-cancel]').addEventListener('click', function(){ rtpEdit[k] = null; renderRtp(); });
+    card.querySelector('[data-rtp-save]').addEventListener('click', function(){ rtpSave(k); });
+    card.querySelector('[data-rtp-toggle]').addEventListener('click', function(){ rtpToggle(k); });
+  });
+  $('btnRtpAddRow').addEventListener('click', function(){ rtpEdit.bet.push({name:'', amt:'', rpt:0}); renderRtp(); });
+  function renderRtpLogs(){
+    var item = $('rtpLogItem').value, list = rtpLogs.filter(function(l){ return !item || l.item===item; });
+    var OP = {on:'<span class="bk-tag green">启用</span>', off:'<span class="bk-tag gray">关闭</span>', edit:'<span class="bk-tag blue">修改</span>'};
+    $('rtpLogBody').innerHTML = pageOf(list, lp).map(function(l){
+      return '<tr><td>'+l.at+'</td><td>'+l.by+'</td><td>'+RTP_NAME[l.item]+'</td><td>'+OP[l.op]+'</td><td class="l">'+(l.detail.length ? l.detail.map(esc).join('<br>') : '-')+'</td></tr>';
+    }).join('') || '<tr><td colspan="5" style="color:var(--text-secondary);padding:24px 0;">暂无修改记录</td></tr>';
+    renderPager($('rtpLogPager'), list.length, lp, renderRtpLogs);
+  }
+  $('btnRtpLog').addEventListener('click', function(){ $('rtpLogItem').value = ''; lp.page = 1; renderRtpLogs(); openM('rtpLogModal'); });
+  $('rtpLogItem').addEventListener('change', function(){ lp.page = 1; renderRtpLogs(); });
+
   window.__pc = {showView:showView, openStg:openStg};
-  seed(); readFilters(); readStgFilters(); render(); renderStg(); paintTask();
+  seed(); seedRtp(); readFilters(); readStgFilters(); render(); renderStg(); renderRtp(); paintTask();
 })();
 (function(){
   var primBtns = document.querySelectorAll('.dh-primary-btn');
@@ -1957,7 +2372,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
 </style>
 <div id="chgTip" role="tooltip"><button class="x" type="button" aria-label="关闭">×</button><div class="tt"></div><div class="bd"></div></div>
 <script>(function(){var TIPS={
- 'menu': ['商户游戏管理 · MY游戏点控管理', '原：商户后台无法对单个会员做输赢控制，「商户游戏管理」下没有点控菜单。\n现：子菜单最后新增「MY游戏点控管理」，页面分「点控记录」「点控策略」两个页签：点控记录可查看、手动新增（一次性）、终止点控；点控策略可按新注册会员、会员层级、VIP 等级或代理设置常驻策略，当前和之后符合条件的会员自动生成点控。\n点控对 MY 系列全部厂商统一生效。'],
+ 'menu': ['商户游戏管理 · MY游戏点控管理', '原：商户后台无法对单个会员做输赢控制，「商户游戏管理」下没有点控菜单。\n现：子菜单最后新增「MY游戏点控管理」，页面分「点控记录」「点控策略」「返奖率设置」三个页签：点控记录可查看、手动新增（一次性）、终止点控；点控策略可按新注册会员、会员层级、VIP 等级或代理设置常驻策略，当前和之后符合条件的会员自动生成点控；返奖率设置可按会员层级、押注金额设置 MY 系列游戏的返奖率（94% ~ 97% 七档），可启用、关闭、修改并查看修改记录。\n点控与返奖率对 MY 系列全部厂商统一生效。'],
 };
 var box=document.getElementById('chgTip'),cur=null,pinned=false,ht=null;
 function esc(t){return t.replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
