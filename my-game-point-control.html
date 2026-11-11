@@ -1242,23 +1242,24 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
           </tbody>
         </table></div>
         <h3>接口对应</h3>
+        <div class="dh-callout">「说明书位置」为该功能在接口说明书中的章节与页码。说明书为《DB棋牌转账钱包API接入说明书》；签名与请求封装见 2.1、2.2（第 4 页），金额按分、时间按 UTC 等公共约定见 2.3（第 5 页）。</div>
         <div class="tbl-wrap"><table class="dh-table-simple">
-          <thead><tr><th>场景</th><th>接口</th><th>传入</th><th>取回与用途</th></tr></thead>
+          <thead><tr><th>场景</th><th>接口</th><th>说明书位置</th><th>传入</th><th>取回与用途</th></tr></thead>
           <tbody>
-            <tr><td><b>新增点控下发、策略生成</b></td><td>SpecCtrl/Add</td><td>playerName：会员的 MY 游戏账号名；control_type：1 送分 / 2 杀分；script_id：剧本 ID；target_value：目标金额 ×100（分）</td><td>返回点控记录，新任务 status=0（正在执行）；会员已有执行中任务时，接口自动将旧任务结束并创建新任务</td></tr>
-            <tr><td><b>终止、批量终止、停用策略并终止</b></td><td>SpecCtrl/Cancel</td><td>playerName</td><td>任务结束（接口 status=2）；会员没有执行中任务时接口返回失败，按「提交时已自然结束」处理，保持达成目标</td></tr>
-            <tr><td><b>进入页面、查询、刷新</b></td><td>SpecCtrl/Query</td><td>playerName</td><td>actual_value（分）÷100 为进行中金额；status=2 且后台未记录终止、覆盖、停用策略时，结束原因为达成目标；接口最多返回最新 1,000 条、不分页</td></tr>
+            <tr><td><b>新增点控下发、策略生成</b></td><td>SpecCtrl/Add</td><td>3.12.1 新增点控（第 36 页）</td><td>playerName：会员的 MY 游戏账号名；control_type：1 送分 / 2 杀分；script_id：剧本 ID；target_value：目标金额 ×100（分）</td><td>返回点控记录，新任务 status=0（正在执行）；会员已有执行中任务时，接口自动将旧任务结束并创建新任务</td></tr>
+            <tr><td><b>终止、批量终止、停用策略并终止</b></td><td>SpecCtrl/Cancel</td><td>3.12.2 取消点控（第 39 页）</td><td>playerName</td><td>任务结束（接口 status=2）；会员没有执行中任务时接口返回失败，按「提交时已自然结束」处理，保持达成目标</td></tr>
+            <tr><td><b>进入页面、查询、刷新</b></td><td>SpecCtrl/Query</td><td>3.12.3 查询点控（第 40 页）</td><td>playerName</td><td>actual_value（分）÷100 为进行中金额；status=2 且后台未记录终止、覆盖、停用策略时，结束原因为达成目标；接口最多返回最新 1,000 条、不分页</td></tr>
           </tbody>
         </table></div>
         <h3>接口对应 · 返奖率设置</h3>
         <div class="tbl-wrap"><table class="dh-table-simple">
-          <thead><tr><th>场景</th><th>接口</th><th>传入</th><th>取回与用途</th></tr></thead>
+          <thead><tr><th>场景</th><th>接口</th><th>说明书位置</th><th>传入</th><th>取回与用途</th></tr></thead>
           <tbody>
-            <tr><td><b>进入页签、保存或开关失败后重新读取</b></td><td>Strategy/Get</td><td>key：levels（层级）/ bets（押注），各读取一次；不传 channel</td><td>currid_level、currid_bets：0 为未启用，非 0 为已启用；json_data 为当前配置，rpt ÷10 为返奖率百分比</td></tr>
-            <tr><td><b>保存层级返奖率</b></td><td>Strategy/Set</td><td>key=levels；json_data 为完整配置：每项 level（会员层级 ID）、name（层级名称）、rpt（返奖率 ×10，如 95.5% 传 955）；不传 channel</td><td>返回保存后的配置，页面按返回结果显示</td></tr>
-            <tr><td><b>保存押注返奖率</b></td><td>Strategy/Set</td><td>key=bets；json_data 为完整配置：每项 bets（押注金额 ×100，分）、name（档位名称）、rpt</td><td>同上</td></tr>
-            <tr><td><b>启用 / 关闭</b></td><td>Strategy/Set</td><td>层级：currid_level；押注：currid_bets；启用传 1，关闭传 0；同时传对应类别的当前完整配置</td><td>返回开关状态</td></tr>
-            <tr><td><b>会员层级同步</b></td><td>User/Login、User/ModifyPassword</td><td>strategy_level：会员所在会员层级 ID</td><td>会员进入 MY 游戏时随登录传入；会员层级变动时用 ModifyPassword 只传 strategy_level（不传 pwd）</td></tr>
+            <tr><td><b>进入页签、保存或开关失败后重新读取</b></td><td>Strategy/Get</td><td>3.8 获取策略（第 29 页）</td><td>key：levels（层级）/ bets（押注），各读取一次；不传 channel</td><td>currid_level、currid_bets：0 为未启用，非 0 为已启用；json_data 为当前配置，rpt ÷10 为返奖率百分比</td></tr>
+            <tr><td><b>保存层级返奖率</b></td><td>Strategy/Set</td><td>3.9 设置策略（第 31 页）；配置结构见 3.10.2（第 34 页），返奖率取值见 3.10.3（第 35 页）</td><td>key=levels；json_data 为完整配置：每项 level（会员层级 ID）、name（层级名称）、rpt（返奖率 ×10，如 95.5% 传 955）；不传 channel</td><td>返回保存后的配置，页面按返回结果显示</td></tr>
+            <tr><td><b>保存押注返奖率</b></td><td>Strategy/Set</td><td>3.9 设置策略（第 31 页）；配置结构见 3.10.2（第 34 页），返奖率取值见 3.10.3（第 35 页）</td><td>key=bets；json_data 为完整配置：每项 bets（押注金额 ×100，分）、name（档位名称）、rpt</td><td>同上</td></tr>
+            <tr><td><b>启用 / 关闭</b></td><td>Strategy/Set</td><td>3.9 设置策略（第 31 页），开关字段 currid_level、currid_bets</td><td>层级：currid_level；押注：currid_bets；启用传 1，关闭传 0；同时传对应类别的当前完整配置</td><td>返回开关状态</td></tr>
+            <tr><td><b>会员层级同步</b></td><td>User/Login、User/ModifyPassword</td><td>3.2 用户登录（第 10 页）；3.7.1 设置密码（第 25 页）</td><td>strategy_level：会员所在会员层级 ID</td><td>会员进入 MY 游戏时随登录传入；会员层级变动时用 ModifyPassword 只传 strategy_level（不传 pwd）</td></tr>
           </tbody>
         </table></div>
       </div>
