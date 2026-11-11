@@ -567,7 +567,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         </div>
       </div>
     </div>
-    <div class="proto-tip">进入页面不加载数据，选站点并查询后按该站点热门排名列出游戏；现网列保留，浅蓝底为本期新增的按站点列。维护 / 启用 / 停用点开后在确认框里选「只改本站点」或「全部站点」，不默认；全部站点停用当下对所有站点生效（前台与排序列表不显示，置顶取消）。操作列「排序」沿用现网（平台级，按前后游戏调整有效注单默认值，对全部站点生效）。游戏图片为占位；有效注单为热门值来源，鼠标移到数值上点 ✎ 修改默认值、表头可点击排序（沿用现网，平台级），前1小时、当前小时数值为示例；批量修改有效注单沿用现网。</div>
+    <div class="proto-tip">进入页面不加载数据，选站点并查询后按该站点热门排名列出游戏；现网列保留，浅蓝底为本期新增的按站点列。维护 / 启用 / 停用点开后在确认框里选「只改本站点」或「全部站点」，不默认；全部站点停用当下对所有站点生效（前台与排序列表不显示，置顶取消）。操作列「排序」沿用现网（平台级，按前后游戏调整有效注单默认值，对全部站点生效）。游戏图片为占位；有效注单为热门值来源，点数值直接修改默认值（本期修改，原为悬停 ✎ 后修改）、表头可点击排序（平台级），前1小时、当前小时数值为示例；批量修改有效注单沿用现网。</div>
   </div>
 
   <!-- ===== 总控 · 热门游戏排序 ===== -->
@@ -1599,7 +1599,7 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
     $('gHead').innerHTML='<tr><th style="width:36px;"'+sc+'><input type="checkbox" class="chk" id="gChkAll" aria-label="全选当前查询结果"></th><th'+sc+'>序号<span class="mk" data-tip="gseqno" tabindex="0">本期修改</span></th><th class="zkc">游戏ID</th><th>游戏名称</th><th>场馆名称</th>'+
       '<th'+sc+'>对应版本<span class="mk" data-tip="grel" tabindex="0">本期新增</span></th><th'+sc+'>前台显示</th><th'+sc+' style="min-width:120px;">前台切换<span class="mk" data-tip="gsw" tabindex="0">本期新增</span></th>'+
       '<th class="zkc">总控状态（全部站点）<span class="mk" data-tip="stname" tabindex="0">本期修改</span></th><th'+sc+'>'+(isM()?'游戏状态':'站点状态（本站点）')+'<span class="mk" data-tip="'+(isM()?'mstat':'sitest')+'" tabindex="0">本期'+(isM()?'修改':'新增')+'</span></th>'+
-      '<th class="zkc">游戏图片</th><th class="zkc">创建时间</th><th>最近操作人</th><th>最近操作时间</th><th>备注</th><th class="zkc"><span class="th-sort" data-gsortbet="1" title="点击排序">有效注单<span class="sic'+(GM.bsort?' on':'')+'">'+(GM.bsort==='desc'?'▼':GM.bsort==='asc'?'▲':'⇅')+'</span></span></th><th class="zkc">前1小时有效注单</th><th class="zkc">当前小时注单量</th><th style="min-width:250px;" class="op-fix">操作<span class="mk" data-tip="'+(isM()?'mops':'gops')+'" tabindex="0">本期修改</span></th></tr>';
+      '<th class="zkc">游戏图片</th><th class="zkc">创建时间</th><th>最近操作人</th><th>最近操作时间</th><th>备注</th><th class="zkc"><span class="th-sort" data-gsortbet="1" title="点击排序">有效注单<span class="mk" data-tip="gbet" tabindex="0">本期修改</span><span class="sic'+(GM.bsort?' on':'')+'">'+(GM.bsort==='desc'?'▼':GM.bsort==='asc'?'▲':'⇅')+'</span></span></th><th class="zkc">前1小时有效注单</th><th class="zkc">当前小时注单量</th><th style="min-width:250px;" class="op-fix">操作<span class="mk" data-tip="'+(isM()?'mops':'gops')+'" tabindex="0">本期修改</span></th></tr>';
     if(!GM.q||!site){ $('gBody').innerHTML=emptyRow(cols,'请先在上方选择站点'); $('gCount').textContent='共 0 条数据'; updGSel(); return; }
     var s=SS[site],rows=gRows(),html='',dv={};
     if(GM.bsort) rows=rows.slice().sort(function(a,b){ return GM.bsort==='asc'?a.hot-b.hot:b.hot-a.hot; });
@@ -1612,7 +1612,7 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
       html+='<tr class="'+(sh==='hide'?'p2':'')+'"><td'+sc+'><input type="checkbox" class="chk" data-gsel="'+g.id+'"'+(GM.sel[g.id]?' checked':'')+'></td><td'+sc+'>'+(stopped(g)||!g.rank?'-':g.rank)+'</td><td class="zkc">'+g.id+'</td><td class="l">'+esc(nm(g))+'</td><td>'+esc(g.venue)+'</td>'+
         '<td'+sc+'>'+rel+'</td><td'+sc+'>'+showTag(sh)+'</td><td'+sc+'>'+swCell(s,g,'data-ga')+'</td>'+
         '<td class="zkc">'+pTag(pst)+'</td><td'+sc+'>'+effTag(pst,g.status,pst!=='停用'&&stopped(g))+'</td>'+
-        '<td class="zkc"><span class="img-ph">图</span></td><td class="zkc">2025-12-0'+(g.base%9+1)+' 10:00:00</td><td>'+esc(o.op)+'</td><td>'+o.time+'</td><td>'+esc(o.remark)+'</td><td class="zkc"><span class="bet-cell">'+g.hot+'<button class="ed" data-gbet="'+g.id+'" type="button" aria-label="修改有效注单" title="修改有效注单">✎</button></span></td><td class="zkc">'+Math.round(g.hot/700)+'</td><td class="zkc">'+Math.round(g.hot/2100)+'</td>'+
+        '<td class="zkc"><span class="img-ph">图</span></td><td class="zkc">2025-12-0'+(g.base%9+1)+' 10:00:00</td><td>'+esc(o.op)+'</td><td>'+o.time+'</td><td>'+esc(o.remark)+'</td><td class="zkc"><button class="lk" data-gbet="'+g.id+'" type="button" title="点击修改有效注单默认值">'+g.hot+'</button></td><td class="zkc">'+Math.round(g.hot/700)+'</td><td class="zkc">'+Math.round(g.hot/2100)+'</td>'+
         '<td class="op-fix"><div class="bk-ops">'+ops+'</div></td></tr>';
     });
     $('gBody').innerHTML=html||emptyRow(cols,'没有符合条件的游戏');
@@ -1638,7 +1638,7 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
   $('gBody').addEventListener('click',function(e){
     var b=e.target.closest('[data-gbet]'); if(!b) return; e.stopPropagation();
     var id=b.getAttribute('data-gbet'),s=SS[GM.site],g=G(s,id);
-    inlineEdit(b.closest('.bet-cell')||b,g.hot,0,999999999,function(x){ Object.keys(SS).forEach(function(k){ var t=G(SS[k],id); if(t) t.hot=x; }); renderAll(); toast('有效注单默认值已改为 '+x.toLocaleString('en-US')+'（平台级，所有站点生效）；之后每小时继续累加新增投注'); });
+    inlineEdit(b,g.hot,0,999999999,function(x){ Object.keys(SS).forEach(function(k){ var t=G(SS[k],id); if(t) t.hot=x; }); renderAll(); toast('有效注单默认值已改为 '+x.toLocaleString('en-US')+'（平台级，所有站点生效）；之后每小时继续累加新增投注'); });
   });
   /* 现网保留：游戏「排序」（平台级，按前后游戏倒推有效注单默认值） */
   $('gBody').addEventListener('click',function(e){
@@ -1911,6 +1911,7 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
  'mops': ['维护 / 开启 / 关闭', '原：平台停用（禁用）的只剩「编辑」，没有说明。\n现：平台停用或维护时按钮换成灰色「平台已停用」「平台维护中」，不能改，悬停说明由平台控制；其余只改本站点。'],
  'mstat': ['场馆状态 / 游戏状态', '原：显示本站点的开启 / 维护 / 关闭；平台停用的显示「禁用」，没有说明。\n现：平台停用显示灰色「关闭（平台停用）」，平台维护显示「维护（平台维护）」，悬停看本站点原来的状态；平台恢复后自动回到原来的状态。'],
  'zkname': ['菜单名', '原：「站点场馆管理」下的「场馆配置总控」「游戏配置总控」。\n现：改名「厂商管理」「游戏管理」，和商户后台一致；一级菜单「站点场馆管理」改名「站点游戏管理」，和商户「商户游戏管理」对应。'],
+ 'gbet': ['有效注单', '原：鼠标移到数值上出现 ✎，点 ✎ 修改。\n现：直接点数值修改，回车保存；改的是平台默认值，所有站点生效。表头排序照现网。'],
 };
 var TIPSM={
  'mstat': ['场馆状态 / 游戏状态', '原：显示本站点的开启 / 维护 / 关闭；平台停用的显示「禁用」，没有说明。\n现：平台停用显示灰色「关闭（平台停用）」，平台维护显示「维护（平台维护）」，悬停看本站点原来的状态；平台恢复后自动回到原来的状态。'],
