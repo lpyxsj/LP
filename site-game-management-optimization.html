@@ -281,6 +281,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .mode-b{padding:7px 12px;background:#fff;border:0;cursor:pointer;font-size:13px;color:#334155;white-space:nowrap;}
 .mode-b.on{background:#1677ff;color:#fff;}
 .mch-only{display:none!important;}
+.mch-col{display:none;} body.mch .mch-col{display:table-cell;}
+body:not(.mch) .mb{display:none!important;}
 body.mch .mch-only{display:inline-flex!important;}
 body.mch .zk-only,body.mch .zkc{display:none!important;}
 body.mch .bk-page [data-tip="stname"],body.mch .bk-page [data-tip="stsc"],body.mch .bk-page [data-tip="site"],body.mch .bk-page [data-tip="vmerge"],body.mch .bk-page [data-tip="vcmd"],body.mch .bk-page [data-tip="vrule"],body.mch .bk-page [data-tip="hpage"],body.mch .bk-page [data-tip="vcols"],body.mch .bk-page [data-tip="gfil"]{display:none!important;}
@@ -515,7 +517,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
               <span class="hint" id="vPinHint"></span>
             </span>
             
-            <button class="bk-btn mch-only" data-mchtoast="1" type="button">对齐平台排序</button><span id="vSwWrap"><button class="bk-btn primary" id="vSwitch" type="button">原厂 / MY 切换</button><span class="mk" data-tip="vsw" tabindex="0">本期新增</span></span>
+            <button class="bk-btn mch-only" data-mchtoast="1" type="button">真人扣费配置</button><button class="bk-btn mch-only" data-mchtoast="1" type="button">场馆排序规则设置</button><button class="bk-btn mch-only" data-mchtoast="1" type="button">对齐平台排序</button><span id="vSwWrap"><button class="bk-btn primary" id="vSwitch" type="button">原厂 / MY 切换</button><span class="mk" data-tip="vsw" tabindex="0">本期新增</span></span>
             <span class="ico-btns"><span title="刷新" id="vRefresh">⟳</span><span title="密度">☰</span><span title="列设置">⚙</span></span>
           </div>
           <div class="sel-hint hide" id="vSelHint" role="status"></div>
@@ -564,14 +566,14 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
   <!-- ===== 总控 · 热门游戏排序 ===== -->
   <div class="bk-page" data-page-panel="hot">
     <div class="proto-window">
-      <div class="bk-top"><span class="bk-crumb">站点场馆管理 / <b>热门游戏排序</b><span class="mk" data-tip="hpage" tabindex="0">本期新增</span></span><span class="sp"></span></div>
+      <div class="bk-top"><span class="bk-crumb">站点场馆管理 / <b>热门游戏排序</b><span class="mk mb" data-tip="mhscope" tabindex="0">本期修改</span><span class="mk" data-tip="hpage" tabindex="0">本期新增</span></span><span class="sp"></span></div>
       <div class="zk-tabs"><span class="zk-tab" data-zk="vendor">场馆配置总控</span><span class="zk-tab" data-zk="game">游戏配置总控</span><span class="zk-tab on" data-zk="hot">热门游戏排序 ×</span></div>
       <div class="bk-body">
         <div class="bk-card"><div class="bk-form">
           <select class="bk-select site" id="hSite" aria-label="站点"></select>
           <select class="bk-select" id="hVenue" style="width:162px;" aria-label="场馆"></select>
           <input class="bk-input" id="hName" placeholder="游戏名称" style="width:162px;">
-          <span style="display:inline-flex;align-items:center;"><select class="bk-select" id="hPinF" style="width:130px;"><option value="">置顶</option><option value="pin">已置顶</option><option value="auto">未置顶</option></select><select class="bk-select" id="hShowF" style="width:130px;margin-left:8px;"><option value="">前台显示</option><option value="show">显示</option><option value="hide">隐藏</option><option value="none">无对应版本</option></select></span>
+          <span style="display:inline-flex;align-items:center;"><select class="bk-select" id="hPinF" style="width:130px;"><option value="">置顶</option><option value="pin">已置顶</option><option value="auto">未置顶</option></select><select class="bk-select" id="hShowF" style="width:130px;margin-left:8px;"><option value="">前台显示</option><option value="show">显示</option><option value="hide">隐藏</option><option value="none">无对应版本</option></select><span class="mk mb" data-tip="mhfil" tabindex="0">本期新增</span></span>
           <div class="bk-actions"><button class="bk-btn" id="hReset" type="button">重 置</button><button class="bk-btn primary" id="hQuery" type="button">查 询</button></div>
         </div></div>
         <div class="bk-card">
@@ -583,7 +585,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
           </div>
           <div class="sel-hint hide" id="hSelHint" role="status"></div>
           <div class="bk-table-wrap"><table class="bk-table" style="min-width:1100px;">
-            <thead><tr><th style="width:36px;"><input type="checkbox" class="chk" id="hChkAll" aria-label="全选当前查询结果"></th><th>序号</th><th>站点</th><th>场馆</th><th>游戏名称</th><th>前台显示</th><th>置顶</th></tr></thead>
+            <thead><tr><th style="width:36px;"><input type="checkbox" class="chk" id="hChkAll" aria-label="全选当前查询结果"></th><th>序号<span class="mk mb" data-tip="mhseq" tabindex="0">本期修改</span></th><th>站点</th><th>场馆</th><th>游戏名称</th><th>前台显示<span class="mk mb" data-tip="mhshow" tabindex="0">本期新增</span></th><th>置顶<span class="mk mb" data-tip="pincol" tabindex="0">本期修改</span></th></tr></thead>
             <tbody id="hBody"></tbody>
           </table></div>
           <div class="bk-foot"><label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="chk" id="hAllFoot"><span id="hAllLabel">选择全部（共 0 条）</span></label><select class="bk-select" id="hBatchSel" style="width:150px;height:28px;padding:0 8px;" aria-label="批量操作"><option value="">批量操作</option><option value="pin">批量置顶</option><option value="unpin">批量取消置顶</option></select><span class="mk" data-tip="bfoot" tabindex="0">本期新增</span><span class="muted" id="hSelText">已选择 0 条</span><div class="bk-pager"><span id="hCount">共 0 条数据</span><span class="pg">1</span><span>50 条/页</span></div></div>
@@ -937,7 +939,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
   <div class="modal-bd">
     <div class="bk-form" style="margin-bottom:12px;"><input class="bk-input" id="cName" placeholder="游戏名称"><select class="bk-select" id="cPinF" style="width:130px;"><option value="">置顶</option><option value="pin">已置顶</option><option value="auto">未置顶</option></select><select class="bk-select" id="cShowF" style="width:130px;"><option value="">前台显示</option><option value="show">显示</option><option value="hide">隐藏</option><option value="none">无对应版本</option></select><button class="bk-btn" id="cReset" type="button">重 置</button><button class="bk-btn primary" id="cQuery" type="button">查 询</button></div>
     <div class="bk-toolbar"><span class="left"><span class="hide"><button class="bk-btn primary" id="cBatchPin" type="button" disabled>批量置顶</button><button class="bk-btn" id="cBatchUnpin" type="button" disabled>批量取消置顶</button><b id="cSelCount">0</b></span><span class="hint" id="cHint"></span></span><span class="hint">顺序：场馆内置顶 → 热门值</span></div>
-    <div class="bk-table-wrap"><table class="bk-table" style="min-width:900px;"><thead><tr><th style="width:36px;"><input type="checkbox" class="chk" id="cChkAll" aria-label="全选"></th><th>序号</th><th>游戏名称</th><th>所属场馆</th><th>站点状态</th><th>前台显示</th><th>置顶</th></tr></thead><tbody id="cBody"></tbody></table></div>
+    <div class="bk-table-wrap"><table class="bk-table" style="min-width:900px;"><thead><tr><th style="width:36px;"><input type="checkbox" class="chk" id="cChkAll" aria-label="全选"></th><th>序号<span class="mk mb" data-tip="mcseq" tabindex="0">本期修改</span></th><th>游戏名称</th><th>所属场馆</th><th>站点状态</th><th>前台显示<span class="mk mb" data-tip="mhshow" tabindex="0">本期新增</span></th><th>置顶<span class="mk mb" data-tip="pincol" tabindex="0">本期修改</span></th></tr></thead><tbody id="cBody"></tbody></table></div>
     <div class="bk-foot"><label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="chk" id="cAllFoot"><span id="cAllLabel">选择全部（共 0 条）</span></label><select class="bk-select" id="cBatchSel" style="width:150px;height:28px;padding:0 8px;" aria-label="批量操作"><option value="">批量操作</option><option value="pin">批量置顶</option><option value="unpin">批量取消置顶</option></select><span class="mk" data-tip="bfoot" tabindex="0">本期新增</span><span class="muted" id="cSelText">已选择 0 条</span></div>
     <div class="muted" style="font-size:12.5px;margin-top:10px;">与该站点商户后台同一份置顶数据；隐藏的版本可置顶，前台不显示、不占位；总控停用、站点关闭的游戏不收录。</div>
   </div>
@@ -1417,16 +1419,16 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
   function renderVendor(){
     var site=VM.q?VM.site:'',sc=' class="site-col"',cols=10;
     $('vTable').style.minWidth='1500px';
-    $('vHead').innerHTML='<tr><th style="width:36px;"'+sc+'><input type="checkbox" class="chk" id="vChkAll" aria-label="全选当前查询结果"></th><th'+sc+'>序号<span class="mk" data-tip="vseqno" tabindex="0">本期修改</span></th><th>场馆名称</th><th>场馆类型</th><th class="zkc">总控状态（全部站点）<span class="mk" data-tip="stname" tabindex="0">本期修改</span></th><th'+sc+'>'+(isM()?'状态':'站点状态（本站点）')+'<span class="mk" data-tip="'+(isM()?'mstat':'sitest')+'" tabindex="0">本期'+(isM()?'修改':'新增')+'</span></th><th>排序值<span class="qm" title="数值越大越靠前（置顶的场馆排在最前）。默认是所选站点的热门游戏数量（热门前 N 名里属于该场馆的游戏数），每小时自动更新。也可以手动修改：改的是平台的值，所有站点一起生效，改过的标「手动」，点「取消手动排序」恢复自动。" style="display:inline-block;width:15px;height:15px;line-height:15px;margin-left:4px;border-radius:50%;background:#e5e7eb;color:#475569;font-size:11px;text-align:center;cursor:help;">?</span><span class="mk" data-tip="hcnt" tabindex="0">本期修改</span></th><th'+sc+'>置顶<span class="mk" data-tip="pincol" tabindex="0">本期修改</span></th><th'+sc+'>对应 MY 场馆<span class="mk" data-tip="vrel" tabindex="0">本期新增</span></th><th style="min-width:300px;" class="op-fix">操作<span class="mk" data-tip="vcmd" tabindex="0">本期新增</span></th></tr>';
+    $('vHead').innerHTML='<tr><th style="width:36px;"'+sc+'><input type="checkbox" class="chk" id="vChkAll" aria-label="全选当前查询结果"></th><th'+sc+'>序号<span class="mk" data-tip="vseqno" tabindex="0">本期修改</span></th><th>场馆名称</th><th>场馆类型</th><th class="zkc">总控状态（全部站点）<span class="mk" data-tip="stname" tabindex="0">本期修改</span></th><th'+sc+'>'+(isM()?'场馆状态':'站点状态（本站点）')+'<span class="mk" data-tip="'+(isM()?'mstat':'sitest')+'" tabindex="0">本期'+(isM()?'修改':'新增')+'</span></th><th>排序值<span class="qm" title="数值越大越靠前（置顶的场馆排在最前）。默认是所选站点的热门游戏数量（热门前 N 名里属于该场馆的游戏数），每小时自动更新。也可以手动修改：改的是平台的值，所有站点一起生效，改过的标「手动」，点「取消手动排序」恢复自动。" style="display:inline-block;width:15px;height:15px;line-height:15px;margin-left:4px;border-radius:50%;background:#e5e7eb;color:#475569;font-size:11px;text-align:center;cursor:help;">?</span><span class="mk" data-tip="hcnt" tabindex="0">本期修改</span></th><th'+sc+'>置顶<span class="mk" data-tip="pincol" tabindex="0">本期修改</span></th><th'+sc+'>对应 MY 场馆<span class="mk" data-tip="vrel" tabindex="0">本期新增</span></th><th class="mch-col">入场余额限制</th><th class="mch-col">最后操作人</th><th class="mch-col">最后操作时间</th><th style="min-width:300px;" class="op-fix">操作<span class="mk" data-tip="vcmd" tabindex="0">本期新增</span></th></tr>';
     if(!VM.q||!site){ $('vBody').innerHTML=emptyRow(cols,'请先在上方选择站点'); $('vCount').textContent='共 0 条数据'; return; }
     var s=SS[site],rows=vRows(),noFilter=!VM.name&&!VM.status&&!VM.type&&!XF.v.pin,html='',np=s.vPins.length;
     rows.forEach(function(v,i){
       var pst=PS.v[v.name],dead=pst==='停用',pin=!!v.vp;
       var st=stBtns('data-va','data-v',v.name,pst,v.status);
-      var ops=st+(!dead&&!isM()&&vMan(v.name)!=null?'<button class="bk-btn sm" data-vcancel="'+esc(v.name)+'" type="button">取消手动排序</button>':'')+(!dead?'<button class="bk-btn sm primary" data-va="csort" data-v="'+esc(v.name)+'" type="button">场馆游戏排序</button>':'');
+      var ops=(isM()?'<button class="bk-btn sm" data-mchtoast="1" type="button">编辑</button>':'')+st+(!dead&&!isM()&&vMan(v.name)!=null?'<button class="bk-btn sm" data-vcancel="'+esc(v.name)+'" type="button">取消手动排序</button>':'')+(!dead?'<button class="bk-btn sm primary" data-va="csort" data-v="'+esc(v.name)+'" type="button">场馆游戏排序</button>':'');
       var rel=VPAIR[v.name]?'<span class="bk-link">'+esc(VPAIR[v.name])+'</span> · <button class="lk" data-va="pairs" data-v="'+esc(v.name)+'" type="button">'+pairCount(s,v.name)+' 款对应游戏</button>':'-';
       html+='<tr class="'+(pin?'row-pin':'')+'"><td'+sc+'><input type="checkbox" class="chk" data-vsel="'+esc(v.name)+'"'+(VM.sel[v.name]?' checked':'')+(dead?' disabled':'')+'></td><td'+sc+'>'+(dead?'-':v.h5)+'</td>'+
-        '<td>'+esc(v.name)+'</td><td>'+v.type+'</td><td class="zkc">'+pTag(pst)+'</td><td'+sc+'>'+effTag(pst,v.status)+'</td><td>'+(dead?'-':isM()?String(v.hc):'<button class="lk" data-vman="'+esc(v.name)+'" type="button">'+v.hc+'</button>'+(vMan(v.name)!=null?' <span class="bk-tag blue">手动</span>':''))+'</td><td'+sc+'>'+pinCell('data-va',v.name,v.vp,!dead)+'</td><td'+sc+'>'+rel+'</td><td class="op-fix"><div class="bk-ops">'+ops+'</div></td></tr>';
+        '<td>'+esc(v.name)+'</td><td>'+v.type+'</td><td class="zkc">'+pTag(pst)+'</td><td'+sc+'>'+effTag(pst,v.status)+'</td><td>'+(dead?'-':isM()?String(v.hc):'<button class="lk" data-vman="'+esc(v.name)+'" type="button">'+v.hc+'</button>'+(vMan(v.name)!=null?' <span class="bk-tag blue">手动</span>':''))+'</td><td'+sc+'>'+pinCell('data-va',v.name,v.vp,!dead)+'</td><td'+sc+'>'+rel+'</td><td class="mch-col">0.00</td><td class="mch-col">'+esc(v.op||'-')+'</td><td class="mch-col">'+(v.time||'-')+'</td><td class="op-fix"><div class="bk-ops">'+ops+'</div></td></tr>';
       if(VPAIR[v.name]&&!isM()) html+=mvRow(s,VPAIR[v.name],v.name,sc);
       if(noFilter&&pin&&v.vp===np&&i<rows.length-1) html+='<tr class="bk-sep"><td colspan="'+cols+'"></td></tr>';
     });
@@ -1588,7 +1590,7 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
     $('gTable').style.minWidth='2700px';
     $('gHead').innerHTML='<tr><th style="width:36px;"'+sc+'><input type="checkbox" class="chk" id="gChkAll" aria-label="全选当前查询结果"></th><th'+sc+'>序号<span class="mk" data-tip="gseqno" tabindex="0">本期修改</span></th><th>游戏ID</th><th>游戏名称</th><th>场馆名称</th>'+
       '<th'+sc+'>对应版本<span class="mk" data-tip="grel" tabindex="0">本期新增</span></th><th'+sc+'>前台显示</th><th'+sc+' style="min-width:120px;">前台切换<span class="mk" data-tip="gsw" tabindex="0">本期新增</span></th>'+
-      '<th class="zkc">总控状态（全部站点）<span class="mk" data-tip="stname" tabindex="0">本期修改</span></th><th'+sc+'>'+(isM()?'状态':'站点状态（本站点）')+'<span class="mk" data-tip="'+(isM()?'mstat':'sitest')+'" tabindex="0">本期'+(isM()?'修改':'新增')+'</span></th>'+
+      '<th class="zkc">总控状态（全部站点）<span class="mk" data-tip="stname" tabindex="0">本期修改</span></th><th'+sc+'>'+(isM()?'游戏状态':'站点状态（本站点）')+'<span class="mk" data-tip="'+(isM()?'mstat':'sitest')+'" tabindex="0">本期'+(isM()?'修改':'新增')+'</span></th>'+
       '<th>游戏图片</th><th>创建时间</th><th>最近操作人</th><th>最近操作时间</th><th>备注</th><th class="zkc">有效注单</th><th class="zkc">前1小时有效注单</th><th class="zkc">当前小时注单量</th><th style="min-width:250px;" class="op-fix">操作<span class="mk" data-tip="'+(isM()?'mops':'gops')+'" tabindex="0">本期修改</span></th></tr>';
     if(!GM.q||!site){ $('gBody').innerHTML=emptyRow(cols,'请先在上方选择站点'); $('gCount').textContent='共 0 条数据'; updGSel(); return; }
     var s=SS[site],rows=gRows(),html='',dv={};
@@ -1827,7 +1829,7 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
     if(k){ ['vSite','gSite','hSite'].forEach(function(id){ $(id).value='888'; }); $('vQuery').click(); $('gQuery').click(); $('hQuery').click(); }
     renderAll(); }
   document.querySelectorAll('.mode-b').forEach(function(b){ b.addEventListener('click',function(){ setMode(b.getAttribute('data-mode')); }); });
-  document.querySelectorAll('[data-mchtoast]').forEach(function(b){ b.addEventListener('click',function(){ toast('对齐平台排序沿用现网'); }); });
+  document.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('[data-mchtoast]'); if(b) toast('「'+b.textContent.trim()+'」沿用现网'); });
   [$('vSite').parentNode,$('gSite').parentNode,$('hSite'),$('vStatus'),$('gBulkBet')].forEach(function(e){ if(e) e.classList.add('zk-only'); });
   (function(){ var gp=$('gPstF'); if(gp) (gp.parentNode.tagName==='SPAN'?gp.parentNode:gp).classList.add('zk-only'); })();
   resetAll(); renderAll();
@@ -1889,12 +1891,19 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
  'fpair': ['同款游戏只显示一款', '原：原厂版和 MY 版同时出现。\n现：只显示选定的那个版本。'],
  'fstop': ['总控停用', '原：总控停用的游戏、场馆还会出现在站点的排序列表里。\n现：所有站点前台和排序列表都不显示，相关置顶自动取消。'],
  'mchview': ['商户后台', '原：商户后台和总控页面结构不同。\n现：三个菜单和总控同一结构；商户只管本站点，看不到总控状态，不能改平台的排序值和有效注单。'],
- 'mops': ['维护 / 开启 / 关闭', '原：任何时候都能点。\n现：只改本站点；平台停用或维护时按钮换成灰色「平台已停用」「平台维护中」，不能改，悬停说明由平台控制。'],
- 'mstat': ['状态', '原：只显示本站点的开启 / 维护 / 关闭，平台停用时看不出来。\n现：平台停用或维护时显示灰色「关闭（平台停用）」「维护（平台维护）」，悬停看本站点原来的状态；平台恢复后自动回到原来的状态。'],
+ 'mops': ['维护 / 开启 / 关闭', '原：平台停用（禁用）的只剩「编辑」，没有说明。\n现：平台停用或维护时按钮换成灰色「平台已停用」「平台维护中」，不能改，悬停说明由平台控制；其余只改本站点。'],
+ 'mstat': ['场馆状态 / 游戏状态', '原：显示本站点的开启 / 维护 / 关闭；平台停用的显示「禁用」，没有说明。\n现：平台停用显示灰色「关闭（平台停用）」，平台维护显示「维护（平台维护）」，悬停看本站点原来的状态；平台恢复后自动回到原来的状态。'],
 };
 var TIPSM={
+ 'mstat': ['场馆状态 / 游戏状态', '原：显示本站点的开启 / 维护 / 关闭；平台停用的显示「禁用」，没有说明。\n现：平台停用显示灰色「关闭（平台停用）」，平台维护显示「维护（平台维护）」，悬停看本站点原来的状态；平台恢复后自动回到原来的状态。'],
+ 'mops': ['维护 / 开启 / 关闭', '原：平台停用（禁用）的只剩「编辑」，没有说明。\n现：平台停用或维护时按钮换成灰色「平台已停用」「平台维护中」，不能改，悬停说明由平台控制；其余只改本站点。'],
+ 'mhshow': ['前台显示', '原：无。\n现：有对应版本的游戏，前台显示的版本标「显示」，另一个标「隐藏」。'],
+ 'mhseq': ['序号', '原：按当前筛选结果从 1 编号。\n现：该游戏在热门列表中的位置，筛选时不变。'],
+ 'mhscope': ['收录范围', '原：已关闭的游戏也在列表里，显示「已关闭」。\n现：站点关闭的游戏不在列表里、不占名次，后面的游戏依次补上。'],
+ 'mhfil': ['搜索 · 前台显示', '原：无。\n现：可以筛显示 / 隐藏 / 没有对应版本的游戏。'],
+ 'mcseq': ['序号', '原：列表行号。\n现：该游戏在这个场馆里的位置，筛选时不变。'],
  'bfoot': ['底部批量操作', '原：批量按钮在工具栏。\n现：勾选后在列表底部「批量操作」里选；「选择全部」可以跨页全选。'],
- 'gseqno': ['序号', '原：列表行号。\n现：本站点的热门排名，筛选时不变。'],
+ 'gseqno': ['序号', '原：「序号」是列表行号，另有一列「热门排名」。\n现：合成一列「序号」，显示本站点的热门排名，筛选时不变。'],
  'hcnt': ['排序值', '原：列名「排序(热门游戏数量)」。\n现：改名「排序值」，只读；平台手动改过的，显示平台改的值。'],
  'pincol': ['置顶', '原：「排序类型」「置顶位置」「是否置顶」三列。\n现：合成一列「置顶」。未置顶的点「置顶」；已置顶的显示「第 N 位」（点数字可改位置）和「取消」。'],
  'vbatch': ['批量置顶 / 取消置顶', '原：工具栏上的两个按钮。\n现：移到列表底部「批量操作」里。'],
