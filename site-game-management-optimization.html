@@ -455,8 +455,8 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
 .ico-btns{display:inline-flex;gap:10px;margin-left:8px;color:#595959;font-size:14px;}
 .ico-btns span{cursor:pointer;}
 .img-ph{display:inline-block;width:34px;height:34px;border-radius:4px;background:#f0f0f0;color:#bfbfbf;font-size:11px;line-height:34px;}
-.bk-table td.site-col{background:#f0f7ff;}
-.bk-table th.site-col{background:#e1efff !important;}
+
+
 .zk-tab[data-zk]{cursor:pointer;}
 .zk-tab[data-zk]:not(.on):hover{color:#1677ff;background:#f0f6ff;}
 .bk-foot{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-top:12px;font-size:13px;}
@@ -491,7 +491,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
 <!-- ================= 交互原型 ================= -->
 <section class="dh-primary-panel active" data-primary-panel="proto" id="protoSec">
   <div class="proto-intro">
-    <div class="grow">四个子页共用同一份数据：<b>平台状态（维护 / 启用 / 停用）全站共用</b>，置顶、显示版本、站点状态<b>每个站点各一份</b>。两个总控页进入为空数据，选站点并查询后显示该站点数据，本期新增的列为浅蓝底。游戏名称、场馆、热门值取自测试环境，其余为示例。</div>
+    <div class="grow">四个子页共用同一份数据：<b>平台状态（维护 / 启用 / 停用）全站共用</b>，置顶、显示版本、站点状态<b>每个站点各一份</b>。两个总控页进入为空数据，选站点并查询后显示该站点数据。游戏名称、场馆、热门值取自测试环境，其余为示例。</div>
     <label class="doc-check" for="markToggle"><input type="checkbox" id="markToggle" checked> 显示本期改动标注</label>
     <button class="doc-btn" id="resetDemo" type="button">重置演示数据</button>
   </div>
@@ -533,7 +533,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         </div>
       </div>
     </div>
-    <div class="proto-tip">顶部标签可直接点击切换页面，切过去自动带出同一站点。进入页面不加载数据，选站点后显示该站点的场馆；现网列保留，浅蓝底为本期新增的按站点列。维护 / 启用 / 停用点开后在确认框里选「只改本站点」或「全部站点」，不默认。「编辑排序数值」「取消手动排序」沿用现网（平台级，对全部站点生效）。刷新 / 密度 / 列设置沿用现网。</div>
+    <div class="proto-tip">顶部标签可直接点击切换页面，切过去自动带出同一站点。进入页面不加载数据，选站点后显示该站点的场馆；现网列保留，本期新增的列见表头角标。维护 / 启用 / 停用点开后在确认框里选「只改本站点」或「全部站点」，不默认。「编辑排序数值」「取消手动排序」沿用现网（平台级，对全部站点生效）。刷新 / 密度 / 列设置沿用现网。</div>
   </div>
 
   <!-- ===== 总控 · 游戏管理 ===== -->
@@ -567,7 +567,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         </div>
       </div>
     </div>
-    <div class="proto-tip">进入页面不加载数据，选站点并查询后按该站点热门排名列出游戏；现网列保留，浅蓝底为本期新增的按站点列。维护 / 启用 / 停用点开后在确认框里选「只改本站点」或「全部站点」，不默认；全部站点停用当下对所有站点生效（前台与排序列表不显示，置顶取消）。操作列「排序」沿用现网（平台级，按前后游戏调整有效注单默认值，对全部站点生效）。游戏图片为占位；有效注单为热门值来源，点数值直接修改默认值（本期修改，原为悬停 ✎ 后修改）、表头可点击排序（平台级），前1小时、当前小时数值为示例；批量修改有效注单沿用现网。</div>
+    <div class="proto-tip">进入页面不加载数据，选站点并查询后按该站点热门排名列出游戏；现网列保留，本期新增的列见表头角标。维护 / 启用 / 停用点开后在确认框里选「只改本站点」或「全部站点」，不默认；全部站点停用当下对所有站点生效（前台与排序列表不显示，置顶取消）。操作列「排序」沿用现网（平台级，按前后游戏调整有效注单默认值，对全部站点生效）。游戏图片为占位；有效注单为热门值来源，点数值直接修改默认值（本期修改，原为悬停 ✎ 后修改）、表头可点击排序（平台级），前1小时、当前小时数值为示例；批量修改有效注单沿用现网。</div>
   </div>
 
   <!-- ===== 总控 · 热门游戏排序 ===== -->
