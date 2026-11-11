@@ -439,7 +439,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
 </style></head><body>
 <header class="dh-header"><div class="dh-header-inner">
   <h1>总控站点游戏管理调整优化（站点选择、置顶、原厂 / MY 切换）</h1>
-  <div class="dh-meta"><span>模块：<b>总控 · 站点场馆管理（总控厂商管理、总控游戏管理、热门游戏排序）· 前台站点</b></span><span>产品经理：<b>Zuno</b></span><span>更新日期：<b>2026-11-11</b></span></div>
+  <div class="dh-meta"><span>模块：<b>总控 · 站点游戏管理（总控厂商管理、总控游戏管理、热门游戏排序）· 前台站点</b></span><span>产品经理：<b>Zuno</b></span><span>更新日期：<b>2026-11-11</b></span></div>
 </div></header>
 <nav class="dh-navbar" id="dhNavbar"><div class="dh-navbar-inner dh-primary" id="dhPrimary">
   <button class="dh-primary-btn active" data-primary="proto" type="button">交互原型 <small>选站点后置顶、原厂 / MY 切换，总控停用，前台同步</small></button>
@@ -500,7 +500,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
   <!-- ===== 总控 · 厂商管理 ===== -->
   <div class="bk-page active" data-page-panel="vendor">
     <div class="proto-window">
-      <div class="bk-top"><span class="bk-crumb">站点场馆管理 / <b>厂商管理</b><span class="mk zk-only" data-tip="zkname" tabindex="0">本期修改</span></span><span class="sp"></span></div>
+      <div class="bk-top"><span class="bk-crumb">站点游戏管理 / <b>厂商管理</b><span class="mk zk-only" data-tip="zkname" tabindex="0">本期修改</span></span><span class="sp"></span></div>
       <div class="zk-tabs"><span class="zk-tab on" data-zk="vendor">厂商管理 ×</span><span class="zk-tab" data-zk="game">游戏管理</span><span class="zk-tab" data-zk="hot">热门游戏排序</span></div>
       <div class="bk-body">
         <div class="bk-card"><div class="bk-form">
@@ -533,7 +533,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
   <!-- ===== 总控 · 游戏管理 ===== -->
   <div class="bk-page" data-page-panel="game">
     <div class="proto-window">
-      <div class="bk-top"><span class="bk-crumb">站点场馆管理 / <b>游戏管理</b><span class="mk zk-only" data-tip="zkname" tabindex="0">本期修改</span></span><span class="sp"></span></div>
+      <div class="bk-top"><span class="bk-crumb">站点游戏管理 / <b>游戏管理</b><span class="mk zk-only" data-tip="zkname" tabindex="0">本期修改</span></span><span class="sp"></span></div>
       <div class="zk-tabs"><span class="zk-tab" data-zk="vendor">厂商管理</span><span class="zk-tab on" data-zk="game">游戏管理 ×</span><span class="zk-tab" data-zk="hot">热门游戏排序</span></div>
       <div class="bk-body">
         <div class="bk-card"><div class="bk-form">
@@ -567,7 +567,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
   <!-- ===== 总控 · 热门游戏排序 ===== -->
   <div class="bk-page" data-page-panel="hot">
     <div class="proto-window">
-      <div class="bk-top"><span class="bk-crumb">站点场馆管理 / <b>热门游戏排序</b><span class="mk mb" data-tip="mhscope" tabindex="0">本期修改</span><span class="mk" data-tip="hpage" tabindex="0">本期新增</span></span><span class="sp"></span></div>
+      <div class="bk-top"><span class="bk-crumb">站点游戏管理 / <b>热门游戏排序</b><span class="mk mb" data-tip="mhscope" tabindex="0">本期修改</span><span class="mk" data-tip="hpage" tabindex="0">本期新增</span></span><span class="sp"></span></div>
       <div class="zk-tabs"><span class="zk-tab" data-zk="vendor">厂商管理</span><span class="zk-tab" data-zk="game">游戏管理</span><span class="zk-tab on" data-zk="hot">热门游戏排序 ×</span></div>
       <div class="bk-body">
         <div class="bk-card"><div class="bk-form">
@@ -749,7 +749,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
       </div></div></div></div>
     <div class="req-block"><h2>现网功能处置与新增</h2>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>区域</th><th>功能</th><th>处置</th><th>规则</th></tr></thead><tbody>
-        <tr><td>菜单</td><td>站点场馆管理 → 场馆配置总控</td><td>修改</td><td>菜单名改为「厂商管理」，和商户后台一致</td></tr>
+        <tr><td>菜单</td><td>站点场馆管理 → 场馆配置总控</td><td>修改</td><td>菜单名改为「厂商管理」，和商户后台一致；一级菜单改为「站点游戏管理」</td></tr>
         <tr><td>搜索区</td><td>场馆名称、总控状态（维护 / 启用 / 停用）、场馆类型、重置 / 查询</td><td>保留</td><td>—</td></tr>
         <tr><td>搜索区</td><td>站点<span class="tag-new" data-tip="site" tabindex="0">本期新增</span></td><td>新增</td><td>单选下拉，必选，默认空；进入页面不加载数据；未选站点点查询提示「请选择站点」；重置清空场馆条件，站点保持</td></tr>
         <tr><td>搜索区</td><td>置顶（筛选）<span class="tag-new" data-tip="vfil" tabindex="0">本期新增</span></td><td>新增</td><td>单选下拉，可清空：置顶 / 自动排序；只显示该站点已置顶 / 未置顶的场馆（总控停用的不显示）；不影响置顶位置计算</td></tr>
@@ -791,7 +791,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
       </div></div></div></div>
     <div class="req-block"><h2>现网功能处置与新增</h2>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>区域</th><th>功能</th><th>处置</th><th>规则</th></tr></thead><tbody>
-        <tr><td>菜单</td><td>站点场馆管理 → 游戏配置总控</td><td>修改</td><td>菜单名改为「游戏管理」，和商户后台一致</td></tr>
+        <tr><td>菜单</td><td>站点场馆管理 → 游戏配置总控</td><td>修改</td><td>菜单名改为「游戏管理」，和商户后台一致；一级菜单改为「站点游戏管理」</td></tr>
         <tr><td>搜索区</td><td>游戏ID、游戏名称、场馆名称、重置 / 查询</td><td>保留</td><td>—</td></tr>
         <tr><td>搜索区</td><td>站点<span class="tag-new" data-tip="site" tabindex="0">本期新增</span></td><td>新增</td><td>同总控厂商管理：必选，进入页面不加载数据</td></tr>
         <tr><td>搜索区</td><td>前台显示<span class="tag-new" data-tip="gshow" tabindex="0">本期新增</span></td><td>新增</td><td>显示 / 隐藏 / 无对应版本</td></tr>
@@ -815,7 +815,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
 
   <!-- ===== 3 热门游戏排序 ===== -->
   <div class="dh-panel" data-panel="hot">
-    <div class="dh-callout">新增菜单，位于「站点场馆管理」下、总控游戏管理之后。照商户后台「热门游戏排序」页做：搜索区以「站点」代替地区、商户号，新增「前台显示」列；与该站点商户后台同一份置顶数据、同一套规则。</div>
+    <div class="dh-callout">新增菜单，位于「站点游戏管理」下、总控游戏管理之后。照商户后台「热门游戏排序」页做：搜索区以「站点」代替地区、商户号，新增「前台显示」列；与该站点商户后台同一份置顶数据、同一套规则。</div>
     <button type="button" class="proto-jump" data-goto="hot">在交互原型中查看「热门游戏排序」 →</button>
     <div class="req-block"><h2>字段说明</h2>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>字段</th><th>说明</th></tr></thead><tbody>
@@ -880,7 +880,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
       </tbody></table></div></div>
     <div class="req-block"><h2>用户与场景</h2>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>角色</th><th>场景</th></tr></thead><tbody>
-        <tr><td><b>总控运营</b></td><td>需「站点场馆管理」下对应菜单权限（热门游戏排序为新菜单，需单独分配）。停用异常游戏，所有站点立即不显示；替某站点主推场馆或游戏；某站点 MY 版异常时整场馆切回原厂</td></tr>
+        <tr><td><b>总控运营</b></td><td>需「站点游戏管理」下对应菜单权限（热门游戏排序为新菜单，需单独分配）。停用异常游戏，所有站点立即不显示；替某站点主推场馆或游戏；某站点 MY 版异常时整场馆切回原厂</td></tr>
         <tr><td><b>商户运营</b></td><td>沿用现有权限。沿用置顶排序；看到总控对本站点做的置顶</td></tr>
       </tbody></table></div></div>
     <div class="req-block"><h2>功能点清单</h2>
@@ -1784,7 +1784,7 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
     ['A35','后台保存任一调整后，查看该站点前台','按现网缓存更新后，按新顺序 / 新版本展示'],
     ['A36','回归商户后台厂商管理、热门游戏排序、场馆游戏排序、游戏管理','与已开发版本一致，没有原厂 / MY 切换'],
     ['A37','试玩模式进入前台','顺序与显示版本与正式模式一致'],
-    ['A38','没有菜单权限的总控账号','不显示「站点场馆管理」下对应菜单；热门游戏排序需单独分配权限'],
+    ['A38','没有菜单权限的总控账号','不显示「站点游戏管理」下对应菜单；热门游戏排序需单独分配权限'],
     ['A39','总控厂商管理点 PG电子「对应 MY 场馆」中的「N 款对应游戏」','弹出「原厂 / MY 对应游戏 - PG电子 / MyPG电子（站点 A）」，列出该站点该场馆对的全部对应游戏及两个版本的总控状态、站点状态、前台显示；顶部合计正确；目标版本已被总控停用的行按钮写「原厂已停用」/「MY 已停用」并置灰'],
     ['A40','对应游戏弹窗内点「改为原厂」/「改为 MY」','不弹确认框，直接切换，提示含「只影响本站点」；该行前台显示互换；弹窗合计、总控游戏管理、站点 A 前台同步；站点 B 不变'],
     ['A41','总控游戏管理查看游戏对的「对应版本」列','显示对方游戏「场馆名称 · 游戏名称（游戏ID）」'],
@@ -1830,7 +1830,7 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
   function setMode(m){ window.MODE=m; var k=m==='mch'?1:0; document.body.classList.toggle('mch',!!k);
     document.querySelectorAll('.mode-b').forEach(function(b){ b.classList.toggle('on',b.getAttribute('data-mode')===m); });
     ['vendor','game','hot'].forEach(function(p){ var sb=document.querySelector('.sub-btn[data-page="'+p+'"]'); if(sb&&sb.firstChild) sb.firstChild.nodeValue=(k?'商户 · ':'总控 · ')+MNAMES[p][k];
-      var cr=document.querySelector('[data-page-panel="'+p+'"] .bk-crumb'); if(cr){ cr.firstChild.nodeValue=(k?'商户游戏管理 / ':'站点场馆管理 / '); var bb=cr.querySelector('b'); if(bb) bb.textContent=MNAMES[p][k]; } });
+      var cr=document.querySelector('[data-page-panel="'+p+'"] .bk-crumb'); if(cr){ cr.firstChild.nodeValue=(k?'商户游戏管理 / ':'站点游戏管理 / '); var bb=cr.querySelector('b'); if(bb) bb.textContent=MNAMES[p][k]; } });
     document.querySelectorAll('.zk-tab').forEach(function(t){ var p=t.getAttribute('data-zk'); if(MNAMES[p]) t.textContent=MNAMES[p][k]+(t.classList.contains('on')?' ×':''); });
     document.querySelectorAll('option').forEach(function(o){ var t=o.textContent; if(k){ if(t==='批量启用') o.textContent='批量开启'; else if(t==='批量停用') o.textContent='批量关闭'; } else { if(t==='批量开启') o.textContent='批量启用'; else if(t==='批量关闭') o.textContent='批量停用'; } });
     if(k){ ['vSite','gSite','hSite'].forEach(function(id){ $(id).value='888'; }); $('vQuery').click(); $('gQuery').click(); $('hQuery').click(); }
@@ -1900,7 +1900,7 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
  'mchview': ['商户后台', '原：商户后台和总控页面结构不同。\n现：三个菜单和总控同一结构；商户只管本站点，看不到总控状态，不能改平台的排序值和有效注单。'],
  'mops': ['维护 / 开启 / 关闭', '原：平台停用（禁用）的只剩「编辑」，没有说明。\n现：平台停用或维护时按钮换成灰色「平台已停用」「平台维护中」，不能改，悬停说明由平台控制；其余只改本站点。'],
  'mstat': ['场馆状态 / 游戏状态', '原：显示本站点的开启 / 维护 / 关闭；平台停用的显示「禁用」，没有说明。\n现：平台停用显示灰色「关闭（平台停用）」，平台维护显示「维护（平台维护）」，悬停看本站点原来的状态；平台恢复后自动回到原来的状态。'],
- 'zkname': ['菜单名', '原：「场馆配置总控」「游戏配置总控」。\n现：改名「厂商管理」「游戏管理」，和商户后台一致；一级菜单「站点场馆管理」不变。'],
+ 'zkname': ['菜单名', '原：「站点场馆管理」下的「场馆配置总控」「游戏配置总控」。\n现：改名「厂商管理」「游戏管理」，和商户后台一致；一级菜单「站点场馆管理」改名「站点游戏管理」，和商户「商户游戏管理」对应。'],
 };
 var TIPSM={
  'mstat': ['场馆状态 / 游戏状态', '原：显示本站点的开启 / 维护 / 关闭；平台停用的显示「禁用」，没有说明。\n现：平台停用显示灰色「关闭（平台停用）」，平台维护显示「维护（平台维护）」，悬停看本站点原来的状态；平台恢复后自动回到原来的状态。'],
