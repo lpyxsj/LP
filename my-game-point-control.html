@@ -347,6 +347,12 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
 .rtp-add{margin-top:10px;}
 .rtp-table td{vertical-align:top;}
 .rtp-table .bk-input{width:150px;}
+#protView td:first-child{width:160px;color:var(--text-secondary);}
+#protView td{text-align:left;white-space:normal;}
+.prot-wins{width:100%;border-collapse:collapse;font-size:13px;}
+.prot-wins th,.prot-wins td{padding:6px 4px;text-align:left;vertical-align:top;font-weight:500;}
+.prot-wins .bk-input{width:120px;}
+.prot-wins .bk-select{width:120px;}
 .rtp-log td.l{text-align:left;white-space:normal;line-height:1.7;}
 </style></head><body>
 <header class="dh-header"><div class="dh-header-inner">
@@ -363,7 +369,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
 <!-- ================= 交互原型 ================= -->
 <section class="dh-primary-panel active" data-primary-panel="proto" id="protoSec">
   <div class="proto-intro">
-    <div class="grow">在「商户游戏管理」下新增菜单，页面分「点控记录」「点控策略」「返奖率设置」三个页签。点控记录默认只看执行中的点控，点「+ 新增点控」对指定会员一次性下发送分 / 杀分；点控策略默认只看生效中的策略，点「+ 新增策略」按新注册会员、会员层级、VIP 等级或代理常驻生效；返奖率设置按会员层级设置 MY 系列游戏的返奖率，点「+ 新增」选择会员层级添加，没有添加的层级不控制，「启用 / 关闭」控制是否生效。数据为示例，操作只影响本页；演示规则：以 9 开头的会员ID视为不存在，以 8 开头的视为试玩会员，以 7 开头的视为下发超时，以 6 开头的视为没有游戏账号；下发与策略首批生成约 3 秒演示完成；策略发布后只插入 3 条示意记录；返奖率设置示例为层级返奖率已启用，已添加 4 个会员层级。</div>
+    <div class="grow">在「商户游戏管理」下新增菜单，页面分「点控记录」「点控策略」「返奖率设置」三个页签。点控记录默认只看执行中的点控，点「+ 新增点控」对指定会员一次性下发送分 / 杀分；点控策略默认只看生效中的策略，点「+ 新增策略」按新注册会员、会员层级、VIP 等级或代理常驻生效；返奖率设置按会员层级设置 MY 系列游戏的返奖率，点「+ 新增」选择会员层级添加，没有添加的层级不控制，「启用 / 关闭」控制是否生效；下方「新手保护」可对所选会员层级设置保护期返奖率。数据为示例，操作只影响本页；演示规则：以 9 开头的会员ID视为不存在，以 8 开头的视为试玩会员，以 7 开头的视为下发超时，以 6 开头的视为没有游戏账号；下发与策略首批生成约 3 秒演示完成；策略发布后只插入 3 条示意记录；返奖率设置示例为层级返奖率已启用，已添加 4 个会员层级；新手保护已设置（按时间）、未启用。</div>
     <label class="doc-check" for="markToggle"><input type="checkbox" id="markToggle" checked> 显示本期新增标注</label>
     <button class="doc-btn" id="resetDemo" type="button">重置演示数据</button>
   </div>
@@ -470,6 +476,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
             <li>点「+ 新增」选择会员层级并设置返奖率；只对已添加的会员层级生效，没有添加的层级不控制，按游戏默认返奖率。</li>
             <li>未启用时，全部会员按游戏默认返奖率。启用、关闭、新增、修改、删除确定后立即生效。</li>
             <li>和点控不同：点控是对指定会员送分 / 杀分，达成目标就结束；返奖率长期生效，直到再次修改或关闭。</li>
+            <li>新手保护：对所选会员层级的会员，在保护期内按单独设置的返奖率；保护期可以按时间，也可以按首充后的盈利目标。</li>
           </ul>
         </div>
         <div class="bk-toolbar" style="margin:12px 0 0;">
@@ -484,6 +491,11 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
           <tbody id="rtpBody"></tbody>
         </table></div>
         <div class="rtp-empty hide" id="rtpEmpty">暂未添加会员层级。点「+ 新增」选择会员层级并设置返奖率；没有添加的层级不控制，按游戏默认返奖率。</div>
+      </div>
+      <div class="bk-card">
+        <div class="rtp-hd"><h3>新手保护</h3><span id="protTag"></span><span class="sp"></span><button class="bk-btn" type="button" id="btnProtToggle"></button><button class="bk-btn primary" type="button" id="btnProtEdit"></button></div>
+        <div class="bk-table-wrap"><table class="bk-table" id="protView"><tbody id="protBody"></tbody></table></div>
+        <div class="rtp-empty hide" id="protEmpty">暂未设置新手保护。点「设置」选择保护层级、保护方式和返奖率。</div>
       </div>
       </div>
     </div>
@@ -511,13 +523,13 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
           <ol>
             <li>商户后台无法对单个会员做输赢控制。</li>
             <li>MY 游戏提供会员点控能力：对指定会员下发送分或杀分任务，会员在 MY 系列游戏中按所选剧本输赢，累计到目标金额后点控自动结束。</li>
-            <li>MY 游戏还提供返奖率配置能力：可按会员层级设置返奖率，只支持 94% ~ 97% 七档；商户后台目前没有入口。</li>
+            <li>MY 游戏还提供返奖率配置能力：可按会员层级设置返奖率，并可对新会员所在层级设置新手保护，返奖率只支持 94% ~ 97% 七档；商户后台目前没有入口。</li>
           </ol>
           <p><strong>目标</strong></p>
           <ol>
             <li>在「商户游戏管理」下新增菜单「MY游戏点控管理」，运营可查看点控记录、对指定会员手动新增点控（一次性）、终止点控。</li>
             <li>支持点控策略：按新注册会员、会员层级、VIP 等级或代理设置常驻策略，当前和之后符合条件的会员自动生成点控，每个会员在一条策略下只点控一次。</li>
-            <li>支持返奖率设置：按会员层级设置 MY 系列游戏的返奖率，长期生效，只对自己添加的会员层级生效，可随时启用、关闭和调整，并保留修改记录。</li>
+            <li>支持返奖率设置：按会员层级设置 MY 系列游戏的返奖率，长期生效，只对自己添加的会员层级生效，可随时启用、关闭和调整，并保留修改记录；支持新手保护：对所选会员层级的会员，在保护期内按单独的返奖率。</li>
             <li>点控与返奖率对 MY 系列全部厂商统一生效，不区分厂商与游戏。</li>
           </ol>
         </div>
@@ -558,6 +570,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
             <tr><td><b>唯一性与覆盖</b></td><td>同一会员同一时间只有 1 条执行中的点控。后生成的点控直接覆盖之前执行中的点控（原点控结束原因「新点控覆盖」），不区分手动新增或策略生成</td></tr>
             <tr><td><b>返奖率</b></td><td>会员在 MY 系列游戏中长期的返还比例，数值越高会员越容易赢。只能选 94%、94.5%、95%、95.5%、96%、96.5%、97% 七档</td></tr>
             <tr><td><b>层级返奖率</b></td><td>按会员所在的会员层级生效；自己选择会员层级添加并设置返奖率，没有添加的层级不控制，按游戏默认返奖率</td></tr>
+            <tr><td><b>新手保护</b></td><td>对所选的一个会员层级，在保护期内按单独设置的返奖率。保护期按时间（保护指定时长），或按盈利（按会员首充金额对应的档位确定盈利目标）</td></tr>
             <tr><td><b>点控与返奖率的区别</b></td><td>点控针对指定会员，送分 / 杀分达成目标金额即结束；返奖率针对会员层级，长期生效，直到修改或关闭</td></tr>
           </tbody>
         </table></div>
@@ -684,7 +697,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
             <tr><td><b>时区</b></td><td>所有时间按后台时区展示</td></tr>
             <tr><td><b>页签</b></td><td>进入页面默认「点控记录」；切换页签保留各自的筛选条件；没有返奖率设置查看权限的账号不显示「返奖率设置」页签</td></tr><tr><td><b>固定列</b></td><td>列表较宽需要横向滚动时，两个页签的「操作」列固定在右侧，点控策略的「策略名称」列固定在左侧</td></tr><tr><td><b>空状态</b></td><td>点控记录：状态为执行中且无数据时显示「暂无执行中的点控记录。如需查看历史，请把「状态」改为「全部」后查询。」，其他情况「暂无符合条件的点控记录，请调整筛选条件后查询。」；点控策略：默认条件下无数据时显示「暂无生效中的策略，可点「+ 新增策略」创建；如需查看已停用的策略，请把「状态」改为「全部」后查询。」，其他情况「暂无符合条件的策略，请调整筛选条件后查询。」</td></tr>
             <tr><td><b>权限</b></td><td>菜单查看、新增点控、终止、新增策略、编辑策略、停用策略纳入现有角色权限体系，按菜单与功能分配；「返奖率设置」单独设「查看」「修改」两个权限点</td></tr>
-            <tr><td><b>操作日志</b></td><td>新增点控、终止、批量终止、新增策略、编辑策略、停用策略、返奖率的启用 / 关闭 / 新增 / 修改 / 删除均写入现有后台操作日志</td></tr>
+            <tr><td><b>操作日志</b></td><td>新增点控、终止、批量终止、新增策略、编辑策略、停用策略、返奖率与新手保护的启用 / 关闭 / 新增 / 修改 / 删除均写入现有后台操作日志</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -1000,17 +1013,18 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
           <div class="mm-b"><div class="mm-node">页面说明</div><div class="mm-leaves"><span class="mm-leaf">返奖率含义</span><span class="mm-leaf">只控制已添加的层级</span><span class="mm-leaf">与点控的区别</span></div></div>
           <div class="mm-b"><div class="mm-node">层级返奖率</div><div class="mm-leaves"><span class="mm-leaf">启用状态</span><span class="mm-leaf">启用 / 关闭</span><span class="mm-leaf">+ 新增</span><span class="mm-leaf">会员层级</span><span class="mm-leaf">会员数</span><span class="mm-leaf">返奖率</span><span class="mm-leaf">修改</span><span class="mm-leaf">删除</span></div></div>
           <div class="mm-b"><div class="mm-node">新增 / 修改弹窗</div><div class="mm-leaves"><span class="mm-leaf">会员层级（多选）</span><span class="mm-leaf">返奖率（七档）</span><span class="mm-leaf">二次确认</span></div></div>
-          <div class="mm-b"><div class="mm-node">修改记录</div><div class="mm-leaves"><span class="mm-leaf">操作时间</span><span class="mm-leaf">操作人</span><span class="mm-leaf">操作</span><span class="mm-leaf">修改内容</span></div></div>
+          <div class="mm-b"><div class="mm-node">新手保护</div><div class="mm-leaves"><span class="mm-leaf">启用状态</span><span class="mm-leaf">启用 / 关闭</span><span class="mm-leaf">设置 / 修改</span><span class="mm-leaf">保护层级</span><span class="mm-leaf">保护方式</span><span class="mm-leaf">保护时长</span><span class="mm-leaf">首充盈利档位</span><span class="mm-leaf">保护期返奖率</span></div></div>
+          <div class="mm-b"><div class="mm-node">修改记录</div><div class="mm-leaves"><span class="mm-leaf">操作时间</span><span class="mm-leaf">操作人</span><span class="mm-leaf">设置项</span><span class="mm-leaf">操作</span><span class="mm-leaf">修改内容</span></div></div>
         </div>
       </div><div class="cap">功能结构图：返奖率设置页签的组成</div></div></div>
 
       <div class="req-block">
         <h2>页面结构与说明</h2>
-        <div class="dh-callout">页面结构：页面说明 → 层级返奖率列表；右上角「修改记录」按钮，旁边显示「最后修改：{操作人} {时间}」。</div>
+        <div class="dh-callout">页面结构：页面说明 → 层级返奖率列表 → 新手保护；右上角「修改记录」按钮，旁边显示「最后修改：{操作人} {时间}」。</div>
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>位置</th><th>提示内容</th></tr></thead>
           <tbody>
-            <tr><td><b>页面顶部（常驻，蓝色说明框，标题「返奖率设置说明」）</b></td><td>1. 返奖率是会员在 MY 系列游戏中长期的返还比例：数值越高，会员越容易赢；只能选 94% ~ 97%。<br>2. 点「+ 新增」选择会员层级并设置返奖率；只对已添加的会员层级生效，没有添加的层级不控制，按游戏默认返奖率。<br>3. 未启用时，全部会员按游戏默认返奖率。启用、关闭、新增、修改、删除确定后立即生效。<br>4. 和点控不同：点控是对指定会员送分 / 杀分，达成目标就结束；返奖率长期生效，直到再次修改或关闭。</td></tr>
+            <tr><td><b>页面顶部（常驻，蓝色说明框，标题「返奖率设置说明」）</b></td><td>1. 返奖率是会员在 MY 系列游戏中长期的返还比例：数值越高，会员越容易赢；只能选 94% ~ 97%。<br>2. 点「+ 新增」选择会员层级并设置返奖率；只对已添加的会员层级生效，没有添加的层级不控制，按游戏默认返奖率。<br>3. 未启用时，全部会员按游戏默认返奖率。启用、关闭、新增、修改、删除确定后立即生效。<br>4. 和点控不同：点控是对指定会员送分 / 杀分，达成目标就结束；返奖率长期生效，直到再次修改或关闭。<br>5. 新手保护：对所选会员层级的会员，在保护期内按单独设置的返奖率；保护期可以按时间，也可以按首充后的盈利目标。</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -1044,12 +1058,93 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
       </div>
 
       <div class="req-block">
+        <h2>新手保护 · 展示</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
+          <tbody>
+            <tr><td><b>启用状态</b></td><td>标题右侧标签：已启用 / 未启用</td><td>未启用</td><td>已启用绿色标签，未启用灰色标签</td></tr>
+            <tr><td><b>启用 / 关闭</b></td><td>按钮，未启用时显示「启用」，已启用时显示「关闭」</td><td>—</td><td>点击后二次确认，确认后立即生效；还没有设置时不能启用</td></tr>
+            <tr><td><b>设置 / 修改</b></td><td>按钮，还没有设置时显示「设置」，已设置后显示「修改」</td><td>—</td><td>打开「设置新手保护」弹窗</td></tr>
+            <tr><td><b>当前设置</b></td><td>只读展示：保护层级、保护方式、保护时长（按时间时）、首充盈利档位（按盈利时）、保护期返奖率</td><td>—</td><td>还没有设置时显示「暂未设置新手保护。点「设置」选择保护层级、保护方式和返奖率。」</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
+        <h2>设置新手保护（弹窗）</h2>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>字段</th><th>说明</th><th>默认值</th><th>配置效果</th></tr></thead>
+          <tbody>
+            <tr><td><b>保护层级 *</b></td><td>下拉单选，选项为系统已配置的会员层级</td><td>不选，显示「请选择」</td><td>只保护这个会员层级的会员</td></tr>
+            <tr><td><b>保护方式 *</b></td><td>单选：按时间 / 按盈利</td><td>按时间</td><td>切换后下方显示对应的设置项：按时间显示「保护时长」，按盈利显示「首充盈利档位」</td></tr>
+            <tr><td><b>保护时长 *</b></td><td>按时间时显示。数字输入框 + 单位下拉（分钟 / 小时 / 天）</td><td>空，单位默认「小时」</td><td>正整数</td></tr>
+            <tr><td><b>首充盈利档位 *</b></td><td>按盈利时显示。列表，每行：首充金额、盈利方式、盈利目标；可添加、删除</td><td>空</td><td>至少 1 档；保存后按首充金额从小到大显示</td></tr>
+            <tr><td><b>首充金额 *</b></td><td>输入框，平台默认货币</td><td>空</td><td>大于 0，最多两位小数；各档位不可重复</td></tr>
+            <tr><td><b>盈利方式 *</b></td><td>下拉：固定金额 / 按首充比例</td><td>固定金额</td><td>决定盈利目标填金额还是比例</td></tr>
+            <tr><td><b>盈利目标 *</b></td><td>固定金额时填金额（平台默认货币）；按首充比例时填百分比</td><td>空</td><td>金额：大于 0，最多两位小数；比例：大于 0，最多一位小数，如 60 表示首充金额的 60%</td></tr>
+            <tr><td><b>保护期返奖率 *</b></td><td>下拉单选：94%、94.5%、95%、95.5%、96%、96.5%、97%</td><td><strong>不预填</strong>，显示「请选择」</td><td>保护期内被保护会员的返奖率</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
+        <h2>新手保护设置流程</h2>
+        <div class="dh-flow">
+          <div class="flow-diagram">
+            <div class="flow-step">点击「设置」或「修改」</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">填写保护层级、保护方式、保护期返奖率<span class="sub">按时间填保护时长；按盈利填首充盈利档位</span></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">点击「保存」，字段校验</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">弹出保存确认<span class="sub">逐项列出改动</span></div>
+          </div>
+          <div class="flow-branches">
+            <div class="flow-branch"><span class="cond">字段校验不通过</span><span class="arr">→</span><span class="result bad">对应字段红字提示，弹窗保持打开</span></div>
+            <div class="flow-branch"><span class="cond">没有任何修改</span><span class="arr">→</span><span class="result neutral">提示「没有修改内容」，关闭弹窗</span></div>
+            <div class="flow-branch"><span class="cond">确认框点「取消」</span><span class="arr">→</span><span class="result neutral">回到弹窗，内容保留</span></div>
+            <div class="flow-branch"><span class="cond">确认框点「确定」，已启用</span><span class="arr">→</span><span class="result good">保存成功，立即生效，记录一条修改记录</span></div>
+            <div class="flow-branch"><span class="cond">确认框点「确定」，未启用</span><span class="arr">→</span><span class="result good">保存成功，不生效，启用后按此设置</span></div>
+            <div class="flow-branch"><span class="cond">设置已被其他人修改 / 保存失败</span><span class="arr">→</span><span class="result bad">本次不保存，提示并显示最新或实际设置</span></div>
+          </div>
+          <div class="cap">图：新手保护从设置到保存</div>
+        </div>
+        <div class="dh-callout">新手保护的启用 / 关闭同层级返奖率，启用前提为已完成设置。</div>
+        <h3>触发条件与反馈</h3>
+        <div class="tbl-wrap"><table class="dh-table-simple">
+          <thead><tr><th>触发条件</th><th>系统反馈</th></tr></thead>
+          <tbody>
+            <tr><td><b>点击「设置」或「修改」</b></td><td>弹出「设置新手保护」，已设置时回显当前内容</td></tr>
+            <tr><td><b>保护方式切换为「按盈利」/「按时间」</b></td><td>按盈利：隐藏「保护时长」，显示「首充盈利档位」；按时间：相反</td></tr>
+            <tr><td><b>未选保护层级</b></td><td>红字「请选择保护层级」</td></tr>
+            <tr><td><b>按时间：保护时长为空、等于 0 或不是正整数</b></td><td>红字「请输入保护时长，须为正整数」</td></tr>
+            <tr><td><b>按盈利：没有档位</b></td><td>红字「请至少添加 1 个首充盈利档位」</td></tr>
+            <tr><td><b>按盈利：首充金额为空、等于 0 或超过两位小数</b></td><td>该行红字「请输入大于 0 的首充金额，最多两位小数」</td></tr>
+            <tr><td><b>按盈利：首充金额与其他档位相同</b></td><td>该行红字「首充金额不能重复」</td></tr>
+            <tr><td><b>按盈利：固定金额的盈利目标为空、等于 0 或超过两位小数</b></td><td>该行红字「请输入大于 0 的盈利金额，最多两位小数」</td></tr>
+            <tr><td><b>按盈利：按首充比例的盈利目标为空、等于 0 或超过一位小数</b></td><td>该行红字「请输入大于 0 的比例，最多一位小数」</td></tr>
+            <tr><td><b>未选保护期返奖率</b></td><td>红字「请选择返奖率」</td></tr>
+            <tr><td><b>点击「保存」且没有任何修改</b></td><td>提示「没有修改内容」，关闭弹窗</td></tr>
+            <tr><td><b>点击「保存」且校验通过</b></td><td>弹出「确认保存」：第一行「确认保存新手保护设置？」；第二行逐项列出改动（首次设置时列出全部设置）；第三行已启用时加粗「当前已启用，确定后立即生效。」，未启用时「当前未启用，确定后不生效，启用后按此设置。」</td></tr>
+            <tr><td><b>确定保存成功</b></td><td>提示「保存成功」；弹窗关闭；页面显示最新设置；「最后修改」更新</td></tr>
+            <tr><td><b>还没有设置时点击「启用」</b></td><td>提示「请先设置新手保护」</td></tr>
+            <tr><td><b>已设置后点击「启用」</b></td><td>弹出确认：第一行「确认启用新手保护？」；第二行「启用后立即生效：「{保护层级}」的会员在保护期内按 {返奖率} 返奖率。」</td></tr>
+            <tr><td><b>确定启用</b></td><td>提示「新手保护已启用」；标签变为已启用，按钮变为「关闭」</td></tr>
+            <tr><td><b>点击「关闭」</b></td><td>弹出警告：第一行「确认关闭新手保护？」；第二行「关闭后立即生效，不再保护；已设置的内容保留，再次启用后继续使用。」</td></tr>
+            <tr><td><b>确定关闭</b></td><td>提示「新手保护已关闭」；标签变为未启用，按钮变为「启用」</td></tr>
+            <tr><td><b>只有查看权限的账号</b></td><td>不显示「设置」「修改」「启用」「关闭」，可查看当前设置</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="req-block">
         <h2>修改记录（弹窗）</h2>
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>字段</th><th>说明</th><th>展示规则</th></tr></thead>
           <tbody>
             <tr><td><b>操作时间</b></td><td>启用、关闭、新增、修改或删除的时间</td><td>年月日时分秒，倒序</td></tr>
             <tr><td><b>操作人</b></td><td>后台账号</td><td>—</td></tr>
+            <tr><td><b>设置项</b></td><td>层级返奖率 / 新手保护</td><td>—</td></tr>
             <tr><td><b>操作</b></td><td>启用 / 关闭 / 新增 / 修改 / 删除</td><td>启用绿色标签，关闭灰色标签，新增、修改蓝色标签，删除红色标签</td></tr>
             <tr><td><b>修改内容</b></td><td>新增「层级一：96%」；修改「层级二：95.5% → 96%」；删除「层级三：96%」；启用、关闭显示「-」</td><td>多项换行展示</td></tr>
             <tr><td><b>分页</b></td><td>每页 20 / 50 / 100 条，默认 20 条</td><td>—</td></tr>
@@ -1169,7 +1264,15 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
             <tr><td><b>多人同时修改</b></td><td>提交时如设置已被其他人修改，本次操作不生效，提示后刷新为最新设置</td></tr>
             <tr><td><b>修改记录</b></td><td>每次启用、关闭、新增、修改、删除成功各记录一条；失败不记录</td></tr>
             <tr><td><b>权限</b></td><td>「返奖率设置」单独设「查看」「修改」两个权限点；没有查看权限的账号不显示本页签</td></tr>
-            <tr><td><b>押注返奖率、新手保护</b></td><td>本期不做，页面不显示</td></tr>
+            <tr><td><b>新手保护：对象</b></td><td>只保护所选的一个会员层级；只能设置一套新手保护</td></tr>
+            <tr><td><b>新手保护：保护方式</b></td><td>按时间：保护指定时长；按盈利：按会员首充金额对应的档位确定盈利目标。两种方式只能选一种，切换方式后另一种的设置保留但不生效</td></tr>
+            <tr><td><b>新手保护：默认状态</b></td><td>默认未启用、未设置；未启用时不保护</td></tr>
+            <tr><td><b>新手保护：保存与生效</b></td><td>保存前二次确认并列出改动；已启用时保存后立即生效，未启用时只保存设置，启用后才生效</td></tr>
+            <tr><td><b>新手保护：启用前提</b></td><td>已完成设置</td></tr>
+            <tr><td><b>新手保护：关闭</b></td><td>关闭后立即生效，不再保护；已设置的内容保留，再次启用后继续使用</td></tr>
+            <tr><td><b>新手保护：与层级返奖率独立</b></td><td>新手保护与层级返奖率各自启用、关闭、设置，互不影响</td></tr>
+            <tr><td><b>新手保护：保护层级被删除</b></td><td>会员层级管理中删除了被选为保护层级的会员层级时，新手保护自动关闭，页面提示「保护层级已被删除，请重新设置」</td></tr>
+            <tr><td><b>押注返奖率</b></td><td>本期不做，页面不显示</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -1181,8 +1284,8 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
         <div class="tbl-wrap"><table class="dh-table-simple">
           <thead><tr><th>项目</th><th>说明</th></tr></thead>
           <tbody>
-            <tr><td><b>本期做</b></td><td>新增菜单「MY游戏点控管理」，分「点控记录」「点控策略」「返奖率设置」三个页签。点控记录：筛选、分页、刷新、终止、批量终止；新增点控（自定义会员，一次性，批量下发与结果明细）。点控策略：策略列表、新增策略（新注册会员 / 会员层级 / VIP 等级 / 代理直属会员/ 代理线全部会员）、编辑名称与备注、停用（可选同时终止已生成的点控）、生成失败明细。返奖率设置：层级返奖率的新增、修改、删除、启用 / 关闭，修改记录</td></tr>
-            <tr><td><b>本期不做</b></td><td>按单个厂商或游戏设置点控；修改执行中点控的金额或剧本（需终止后重新新增）；修改策略的条件与点控设置（需停用后新建）；已停用策略重新启用；一条策略组合多种条件；删除点控记录或策略；导出；按押注金额设置返奖率；返奖率的新手保护；按渠道分别设置返奖率；94% ~ 97% 七档以外的返奖率；对单个会员设置返奖率（单个会员用点控）</td></tr>
+            <tr><td><b>本期做</b></td><td>新增菜单「MY游戏点控管理」，分「点控记录」「点控策略」「返奖率设置」三个页签。点控记录：筛选、分页、刷新、终止、批量终止；新增点控（自定义会员，一次性，批量下发与结果明细）。点控策略：策略列表、新增策略（新注册会员 / 会员层级 / VIP 等级 / 代理直属会员/ 代理线全部会员）、编辑名称与备注、停用（可选同时终止已生成的点控）、生成失败明细。返奖率设置：层级返奖率的新增、修改、删除、启用 / 关闭，新手保护的设置、启用 / 关闭，修改记录</td></tr>
+            <tr><td><b>本期不做</b></td><td>按单个厂商或游戏设置点控；修改执行中点控的金额或剧本（需终止后重新新增）；修改策略的条件与点控设置（需停用后新建）；已停用策略重新启用；一条策略组合多种条件；删除点控记录或策略；导出；按押注金额设置返奖率；多套新手保护；按渠道分别设置返奖率；94% ~ 97% 七档以外的返奖率；对单个会员设置返奖率（单个会员用点控）</td></tr>
             <tr><td><b>适用范围</b></td><td>全部商户后台；点控与返奖率对 MY 系列全部厂商统一生效；返奖率对本商户全部会员生效</td></tr>
           </tbody>
         </table></div>
@@ -1199,6 +1302,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
             <tr><td><b>场景 3</b></td><td>新会员注册后自动进入送分（养客）或杀分</td></tr>
             <tr><td><b>场景 4</b></td><td>查看点控执行进度，提前终止；活动结束时停用策略，并可一并终止其已生成的点控</td></tr>
             <tr><td><b>场景 5</b></td><td>长期调整某个会员层级的输赢比例：在「返奖率设置」里选返奖率并启用，之后随时修改或关闭</td></tr>
+            <tr><td><b>场景 6</b></td><td>新会员保护：对新会员所在的会员层级启用新手保护，保护期内按较高的返奖率，按时间或按首充后的盈利目标结束</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -1217,6 +1321,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
           <li><strong>F9【P1】编辑与停用策略</strong>：编辑只改名称与备注；停用二次确认，可选同时终止该策略已生成、执行中的点控（结束原因停用策略）。</li>
           <li><strong>F10【P0】层级返奖率</strong>：自己选择会员层级新增返奖率（七档下拉），可修改、删除，均二次确认；启用 / 关闭；只对已添加的层级生效，会员层级变动后同步。</li>
           <li><strong>F11【P1】修改记录与页面说明</strong>：返奖率设置说明常驻；修改记录弹窗（分页）；最后修改人与时间。</li>
+          <li><strong>F12【P1】新手保护</strong>：设置保护层级、保护方式（按时间 / 按盈利）、保护时长或首充盈利档位、保护期返奖率，保存二次确认；启用 / 关闭。</li>
         </ol></div>
       </div>
 
@@ -1226,7 +1331,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
           <thead><tr><th>项目</th><th>说明</th></tr></thead>
           <tbody>
             <tr><td><b>新增埋点</b></td><td>无</td></tr>
-            <tr><td><b>需记录的数据</b></td><td>每条点控的会员、类型、剧本、目标金额、进行中金额、状态、结束原因、来源、策略、申请时间、备注、操作人、最后操作时间；每条策略的名称、条件类型与内容、类型、剧本、金额、备注、状态、发布人与时间、最后操作人与时间、已生成 / 失败人数；「会员 + 策略」已处理记录；策略生成失败明细；返奖率的启用状态与各层级设置；返奖率修改记录（时间、操作人、操作、改前 / 改后）；会员与 MY 游戏策略层级的对应</td></tr>
+            <tr><td><b>需记录的数据</b></td><td>每条点控的会员、类型、剧本、目标金额、进行中金额、状态、结束原因、来源、策略、申请时间、备注、操作人、最后操作时间；每条策略的名称、条件类型与内容、类型、剧本、金额、备注、状态、发布人与时间、最后操作人与时间、已生成 / 失败人数；「会员 + 策略」已处理记录；策略生成失败明细；返奖率的启用状态与各层级设置；新手保护的启用状态与设置；返奖率修改记录（时间、操作人、设置项、操作、改前 / 改后）；会员与 MY 游戏策略层级的对应</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -1261,6 +1366,8 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
             <tr><td><b>新增、修改、删除层级返奖率</b></td><td>Strategy/Set</td><td>3.9 设置策略（第 31 页）；配置结构见 3.10.2（第 34 页），返奖率取值见 3.10.3（第 35 页）</td><td>key=levels；json_data 为完整配置：每项 level（会员层级 ID）、name（层级名称）、rpt（返奖率 ×10，如 95.5% 传 955），只含已添加的层级；不传 channel</td><td>返回保存后的配置，页面按返回结果显示</td></tr>
             <tr><td><b>启用 / 关闭</b></td><td>Strategy/Set</td><td>3.9 设置策略（第 31 页），开关字段 currid_level</td><td>currid_level：启用传 1，关闭传 0；同时传当前完整配置</td><td>返回开关状态</td></tr>
             <tr><td><b>会员层级同步</b></td><td>User/Login、User/ModifyPassword</td><td>3.2 用户登录（第 10 页）；3.7.1 设置密码（第 25 页）</td><td>strategy_level：会员所在会员层级 ID</td><td>会员进入 MY 游戏时随登录传入；会员层级变动时用 ModifyPassword 只传 strategy_level（不传 pwd）</td></tr>
+            <tr><td><b>读取新手保护</b></td><td>Strategy/Get</td><td>3.8 获取策略（第 29 页）；字段见 3.10.1 新手保护（第 33 页）</td><td>key=protect；不传 channel</td><td>返回配置对象；未配置时返回空对象，页面显示未设置；switch 为 1 表示已启用</td></tr>
+            <tr><td><b>保存、启用、关闭新手保护</b></td><td>Strategy/Set</td><td>3.9 设置策略（第 31 页）；字段见 3.10.1（第 33 页），数值约定见 3.10.3（第 35 页）</td><td>key=protect；json_data 为完整配置：switch（1 启用 / 0 关闭）、protect_level（保护层级的会员层级 ID）、protect_mode（0 按时间 / 1 按盈利）、protect_time（保护时长，秒）、rpt（返奖率 ×10）、protect_wins（首充盈利档位：amount 首充金额 ×100；use_ratio 按首充比例传 1、固定金额传 0；win 盈利金额 ×100；win_ratio 比例 ×10，如 60% 传 600）</td><td>返回保存后的配置，页面按返回结果显示</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -1329,7 +1436,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
             <tr><td><b>A57</b></td><td>新增点控、终止、批量终止、新增策略、编辑策略、停用策略</td><td>后台操作日志均有对应记录</td></tr>
             <tr><td><b>A58</b></td><td>进入「点控策略」页签；打开新增策略；打开编辑策略</td><td>列表上方常驻显示「策略生效规则」6 条；新增弹窗顶部显示生效规则说明条；编辑弹窗不显示该说明条，只显示不可修改提示</td></tr>
             <tr><td><b>A59</b></td><td>筛选结果共 25 条、每页 20 条：勾选表头 → 点上方「选择全部 25 条」→ 取消勾选其中一行 → 翻到第 2 页</td><td>依次显示「已选择 20 条」+ 提示「已选本页 20 条，选择全部 25 条」；「已选择全部 25 条」+「清除选择」；退回「已选择 19 条」；翻页后清空为「已选择 0 条」</td></tr>
-            <tr><td><b>A60</b></td><td>有返奖率设置查看权限的账号切到「返奖率设置」页签</td><td>顶部显示「返奖率设置说明」4 条；下方为层级返奖率，显示启用状态与已添加的会员层级；右上角显示最后修改人与时间、「修改记录」按钮</td></tr>
+            <tr><td><b>A60</b></td><td>有返奖率设置查看权限的账号切到「返奖率设置」页签</td><td>顶部显示「返奖率设置说明」5 条；下方为层级返奖率，显示启用状态与已添加的会员层级；右上角显示最后修改人与时间、「修改记录」按钮</td></tr>
             <tr><td><b>A61</b></td><td>首次上线后进入页签</td><td>层级返奖率为未启用；列表显示「暂未添加会员层级…」</td></tr>
             <tr><td><b>A62</b></td><td>点击「+ 新增」</td><td>弹窗中会员层级可多选，已添加的层级置灰并标「已添加」；返奖率下拉为 94% ~ 97% 七档，默认「请选择」</td></tr>
             <tr><td><b>A63</b></td><td>新增时不选会员层级 / 不选返奖率，点「确定」</td><td>分别出现红字「请选择会员层级」/「请选择返奖率」，不提交</td></tr>
@@ -1349,6 +1456,22 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
             <tr><td><b>A77</b></td><td>启用、关闭、新增、修改、删除返奖率</td><td>后台操作日志均有对应记录</td></tr>
             <tr><td><b>A78</b></td><td>层级返奖率未启用</td><td>全部会员按游戏默认返奖率，点控功能不受影响</td></tr>
             <tr><td><b>A79</b></td><td>会员层级管理中删除一个已添加返奖率的会员层级</td><td>本页该层级的返奖率同时移除</td></tr>
+            <tr><td><b>A80</b></td><td>进入「返奖率设置」页签，查看层级返奖率下方</td><td>显示「新手保护」：启用状态与当前设置；还没有设置时显示「暂未设置新手保护…」，按钮为「设置」</td></tr>
+            <tr><td><b>A81</b></td><td>点击「设置」</td><td>弹窗显示保护层级（请选择）、保护方式（默认按时间）、保护时长（单位默认小时）、保护期返奖率（请选择）</td></tr>
+            <tr><td><b>A82</b></td><td>按时间：不选保护层级 / 保护时长为空、0、1.5 / 不选返奖率，点「保存」</td><td>分别出现对应红字提示，不保存</td></tr>
+            <tr><td><b>A83</b></td><td>按时间：默认层级、24 小时、97%，保存</td><td>确认框列出全部设置与「当前未启用，确定后不生效，启用后按此设置」；确认后提示「保存成功」，页面显示当前设置，按钮变为「修改」，修改记录新增一条设置项为「新手保护」的记录</td></tr>
+            <tr><td><b>A84</b></td><td>保护方式切换为「按盈利」</td><td>隐藏保护时长，显示首充盈利档位；没有档位时点「保存」提示「请至少添加 1 个首充盈利档位」</td></tr>
+            <tr><td><b>A85</b></td><td>首充盈利档位：首充金额为空、0、1.234 / 两档首充金额相同 / 固定金额为空、0 / 比例为空、0、1.23，点「保存」</td><td>分别出现对应红字提示，不保存</td></tr>
+            <tr><td><b>A86</b></td><td>按盈利：添加 500.00 按首充比例 60%、100.00 固定金额 60.00 两档并保存</td><td>保存成功；档位按首充金额从小到大显示 100.00、500.00，盈利目标分别显示「60.00」「首充金额的 60%」</td></tr>
+            <tr><td><b>A87</b></td><td>还没有设置时点「启用」</td><td>提示「请先设置新手保护」，保持未启用</td></tr>
+            <tr><td><b>A88</b></td><td>已设置后启用，再关闭</td><td>启用：确认后标签变为已启用，提示「新手保护已启用」；关闭：确认后标签变为未启用，设置内容仍显示；修改记录各新增一条</td></tr>
+            <tr><td><b>A89</b></td><td>已启用时修改保护期返奖率并保存</td><td>确认框显示改前 → 改后与「当前已启用，确定后立即生效」；保存后被保护会员按新的返奖率</td></tr>
+            <tr><td><b>A90</b></td><td>打开「修改」，不改内容直接点「保存」</td><td>提示「没有修改内容」，不产生修改记录</td></tr>
+            <tr><td><b>A91</b></td><td>新手保护已启用（按时间），保护层级的新会员进入 MY 系列游戏</td><td>保护期内按保护期返奖率；保护时长结束后不再按保护期返奖率</td></tr>
+            <tr><td><b>A92</b></td><td>新手保护已启用（按盈利），保护层级的会员首充 100.00，对应档位盈利目标 60.00</td><td>保护期内按保护期返奖率；盈利达到 60.00 后保护结束</td></tr>
+            <tr><td><b>A93</b></td><td>会员层级管理中删除被选为保护层级的会员层级</td><td>新手保护自动关闭，页面提示「保护层级已被删除，请重新设置」</td></tr>
+            <tr><td><b>A94</b></td><td>保存、启用或关闭新手保护时接口返回失败</td><td>提示「操作失败：{失败原因}，已重新读取当前设置」；页面按接口读取结果显示；不产生修改记录</td></tr>
+            <tr><td><b>A95</b></td><td>只有返奖率设置查看权限的账号查看新手保护</td><td>可查看当前设置，不显示「设置」「修改」「启用」「关闭」</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -1359,9 +1482,9 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
           <thead><tr><th>检查项</th><th>结论</th></tr></thead>
           <tbody>
             <tr><td><b>权限</b></td><td>菜单与功能权限纳入现有角色权限体系；返奖率设置单独设查看、修改权限</td></tr>
-            <tr><td><b>操作留痕</b></td><td>每条记录保留操作人与最后操作时间；策略保留发布人、发布时间、最后操作人与时间；新增、终止、策略新增 / 编辑 / 停用写入后台操作日志；策略生成失败写入系统日志；返奖率的启用、关闭、新增、修改、删除有页面内修改记录并写入后台操作日志</td></tr>
-            <tr><td><b>边界状态</b></td><td>空列表、全部已结束、超人数上限、会员不存在、没有游戏账号、下发超时、覆盖时新点控下发失败、已有执行中点控、提交时已自然结束；策略 0 人、超 1 万人、首批未完成停用、同时命中多条、离开再进入、重名均已定义；返奖率没有添加任何层级、全部层级都已添加、已启用时删到最后一个、没有修改、多人同时修改、操作失败、会员层级被删除均已定义</td></tr>
-            <tr><td><b>口径与单位</b></td><td>金额按平台默认货币，两位小数；进行中金额正为赢、负为输；时间按后台时区；返奖率按百分比显示，只有七档</td></tr>
+            <tr><td><b>操作留痕</b></td><td>每条记录保留操作人与最后操作时间；策略保留发布人、发布时间、最后操作人与时间；新增、终止、策略新增 / 编辑 / 停用写入后台操作日志；策略生成失败写入系统日志；返奖率与新手保护的启用、关闭、新增、修改、删除有页面内修改记录并写入后台操作日志</td></tr>
+            <tr><td><b>边界状态</b></td><td>空列表、全部已结束、超人数上限、会员不存在、没有游戏账号、下发超时、覆盖时新点控下发失败、已有执行中点控、提交时已自然结束；策略 0 人、超 1 万人、首批未完成停用、同时命中多条、离开再进入、重名均已定义；返奖率没有添加任何层级、全部层级都已添加、已启用时删到最后一个、没有修改、多人同时修改、操作失败、会员层级被删除均已定义；新手保护未设置、切换保护方式、没有档位、保护层级被删除均已定义</td></tr>
+            <tr><td><b>口径与单位</b></td><td>金额按平台默认货币，两位小数；进行中金额正为赢、负为输；时间按后台时区；返奖率按百分比显示，只有七档；保护时长按分钟 / 小时 / 天输入；首充金额、盈利金额按平台默认货币，两位小数</td></tr>
             <tr><td><b>批量操作</b></td><td>手动新增上限 10,000 人并展示明细；批量终止只处理执行中记录；策略分批生成不设上限，展示进度与失败明细</td></tr>
             <tr><td><b>多语言 / 多环境</b></td><td>后台页面沿用现有后台语言机制，无前台文案</td></tr>
             <tr><td><b>特殊模式</b></td><td>试玩会员不支持点控：手动新增中的试玩ID计入失败；策略自动排除试玩会员与试玩账号注册</td></tr>
@@ -1390,13 +1513,14 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
           <li><strong>时间与账号。</strong>接口返回时间为 UTC，列表按后台时区展示；接口按游戏账号名调用，需做会员与游戏账号的对应。</li>
           <li><strong>剧本 ID。</strong>页面只显示剧本名称；调用接口按剧本 ID 传，排查问题时按 ID 对应：快送 604、正常送 603、慢送 602、快杀 601、正常杀 600、慢杀 599。</li>
           <li><strong>菜单名称。</strong>菜单位置示意图为现网名称；若客户端游戏排序需求先上线，「游戏排名」显示为「热门游戏排序」，本菜单仍排在最后。</li>
-          <li><strong>返奖率接口。</strong>读取用 Strategy/Get，写入用 Strategy/Set；只用类别 levels（层级），写入时传完整配置（整表覆盖）；不传渠道，对整个商户生效；押注（bets）、新手保护（protect）本期不做，不调用。</li>
+          <li><strong>返奖率接口。</strong>读取用 Strategy/Get，写入用 Strategy/Set；只用类别 levels（层级），写入时传完整配置（整表覆盖）；不传渠道，对整个商户生效；新手保护用类别 protect（见第 25 条）；押注（bets）本期不做，不调用。</li>
           <li><strong>返奖率取值。</strong>接口只接受千分比整数 940、945、950、955、960、965、970；页面显示为 94% ~ 97%，下拉只提供这七档，后端同样校验。</li>
           <li><strong>启用 / 关闭。</strong>用 currid_level，启用传 1、关闭传 0；currid_bets 不使用；关闭不清空已保存的配置。</li>
           <li><strong>会员层级与策略层级。</strong>levels 中的 level 用我方会员层级 ID（须为大于 0 的整数，否则另建对应关系），name 用层级名称；会员的 strategy_level 为其会员层级 ID。同步时机：会员进入 MY 游戏登录时随登录接口传入；会员层级变动时调用设置密码接口，只传 strategy_level、不传 pwd（传 pwd 会改掉游戏密码）；功能上线时对已有游戏账号的会员同步一次。只把已添加的会员层级写入 levels，没有添加的不写入。</li>
           <li><strong>以接口结果为准。</strong>接口说明：配置校验失败时开关可能已改变。新增、修改、删除、启用、关闭失败后必须重新读取并按读取结果显示；进入页签时的启用状态与配置以读取结果为准；修改记录由后台自行保存，只记录成功的操作。</li>
           <li><strong>多人同时修改。</strong>提交时比对打开页面时的配置与当前配置，不一致则本次操作不生效并刷新。</li>
-          <li><strong>对接核对。</strong>以下内容接口说明书未写明，对接时与 MY 游戏方核对，结果与本文不一致时反馈产品调整：会员有执行中的点控时，点控与返奖率哪个优先；会员层级不在配置中时是否按游戏默认返奖率；保存后是否立即生效。</li>
+          <li><strong>对接核对。</strong>以下内容接口说明书未写明，对接时与 MY 游戏方核对，结果与本文不一致时反馈产品调整：会员有执行中的点控时，点控与返奖率哪个优先；会员层级不在配置中时是否按游戏默认返奖率；新手保护与层级返奖率同时命中同一会员时哪个优先；按时间保护从何时开始计时（注册、首充还是首次进入游戏）；按盈利时首充金额如何匹配档位（本文按「首充金额达到该档金额时适用，取金额最高的一档」理解）、盈利达到目标后是否立即结束保护；按盈利时保护时长是否仍然生效；保护层级与层级配置是否使用同一套层级编号；保存后是否立即生效。</li>
+          <li><strong>新手保护接口字段。</strong>新手保护用类别 protect，整个配置一次写入；启用 / 关闭改 switch 并带上其余当前配置。保护时长页面按分钟 / 小时 / 天输入，换算成秒传 protect_time；比例页面按百分比输入（最多一位小数），换算成千分比整数传 win_ratio；金额按分传整数。按时间时 protect_wins 传已保存的档位或空数组，按盈利时 protect_time 传已保存的时长或 0。</li>
         </ol></div>
       </div>
     </div>
@@ -1551,11 +1675,44 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
   <div class="modal-ft"><button class="bk-btn" data-close="rtpModal" type="button">取 消</button><button class="bk-btn primary" id="rtpOk" type="button">确 定</button></div>
 </div></div>
 
+<div class="modal-mask" id="protModal"><div class="modal-box lg" role="dialog" aria-modal="true" style="width:720px;">
+  <div class="modal-hd">设置新手保护<button class="x" data-close="protModal" type="button" aria-label="关闭">×</button></div>
+  <div class="modal-bd"><div class="m-form">
+    <div class="m-note">只保护所选会员层级的会员：保护期内按下面设置的返奖率。保护期可以按时间，也可以按首充后的盈利目标。</div>
+    <div class="m-row"><label for="pLevel"><span class="req">*</span>保护层级</label><div class="ctl">
+      <select class="bk-select" id="pLevel"></select>
+      <div class="m-tip hide" id="errPLevel">请选择保护层级</div>
+    </div></div>
+    <div class="m-row"><label><span class="req">*</span>保护方式</label><div class="ctl">
+      <div class="radio-group" id="pMode">
+        <span class="radio" data-mode="time"><span class="r"></span>按时间</span>
+        <span class="radio" data-mode="win"><span class="r"></span>按盈利</span>
+      </div>
+    </div></div>
+    <div class="m-row" id="pDurRow"><label for="pDur"><span class="req">*</span>保护时长</label><div class="ctl">
+      <input class="bk-input" id="pDur" style="width:140px;" placeholder="请输入"> <select class="bk-select sm" id="pUnit"><option value="m">分钟</option><option value="h">小时</option><option value="d">天</option></select>
+      <div class="m-tip hide" id="errPDur">请输入保护时长，须为正整数</div>
+    </div></div>
+    <div class="m-row" id="pWinRow"><label><span class="req">*</span>首充盈利档位</label><div class="ctl">
+      <table class="prot-wins"><thead><tr><th>首充金额（BRL）</th><th>盈利方式</th><th>盈利目标</th><th></th></tr></thead><tbody id="pWins"></tbody></table>
+      <button class="bk-btn sm" type="button" id="btnPWinAdd" style="margin-top:6px;">+ 添加档位</button>
+      <div class="m-help">盈利目标：固定金额，或首充金额 × 比例（如 60 表示首充金额的 60%）。</div>
+      <div class="m-tip hide" id="errPWins">请至少添加 1 个首充盈利档位</div>
+    </div></div>
+    <div class="m-row"><label for="pRate"><span class="req">*</span>保护期返奖率</label><div class="ctl">
+      <select class="bk-select" id="pRate"></select>
+      <div class="m-help">保护期内被保护会员的返奖率，数值越高越容易赢</div>
+      <div class="m-tip hide" id="errPRate">请选择返奖率</div>
+    </div></div>
+  </div></div>
+  <div class="modal-ft"><button class="bk-btn" data-close="protModal" type="button">取 消</button><button class="bk-btn primary" id="protOk" type="button">保 存</button></div>
+</div></div>
+
 <div class="modal-mask" id="rtpLogModal"><div class="modal-box lg" role="dialog" aria-modal="true" style="width:820px;">
   <div class="modal-hd">修改记录<button class="x" data-close="rtpLogModal" type="button" aria-label="关闭">×</button></div>
   <div class="modal-bd">
     <div class="bk-table-wrap"><table class="bk-table rtp-log">
-      <thead><tr><th>操作时间</th><th>操作人</th><th>操作</th><th>修改内容</th></tr></thead>
+      <thead><tr><th>操作时间</th><th>操作人</th><th>设置项</th><th>操作</th><th>修改内容</th></tr></thead>
       <tbody id="rtpLogBody"></tbody>
     </table></div>
     <div class="bk-foot"><div class="bk-pager" id="rtpLogPager"></div></div>
@@ -2214,10 +2371,11 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
       {at:'2026-11-08 10:02:45', by:'zune01', op:'on', detail:[]},
       {at:'2026-11-08 10:01:30', by:'zune01', op:'add', detail:['默认层级：95%','层级一：95.5%','层级二：96%','层级三：96%','层级五：96.5%']}
     ];
-    rtpEditing = null; lp.page = 1; lp.size = 20;
+    rtpEditing = null; lp.page = 1; lp.size = 20; seedProtect();
   }
   function rtpRows(){ return RTP_LEVELS.filter(function(l){ return rtp.map[l[0]]; }); }
   function renderRtp(){
+    renderProtect();
     var rows = rtpRows(), full = rows.length === RTP_LEVELS.length;
     $('rtpLast').textContent = '最后修改：'+rtp.last.by+' '+rtp.last.at;
     $('rtpTag').innerHTML = rtp.on ? '<span class="bk-tag green">已启用</span>' : '<span class="bk-tag gray">未启用</span>';
@@ -2230,7 +2388,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
     $('rtpBody').querySelectorAll('[data-rtp-mod]').forEach(function(el){ el.addEventListener('click', function(){ openRtp(el.getAttribute('data-rtp-mod')); }); });
     $('rtpBody').querySelectorAll('[data-rtp-del]').forEach(function(el){ el.addEventListener('click', function(){ delRtp(el.getAttribute('data-rtp-del')); }); });
   }
-  function rtpLog(op, detail){ var at = nowStr(); rtpLogs.unshift({at:at, by:'zune01', op:op, detail:detail||[]}); rtp.last = {by:'zune01', at:at}; }
+  function rtpLog(op, detail, item){ var at = nowStr(); rtpLogs.unshift({at:at, by:'zune01', op:op, item:item||'level', detail:detail||[]}); rtp.last = {by:'zune01', at:at}; }
   function rtpEffect(){ return rtp.on ? '<b>当前已启用，确定后立即生效。</b>' : '当前未启用，确定后不生效，启用后按此设置。'; }
   function diffHtml(list){ return '<div style="margin:8px 0;max-height:180px;overflow:auto;">'+list.map(function(x){ return '<div>'+esc(x)+'</div>'; }).join('')+'</div>'; }
   function openRtp(name){
@@ -2274,12 +2432,99 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
     if(!rtpRows().length){ toast('请先新增层级返奖率', true); return; }
     confirmBox('确认启用层级返奖率？', '启用后立即生效：已添加层级的会员在 MY 系列游戏中按对应的返奖率，没有添加的层级不控制。', '确定启用', false, function(){ rtp.on = true; rtpLog('on'); renderRtp(); toast('层级返奖率已启用'); });
   });
+  // ---------- 新手保护 ----------
+  var prot, pDraft = null;
+  var P_UNIT = {m:'分钟', h:'小时', d:'天'};
+  function seedProtect(){ prot = {on:false, set:true, level:'默认层级', mode:'time', dur:'24', unit:'h', rpt:970, wins:[]}; }
+  function winGoal(w){ return w.kind==='ratio' ? '首充金额的 '+(+w.val)+'%' : money(+w.val); }
+  function protLines(s){
+    var a = [['保护层级', s.level], ['保护方式', s.mode==='time' ? '按时间' : '按盈利']];
+    if(s.mode==='time') a.push(['保护时长', s.dur+' '+P_UNIT[s.unit]]);
+    else a.push(['首充盈利档位', s.wins.map(function(w){ return '首充 '+money(+w.amt)+' 盈利目标 '+winGoal(w); }).join('；')]);
+    a.push(['保护期返奖率', pct(s.rpt)]);
+    return a;
+  }
+  function renderProtect(){
+    $('protTag').innerHTML = prot.on ? '<span class="bk-tag green">已启用</span>' : '<span class="bk-tag gray">未启用</span>';
+    $('btnProtToggle').textContent = prot.on ? '关 闭' : '启 用';
+    $('btnProtEdit').textContent = prot.set ? '修 改' : '设 置';
+    show($('protEmpty'), !prot.set); show($('protView'), prot.set);
+    $('protBody').innerHTML = !prot.set ? '' : protLines(prot).map(function(l){
+      var v = l[0]==='首充盈利档位' ? prot.wins.map(function(w){ return '<div>首充 '+money(+w.amt)+' → 盈利目标 '+esc(winGoal(w))+'</div>'; }).join('') : esc(l[1]);
+      return '<tr><td>'+l[0]+'</td><td>'+v+'</td></tr>';
+    }).join('');
+  }
+  function paintPMode(){
+    $('pMode').querySelectorAll('.radio').forEach(function(x){ x.classList.toggle('on', x.getAttribute('data-mode')===pDraft.mode); });
+    show($('pDurRow'), pDraft.mode==='time'); show($('pWinRow'), pDraft.mode==='win');
+  }
+  function paintPWins(){
+    $('pWins').innerHTML = pDraft.wins.map(function(w, i){
+      return '<tr><td><input class="bk-input" data-w="amt" data-i="'+i+'" placeholder="请输入" value="'+esc(w.amt)+'">'+(w.eAmt ? '<div class="rtp-err">'+w.eAmt+'</div>' : '')+'</td>'
+        +'<td><select class="bk-select" data-w="kind" data-i="'+i+'"><option value="fixed"'+(w.kind==='fixed'?' selected':'')+'>固定金额</option><option value="ratio"'+(w.kind==='ratio'?' selected':'')+'>按首充比例</option></select></td>'
+        +'<td><input class="bk-input" data-w="val" data-i="'+i+'" placeholder="请输入" value="'+esc(w.val)+'"> '+(w.kind==='ratio' ? '%' : 'BRL')+(w.eVal ? '<div class="rtp-err">'+w.eVal+'</div>' : '')+'</td>'
+        +'<td><span class="bk-link danger" data-wdel="'+i+'">删除</span></td></tr>';
+    }).join('');
+    $('pWins').querySelectorAll('[data-w]').forEach(function(el){
+      el.addEventListener(el.tagName==='SELECT' ? 'change' : 'input', function(){
+        pDraft.wins[+el.getAttribute('data-i')][el.getAttribute('data-w')] = el.value;
+        if(el.tagName==='SELECT'){ pDraft.wins[+el.getAttribute('data-i')].val = ''; paintPWins(); }
+      });
+    });
+    $('pWins').querySelectorAll('[data-wdel]').forEach(function(el){ el.addEventListener('click', function(){ pDraft.wins.splice(+el.getAttribute('data-wdel'), 1); paintPWins(); }); });
+  }
+  function openProtect(){
+    pDraft = prot.set ? {level:prot.level, mode:prot.mode, dur:prot.dur, unit:prot.unit, rpt:prot.rpt, wins:prot.wins.map(function(w){ return {amt:w.amt, kind:w.kind, val:w.val}; })} : {level:'', mode:'time', dur:'', unit:'h', rpt:0, wins:[]};
+    $('pLevel').innerHTML = '<option value="">请选择</option>'+RTP_LEVELS.map(function(l){ return '<option'+(l[0]===pDraft.level ? ' selected' : '')+'>'+esc(l[0])+'</option>'; }).join('');
+    $('pRate').innerHTML = '<option value="">请选择</option>'+RATES.map(function(r){ return '<option value="'+r+'"'+(r===pDraft.rpt ? ' selected' : '')+'>'+pct(r)+'</option>'; }).join('');
+    $('pDur').value = pDraft.dur; $('pUnit').value = pDraft.unit;
+    ['errPLevel','errPDur','errPWins','errPRate'].forEach(function(id){ show($(id), false); });
+    paintPMode(); paintPWins(); openM('protModal');
+  }
+  $('btnProtEdit').addEventListener('click', openProtect);
+  $('pMode').querySelectorAll('.radio').forEach(function(x){ x.addEventListener('click', function(){ pDraft.mode = x.getAttribute('data-mode'); paintPMode(); }); });
+  $('btnPWinAdd').addEventListener('click', function(){ pDraft.wins.push({amt:'', kind:'fixed', val:''}); show($('errPWins'), false); paintPWins(); });
+  $('protOk').addEventListener('click', function(){
+    var d = pDraft, bad = false;
+    d.level = $('pLevel').value; d.dur = $('pDur').value.trim(); d.unit = $('pUnit').value; d.rpt = +$('pRate').value || 0;
+    var eL = !d.level, eR = !d.rpt, eD = d.mode==='time' && !/^[1-9]\d*$/.test(d.dur), eW = d.mode==='win' && !d.wins.length;
+    show($('errPLevel'), eL); show($('errPRate'), eR); show($('errPDur'), eD); show($('errPWins'), eW);
+    if(d.mode==='win'){
+      var seen = {};
+      d.wins.forEach(function(w){
+        w.amt = String(w.amt).trim(); w.val = String(w.val).trim();
+        w.eAmt = (/^\d+(\.\d{1,2})?$/.test(w.amt) && +w.amt > 0) ? '' : '请输入大于 0 的首充金额，最多两位小数';
+        if(!w.eAmt){ var k = (+w.amt).toFixed(2); if(seen[k]) w.eAmt = '首充金额不能重复'; seen[k] = 1; }
+        w.eVal = w.kind==='ratio' ? ((/^\d+(\.\d)?$/.test(w.val) && +w.val > 0) ? '' : '请输入大于 0 的比例，最多一位小数') : ((/^\d+(\.\d{1,2})?$/.test(w.val) && +w.val > 0) ? '' : '请输入大于 0 的盈利金额，最多两位小数');
+        if(w.eAmt || w.eVal) bad = true;
+      });
+      paintPWins();
+    }
+    if(eL || eR || eD || eW || bad) return;
+    var next = {level:d.level, mode:d.mode, dur:d.mode==='time' ? d.dur : prot.dur, unit:d.mode==='time' ? d.unit : prot.unit, rpt:d.rpt, wins:(d.mode==='win' ? d.wins : prot.wins).map(function(w){ return {amt:w.amt, kind:w.kind, val:w.val}; }).sort(function(a,b){ return a.amt-b.amt; })};
+    var nl = protLines(next), ol = prot.set ? protLines(prot) : [], om = {}, diff = [];
+    ol.forEach(function(l){ om[l[0]] = l[1]; });
+    nl.forEach(function(l){ if(!prot.set) diff.push(l[0]+'：'+l[1]); else if(om[l[0]] !== l[1]) diff.push(l[0]+'：'+(om[l[0]]===undefined ? '未设置' : om[l[0]])+' → '+l[1]); });
+    if(!diff.length){ closeM('protModal'); toast('没有修改内容'); return; }
+    confirmBox('确认保存', '确认保存新手保护设置？'+diffHtml(diff)+(prot.on ? '<b>当前已启用，确定后立即生效。</b>' : '当前未启用，确定后不生效，启用后按此设置。'), '确 定', false, function(){
+      prot.level = next.level; prot.mode = next.mode; prot.dur = next.dur; prot.unit = next.unit; prot.rpt = next.rpt; prot.wins = next.wins; prot.set = true;
+      rtpLog('edit', diff, 'protect'); closeM('protModal'); renderRtp(); toast('保存成功');
+    });
+  });
+  $('btnProtToggle').addEventListener('click', function(){
+    if(prot.on){
+      confirmBox('确认关闭新手保护？', '关闭后立即生效，不再保护；已设置的内容保留，再次启用后继续使用。', '确定关闭', true, function(){ prot.on = false; rtpLog('off', [], 'protect'); renderRtp(); toast('新手保护已关闭'); });
+      return;
+    }
+    if(!prot.set){ toast('请先设置新手保护', true); return; }
+    confirmBox('确认启用新手保护？', '启用后立即生效：「'+esc(prot.level)+'」的会员在保护期内按 '+pct(prot.rpt)+' 返奖率。', '确定启用', false, function(){ prot.on = true; rtpLog('on', [], 'protect'); renderRtp(); toast('新手保护已启用'); });
+  });
   function renderRtpLogs(){
     var list = rtpLogs;
     var OP = {on:'<span class="bk-tag green">启用</span>', off:'<span class="bk-tag gray">关闭</span>', add:'<span class="bk-tag blue">新增</span>', edit:'<span class="bk-tag blue">修改</span>', del:'<span class="bk-tag red">删除</span>'};
     $('rtpLogBody').innerHTML = pageOf(list, lp).map(function(l){
-      return '<tr><td>'+l.at+'</td><td>'+l.by+'</td><td>'+OP[l.op]+'</td><td class="l">'+(l.detail.length ? l.detail.map(esc).join('<br>') : '-')+'</td></tr>';
-    }).join('') || '<tr><td colspan="4" style="color:var(--text-secondary);padding:24px 0;">暂无修改记录</td></tr>';
+      return '<tr><td>'+l.at+'</td><td>'+l.by+'</td><td>'+(l.item==='protect' ? '新手保护' : '层级返奖率')+'</td><td>'+OP[l.op]+'</td><td class="l">'+(l.detail.length ? l.detail.map(esc).join('<br>') : '-')+'</td></tr>';
+    }).join('') || '<tr><td colspan="5" style="color:var(--text-secondary);padding:24px 0;">暂无修改记录</td></tr>';
     renderPager($('rtpLogPager'), list.length, lp, renderRtpLogs);
   }
   $('btnRtpLog').addEventListener('click', function(){ lp.page = 1; renderRtpLogs(); openM('rtpLogModal'); });
@@ -2344,7 +2589,7 @@ table:has(#ctrlBody) th:last-child,table:has(#stgBody) th:last-child,table:has(#
 </style>
 <div id="chgTip" role="tooltip"><button class="x" type="button" aria-label="关闭">×</button><div class="tt"></div><div class="bd"></div></div>
 <script>(function(){var TIPS={
- 'menu': ['商户游戏管理 · MY游戏点控管理', '原：商户后台无法对单个会员做输赢控制，「商户游戏管理」下没有点控菜单。\n现：子菜单最后新增「MY游戏点控管理」，页面分「点控记录」「点控策略」「返奖率设置」三个页签：点控记录可查看、手动新增（一次性）、终止点控；点控策略可按新注册会员、会员层级、VIP 等级或代理设置常驻策略，当前和之后符合条件的会员自动生成点控；返奖率设置可自己选择会员层级添加返奖率（94% ~ 97% 七档），没有添加的层级不控制，可启用、关闭、修改、删除并查看修改记录。\n点控与返奖率对 MY 系列全部厂商统一生效。'],
+ 'menu': ['商户游戏管理 · MY游戏点控管理', '原：商户后台无法对单个会员做输赢控制，「商户游戏管理」下没有点控菜单。\n现：子菜单最后新增「MY游戏点控管理」，页面分「点控记录」「点控策略」「返奖率设置」三个页签：点控记录可查看、手动新增（一次性）、终止点控；点控策略可按新注册会员、会员层级、VIP 等级或代理设置常驻策略，当前和之后符合条件的会员自动生成点控；返奖率设置可自己选择会员层级添加返奖率（94% ~ 97% 七档），没有添加的层级不控制，可启用、关闭、修改、删除并查看修改记录；还可设置新手保护，对所选会员层级在保护期内按单独的返奖率。\n点控与返奖率对 MY 系列全部厂商统一生效。'],
 };
 var box=document.getElementById('chgTip'),cur=null,pinned=false,ht=null;
 function esc(t){return t.replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
