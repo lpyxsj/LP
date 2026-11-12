@@ -295,7 +295,7 @@ h1,h2,h3{font-family:var(--f-serif);font-weight:600;margin:0;}
       <tr><td>操作列<span class="tag-new n" data-tip="void" tabindex="0">新增</span></td><td>未领取的记录显示「作废订单」，二次确认后该笔优惠作废，会员不能再领取。</td></tr>
     </tbody>
   </table></div>
-  <div class="dh-callout">其余筛选项、列表 15 列的名称与顺序、排序、操作列、人工存款记录与人工提款记录两个页签都不变；不改变优惠的派发与领取流程。</div>
+  <div class="dh-callout">其余筛选项、列表 15 列的名称与顺序、排序、分页、人工存款记录与人工提款记录两个页签都不变；不改变优惠的派发与领取流程。</div>
 </div>
 </div>
 
@@ -501,8 +501,8 @@ h1,h2,h3{font-family:var(--f-serif);font-weight:600;margin:0;}
   <div class="tbl-wrap"><table class="dh-table-simple">
     <thead><tr><th>项目</th><th>说明</th></tr></thead>
     <tbody>
-      <tr><td>影响范围</td><td>只影响本页签的查询、合计、导出；不改变优惠派发与领取流程</td></tr>
-      <tr><td>前台影响</td><td>无</td></tr>
+      <tr><td>影响范围</td><td>本页签的查询、合计、导出与作废；作废会同步「人工优惠记录」中该订单的状态；不改变优惠派发与领取流程</td></tr>
+      <tr><td>前台影响</td><td>作废后会员不能再领取该笔优惠</td></tr>
       <tr><td>风险与注意</td><td>选「全部」时共 X 元含未领取金额，不等于实际到账</td></tr>
     </tbody>
   </table></div>
@@ -534,7 +534,9 @@ h1,h2,h3{font-family:var(--f-serif);font-weight:600;margin:0;}
       <tr><td>操作留痕</td><td>作废记录操作人与时间，留痕方式沿用「人工优惠记录」作废</td></tr>
       <tr><td>边界与在途</td><td>上线前已派发未领取的记录上线后即可查到；领取后重新查询即更新</td></tr>
       <tr><td>口径与单位</td><td>金额、时间格式、时区沿用现有</td></tr>
-      <tr><td>多语言</td><td>新增文案「领取状态」及选项按后台现有多语言方式提供</td></tr>
+      <tr><td>批量</td><td>不做批量作废</td></tr>
+      <tr><td>多语言</td><td>新增文案「领取状态」及选项、「作废订单」按后台现有多语言方式提供</td></tr>
+      <tr><td>特殊模式</td><td>无</td></tr>
       <tr><td>生效范围</td><td>上线后对全部商户生效</td></tr>
     </tbody>
   </table></div>
