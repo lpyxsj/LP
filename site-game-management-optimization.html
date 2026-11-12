@@ -807,7 +807,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td>列表</td><td>游戏ID、游戏名称、场馆名称、游戏状态（平台级）、游戏图片、创建时间、最近操作人、最近操作时间、备注、有效注单、前1小时有效注单、当前小时注单量</td><td>保留</td><td>「游戏状态」列名改为「总控状态（全部站点）」，取值不变；列表按该站点热门排名排列</td></tr>
         <tr><td>列表</td><td>序号（显示热门排名）、勾选、站点状态、对应版本、前台显示、前台切换</td><td>新增</td><td>见下</td></tr>
         <tr><td>操作列</td><td>维护 / 启用、停用（备注必填 30 字），只改总控状态<span class="tag-new" data-tip="stsc" tabindex="0">本期新增</span></td><td>修改</td><td>同总控厂商管理</td></tr>
-        <tr><td>操作列</td><td>排序（点开录入排列顺序，平台级）</td><td>删除</td><td>按站点排到指定位置用「热门游戏排序」置顶；所有站点一起往前推改有效注单默认值。删除前请确认没有其他地方在用</td></tr>
+        <tr><td>操作列</td><td>排序（点开录入排列顺序，平台级）</td><td>删除</td><td>按站点排到指定位置用「热门游戏排序」置顶；所有站点一起往前推改有效注单默认值</td></tr>
       </tbody></table></div></div>
     <div class="req-block"><h2>新增字段</h2>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>字段</th><th>说明</th></tr></thead><tbody>
@@ -904,7 +904,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
       </ol></div></div>
     <div class="req-block"><h2>数据、依赖与风险</h2>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>项目</th><th>说明</th></tr></thead><tbody>
-        <tr><td><b>新增数据</b></td><td>前台显示版本（按站点、按游戏对，默认 MY）；场馆对、游戏对（平台级，开发预置）；场馆手动排序数值、游戏有效注单沿用现网；游戏「排序」删除，删除前请确认没有其他地方在用。不新增埋点</td></tr>
+        <tr><td><b>新增数据</b></td><td>前台显示版本（按站点、按游戏对，默认 MY）；场馆对、游戏对（平台级，开发预置）；场馆手动排序数值、游戏有效注单沿用现网；游戏「排序」删除。不新增埋点</td></tr>
         <tr><td><b>依赖</b></td><td>商户置顶排序已开发版本；对应关系清单（开发预置）；总控下发站点数据的过滤；前台列表接口</td></tr>
         <tr><td><b>风险：上线即变化</b></td><td>已被总控停用的游戏 / 场馆从各站点前台与排序列表消失，相关置顶取消；游戏对从两款变为只显示 MY 版；上线前告知运营</td></tr>
         <tr><td><b>风险：选错影响范围</b></td><td>范围不默认、必须选；选全部站点时「确定」变红；备注必填</td></tr>
