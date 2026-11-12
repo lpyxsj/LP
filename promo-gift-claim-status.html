@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>优惠赠送记录领取状态筛选</title>
+<style>
+/* 文档壳(暖纸色) + 现网后台页面复刻 */
+:root{
+  color-scheme:light;
+  --doc-paper:#faf8f4;--doc-paper-raised:#ffffff;--doc-ink:#211f1a;--doc-ink-soft:#5c584e;--doc-ink-faint:#8b8677;
+  --doc-line:#e4ded1;--doc-line-soft:#eee9de;--doc-accent:#a8481f;--doc-accent-soft:#f4e2d3;
+  --doc-teal:#0d6d66;--doc-teal-soft:#dcefec;--doc-p1:#a8481f;--doc-p1-soft:#f4e2d3;
+  --doc-status-done-fg:#0d6d66;--doc-status-done-bg:#dcefec;
+  --shadow-card:0 1px 2px rgba(33,31,26,.06),0 4px 14px rgba(33,31,26,.06);
+  --f-serif:'Source Serif 4',Georgia,'Songti SC',serif;
+  --f-sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  --f-mono:Consolas,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  color-scheme:dark;--doc-paper:#18160f;--doc-paper-raised:#221f17;--doc-ink:#f1ece0;--doc-ink-soft:#c2bba8;--doc-ink-faint:#8f8877;
+  --doc-line:#3b3627;--doc-line-soft:#2c2919;--doc-accent:#e2925e;--doc-accent-soft:#3c2a1a;--doc-teal:#63c2b8;--doc-teal-soft:#183430;
+  --doc-p1:#e2925e;--doc-p1-soft:#3c2a1a;--doc-status-done-fg:#63c2b8;--doc-status-done-bg:#183430;
+  --shadow-card:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.35);}}
+:root[data-theme="dark"]{
+  color-scheme:dark;--doc-paper:#18160f;--doc-paper-raised:#221f17;--doc-ink:#f1ece0;--doc-ink-soft:#c2bba8;--doc-ink-faint:#8f8877;
+  --doc-line:#3b3627;--doc-line-soft:#2c2919;--doc-accent:#e2925e;--doc-accent-soft:#3c2a1a;--doc-teal:#63c2b8;--doc-teal-soft:#183430;
+  --doc-p1:#e2925e;--doc-p1-soft:#3c2a1a;--doc-status-done-fg:#63c2b8;--doc-status-done-bg:#183430;
+  --shadow-card:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.35);}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--doc-paper);color:var(--doc-ink);font-family:var(--f-sans);font-size:14.5px;line-height:1.6;}
+h1,h2,h3{font-family:var(--f-serif);font-weight:600;margin:0;}
+.dh-header{background:var(--doc-paper-raised);border-bottom:1px solid var(--doc-line);}
+.dh-header-inner,.dh-navbar-inner,.dh-wrap{max-width:1600px;margin:0 auto;padding-left:16px;padding-right:16px;}
+.dh-header-inner{padding-block:22px 16px;}
+.dh-header h1{font-size:26px;}
+.dh-meta{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:6px;font-size:12.5px;color:var(--doc-ink-faint);}
+.dh-meta b{color:var(--doc-ink-soft);font-weight:500;}
+.dh-navbar{position:sticky;top:0;z-index:30;background:var(--doc-paper-raised);border-bottom:1px solid var(--doc-line);}
+.dh-primary{display:flex;gap:4px;overflow-x:auto;}
+.dh-primary-btn{appearance:none;border:0;background:none;padding:12px 16px 10px;font:inherit;font-weight:600;color:var(--doc-ink-soft);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;}
+.dh-primary-btn small{font-weight:400;color:var(--doc-ink-faint);margin-left:6px;font-size:12px;}
+.dh-primary-btn.active{color:var(--doc-ink);border-bottom-color:var(--doc-accent);}
+.dh-primary-btn:focus-visible,.dh-tab:focus-visible{outline:2px solid var(--doc-teal);outline-offset:2px;}
+.dh-wrap{padding-block:20px 64px;}
+.dh-primary-panel{display:none;}
+.dh-primary-panel.active{display:block;}
+.dh-tabs{position:sticky;top:47px;z-index:20;display:flex;gap:2px;overflow-x:auto;background:var(--doc-paper);border-bottom:1px solid var(--doc-line);margin-bottom:22px;}
+.dh-tab{appearance:none;border:0;background:none;font:inherit;font-size:14px;padding:10px 14px;color:var(--doc-ink-soft);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;}
+.dh-tab .n{font-family:var(--f-mono);color:var(--doc-accent);margin-right:6px;font-size:12px;}
+.dh-tab.active{color:var(--doc-ink);border-bottom-color:var(--doc-accent);font-weight:600;}
+.dh-panel{display:none;}
+.dh-panel.active{display:block;}
+.dh-prose{max-width:92ch;color:var(--doc-ink-soft);}
+.dh-prose p{margin:0 0 10px;}
+.dh-prose strong{color:var(--doc-ink);}
+.dh-prose ul,.dh-prose ol{margin:0 0 10px;padding-left:1.4em;}
+.dh-prose li{margin-bottom:4px;}
+.req-block{max-width:1200px;margin:0 0 30px;}
+.req-block h2{font-size:22px;margin-bottom:12px;}
+.req-block h2:not(:first-child){margin-top:30px;}
+.req-block h3{font-size:17px;margin:22px 0 10px;}
+.dh-callout{max-width:1200px;border-left:3px solid var(--doc-teal);background:var(--doc-paper-raised);padding:10px 14px;margin:12px 0;font-size:13.5px;color:var(--doc-ink-soft);border-radius:0 6px 6px 0;}
+.dh-callout.warn{border-left-color:var(--doc-p1);}
+.tag-new{display:inline-block;font-size:11px;background:var(--doc-accent);color:#fff;border-radius:3px;padding:0 5px;margin-left:6px;vertical-align:1px;font-weight:500;white-space:nowrap;}
+.tag-new.n{background:#19be6b;}
+.tag-new.d{background:#f5222d;}
+.tbl-wrap{overflow-x:auto;max-width:1200px;}
+.dh-table-simple{width:100%;min-width:560px;border-collapse:separate;border-spacing:0;background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:8px;overflow:hidden;font-size:13.5px;box-shadow:var(--shadow-card);}
+.dh-table-simple th,.dh-table-simple td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--doc-line-soft);overflow-wrap:anywhere;}
+.dh-table-simple th{background:var(--doc-line-soft);font-weight:600;color:var(--doc-ink);}
+.dh-table-simple tr:last-child td{border-bottom:0;}
+.dh-table-simple td:first-child{min-width:7em;max-width:34em;}
+.dh-table-simple td{color:var(--doc-ink-soft);}
+.dh-table-simple td b{color:var(--doc-ink);}
+.dh-table-simple tr.chg td{background:var(--doc-accent-soft);}
+.dh-flow{max-width:1200px;background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:8px;padding:14px;margin:12px 0 16px;box-shadow:var(--shadow-card);cursor:zoom-in;}
+.flow-diagram{display:flex;flex-wrap:wrap;align-items:center;gap:2px;}
+.flow-step{background:var(--doc-paper);border:1px solid var(--doc-line);border-radius:6px;padding:8px 12px;font-size:12.5px;line-height:1.45;text-align:center;max-width:220px;color:var(--doc-ink);}
+.flow-step .sub{display:block;font-size:11px;color:var(--doc-ink-faint);margin-top:2px;}
+.flow-arrow{color:var(--doc-ink-faint);font-size:15px;padding:0 4px;}
+.flow-branches{display:flex;flex-direction:column;gap:7px;margin-top:10px;padding-left:10px;border-left:2px solid var(--doc-line);}
+.flow-branch{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;color:var(--doc-ink-soft);}
+.flow-branch .arr{color:var(--doc-ink-faint);}
+.flow-branch .result{font-weight:600;padding:2px 10px;border-radius:100px;font-size:12px;}
+.flow-branch .result.good{color:var(--doc-status-done-fg);background:var(--doc-status-done-bg);}
+.flow-branch .result.bad{color:var(--doc-p1);background:var(--doc-p1-soft);}
+.flow-branch .result.neutral{color:var(--doc-ink-soft);background:var(--doc-line-soft);}
+.dh-mind{max-width:1200px;background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:8px;padding:16px;margin:12px 0 16px;box-shadow:var(--shadow-card);cursor:zoom-in;overflow-x:auto;}
+.mm{display:flex;align-items:center;}
+.mm-root{flex:none;background:var(--doc-ink);color:var(--doc-paper);padding:10px 16px;border-radius:8px;font-weight:600;font-size:14.5px;position:relative;margin-right:26px;font-family:var(--f-serif);}
+.mm-root::after{content:"";position:absolute;right:-26px;top:50%;width:26px;border-top:1.5px solid var(--doc-ink-faint);}
+.mm-branches{display:flex;flex-direction:column;}
+.mm-b{position:relative;display:flex;align-items:center;padding:6px 0 6px 22px;}
+.mm-b::before{content:"";position:absolute;left:0;top:50%;width:22px;border-top:1.5px solid var(--doc-ink-faint);}
+.mm-b::after{content:"";position:absolute;left:0;top:0;bottom:0;border-left:1.5px solid var(--doc-ink-faint);}
+.mm-b:first-child::after{top:50%;}
+.mm-b:last-child::after{bottom:50%;}
+.mm-b:only-child::after{display:none;}
+.mm-node{flex:none;min-width:96px;border:1.5px solid var(--doc-line);border-radius:6px;padding:5px 10px;background:var(--doc-paper);font-weight:600;font-size:13px;color:var(--doc-ink);position:relative;margin-right:20px;white-space:nowrap;}
+.mm-node::after{content:"";position:absolute;right:-21px;top:50%;width:20px;border-top:1.5px solid var(--doc-line);}
+.mm-leaves{display:flex;flex-direction:column;}
+.mm-leaf{position:relative;display:inline-flex;align-items:center;gap:5px;padding:3px 0 3px 16px;font-size:12.5px;color:var(--doc-ink-soft);white-space:nowrap;}
+.mm-leaf::before{content:"";position:absolute;left:0;top:50%;width:12px;border-top:1px solid var(--doc-line);}
+.mm-leaf::after{content:"";position:absolute;left:0;top:0;bottom:0;border-left:1px solid var(--doc-line);}
+.mm-leaf:first-child::after{top:50%;}
+.mm-leaf:last-child::after{bottom:50%;}
+.mm-leaf:only-child::after{display:none;}
+.dh-illustration{max-width:1200px;background:var(--doc-paper-raised);border:1px solid var(--doc-line);border-radius:8px;padding:14px;margin:12px 0 16px;box-shadow:var(--shadow-card);}
+.illus-list{display:flex;flex-wrap:wrap;align-items:center;gap:6px 0;}
+.illus-item{background:var(--doc-paper);border:1px solid var(--doc-line);border-radius:6px;padding:6px 10px;font-size:12.5px;color:var(--doc-ink-soft);white-space:nowrap;}
+.illus-item.new{border-color:var(--doc-accent);color:var(--doc-accent);background:var(--doc-accent-soft);font-weight:600;}
+.illus-sep{width:14px;height:1px;background:var(--doc-line);margin:0 2px;flex:none;}
+.cap{font-size:12px;color:var(--doc-ink-faint);margin-top:10px;}
+.dh-lightbox{position:fixed;inset:0;background:rgba(20,18,12,.72);display:none;align-items:center;justify-content:center;z-index:300;padding:32px;}
+.dh-lightbox.open{display:flex;}
+.dh-lightbox-body>*{max-width:min(94vw,1200px);max-height:calc(100vh - 64px);overflow:auto;cursor:default;font-size:115%;}
+.dh-lightbox-body .flow-step{font-size:15px;max-width:260px;}
+.dh-lightbox-body .flow-branch,.dh-lightbox-body .mm-leaf{font-size:14px;}
+.proto-legend{font-size:13px;color:var(--doc-ink-soft);margin:0 0 8px;}
+.switch{display:inline-flex;border:1px solid var(--doc-line);border-radius:6px;overflow:hidden;margin:4px 0 12px;}
+.switch button{appearance:none;border:0;background:var(--doc-paper-raised);color:var(--doc-ink-soft);font:inherit;padding:6px 16px;cursor:pointer;}
+.switch button.on{background:var(--doc-accent);color:#fff;}
+@media (max-width:560px){.dh-header h1{font-size:22px;}}
+
+/* ===== 后台复刻（固定浅色） ===== */
+.proto{color-scheme:light;--primary:#1890ff;--border:#d9d9d9;--text:#000000d9;--text2:#00000073;
+  display:flex;border:1px solid var(--doc-line);border-radius:6px;overflow:hidden;background:#f0f2f5;color:var(--text);font-size:13px;min-height:640px}
+.sb{width:180px;flex:none;background:#001529;color:#ffffffa6}
+.sb .logo{height:44px;display:flex;align-items:center;gap:8px;padding:0 14px;color:#fff;font-weight:600;font-size:15px}
+.sb .logo i{width:24px;height:24px;border-radius:50%;background:#2a5caa;display:inline-block}
+.sb .m{padding:9px 14px;display:flex;justify-content:space-between}
+.sb .m.open{color:#fff}
+.sb .s{padding:9px 14px 9px 34px;background:#000c17}
+.sb .s.act{background:var(--primary);color:#fff}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.hd{height:44px;background:#fff;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 14px;color:var(--text2);border-bottom:1px solid #f0f0f0;white-space:nowrap;overflow:hidden}
+.tabs{height:30px;background:#fff;display:flex;align-items:flex-end;gap:4px;padding:0 6px;border-bottom:1px solid #f0f0f0}
+.tabs span{font-size:12px;padding:3px 10px;border:1px solid #f0f0f0;border-bottom:0}
+.tabs span.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+.body{margin:12px;background:#fff;padding:0 14px 10px;min-width:0;position:relative}
+.ptabs{display:flex;gap:2px;padding-top:12px;margin-bottom:12px;border-bottom:1px solid #f0f0f0}
+.ptabs span{padding:8px 14px;border:1px solid #f0f0f0;border-bottom:0;background:#fafafa;border-radius:2px 2px 0 0}
+.ptabs span.on{background:#fff;color:var(--primary)}
+.form{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px 14px}
+.fi{display:flex;align-items:center;gap:6px;min-width:0}
+.fi label{width:76px;flex:none;text-align:right;white-space:nowrap}
+.fi.w2{grid-column:span 2}
+.ctl{flex:1;min-width:0;height:30px;border:1px solid var(--border);border-radius:2px;display:flex;align-items:center;padding:0 8px;justify-content:space-between;background:#fff;white-space:nowrap;overflow:hidden}
+.ctl.ph{color:#bfbfbf}
+.ctl::after{content:"";width:6px;height:6px;border-right:1px solid #bfbfbf;border-bottom:1px solid #bfbfbf;transform:rotate(45deg);margin:-3px 2px 0 6px;flex:none}
+.ctl.in::after{display:none}
+.ctl.ss{cursor:pointer}
+.ro{color:#bfbfbf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btns{display:flex;gap:8px;align-items:center;margin:12px 0 14px;flex-wrap:wrap}
+.btn{height:30px;padding:0 15px;border:1px solid var(--border);border-radius:2px;background:#fff;display:inline-flex;align-items:center;font-size:13px}
+.btn.p{background:var(--primary);border-color:var(--primary);color:#fff}
+.btn.o{border-color:var(--primary);color:var(--primary)}
+.link{color:var(--primary)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.bar .l{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.red{color:#f5222d}
+.tw{overflow-x:auto;border:1px solid #f0f0f0}
+.proto table{border-collapse:separate;border-spacing:0;font-size:13px;white-space:nowrap;width:100%}
+.proto th,.proto td{padding:10px 12px;border-bottom:1px solid #f0f0f0;text-align:center;vertical-align:middle;background:#fff}
+.proto th{background:#fafafa;font-weight:500}
+.proto th.op,.proto td.op{position:sticky;right:0;box-shadow:-6px 0 6px -4px rgba(0,0,0,.12)}
+.cp{display:inline-block;width:11px;height:12px;border:1px solid var(--primary);border-radius:2px;margin-left:4px;vertical-align:-1px}
+.s-ok{color:#52c41a}.s-no{color:#f5222d}
+.added{background:#fff7e6 !important}
+.removed{background:#fff1f0 !important;outline:1px dashed #ff7875;outline-offset:-3px}
+.pg{display:flex;justify-content:flex-end;gap:8px;align-items:center;padding:10px 0 0;color:var(--text2);flex-wrap:wrap}
+.pg b{display:inline-flex;width:26px;height:26px;align-items:center;justify-content:center;border:1px solid var(--primary);color:var(--primary);font-weight:400}
+.pg .sel-s{height:26px;border:1px solid var(--border);padding:0 8px;display:inline-flex;align-items:center;border-radius:2px;color:var(--text)}
+.fi label.chg{color:#d4380d}
+.mk{display:inline-block;font-size:10px;line-height:14px;padding:0 3px;margin-right:3px;border-radius:2px;background:#fa8c16;color:#fff;vertical-align:1px;font-weight:500}
+.proto th .mk{margin:0 0 0 4px}
+.mk.n{background:#19be6b}.mk.d{background:#f5222d}
+.dd{position:absolute;z-index:20;background:#fff;box-shadow:0 3px 6px -4px rgba(0,0,0,.12),0 6px 16px rgba(0,0,0,.08);border-radius:2px;padding:4px 0;min-width:140px;font-size:13px}
+.dd .op{padding:5px 12px;cursor:pointer}
+.dd .op:hover{background:#f5f5f5}
+.dd .op.sel{background:#e6f7ff;font-weight:600}
+.empty{color:#bfbfbf;padding:30px 0 !important}
+.mode-new .old-only{display:none !important}
+.mode-old .new-only{display:none !important}
+@media (max-width:900px){.sb{display:none}.form{grid-template-columns:repeat(2,minmax(0,1fr))}.fi.w2{grid-column:span 2}}
+@media (max-width:520px){.form{grid-template-columns:minmax(0,1fr)}.fi.w2{grid-column:span 1}.hd .r{display:none}}
+</style></head>
+<body>
+<header class="dh-header"><div class="dh-header-inner">
+  <h1>优惠赠送记录 · 领取状态筛选</h1>
+  <div class="dh-meta"><span>模块：<b>商户财务管理 · 人工提存记录 · 优惠赠送记录</b></span><span>产品经理：<b>Zuno</b></span><span>更新日期：<b>2026-11-12</b></span></div>
+</div></header>
+<nav class="dh-navbar"><div class="dh-navbar-inner dh-primary">
+  <button class="dh-primary-btn active" data-primary="proto" type="button">交互原型 <small>领取状态筛选、未领取记录展示</small></button>
+  <button class="dh-primary-btn" data-primary="docs" type="button">需求文档 <small>功能说明、规则与验收</small></button>
+</div></nav>
+<main class="dh-wrap">
+<section class="dh-primary-panel active" id="pp-proto">
+<p class="proto-legend">带「新增」「改」「删除」角标的是本期改动，鼠标移入角标看改动前后对比。点击「领取状态」可切换，列表、条数和「共 X 元」随之变化；「调整后 / 现网」切换对比改版前后。其余筛选、查询、导出、分页为静态，列表为示例数据。</p>
+<div class="switch" role="tablist">
+  <button class="on" data-mode="new" type="button">调整后</button>
+  <button data-mode="old" type="button">现网</button>
+</div>
+<div id="page" class="mode-new">
+<div class="proto">
+  <aside class="sb">
+    <div class="logo"><i></i>DD.GG</div>
+    <div class="m">平台概况<span>∨</span></div>
+    <div class="m">系统管理<span>∨</span></div>
+    <div class="m">商户游戏管理<span>∨</span></div>
+    <div class="m">会员管理<span>∨</span></div>
+    <div class="m open">商户财务管理<span>∧</span></div>
+    <div class="s">人工提存</div>
+    <div class="s act">人工提存记录</div>
+    <div class="s">已上分三方充值订单</div>
+    <div class="s">未上分三方充值订单</div>
+    <div class="s">三方充值记录</div>
+    <div class="s">待审核出款订单</div>
+    <div class="s">已审核出款订单</div>
+    <div class="s">总出款记录</div>
+    <div class="s">提现渠道统计</div>
+    <div class="s">充值渠道统计</div>
+    <div class="s">三方支付平台成功率</div>
+    <div class="s">三方代付平台成功率</div>
+    <div class="m">报表查询<span>∨</span></div>
+    <div class="m">代理中心(无限极差)<span>∨</span></div>
+  </aside>
+  <div class="main">
+    <div class="hd"><span>商户财务管理 / 人工提存记录</span><span class="r">2026-11-11 02:29:53 (巴西雷亚尔：UTC-3)　zune01</span></div>
+    <div class="tabs"><span>全局报表（old）</span><span class="on">人工提存记录 ×</span></div>
+    <div class="body">
+      <div class="ptabs"><span>人工存款记录</span><span>人工提款记录</span><span class="on">优惠赠送记录</span></div>
+      <div class="form">
+        <div class="fi"><label>所属地区：</label><div class="ctl">巴西站-测试</div></div>
+        <div class="fi"><label>所属商户：</label><div class="ctl">888</div></div>
+        <div class="fi"><label>会员ID：</label><div class="ctl in ph">请输入</div></div>
+        <div class="fi"><label>金额区间：</label><div class="ctl in ph">请输入　~　请输入</div></div>
+        <div class="fi"><label>订单号：</label><div class="ctl in ph">请输入</div></div>
+        <div class="fi"><label>操作员：</label><div class="ctl in ph">请输入</div></div>
+        <div class="fi"><label>渠道：</label><div class="ctl">全部</div></div>
+        <div class="fi"><label>用户类型：</label><div class="ctl">全部</div></div>
+        <div class="fi w2"><label>时间段：</label><div class="ctl in">2026-11-01 00:00:00　→　2026-11-30 23:59:59</div></div>
+        <div class="fi"><label>优惠类型：</label><div class="ctl">人工存入</div></div>
+        <div class="fi"><label>领取方式：</label><div class="ctl">全部</div></div>
+        <div class="fi new-only"><label class="chg"><span class="mk n" data-tip="st" tabindex="0">新增</span>领取状态：</label><div class="ctl ss" id="stCtl">全部</div></div>
+        <div class="fi w2"><label>领取时间：</label><div class="ctl in ph">开始日期　→　结束日期</div></div>
+        <div class="fi old-only removed"><label class="chg"><span class="mk d" data-tip="scope" tabindex="0">删除</span>展示范围：</label><span class="ro">仅展示已领取/成功账变数据</span></div>
+      </div>
+      <div class="dd" id="dd" hidden></div>
+      <div class="btns"><span class="btn">今 天</span><span class="btn">昨 天</span><span class="btn">本 周</span><span class="btn">上 周</span><span class="btn o">本 月</span><span class="btn">上 月</span><span class="btn">重 置</span><span class="btn p">查 询</span></div>
+      <div class="bar">
+        <div class="l"><span>优惠赠送记录列表</span><span class="red" id="sum">共0.00元</span><span class="mk new-only" data-tip="sum" tabindex="0">改</span></div>
+        <div class="r"><span class="btn">导 出</span><span class="mk new-only" data-tip="exp" tabindex="0" style="margin-left:4px">改</span></div>
+      </div>
+      <div class="tw"><table id="tbl"></table></div>
+      <div class="pg"><span id="cnt">共 0 条数据</span><b>1</b><span class="sel-s">50 条/页 ∨</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</section>
+
+<section class="dh-primary-panel" id="pp-docs">
+<div class="dh-tabs" role="tablist">
+  <button class="dh-tab active" data-tab="t0" type="button"><span class="n">0</span>总览</button>
+  <button class="dh-tab" data-tab="t1" type="button"><span class="n">1</span>搜索区</button>
+  <button class="dh-tab" data-tab="t2" type="button"><span class="n">2</span>列表、合计与导出</button>
+  <button class="dh-tab" data-tab="t3" type="button"><span class="n">3</span>验收与开发测试</button>
+</div>
+
+<!-- 0 总览 -->
+<div class="dh-panel active" id="t0">
+<div class="req-block">
+  <h2>背景</h2>
+  <div class="dh-prose">
+    <p>优惠赠送记录现在只显示已领取的优惠。用「弹窗领取」「充值后领取」派发的彩金，会员没领之前在这一页看不到，商户无法找出这些会员回访。</p>
+    <p><strong>目标</strong>：增加「领取状态」筛选，商户能查出彩金已送出但还没领取的会员，并导出名单。打开页面默认显示全部状态的记录。</p>
+  </div>
+  <h2 style="margin-top:22px">本期改动</h2>
+  <div class="tbl-wrap"><table class="dh-table-simple">
+    <thead><tr><th>位置</th><th>改动</th></tr></thead>
+    <tbody>
+      <tr><td>搜索区<span class="tag-new d" data-tip="scope" tabindex="0">删除</span></td><td>去掉「展示范围：仅展示已领取/成功账变数据」。</td></tr>
+      <tr><td>搜索区<span class="tag-new n" data-tip="st" tabindex="0">新增</span></td><td>「领取方式」右侧新增「领取状态」：全部 / 未领取 / 已领取 / 作废 / 过期 / 放弃，默认「全部」。</td></tr>
+      <tr><td>列表<span class="tag-new" data-tip="rows" tabindex="0">修改</span></td><td>未领取、作废、过期、放弃的记录也进列表；这些记录的领取时间显示「--」，未领取红字。</td></tr>
+      <tr><td>共 X 元<span class="tag-new" data-tip="sum" tabindex="0">修改</span></td><td>按当前筛选结果合计存入金额。</td></tr>
+      <tr><td>导出<span class="tag-new" data-tip="exp" tabindex="0">修改</span></td><td>导出跟随领取状态筛选。</td></tr>
+    </tbody>
+  </table></div>
+  <div class="dh-callout">其余筛选项、列表 15 列的名称与顺序、排序、操作列、人工存款记录与人工提款记录两个页签都不变；不改变优惠的派发与领取流程。</div>
+</div>
+</div>
+
+<!-- 1 搜索区 -->
+<div class="dh-panel" id="t1">
+<div class="req-block">
+  <h2>功能结构</h2>
+  <div class="dh-mind"><div class="mm">
+    <div class="mm-root">搜索区</div>
+    <div class="mm-branches">
+      <div class="mm-b"><div class="mm-node">新增</div><div class="mm-leaves">
+        <span class="mm-leaf">领取状态：全部 / 未领取 / 已领取 / 作废 / 过期 / 放弃<span class="tag-new n" data-tip="st" tabindex="0">新增</span></span>
+      </div></div>
+      <div class="mm-b"><div class="mm-node">删除</div><div class="mm-leaves">
+        <span class="mm-leaf">展示范围（仅展示已领取）<span class="tag-new d" data-tip="scope" tabindex="0">删除</span></span>
+      </div></div>
+      <div class="mm-b"><div class="mm-node">不变</div><div class="mm-leaves">
+        <span class="mm-leaf">其余 12 个筛选项</span>
+        <span class="mm-leaf">快捷日期、重置 / 查询</span>
+      </div></div>
+    </div>
+  </div></div>
+
+  <h3>字段位置</h3>
+  <div class="dh-illustration">
+    <div class="illus-list">
+      <span class="illus-item">… 优惠类型</span><span class="illus-sep"></span>
+      <span class="illus-item">领取方式</span><span class="illus-sep"></span>
+      <span class="illus-item new">领取状态</span><span class="illus-sep"></span>
+      <span class="illus-item">领取时间</span>
+    </div>
+    <p class="cap">示意图：「领取状态」放在「领取方式」与「领取时间」之间；原「展示范围」去掉。其余字段顺序不变。</p>
+  </div>
+
+  <h3>字段说明</h3>
+  <div class="tbl-wrap"><table class="dh-table-simple">
+    <thead><tr><th>字段</th><th>控件与选项</th><th>默认值</th></tr></thead>
+    <tbody>
+      <tr class="chg"><td><b>领取状态</b><span class="tag-new n" data-tip="st" tabindex="0">新增</span></td><td>单选下拉：全部 / 未领取 / 已领取 / 作废 / 过期 / 放弃</td><td>全部</td></tr>
+      <tr class="chg"><td><b>展示范围</b><span class="tag-new d" data-tip="scope" tabindex="0">删除</span></td><td>去掉整项</td><td>—</td></tr>
+      <tr><td>领取时间</td><td>日期时间范围，按会员领取的时间筛选</td><td>空</td></tr>
+      <tr><td>时间段</td><td>日期时间范围，按存入时间筛选，对所有领取状态都生效</td><td>本月</td></tr>
+      <tr><td>其余筛选</td><td>所属地区、所属商户、会员ID、金额区间、订单号、操作员、渠道、用户类型、优惠类型、领取方式</td><td>沿用现有</td></tr>
+      <tr><td>重置</td><td>领取状态回到「全部」，其余字段回到默认值</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>领取状态含义</h3>
+  <div class="tbl-wrap"><table class="dh-table-simple">
+    <thead><tr><th>领取状态</th><th>含义</th><th>领取时间</th></tr></thead>
+    <tbody>
+      <tr><td>已领取</td><td>会员已领取，或自动领取</td><td>有</td></tr>
+      <tr><td>未领取</td><td>已派发、会员还没领（弹窗领取 / 充值后领取）</td><td>--</td></tr>
+      <tr><td>作废</td><td>后台已作废</td><td>--</td></tr>
+      <tr><td>过期</td><td>超过奖励过期时间未领</td><td>--</td></tr>
+      <tr><td>放弃</td><td>会员放弃领取</td><td>--</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>查询流程</h3>
+  <div class="dh-flow">
+    <div class="flow-diagram">
+      <span class="flow-step">选择领取状态<span class="sub">默认全部</span></span><span class="flow-arrow">→</span>
+      <span class="flow-step">点击查询</span><span class="flow-arrow">→</span>
+      <span class="flow-step">按全部条件同时筛选</span>
+    </div>
+    <div class="flow-branches">
+      <div class="flow-branch">选「已领取」<span class="arr">→</span><span class="result good">只看已到账的记录</span></div>
+      <div class="flow-branch">选「未领取」<span class="arr">→</span><span class="result good">显示送了没领的记录，可导出名单</span></div>
+      <div class="flow-branch">选「全部」<span class="arr">→</span><span class="result good">所有状态混合显示，按存入时间倒序</span></div>
+      <div class="flow-branch">选未领取 / 作废 / 过期 / 放弃，同时填了领取时间<span class="arr">→</span><span class="result bad">无数据（这些记录没有领取时间）</span></div>
+    </div>
+  </div>
+
+  <h3>触发条件与反馈</h3>
+  <div class="tbl-wrap"><table class="dh-table-simple">
+    <thead><tr><th>触发条件</th><th>系统反馈</th></tr></thead>
+    <tbody>
+      <tr><td>打开页面</td><td>领取状态为「全部」，显示全部状态的记录，按存入时间倒序</td></tr>
+      <tr><td>领取状态选「未领取」后查询</td><td>只显示未领取的记录，领取时间「--」，领取状态红字</td></tr>
+      <tr><td>领取状态选作废 / 过期 / 放弃后查询</td><td>只显示对应状态的记录，领取时间「--」</td></tr>
+      <tr><td>未领取 / 作废 / 过期 / 放弃 + 填了领取时间</td><td>无数据</td></tr>
+      <tr><td>会员领取后重新查询</td><td>该记录从「未领取」变为「已领取」，领取时间有值</td></tr>
+      <tr><td>点击重置</td><td>领取状态回到「全部」</td></tr>
+    </tbody>
+  </table></div>
+</div>
+</div>
+
+<!-- 2 列表、合计与导出 -->
+<div class="dh-panel" id="t2">
+<div class="req-block">
+  <h2>功能结构</h2>
+  <div class="dh-mind"><div class="mm">
+    <div class="mm-root">列表、合计与导出</div>
+    <div class="mm-branches">
+      <div class="mm-b"><div class="mm-node">修改</div><div class="mm-leaves">
+        <span class="mm-leaf">列表纳入未领取 / 作废 / 过期 / 放弃<span class="tag-new" data-tip="rows" tabindex="0">修改</span></span>
+        <span class="mm-leaf">共 X 元按筛选结果合计<span class="tag-new" data-tip="sum" tabindex="0">修改</span></span>
+        <span class="mm-leaf">导出跟随领取状态<span class="tag-new" data-tip="exp" tabindex="0">修改</span></span>
+      </div></div>
+      <div class="mm-b"><div class="mm-node">不变</div><div class="mm-leaves">
+        <span class="mm-leaf">15 列名称与顺序</span>
+        <span class="mm-leaf">存入时间倒序</span>
+        <span class="mm-leaf">操作列、分页</span>
+      </div></div>
+    </div>
+  </div></div>
+
+  <h3>列表规则</h3>
+  <div class="tbl-wrap"><table class="dh-table-simple">
+    <thead><tr><th>项目</th><th>规则</th></tr></thead>
+    <tbody>
+      <tr class="chg"><td><b>显示哪些记录</b><span class="tag-new" data-tip="rows" tabindex="0">修改</span></td><td>按领取状态筛选；未领取、作废、过期、放弃的记录也进列表</td></tr>
+      <tr><td>列</td><td>订单号、会员ID、会员账号、账号类型、优惠类型、存入时间、存入金额、领取方式、领取时间、领取状态、商户名称、渠道、操作员、备注、操作，名称与顺序不变</td></tr>
+      <tr class="chg"><td><b>领取状态列</b><span class="tag-new" data-tip="rows" tabindex="0">修改</span></td><td>未领取红字；其余状态沿用现网样式</td></tr>
+      <tr class="chg"><td><b>领取时间列</b><span class="tag-new" data-tip="rows" tabindex="0">修改</span></td><td>未领取、作废、过期、放弃显示「--」</td></tr>
+      <tr><td>排序、操作列、分页</td><td>不变</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>合计与导出</h3>
+  <div class="tbl-wrap"><table class="dh-table-simple">
+    <thead><tr><th>项目</th><th>规则</th></tr></thead>
+    <tbody>
+      <tr class="chg"><td><b>共 X 元</b><span class="tag-new" data-tip="sum" tabindex="0">修改</span></td><td>当前筛选结果的存入金额合计</td></tr>
+      <tr class="chg"><td><b>导出</b><span class="tag-new" data-tip="exp" tabindex="0">修改</span></td><td>导出的行跟随全部筛选条件（含领取状态），列与列表一致；领取时间无值导出为「--」</td></tr>
+    </tbody>
+  </table></div>
+  <div class="dh-callout warn">领取状态选「全部」时，「共 X 元」包含未领取的金额，不等于实际到账金额；只看到账金额请选「已领取」。</div>
+</div>
+</div>
+
+<!-- 3 验收与开发测试 -->
+<div class="dh-panel" id="t3">
+<div class="req-block">
+  <h2>范围</h2>
+  <div class="tbl-wrap"><table class="dh-table-simple">
+    <thead><tr><th>项目</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>本期做</td><td>领取状态筛选；列表与合计包含全部状态的记录；导出跟随筛选</td></tr>
+      <tr><td>本期不做</td><td>作废操作；优惠类型选项、用户类型默认值；人工存款记录、人工提款记录页签；其余筛选、列、排序、分页</td></tr>
+      <tr><td>适用范围</td><td>全部商户站点</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>用户与场景</h2>
+  <div class="tbl-wrap"><table class="dh-table-simple">
+    <thead><tr><th>项目</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>角色</td><td>商户运营、财务，具备原菜单权限</td></tr>
+      <tr><td>找送了没领的会员</td><td>领取状态选「未领取」，时间段选派发日期，查询后导出名单回访</td></tr>
+      <tr><td>看过期、放弃的会员</td><td>领取状态选「过期」或「放弃」</td></tr>
+      <tr><td>对账</td><td>领取状态选「已领取」，只看已到账的记录</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>功能点清单</h2>
+  <div class="dh-prose"><ol>
+    <li><strong>F1【P0】领取状态筛选</strong>：全部 / 未领取 / 已领取 / 作废 / 过期 / 放弃，默认全部。</li>
+    <li><strong>F2【P0】列表包含全部状态</strong>：未领取等记录进列表，领取时间「--」，未领取红字。</li>
+    <li><strong>F3【P1】共 X 元按筛选结果合计</strong>。</li>
+    <li><strong>F4【P1】导出跟随领取状态</strong>。</li>
+  </ol></div>
+
+  <h2>数据与埋点</h2>
+  <div class="tbl-wrap"><table class="dh-table-simple">
+    <thead><tr><th>项目</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>埋点</td><td>不新增</td></tr>
+      <tr><td>数据源</td><td>需包含未领取、作废、过期、放弃的人工优惠记录</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>依赖、影响与风险</h2>
+  <div class="tbl-wrap"><table class="dh-table-simple">
+    <thead><tr><th>项目</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>影响范围</td><td>只影响本页签的查询、合计、导出；不改变优惠派发与领取流程</td></tr>
+      <tr><td>前台影响</td><td>无</td></tr>
+      <tr><td>风险与注意</td><td>选「全部」时共 X 元含未领取金额，不等于实际到账</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>验收标准</h2>
+  <div class="tbl-wrap"><table class="dh-table-simple">
+    <thead><tr><th>编号</th><th>前置条件与操作</th><th>期望结果</th></tr></thead>
+    <tbody>
+      <tr><td>A1</td><td>打开优惠赠送记录</td><td>无「展示范围」；「领取方式」右侧有「领取状态」，默认「全部」；列表显示全部状态的记录</td></tr>
+      <tr><td>A2</td><td>领取状态选「未领取」查询</td><td>只显示未领取记录，领取时间「--」，状态红字；共 X 元为这些记录的存入金额合计</td></tr>
+      <tr><td>A3</td><td>领取状态选「全部」</td><td>已领取与未领取等记录混合显示，按存入时间倒序；共 X 元含全部</td></tr>
+      <tr><td>A4</td><td>分别选作废、过期、放弃</td><td>只显示对应状态，领取时间「--」</td></tr>
+      <tr><td>A5</td><td>未领取 + 填领取时间</td><td>无数据</td></tr>
+      <tr><td>A6</td><td>会员领取后重新查询</td><td>该记录从「未领取」变为「已领取」，领取时间有值</td></tr>
+      <tr><td>A7</td><td>选「未领取」后导出</td><td>导出行与列表一致，领取时间为「--」</td></tr>
+      <tr><td>A8</td><td>改了领取状态后点重置</td><td>领取状态回到「全部」</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>需求完整性自查</h2>
+  <div class="tbl-wrap"><table class="dh-table-simple">
+    <thead><tr><th>检查项</th><th>结论</th></tr></thead>
+    <tbody>
+      <tr><td>权限</td><td>沿用原菜单与导出权限，不新增权限点</td></tr>
+      <tr><td>操作留痕</td><td>只读查询，无留痕</td></tr>
+      <tr><td>边界与在途</td><td>上线前已派发未领取的记录上线后即可查到；领取后重新查询即更新</td></tr>
+      <tr><td>口径与单位</td><td>金额、时间格式、时区沿用现有</td></tr>
+      <tr><td>多语言</td><td>新增文案「领取状态」及选项按后台现有多语言方式提供</td></tr>
+      <tr><td>生效范围</td><td>上线后对全部商户生效</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>开发测试重点说明</h2>
+  <div class="dh-prose"><ol>
+    <li><strong>默认全部</strong>：打开页面领取状态为「全部」，未领取等记录直接可见；选「已领取」时与改版前一致，回归必测。</li>
+    <li><strong>数据源放开</strong>：未领取、作废、过期、放弃都要进本页。</li>
+    <li><strong>领取时间 + 无领取时间的状态 = 空</strong>。</li>
+    <li><strong>共 X 元、导出都跟随领取状态</strong>。</li>
+  </ol></div>
+</div>
+</div>
+</section>
+</main>
+<div class="dh-lightbox" id="lb"><div class="dh-lightbox-body" id="lbBody"></div></div>
+<script>
+const COLS=['订单号','会员ID','会员账号','账号类型','优惠类型','存入时间','存入金额','领取方式','领取时间','领取状态','商户名称','渠道','操作员','备注'];
+const cp='<span class="cp"></span>';
+// [订单号, 会员ID, 会员账号, 存入时间, 存入金额, 领取方式, 领取时间, 领取状态, 渠道, 备注]
+const DATA=[
+ ['5498326560312524801','58296828','11999900036','2026-11-11 02:18:49','0.12','弹窗领取','2026-11-11 02:19:41','已领取','官方渠道','回访赠送'],
+ ['5498326216715141121','58296828','11999900036','2026-11-11 02:18:28','0.11','自动领取','2026-11-11 02:18:28','已领取','官方渠道','回访赠送'],
+ ['5498325941201733633','35995369','11999900027','2026-11-11 01:52:10','0.80','弹窗领取','--','未领取','官方渠道','回访赠送'],
+ ['5498325529520373761','58296828','11999900036','2026-11-11 01:47:48','5.00','自动领取','2026-11-11 01:47:48','已领取','官方渠道','首存赠送'],
+ ['5498321107734528001','93092497','11999900002','2026-11-10 22:05:31','2.00','充值后领取','--','未领取','官方渠道','充值奖励'],
+ ['5498318820150796289','24498184','11962222250','2026-11-10 18:40:02','1.50','弹窗领取','--','未领取','官方渠道','回访赠送'],
+ ['5498318820150796290','35995369','11999900027','2026-11-10 18:40:02','1.50','弹窗领取','2026-11-10 19:02:15','已领取','官方渠道','回访赠送'],
+ ['5498310035512147969','93092497','11999900002','2026-11-08 10:12:44','3.00','弹窗领取','--','过期','官方渠道','活动补发'],
+ ['5498302276638916609','24498184','11962222250','2026-11-06 15:30:20','1.00','充值后领取','--','放弃','官方渠道','充值奖励'],
+ ['5498297718024052737','58296828','11999900036','2026-11-05 09:01:05','2.50','弹窗领取','--','作废','官方渠道','误发作废']
+];
+const MK={'领取时间':'<span class="mk new-only" data-tip="rows" tabindex="0">改</span>','领取状态':'<span class="mk new-only" data-tip="rows" tabindex="0">改</span>'};
+let ST='全部';
+function render(){
+  const old=document.getElementById('page').classList.contains('mode-old');
+  const f=old?'已领取':ST;
+  const rows=DATA.filter(r=>f==='全部'||r[7]===f);
+  const sum=rows.reduce((a,r)=>a+parseFloat(r[4]),0);
+  document.getElementById('sum').textContent='共'+sum.toFixed(2)+'元';
+  document.getElementById('cnt').textContent='共 '+rows.length+' 条数据';
+  const td=r=>{const s=r[7];const sc=s==='已领取'?'s-ok':s==='未领取'?'s-no':'';
+    return [r[0],'<span class="link">'+r[1]+'</span>'+cp,r[2],'正式','人工存入',r[3],r[4],r[5],r[6],`<span class="${sc}">${s}</span>`,'888',r[8],'zune01',r[9]];};
+  document.getElementById('tbl').innerHTML='<thead><tr>'+COLS.map(c=>`<th>${c}${MK[c]||''}</th>`).join('')+'<th class="op">操作</th></tr></thead><tbody>'+
+    (rows.length?rows.map(r=>'<tr>'+td(r).map(v=>`<td>${v}</td>`).join('')+'<td class="op">-</td></tr>').join(''):`<tr><td class="empty" colspan="${COLS.length+1}">暂无数据</td></tr>`)+'</tbody>';
+}
+const dd=document.getElementById('dd'),stCtl=document.getElementById('stCtl');
+const OPTS=['全部','未领取','已领取','作废','过期','放弃'];
+stCtl.onclick=e=>{e.stopPropagation();if(!dd.hidden){dd.hidden=true;return;}
+  dd.innerHTML=OPTS.map(o=>`<div class="op${o===ST?' sel':''}" data-v="${o}">${o}</div>`).join('');
+  const b=stCtl.getBoundingClientRect(),p=dd.parentElement.getBoundingClientRect();
+  dd.style.left=(b.left-p.left)+'px';dd.style.top=(b.bottom-p.top+2)+'px';dd.style.minWidth=b.width+'px';dd.hidden=false;};
+dd.onclick=e=>{e.stopPropagation();const o=e.target.closest('.op');if(!o)return;ST=o.dataset.v;stCtl.textContent=ST;dd.hidden=true;render();};
+document.addEventListener('click',()=>{dd.hidden=true;});
+document.querySelectorAll('.switch button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.switch button').forEach(x=>x.classList.toggle('on',x===b));
+  document.getElementById('page').className='mode-'+b.dataset.mode;dd.hidden=true;render();
+});
+render();
+</script>
+<script>
+document.querySelectorAll('.dh-primary-btn').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.dh-primary-btn').forEach(x=>x.classList.toggle('active',x===b));
+  document.querySelectorAll('.dh-primary-panel').forEach(p=>p.classList.toggle('active',p.id==='pp-'+b.dataset.primary));
+  scrollTo(0,0);
+});
+document.querySelectorAll('.dh-tab').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.dh-tab').forEach(x=>x.classList.toggle('active',x===b));
+  document.querySelectorAll('.dh-panel').forEach(p=>p.classList.toggle('active',p.id===b.dataset.tab));
+});
+const lb=document.getElementById('lb'),lbBody=document.getElementById('lbBody');
+document.querySelectorAll('.dh-flow,.dh-mind').forEach(el=>el.addEventListener('click',()=>{lbBody.innerHTML='';lbBody.appendChild(el.cloneNode(true));lb.classList.add('open');}));
+lb.addEventListener('click',e=>{if(e.target===lb||e.target===lbBody)lb.classList.remove('open');});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove('open');});
+</script>
+<style id="tipCss">
+[data-tip]{cursor:help;}
+[data-tip]:hover,[data-tip]:focus{filter:brightness(1.12);text-decoration:underline dotted;outline:none;}
+#chgTip{position:fixed;z-index:9999;max-width:340px;width:calc(100vw - 32px);box-sizing:border-box;background:#1f2433;color:#eef1f7;border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.65;box-shadow:0 8px 28px rgba(0,0,0,.28);display:none;text-align:left;font-weight:400;white-space:normal;}
+#chgTip .tt{font-weight:600;font-size:13px;margin-bottom:6px;display:flex;align-items:center;gap:8px;padding-right:18px;}
+#chgTip .tt i{font-style:normal;font-size:11px;padding:1px 6px;border-radius:3px;background:#ff8a00;color:#fff;font-weight:500;white-space:nowrap;}
+#chgTip .tt i.n{background:#19be6b;}
+#chgTip .tt i.d{background:#f5222d;}
+#chgTip p{margin:0 0 4px;white-space:pre-wrap;}
+#chgTip p b{color:#ffcf70;font-weight:500;}
+#chgTip .x{position:absolute;right:8px;top:6px;cursor:pointer;color:#9aa3b5;font-size:16px;line-height:1;background:none;border:0;padding:2px;}
+</style>
+<div id="chgTip" role="tooltip"><button class="x" type="button" aria-label="关闭">×</button><div class="tt"></div><div class="bd"></div></div>
+<script>(function(){var TIPS={
+ 'st': ['优惠赠送记录 · 搜索「领取状态」', '原：没有领取状态筛选，页面只显示已领取的记录。\n现：「领取方式」右侧新增单选下拉：全部 / 未领取 / 已领取 / 作废 / 过期 / 放弃，默认「全部」；重置后回到「全部」。'],
+ 'scope': ['优惠赠送记录 · 搜索「展示范围」', '原：显示只读文字「仅展示已领取/成功账变数据」，未领取等记录看不到。\n现：去掉此项，显示范围由「领取状态」决定。'],
+ 'rows': ['优惠赠送记录 · 列表记录', '原：只显示已领取的记录。\n现：未领取、作废、过期、放弃的记录也进列表，领取时间显示「--」，未领取红字。列名与顺序不变。'],
+ 'sum': ['优惠赠送记录 · 「共 X 元」', '原：合计只含已领取的存入金额。\n现：按当前筛选结果合计存入金额；领取状态选「全部」时包含未领取金额。'],
+ 'exp': ['优惠赠送记录 · 导出', '原：导出的只有已领取的记录。\n现：导出的行跟随全部筛选条件（含领取状态），列与列表一致；领取时间无值导出为「--」。'],
+};
+var box=document.getElementById('chgTip'),cur=null,pinned=false,ht=null;
+function esc(t){return t.replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+function place(){if(!cur)return;var r=cur.getBoundingClientRect(),w=box.offsetWidth,h=box.offsetHeight,vw=document.documentElement.clientWidth,vh=innerHeight;if(r.bottom<0||r.top>vh||!r.width){hide();return;}var x=Math.min(Math.max(16,r.left),vw-w-16),y=r.bottom+6;if(y+h>vh-8)y=Math.max(8,r.top-h-6);box.style.left=x+'px';box.style.top=y+'px';}
+function show(el){var d=TIPS[el.getAttribute('data-tip')];if(!d)return;clearTimeout(ht);cur=el;var lab=el.textContent.trim();
+box.querySelector('.tt').innerHTML='<i class="'+(lab.indexOf('新增')>-1?'n':lab.indexOf('删除')>-1?'d':'')+'">'+esc(lab)+'</i>'+esc(d[0]);
+box.querySelector('.bd').innerHTML=d[1].split('\n').map(function(l){var m=l.match(/^(原|现)：/);return '<p>'+(m?'<b>'+m[0]+'</b>'+esc(l.slice(2)):esc(l))+'</p>';}).join('');
+box.style.display='block';place();}
+function hide(){box.style.display='none';cur=null;pinned=false;}
+function tipOf(t){return t&&t.closest?t.closest('[data-tip]'):null;}
+document.addEventListener('mouseover',function(e){var el=tipOf(e.target);if(el&&!pinned)show(el);else if(!el&&!pinned&&cur&&!(e.target.closest&&e.target.closest('#chgTip'))){clearTimeout(ht);ht=setTimeout(function(){if(!pinned)hide();},150);}});
+document.addEventListener('click',function(e){var el=tipOf(e.target);
+if(el){e.preventDefault();e.stopPropagation();show(el);pinned=box.style.display==='block';return;}
+if(e.target.closest&&e.target.closest('#chgTip')&&!e.target.closest('.x'))return;hide();},true);
+document.addEventListener('focusin',function(e){var el=tipOf(e.target);if(el)show(el);});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')hide();});
+addEventListener('scroll',place,true);addEventListener('resize',place);})();</script>
+</body></html>
