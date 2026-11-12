@@ -184,6 +184,10 @@ h1,h2,h3{font-family:var(--f-serif);font-weight:600;margin:0;}
 .modal-box{background:#fff;color:#000000d9;border-radius:2px;width:min(416px,calc(100vw - 32px));padding:32px 32px 24px;box-shadow:0 6px 16px rgba(0,0,0,.08);font-size:14px}
 .modal-box .t{display:flex;gap:12px;align-items:flex-start;font-weight:500;font-size:16px}
 .modal-box .t i{flex:none;width:22px;height:22px;border-radius:50%;background:#faad14;color:#fff;font-style:normal;display:inline-flex;align-items:center;justify-content:center;font-size:14px}
+.modal-box .d{margin:8px 0 0 34px;color:#f5222d;font-size:14px}
+.toast{position:fixed;top:24px;left:50%;transform:translateX(-50%);background:#fff;color:#000000d9;box-shadow:0 3px 6px -4px rgba(0,0,0,.12),0 6px 16px rgba(0,0,0,.08);border-radius:2px;padding:9px 16px;font-size:14px;z-index:400;display:flex;align-items:center;gap:8px;color-scheme:light}
+.toast[hidden]{display:none}
+.toast i{width:16px;height:16px;border-radius:50%;background:#52c41a;color:#fff;font-style:normal;font-size:11px;display:inline-flex;align-items:center;justify-content:center}
 .modal-box .ft{display:flex;justify-content:flex-end;gap:8px;margin-top:24px}
 .modal-box .bt{height:32px;padding:0 15px;border:1px solid #d9d9d9;border-radius:2px;background:#fff;cursor:pointer;font:inherit}
 .modal-box .bt.p{background:#1890ff;border-color:#1890ff;color:#fff}
@@ -292,7 +296,7 @@ h1,h2,h3{font-family:var(--f-serif);font-weight:600;margin:0;}
       <tr><td>列表<span class="tag-new" data-tip="rows" tabindex="0">修改</span></td><td>未领取、作废、过期、放弃的记录也进列表；这些记录的领取时间显示「--」，未领取红字。</td></tr>
       <tr><td>共 X 元<span class="tag-new" data-tip="sum" tabindex="0">修改</span></td><td>按当前筛选结果合计存入金额。</td></tr>
       <tr><td>导出<span class="tag-new" data-tip="exp" tabindex="0">修改</span></td><td>导出跟随领取状态筛选。</td></tr>
-      <tr><td>操作列<span class="tag-new n" data-tip="void" tabindex="0">新增</span></td><td>未领取的记录显示「作废订单」，二次确认后该笔优惠作废，会员不能再领取。</td></tr>
+      <tr><td>操作列<span class="tag-new n" data-tip="void" tabindex="0">新增</span></td><td>未领取的记录显示「作废订单」，二次确认后该笔优惠作废，会员不能再领取；确认框红字说明影响，成功后提示「已作废」。</td></tr>
     </tbody>
   </table></div>
   <div class="dh-callout">其余筛选项、列表 15 列的名称与顺序、排序、分页、人工存款记录与人工提款记录两个页签都不变；不改变优惠的派发与领取流程。</div>
@@ -435,10 +439,10 @@ h1,h2,h3{font-family:var(--f-serif);font-weight:600;margin:0;}
   <div class="dh-flow">
     <div class="flow-diagram">
       <span class="flow-step">未领取的行点「作废订单」</span><span class="flow-arrow">→</span>
-      <span class="flow-step">弹出确认框<span class="sub">确认作废此记录</span></span>
+      <span class="flow-step">弹出确认框<span class="sub">确认作废此记录<br>作废后会员不能再领取这笔优惠（红字）</span></span>
     </div>
     <div class="flow-branches">
-      <div class="flow-branch">点「确定」<span class="arr">→</span><span class="result good">该笔优惠变为作废，会员不能再领取；列表刷新，该行领取状态为「作废」，操作列为「-」</span></div>
+      <div class="flow-branch">点「确定」<span class="arr">→</span><span class="result good">提示「已作废」；该笔优惠变为作废，会员不能再领取；列表刷新，该行领取状态为「作废」，操作列为「-」</span></div>
       <div class="flow-branch">点「取消」或关闭<span class="arr">→</span><span class="result neutral">不作废，记录不变</span></div>
       <div class="flow-branch">确认前会员已领取<span class="arr">→</span><span class="result bad">作废失败，提示该订单已领取，列表刷新后显示「已领取」</span></div>
     </div>
@@ -446,8 +450,8 @@ h1,h2,h3{font-family:var(--f-serif);font-weight:600;margin:0;}
   <div class="tbl-wrap"><table class="dh-table-simple">
     <thead><tr><th>触发条件</th><th>系统反馈</th></tr></thead>
     <tbody>
-      <tr><td>未领取的行点「作废订单」</td><td>弹出确认框「确认作废此记录」，按钮 取消 / 确定</td></tr>
-      <tr><td>点「确定」</td><td>该笔优惠作废，会员不能再领取；列表刷新，领取状态「作废」，领取时间「--」，操作列「-」；「人工优惠记录」中该订单状态同为「作废」</td></tr>
+      <tr><td>未领取的行点「作废订单」</td><td>弹出确认框：第一行「确认作废此记录」，第二行红字「作废后会员不能再领取这笔优惠」；按钮 取消 / 确定</td></tr>
+      <tr><td>点「确定」</td><td>提示「已作废」；该笔优惠作废，会员不能再领取；列表刷新，领取状态「作废」，领取时间「--」，操作列「-」；「人工优惠记录」中该订单状态同为「作废」</td></tr>
       <tr><td>点「取消」</td><td>关闭确认框，记录不变</td></tr>
       <tr><td>已领取、作废、过期、放弃的行</td><td>操作列显示「-」，不能作废</td></tr>
     </tbody>
@@ -519,7 +523,7 @@ h1,h2,h3{font-family:var(--f-serif);font-weight:600;margin:0;}
       <tr><td>A6</td><td>会员领取后重新查询</td><td>该记录从「未领取」变为「已领取」，领取时间有值</td></tr>
       <tr><td>A7</td><td>选「未领取」后导出</td><td>导出行与列表一致，领取时间为「--」</td></tr>
       <tr><td>A8</td><td>改了领取状态后点重置</td><td>领取状态回到「全部」</td></tr>
-      <tr><td>A9</td><td>未领取的行点「作废订单」，点「确定」</td><td>弹出「确认作废此记录」；确定后该行领取状态「作废」，操作列「-」；会员端不能再领取该笔优惠；人工优惠记录中该订单状态为「作废」</td></tr>
+      <tr><td>A9</td><td>未领取的行点「作废订单」，点「确定」</td><td>弹出确认框，第二行红字「作废后会员不能再领取这笔优惠」；确定后提示「已作废」，该行领取状态「作废」，操作列「-」；会员端不能再领取该笔优惠；人工优惠记录中该订单状态为「作废」</td></tr>
       <tr><td>A10</td><td>未领取的行点「作废订单」，点「取消」</td><td>记录不变</td></tr>
       <tr><td>A11</td><td>查看已领取、作废、过期、放弃的行</td><td>操作列显示「-」</td></tr>
       <tr><td>A12</td><td>打开确认框后会员领取了该笔优惠，再点「确定」</td><td>作废失败，提示该订单已领取；列表刷新后显示「已领取」</td></tr>
@@ -553,7 +557,8 @@ h1,h2,h3{font-family:var(--f-serif);font-weight:600;margin:0;}
 </div>
 </section>
 </main>
-<div class="modal-mask" id="vmask" hidden><div class="modal-box" role="dialog"><div class="t"><i>!</i><span>确认作废此记录</span></div><div class="ft"><button class="bt" data-a="no" type="button">取 消</button><button class="bt p" data-a="ok" type="button">确 定</button></div></div></div>
+<div class="modal-mask" id="vmask" hidden><div class="modal-box" role="dialog"><div class="t"><i>!</i><span>确认作废此记录</span></div><div class="d">作废后会员不能再领取这笔优惠</div><div class="ft"><button class="bt" data-a="no" type="button">取 消</button><button class="bt p" data-a="ok" type="button">确 定</button></div></div></div>
+<div class="toast" id="toast" hidden><i>✓</i>已作废</div>
 <div class="dh-lightbox" id="lb"><div class="dh-lightbox-body" id="lbBody"></div></div>
 <script>
 const COLS=['订单号','会员ID','会员账号','账号类型','优惠类型','存入时间','存入金额','领取方式','领取时间','领取状态','商户名称','渠道','操作员','备注'];
@@ -601,7 +606,7 @@ document.querySelectorAll('.switch button').forEach(b=>b.onclick=()=>{
 let VO=null;const mask=document.getElementById('vmask');
 document.getElementById('tbl').addEventListener('click',e=>{const v=e.target.closest('.vd');if(!v)return;VO=v.dataset.o;mask.hidden=false;});
 mask.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b&&e.target!==mask)return;
-  if(b&&b.dataset.a==='ok'){const r=DATA.find(x=>x[0]===VO);if(r){r[7]='作废';r[6]='--';}render();}
+  if(b&&b.dataset.a==='ok'){const r=DATA.find(x=>x[0]===VO);if(r){r[7]='作废';r[6]='--';}render();const t=document.getElementById('toast');t.hidden=false;clearTimeout(window.__tt);window.__tt=setTimeout(()=>{t.hidden=true;},2000);}
   mask.hidden=true;VO=null;});
 render();
 </script>
@@ -638,7 +643,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove(
  'scope': ['优惠赠送记录 · 搜索「展示范围」', '原：显示只读文字「仅展示已领取/成功账变数据」，未领取等记录看不到。\n现：去掉此项，显示范围由「领取状态」决定。'],
  'rows': ['优惠赠送记录 · 列表记录', '原：只显示已领取的记录。\n现：未领取、作废、过期、放弃的记录也进列表，领取时间显示「--」，未领取红字。列名与顺序不变。'],
  'sum': ['优惠赠送记录 · 「共 X 元」', '原：合计只含已领取的存入金额。\n现：按当前筛选结果合计存入金额；领取状态选「全部」时包含未领取金额。'],
- 'void': ['优惠赠送记录 · 操作列「作废订单」', '原：操作列显示「-」，没有作废入口；未领取的记录不在本页。\n现：未领取的行显示「作废订单」图标，点击后确认「确认作废此记录」，确定后该笔优惠作废，会员不能再领取；已领取、作废、过期、放弃的行显示「-」。'],
+ 'void': ['优惠赠送记录 · 操作列「作废订单」', '原：操作列显示「-」，没有作废入口；未领取的记录不在本页。\n现：未领取的行显示「作废订单」图标，点击后弹出确认框「确认作废此记录」，第二行红字「作废后会员不能再领取这笔优惠」；确定后提示「已作废」，该笔优惠作废，会员不能再领取；已领取、作废、过期、放弃的行显示「-」。'],
  'exp': ['优惠赠送记录 · 导出', '原：导出的只有已领取的记录。\n现：导出的行跟随全部筛选条件（含领取状态），列与列表一致；领取时间无值导出为「--」。'],
 };
 var box=document.getElementById('chgTip'),cur=null,pinned=false,ht=null;
