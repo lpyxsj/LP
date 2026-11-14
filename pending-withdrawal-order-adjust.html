@@ -201,7 +201,7 @@ h1,h2,h3{font-family:var(--f-serif);font-weight:600;margin:0;}
 <body>
 <header class="dh-header"><div class="dh-header-inner">
   <h1>待审核出款订单 · 搜索区与列表调整</h1>
-  <div class="dh-meta"><span>模块：<b>商户财务管理 · 待审核出款订单</b></span><span>产品经理：<b>Zuno</b></span><span>更新日期：<b>2026-11-09</b></span></div>
+  <div class="dh-meta"><span>模块：<b>商户财务管理 · 待审核出款订单</b></span><span>产品经理：<b>Zuno</b></span><span>更新日期：<b>2026-11-14</b></span></div>
 </div></header>
 <nav class="dh-navbar"><div class="dh-navbar-inner dh-primary">
   <button class="dh-primary-btn active" data-primary="proto" type="button">交互原型 <small>搜索区多选、邀请ID，列表新增两列</small></button>
@@ -381,6 +381,13 @@ h1,h2,h3{font-family:var(--f-serif);font-weight:600;margin:0;}
     </tbody>
   </table></div>
   <div class="dh-callout">搜索区下方的「查看全部」「查看自动代付锁定订单」勾选框、重置 / 查询按钮、页面刷新下拉不变。重置后所有字段恢复上表默认值。</div>
+  <h3>补充规则</h3>
+  <div class="dh-prose"><ol>
+    <li><strong>多选下拉的选项</strong>：注册渠道、会员层级、代付平台的选项沿用现网同名筛选的数据，不另加停用 / 删除标识；不设「空」选项，未代付的订单只在代付平台不选时出现。</li>
+    <li><strong>会员查询为空</strong>：输入框只能输入数字；为空时不限制该条件，按其他条件正常查询，会员ID、手机号(会员账号)、邀请ID 三种类型一致。</li>
+    <li><strong>按当前会员资料</strong>：注册渠道、会员层级、邀请ID 的列表展示与筛选统一按查询时的当前会员资料，会员资料变更后已申请的订单随之变化。</li>
+    <li><strong>提款方式</strong>：只列当前开启中的方式，暂停 / 停用的不算已开通；进入或刷新页面时加载选项；已选的方式在本页内不自动清除，照常按该方式查询，刷新页面后恢复「全部」。</li>
+  </ol></div>
 
   <h3>查询流程</h3>
   <div class="dh-flow">
@@ -409,6 +416,7 @@ h1,h2,h3{font-family:var(--f-serif);font-weight:600;margin:0;}
       <tr><td>会员查询选「邀请ID」，输入某上级会员的ID后查询</td><td>显示该上级邀请的全部下级会员的订单；该ID没有下级或下级没有待审核订单时列表为空</td></tr>
       <tr><td>展开提款方式下拉</td><td>只有「全部」和商户已开通的提款方式，未开通的不显示</td></tr>
       <tr><td>点击重置</td><td>所有字段恢复默认值：多选字段恢复全部，会员查询类型恢复会员ID</td></tr>
+      <tr><td>会员查询输入框为空时点查询</td><td>不限制该条件，按其他条件正常查询</td></tr>
     </tbody>
   </table></div>
 </div>
@@ -526,6 +534,8 @@ h1,h2,h3{font-family:var(--f-serif);font-weight:600;margin:0;}
     <li><strong>提款方式只列已开通</strong>：选项按当前商户已开通的方式生成，不同商户看到的选项可能不同。</li>
     <li><strong>提款账户脱敏</strong>：脱敏规则与原「提款卡号」完全一致，不要另定规则；无值时显示「-」且不显示复制按钮。</li>
     <li><strong>重置</strong>：多选字段恢复全部，会员查询类型恢复会员ID，输入框提示随之恢复「请输入会员ID」。</li>
+    <li><strong>会员查询为空不限制</strong>：三种类型为空时都不限制该条件，正常查询，不提示、不拦截。</li>
+    <li><strong>按当前会员资料</strong>：注册渠道、会员层级、邀请ID 展示与筛选用同一时点（查询时的当前会员资料），不做申请时快照。</li>
   </ol></div>
 </div>
 </div>
