@@ -370,6 +370,8 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
 .h5-sec-hd .icon.logo{width:24px;}
 .h5-sec-hd .t{font-weight:700;font-size:12.5px;}
 .h5-cnt{margin-left:6px;font-size:9.5px;color:#25db8c;border:.5px solid #25db8c;background:#1b3826;border-radius:25px;padding:0 7px;line-height:15px;}
+.h5-sec-hd .nav{margin-left:auto;display:flex;gap:4px;margin-right:3px;}
+.h5-sec-hd .nav span{width:21px;height:21px;border:1px solid #3d3933;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:10px;background:#1d1b19;}
 .h5-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;}
 .h5-grid.c3{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;}
 .h5-card{position:relative;aspect-ratio:106/138;border-radius:11px;overflow:hidden;background:#2a2725;max-width:100%;}
@@ -1716,7 +1718,7 @@ function stTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">
     return '<button class="h5-tile'+(em?' dim':'')+'" '+(em?'disabled':'data-open="'+esc(v.name)+'"')+' type="button">'+(t?fimg(t):'<span style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-weight:800">'+esc(c.slice(0,3))+'</span>')+'<span class="lb">'+esc(c)+(em?' · 维护中':'')+'</span>'+(v.vp?'<span class="fpin">置顶'+v.vp+'</span>':'')+'</button>'; }
   function fTop(){ return '<div class="h5-top">'+fimg(fic('menu'),'ic')+fimg(fic('logo'),'logo')+'<span class="h5-bal">'+fimg(fic('wallet'))+'R$ 13.752,20</span><span class="h5-dep">充值</span></div>'; }
   function fHead2(t){ return '<div class="h5-head2"><span class="back" aria-hidden="true">‹</span>'+esc(t)+'</div>'; }
-  function fSecHd(icon,isLogo,title,cnt){ return '<div class="h5-sec-hd" style="background-image:url('+fic('secBg')+')">'+(icon?'<img class="icon'+(isLogo?' logo':'')+'" src="'+icon+'" alt="">':'')+'<span class="t">'+esc(title)+'</span><span class="h5-cnt">'+cnt+'</span></div>'; }
+  function fSecHd(icon,isLogo,title,cnt){ return '<div class="h5-sec-hd" style="background-image:url('+fic('secBg')+')">'+(icon?'<img class="icon'+(isLogo?' logo':'')+'" src="'+icon+'" alt="">':'')+'<span class="t">'+esc(title)+'</span><span class="h5-cnt">'+cnt+'</span><span class="nav"><span>←</span><span>→</span></span></div>'; }
   function fFoot(){ var L=['首页','优惠','邀请','取款','我的'],h='<div class="h5-foot">'; for(var i=0;i<5;i++) h+='<span class="'+(i===0?'on':'')+(i===2?' mid':'')+'">'+fimg(fic('foot'+i))+L[i]+'</span>'; return h+'</div>'; }
   function fHome(d){
     var h=fTop()+'<div class="h5-banner">轮播广告位</div><div class="h5-promos"><span>活动入口</span><span>活动入口</span><span>活动入口</span></div><div class="h5-marquee"><div class="bar"></div><div class="s">⌕</div></div>';
