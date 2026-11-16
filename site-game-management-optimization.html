@@ -780,11 +780,12 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td><b>显示版本</b></td><td>总控默认版本全平台一份，默认 MY；商户可改本站点。前台：站点有自己的值用站点值，否则用总控默认；同一游戏对只显示一款</td></tr>
         <tr><td><b>总控切换</b></td><td>入口：场馆配置总控「原厂 / MY 切换」（按场馆对一键）、对应游戏弹窗（逐个）、游戏配置总控前台切换（单个 / 批量）。确定后所有站点立即生效，覆盖各站点自己改过的值</td></tr>
         <tr><td><b>商户切换</b></td><td>入口：厂商管理「原厂 / MY 切换」、游戏管理前台切换（单个 / 批量）。确定后只影响本站点；总控之后再切换同一游戏对时会被覆盖</td></tr>
-        <tr><td><b>待确定</b><span class="tag-new" data-tip="pend" tabindex="0">本期新增</span></td><td>切换先不生效；页面上方提示条显示数量，「确定」一次生效、「放弃修改」全部撤回；确定时目标版本已被总控停用的不生效，确认框写明数量</td></tr>
+        <tr><td><b>待确定</b><span class="tag-new" data-tip="pend" tabindex="0">本期新增</span></td><td>切换先不生效；页面上方提示条显示数量，「确定」一次生效、「放弃修改」全部撤回；确定时目标版本已被总控停用的不生效，确认框写明数量；待确定存在后台：总控一份、每个站点一份，离开或刷新页面不丢；同一侧有权限的账号看到同一个提示条，都可以「确定」或「放弃修改」；版本记录的操作人记点「确定」的账号</td></tr>
         <tr><td><b>版本记录</b><span class="tag-new" data-tip="rv" tabindex="0">本期新增</span></td><td>每次「确定」或还原记为一个版本：时间、操作人、修改内容、备注、修改前的显示版本；只保留最近 3 个。总控记录所有站点的实际显示版本（含站点自己的值）；商户只记本站点；总控与商户各记各的，总控还原不改商户的记录</td></tr>
         <tr><td><b>还原</b></td><td>选一条「还原到这次修改前」：显示版本回到那次修改之前，之后的修改一起撤回（总控：所有站点；商户：本站点）；那时显示的版本已被总控停用的跳过；有待确定的修改时先确定或放弃</td></tr>
         <tr><td><b>置顶</b></td><td>游戏对两个版本各自的置顶保留；前台只显示当前版本，按它自己的位置排；隐藏版本的置顶不占位；切换、还原不改置顶</td></tr>
         <tr><td><b>合并场馆</b></td><td>PG电子 与 MyPG电子、TaDa 电子 与 MyTaDa电子 在前台合并为一个场馆（名称、置顶、顺序看原厂场馆）；MY 场馆关闭或停用只影响显示 MY 版的游戏（不自动换版本，可切回原厂）</td></tr>
+        <tr><td><b>显示的版本不可用</b><span class="tag-new" data-tip="vna" tabindex="0">本期新增</span></td><td>当前显示的版本被站点关闭（只影响该站点）或被总控停用（所有站点）时，不自动换成另一款，该游戏对前台两款都不显示；后台前台显示列下方提示「显示的版本已关闭 / 已停用，前台两款都不显示」，运营可切到另一款</td></tr>
       </tbody></table></div></div>
   </div>
 
@@ -821,7 +822,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
     <div class="req-block"><h2>范围</h2>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>项目</th><th>说明</th></tr></thead><tbody>
         <tr><td><b>本期做</b></td><td>场馆配置总控：总控场馆置顶、置顶筛选、底部批量、场馆游戏排序弹窗（总控场馆内置顶）。游戏配置总控：游戏状态筛选。原厂 / MY 切换（总控与商户）：切换、对应 MY 场馆、对应游戏弹窗、对应版本 / 前台显示列、批量切换、统一确定、还原显示版本；前台同一游戏对只显示当前版本。总控置顶到站点（商户置顶 → 总控置顶 → 自动，对齐后生效）。总控停用过滤。热门补满</td></tr>
-        <tr><td><b>本期不做</b></td><td>总控新增菜单（含热门游戏排序 / 总控热门置顶）；后台修改对应关系（开发预置）；总控按站点操作；自动排序规则调整；游戏配置总控其余改动、商户游戏管理改动</td></tr>
+        <tr><td><b>本期不做</b></td><td>总控新增菜单（含热门游戏排序 / 总控热门置顶）；后台修改对应关系（开发预置）；总控按站点操作；自动排序规则调整；游戏配置总控与商户游戏管理的其余改动</td></tr>
         <tr><td><b>适用范围</b></td><td>总控置顶对全平台生效，各站点对齐后排在本站点置顶之后；维护 / 启用 / 停用、有效注单沿用现网</td></tr>
       </tbody></table></div></div>
     <div class="req-block"><h2>功能点清单</h2>
@@ -846,7 +847,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>编号</th><th>前置条件与操作</th><th>期望结果</th></tr></thead><tbody id="accBody"></tbody></table></div></div>
     <div class="req-block"><h2>需求完整性自查</h2>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>检查项</th><th>结论</th></tr></thead><tbody>
-        <tr><td><b>权限</b></td><td>沿用场馆配置总控菜单权限，不新增菜单与按钮权限点；商户沿用</td></tr>
+        <tr><td><b>权限</b></td><td>置顶、场馆游戏排序、原厂 / MY 切换与还原沿用场馆配置总控、游戏配置总控各自的菜单权限，不新增菜单与按钮权限点；商户沿用厂商管理、游戏管理的菜单权限</td></tr>
         <tr><td><b>操作留痕</b></td><td>总控置顶更新场馆最后操作人与时间；场馆内置顶沿用商户端现状</td></tr>
         <tr><td><b>边界状态</b></td><td>总控停用取消相关置顶且不显示；商户与总控重复置顶只显示一次；总控置顶项在站点关闭时跳过；维护中可置顶；没有置顶时不显示分隔线；首页热门区不在前台显示的游戏不占名额、往后补满；目标版本停用不能切换、不还原；隐藏版本置顶保留不占位；有待确定修改时不能还原</td></tr>
         <tr><td><b>特殊模式</b></td><td>试玩与正式模式一致</td></tr>
@@ -1037,6 +1038,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
   function showOf(s,id){ var p=pairOf(id); if(p) return (ver(s,p)==='my'?p.my:p.orig)===id?'show':'hide'; return hasVPair(GI[id].venue)?'none':'na'; }
   function canTo(p,to){ return !stopped(to==='my'?p.my:p.orig); }
   function verLab(to){ return to==='my'?'MY':'原厂'; }
+  function naNote(s,id,sh){ if(sh!=='show'||!pairOf(id)) return ''; var t=stopped(id)?'已停用':(s&&s.games[id].status==='off'?'已关闭':''); return t?'<div class="muted" style="font-size:12px;line-height:16px;" data-tip="vna" tabindex="0">显示的版本'+t+'，前台两款都不显示</div>':''; }
   function showTag(sh){ return sh==='show'?'<span class="bk-tag green">显示</span>':sh==='hide'?'<span class="bk-tag gray">隐藏</span>':'-'; }
   function pTag(st){ return st==='启用'?'<span class="bk-tag green">启用</span>':st==='维护'?'<span class="bk-tag gold">维护</span>':'<span class="bk-tag red">停用</span>'; }
   function sTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">开启</span>':st==='mt'||st==='维护'?'<span class="bk-tag gold">维护</span>':'<span class="bk-tag red">关闭</span>'; }
@@ -1464,14 +1466,14 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
       $('gHead').innerHTML='<tr><th style="width:36px;">'+chkAll('g',rows)+'</th><th>序号</th><th>游戏ID</th><th>游戏名称</th><th>场馆名称</th><th>对应版本'+mk('grel','本期新增')+'</th><th>前台显示</th><th style="min-width:120px;">前台切换'+mk('gsw','本期新增')+'</th><th>游戏状态</th><th>游戏图片</th><th>创建时间</th><th>最近操作人</th><th>最近操作时间</th><th>备注</th><th><span class="th-sort" data-gsortbet="1" title="点击排序">有效注单<span class="sic'+(GM.bsort?' on':'')+'">'+(GM.bsort==='desc'?'▼':GM.bsort==='asc'?'▲':'⇅')+'</span></span></th><th>前1小时有效注单</th><th>当前小时注单量</th><th style="min-width:220px;" class="op-fix">操作</th></tr>';
       rows.forEach(function(id,i){ var g=GI[id],pst=PS.g[id],o=PS.gop[id],sh=showOf(null,id),p=pairOf(id);
         var rel=p?(function(){ var x=GI[p.my===id?p.orig:p.my]; return esc(x.venue)+' · '+esc(x.zh)+'<span class="pair-note">'+x.id+'</span>'; })():(sh==='none'?'<span class="bk-tag gray">无对应版本</span>':'-');
-        html+='<tr class="'+(sh==='hide'?'p2':'')+'"><td>'+chk('g',id)+'</td><td>'+(i+1)+'</td><td>'+id+'</td><td class="l">'+esc(nm(id))+'</td><td>'+esc(g.venue)+'</td><td>'+rel+'</td><td>'+showTag(sh)+(p?ovSmall(p,id)+pendTag(null,p):'')+'</td><td>'+swCell(null,id,'data-ga')+'</td><td>'+pTag(pst)+'</td><td><span class="img-ph">图</span></td><td>2025-12-0'+(g.base%9+1)+' 10:00:00</td><td>'+esc(o.op)+'</td><td>'+o.time+'</td><td>'+esc(o.remark)+'</td><td>'+fmt(hot(id))+'<button class="ed-pen" data-ga="bet" data-id="'+id+'" type="button" title="修改有效注单">✎</button></td><td>'+fmt(Math.round(hot(id)/700))+'</td><td>'+fmt(Math.round(hot(id)/2100))+'</td><td class="op-fix"><div class="bk-ops">'+zkStBtns('data-ga',id,pst)+'<button class="bk-btn sm" data-mchtoast="1" type="button">排序</button></div></td></tr>'; });
+        html+='<tr class="'+(sh==='hide'?'p2':'')+'"><td>'+chk('g',id)+'</td><td>'+(i+1)+'</td><td>'+id+'</td><td class="l">'+esc(nm(id))+'</td><td>'+esc(g.venue)+'</td><td>'+rel+'</td><td>'+showTag(sh)+naNote(null,id,sh)+(p?ovSmall(p,id)+pendTag(null,p):'')+'</td><td>'+swCell(null,id,'data-ga')+'</td><td>'+pTag(pst)+'</td><td><span class="img-ph">图</span></td><td>2025-12-0'+(g.base%9+1)+' 10:00:00</td><td>'+esc(o.op)+'</td><td>'+o.time+'</td><td>'+esc(o.remark)+'</td><td>'+fmt(hot(id))+'<button class="ed-pen" data-ga="bet" data-id="'+id+'" type="button" title="修改有效注单">✎</button></td><td>'+fmt(Math.round(hot(id)/700))+'</td><td>'+fmt(Math.round(hot(id)/2100))+'</td><td class="op-fix"><div class="bk-ops">'+zkStBtns('data-ga',id,pst)+'<button class="bk-btn sm" data-mchtoast="1" type="button">排序</button></div></td></tr>'; });
       $('gBody').innerHTML=html||emptyRow(18,'没有符合条件的游戏');
     } else {
       $('gTable').style.minWidth='1900px'; var ho=siteHot(s).map(function(r){ return r.k; });
       $('gHead').innerHTML='<tr><th style="width:36px;">'+chkAll('g',rows)+'</th><th>序号</th><th>热门排名</th><th>游戏名称</th><th>场馆名称</th><th>对应版本'+mk('grel','本期新增')+'</th><th>前台显示</th><th style="min-width:120px;">前台切换'+mk('gsw','本期新增')+'</th><th>游戏状态</th><th>最近操作人</th><th>最近操作时间</th><th>备注</th><th style="min-width:220px;" class="op-fix">操作</th></tr>';
       rows.forEach(function(id,i){ var g=GI[id],sg=s.games[id],sh=showOf(s,id),p=pairOf(id),dead=stopped(id),rk=ho.indexOf(id)+1;
         var rel=p?(function(){ var x=GI[p.my===id?p.orig:p.my]; return esc(x.venue)+' · '+esc(x.zh)+'<span class="pair-note">'+x.id+'</span>'; })():(sh==='none'?'<span class="bk-tag gray">无对应版本</span>':'-');
-        html+='<tr class="'+(sh==='hide'?'p2':'')+'"><td>'+chk('g',id)+'</td><td>'+(i+1)+'</td><td>'+(rk||'-')+'</td><td class="l">'+esc(nm(id))+'</td><td>'+esc(g.venue)+'</td><td>'+rel+'</td><td>'+showTag(sh)+(p?pendTag(s,p):'')+'</td><td>'+swCell(s,id,'data-ga')+'</td><td>'+(dead?'<span class="bk-tag gray">禁用</span>':sTag(sg.status))+'</td><td>'+esc(sg.op)+'</td><td>'+sg.time+'</td><td>'+esc(sg.remark)+'</td><td class="op-fix"><div class="bk-ops">'+(dead?'-':mStBtns('data-ga',id,{on:'开启',mt:'维护',off:'关闭'}[sg.status]))+'</div></td></tr>'; });
+        html+='<tr class="'+(sh==='hide'?'p2':'')+'"><td>'+chk('g',id)+'</td><td>'+(i+1)+'</td><td>'+(rk||'-')+'</td><td class="l">'+esc(nm(id))+'</td><td>'+esc(g.venue)+'</td><td>'+rel+'</td><td>'+showTag(sh)+naNote(s,id,sh)+(p?pendTag(s,p):'')+'</td><td>'+swCell(s,id,'data-ga')+'</td><td>'+(dead?'<span class="bk-tag gray">禁用</span>':sTag(sg.status))+'</td><td>'+esc(sg.op)+'</td><td>'+sg.time+'</td><td>'+esc(sg.remark)+'</td><td class="op-fix"><div class="bk-ops">'+(dead?'-':mStBtns('data-ga',id,{on:'开启',mt:'维护',off:'关闭'}[sg.status]))+'</div></td></tr>'; });
       $('gBody').innerHTML=html||emptyRow(13,'没有符合条件的游戏');
     }
     $('gCount').textContent='共 '+rows.length+' 条数据'; }
@@ -1615,7 +1617,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     ['A35','勾选游戏对与非游戏对，底部选「批量改为原厂」','只把可切换的游戏对加入待确定，提示写明不处理的数量；两行都勾选算 1 个；都无需切换时提示'],
     ['A36','对应游戏弹窗内逐个切换','加入待确定；弹窗、游戏配置总控显示「待确定」；点「确定」后各站点前台同步'],
     ['A37','游戏对切换后看站点前台','只显示新版本，按新版本自己的置顶位置 / 热门值排列；任一位置只出现一款'],
-    ['A38','游戏对隐藏的版本有总控热门置顶','置顶保留；前台不显示该版本、不留空位；切换为显示该版本后按其位置展示'],
+    ['A38','游戏对隐藏的版本有置顶（商户热门置顶或总控场馆内置顶）','置顶保留；前台不显示该版本、不留空位；切换为显示该版本后按其位置展示'],
     ['A39','商户游戏管理对游戏对点「改为原厂」并在页面上方点「确定」','只影响本站点；总控该游戏前台显示下方出现「1 个站点自行改为原厂」；其他站点不变'],
     ['A40','商户改过后，总控对同一游戏对改为 MY 并确定','该站点也变为 MY（被覆盖）'],
     ['A41','有待确定的修改时点「确定」','确认框写明数量（改为原厂 X 款、改为 MY Y 款）、所有站点生效（含站点自己改过的数量），备注选填（最多 50 字）；确定后一次生效、记为一个版本，提示「已确定，N 款修改已生效（所有站点）」'],
@@ -1625,7 +1627,9 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     ['A45','还原时那次显示的版本已被总控停用','该款跳过、保持当前显示；确认框写明不还原的数量'],
     ['A46','有待确定的修改时点「还原显示版本」','提示「请先确定或放弃待确定的修改」，不打开弹窗'],
     ['A47','商户在厂商管理或游戏管理点「还原显示版本」并还原','只恢复本站点；总控与其他站点不变；总控的还原不改商户的修改记录'],
-    ['A48','总控改了置顶、确定了一次原厂 / MY 切换、停用了一款游戏，站点 A 不点「对齐平台排序」','站点 A 前台置顶顺序不变（对齐后才变）；切换后的显示版本、停用的游戏立即按新的显示']
+    ['A48','总控改了置顶、确定了一次原厂 / MY 切换、停用了一款游戏，站点 A 不点「对齐平台排序」','站点 A 前台置顶顺序不变（对齐后才变）；切换后的显示版本、停用的游戏立即按新的显示'],
+    ['A49','游戏对当前显示 MY 版，MY 版被站点 A 关闭（或被总控停用）','不自动换成原厂版：站点 A 前台两款都不显示（停用时所有站点）；后台前台显示列下方提示「显示的版本已关闭，前台两款都不显示」（停用时为「已停用」）；切到原厂版后按原厂版显示'],
+    ['A50','总控账号甲加入 2 处待确定后刷新页面；账号乙打开场馆配置总控或游戏配置总控','刷新后待确定仍在；乙看到同一个提示条，可「确定」或「放弃修改」；乙确定后版本记录的操作人为乙；商户各站点的待确定各自一份，互不影响']
   ];
   $('accBody').innerHTML=ACC.map(function(a){ return '<tr><td>'+a[0]+'</td><td>'+esc(a[1])+'</td><td>'+esc(a[2])+'</td></tr>'; }).join('');
 
@@ -1678,6 +1682,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
  'hshow': ['前台显示', '原：无。\n现：有对应版本的游戏，前台显示的版本标「显示」，另一个标「隐藏」；隐藏的版本置顶保留、前台不占位。'],
  'fpair': ['同款游戏只显示一款', '原：原厂版和 MY 版同时出现。\n现：只显示当前版本（站点自己改过的用站点的，否则用总控默认），隐藏的版本不占位。'],
  'vmy': ['MyPG电子 / MyTaDa电子 行', '原：和其他场馆一样按排序值单独排，和 PG电子 / TaDa 电子 不在一起。\n现：作为子行缩进显示在 PG电子 / TaDa 电子 下面；序号、置顶、场馆游戏排序都在上面的主行，子行只管自己的状态。'],
+ 'vna': ['显示的版本不可用', '原：无。\n现：前台正在显示的那一款被站点关闭或被总控停用时，不自动换成另一款，这对游戏前台两款都不显示；可以切到另一款。'],
  'mstop': ['收录范围', '原：总控停用的游戏也在列表里。\n现：总控停用的游戏、场馆不出现，已置顶的自动取消。']
 };
 var TIPSM={
