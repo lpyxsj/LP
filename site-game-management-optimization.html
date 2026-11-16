@@ -446,7 +446,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
 </style></head><body>
 <header class="dh-header"><div class="dh-header-inner">
   <h1>总控站点游戏管理调整优化（总控置顶模板、原厂 / MY 切换与还原）</h1>
-  <div class="dh-meta"><span>模块：<b>总控 · 站点场馆管理（场馆配置总控、游戏配置总控、热门游戏排序）· 商户 · 商户游戏管理 · 前台站点</b></span><span>产品经理：<b>Zuno</b></span><span>更新日期：<b>2026-11-14</b></span></div>
+  <div class="dh-meta"><span>模块：<b>总控 · 站点场馆管理（场馆配置总控、游戏配置总控、热门游戏排序）· 商户 · 商户游戏管理 · 前台站点</b></span><span>产品经理：<b>Zuno</b></span><span>更新日期：<b>2026-11-16</b></span></div>
 </div></header>
 <nav class="dh-navbar" id="dhNavbar"><div class="dh-navbar-inner dh-primary" id="dhPrimary">
   <button class="dh-primary-btn active" data-primary="proto" type="button">交互原型 <small>总控置顶模板、原厂 / MY 切换与还原，前台同步</small></button>
@@ -500,7 +500,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
 <!-- ================= 交互原型 ================= -->
 <section class="dh-primary-panel active" data-primary-panel="proto" id="protoSec">
   <div class="proto-intro">
-    <div class="grow">总控两页不分站点，页面照现网，只新增<b>总控置顶</b>（全平台一份，作为各站点的模板）和<b>原厂 / MY 切换与还原</b>。商户后台照现网，只新增本站点的切换与还原。站点前台：<b>商户置顶 → 总控置顶 → 自动</b>；总控置顶在商户点「对齐平台排序」后到站点。游戏名称、场馆、热门值取自测试环境，其余为示例。</div>
+    <div class="grow">总控两页不分站点，页面照现网，只新增<b>总控置顶</b>（全平台一份，作为各站点的模板）和<b>原厂 / MY 切换与还原</b>。商户后台只改排序（总控置顶排在本站点置顶之后）和切换（本站点，可还原），其余照现网。站点前台：<b>商户置顶 → 总控置顶 → 自动</b>；总控置顶在商户点「对齐平台排序」后到站点。游戏名称、场馆、热门值取自测试环境，其余为示例。</div>
     <label class="doc-check" for="markToggle"><input type="checkbox" id="markToggle" checked> 显示本期改动标注</label>
     <button class="doc-btn" id="resetDemo" type="button">重置演示数据</button>
   </div>
@@ -805,7 +805,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
   <div class="dh-panel" data-panel="front">
     <button type="button" class="proto-jump" data-goto="front">在交互原型中查看「前台效果」 →</button>
     <div class="req-block"><h2>商户后台</h2>
-      <div class="dh-callout">照现网（客户端游戏排序优化已上线版本），只新增本站点的原厂 / MY 切换与还原、前台显示列。原型右上角切到「商户后台」查看。</div>
+      <div class="dh-callout">只改两处：<b>排序</b>（对齐后总控置顶排在本站点置顶之后、标「总控置顶」；总控停用的不出现）和<b>原厂 / MY 切换</b>（本站点，可还原，含前台显示列）。其余照现网（客户端游戏排序优化已上线版本）。原型右上角切到「商户后台」查看。</div>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>页面</th><th>处置</th><th>规则</th></tr></thead><tbody>
         <tr><td><b>厂商管理</b></td><td>保留现网；新增工具栏「原厂 / MY 切换」</td><td>只影响本站点，可还原；按钮放在「对齐平台排序」右侧</td></tr>
         <tr><td><b>游戏管理</b></td><td>保留现网；新增对应版本、前台显示、前台切换列，前台显示筛选，底部批量改为原厂 / MY</td><td>前台显示为本站点实际显示的版本；单个切换直接生效，提示「只影响本站点」；切换前自动保存，可在厂商管理「原厂 / MY 切换」还原</td></tr>
@@ -1641,7 +1641,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
  'ftpl': ['前台顺序', '原：商户置顶 → 自动排序。\n现：商户置顶 → 总控置顶 → 自动排序；同一项两边都置顶时按商户的位置只显示一次。'],
  'fpair': ['同款游戏只显示一款', '原：原厂版和 MY 版同时出现。\n现：只显示当前版本（站点自己改过的用站点的，否则用总控默认）。'],
  'fstop': ['总控停用', '原：总控停用的游戏、场馆还会出现在站点的排序列表里。\n现：所有站点前台和排序列表都不显示，相关置顶自动取消。'],
- 'mchview': ['商户后台', '原：厂商管理、游戏管理、热门游戏排序（现网）。\n现：页面照现网，只新增本站点的原厂 / MY 切换与还原、前台显示列；对齐后显示总控置顶。']
+ 'mchview': ['商户后台', '原：厂商管理、游戏管理、热门游戏排序（现网）。\n现：只改排序和切换——对齐后总控置顶排在本站点置顶之后、标「总控置顶」，总控停用的不出现；新增本站点的原厂 / MY 切换与还原、前台显示列。其余照现网。']
 };
 var TIPSM={
  'vsw': ['原厂 / MY 切换', '原：无。\n现：按场馆把对应游戏一次改为原厂或 MY，只影响本站点；切换前自动保存，可点「还原」。总控之后再切换会覆盖本站点的设置。'],
