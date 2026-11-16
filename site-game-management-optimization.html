@@ -543,7 +543,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         </div>
       </div>
     </div>
-    <div class="proto-tip zk-only" style="display:block;">现网列与操作（场馆状态、排序(热门游戏数量)与编辑排序数值、取消手动排序、维护 / 启用 / 停用）保留。本期新增：总控场馆置顶（全平台一份，各站点对齐平台排序后排在站点自己的置顶之后）、置顶筛选、底部批量置顶 / 取消、场馆游戏排序（总控场馆内置顶）、对应 MY 场馆、原厂 / MY 切换（先加入待确定，点上方「确定」统一生效）、还原显示版本（最近 3 次）。</div>
+    <div class="proto-tip zk-only" style="display:block;">现网列与操作（场馆状态、排序(热门游戏数量)与编辑排序数值、取消手动排序、维护 / 启用 / 停用）保留。本期新增：总控场馆置顶（全平台一份，各站点对齐平台排序后排在站点自己的置顶之后）、置顶筛选、底部批量置顶 / 取消、场馆游戏排序（总控场馆内置顶）、对应 MY 场馆（MyPG电子 / MyTaDa电子 行紧挨着排在 PG电子 / TaDa 电子 前面）、原厂 / MY 切换（先加入待确定，点上方「确定」统一生效）、还原显示版本（最近 3 次）。</div>
     <div class="proto-tip mch-only" style="display:block;">商户厂商管理照上期上线版本（本站点置顶、改位置弹窗、工具栏批量置顶）。本期多三点：点「对齐平台排序」后，总控置顶的场馆排在本站点置顶之后、标「总控置顶」；总控停用的场馆不再出现在前台，已置顶的取消；工具栏「原厂 / MY 切换」「还原显示版本」，只影响本站点。</div>
   </div>
 
@@ -721,6 +721,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td>列表</td><td>序号、场馆名称、场馆类型、场馆状态、排序(热门游戏数量)（编辑排序数值、取消手动排序）、排序类型</td><td>保留</td><td>列表顺序：总控置顶的场馆按置顶位置在前，其余照现网</td></tr>
         <tr><td>列表</td><td>—</td><td>新增 勾选、置顶</td><td>已置顶显示「第 N 位」（点击原地输入新位置）和「取消」；未置顶显示「置顶」，点击直接排到末尾；「取消」弹确认框。停用的场馆、MyPG电子 / MyTaDa电子 行不可勾选、置顶显示「-」</td></tr>
         <tr><td>列表</td><td>—</td><td>新增 对应 MY 场馆</td><td>有场馆对的显示「MyPG电子 · N 款对应游戏」，点数量打开对应游戏弹窗（逐个切换）；MyPG电子 / MyTaDa电子 行显示「并入 PG电子」；其余「-」</td></tr>
+        <tr><td>列表</td><td>MyPG电子、MyTaDa电子 行（按排序值单独排）</td><td>修改 位置<span class="tag-new" data-tip="vmy" tabindex="0">本期修改</span></td><td>紧挨着排在所并入的 PG电子 / TaDa 电子 前面；置顶「-」，没有场馆游戏排序，不可勾选</td></tr>
         <tr><td>工具栏</td><td>—</td><td>新增 原厂 / MY 切换、还原显示版本</td><td>见第 3 页</td></tr>
         <tr><td>底部</td><td>—</td><td>新增 批量操作</td><td>「选择全部（共 N 条）」→「批量操作」下拉（批量置顶 / 批量取消置顶）→「已选择 X 条」；确认框写实际条数与位置</td></tr>
         <tr><td>操作列</td><td>维护 / 启用、停用（备注必填，最多 30 字）</td><td>保留</td><td>平台级，照现网；停用后按停用过滤处理</td></tr>
@@ -1063,10 +1064,12 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     arr.forEach(function(id,i){ if(ids.indexOf(id)>-1){ pk[id]=1; out.push({id:id,pin:i+1}); } });
     ids.filter(function(id){ return !pk[id]; }).sort(byHot).forEach(function(id){ out.push({id:id,pin:null}); });
     out.forEach(function(r,i){ r.rank=i+1; }); return out; }
-  function zkVenues(){ var live=ZKV.filter(function(n){ return !vStop(n); }),dead=ZKV.filter(vStop),pk={},out=[];
+  /* 场馆配置总控列表：总控置顶 → 其余照现网；MyPG电子 / MyTaDa电子 紧挨着排在所并入的原厂场馆前面 */
+  function zkVenues(){ var live=VNAMES.filter(function(n){ return !vStop(n); }),dead=VNAMES.filter(vStop),pk={},out=[];
     T.vPins.forEach(function(n,i){ if(live.indexOf(n)>-1){ pk[n]=1; out.push({name:n,pin:i+1}); } });
-    live.filter(function(n){ return !pk[n]; }).sort(function(a,b){ return vVal(b)-vVal(a)||ZKV.indexOf(a)-ZKV.indexOf(b); }).forEach(function(n){ out.push({name:n,pin:null}); });
-    dead.forEach(function(n){ out.push({name:n,pin:null,dead:true}); }); return out; }
+    live.filter(function(n){ return !pk[n]; }).sort(function(a,b){ return vVal(b)-vVal(a)||VNAMES.indexOf(a)-VNAMES.indexOf(b); }).forEach(function(n){ out.push({name:n,pin:null}); });
+    dead.forEach(function(n){ out.push({name:n,pin:null,dead:true}); });
+    var res=[]; out.forEach(function(r){ var mv=VPAIR[r.name]; if(mv) res.push({name:mv,pin:null,dead:vStop(mv)}); res.push(r); }); return res; }
   /* 站点：商户置顶 → 总控置顶（已同步）→ 其余 */
   function merge3(all,mine,tpl,rest){ var pk={},out=[];
     mine.forEach(function(k,i){ if(all.indexOf(k)>-1&&!pk[k]){ pk[k]=1; out.push({k:k,kind:'m',mp:i+1}); } });
@@ -1334,7 +1337,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
       rows.forEach(function(r,i){ var n=r.name,pst=PS.v[n],dead=pst==='停用',merged=!!MERGE[n];
         var rel=VPAIR[n]?'<span class="bk-link">'+esc(VPAIR[n])+'</span> · <button class="lk" data-va="pairs" data-id="'+esc(n)+'" type="button">'+pairsOfO(n).length+' 款对应游戏</button>':merged?'<span class="muted">并入 '+esc(MERGE[n])+'</span>':'-';
         var ops=zkStBtns('data-va',n,pst)+(!dead&&!merged?'<button class="bk-btn sm primary" data-va="csort" data-id="'+esc(n)+'" type="button">场馆游戏排序</button>':'');
-        html+='<tr class="'+(r.pin?'row-pin':'')+(merged?' p2':'')+'"><td>'+chk('v',n,!vCan(n))+'</td><td>'+(i+1)+'</td><td>'+esc(n)+'</td><td>'+VTYPE[n]+'</td><td>'+pTag(pst)+'</td><td>'+vnumCell(n)+'</td><td>自动排序</td><td>'+(merged?'<span class="muted">-</span>':pinCell('data-va',n,r.pin,!dead))+'</td><td>'+rel+'</td><td class="op-fix"><div class="bk-ops">'+ops+'</div></td></tr>';
+        html+='<tr class="'+(r.pin?'row-pin':'')+(merged?' p2':'')+'"><td>'+chk('v',n,!vCan(n))+'</td><td>'+(i+1)+'</td><td>'+esc(n)+(merged?mk('vmy','本期修改'):'')+'</td><td>'+VTYPE[n]+'</td><td>'+pTag(pst)+'</td><td>'+vnumCell(n)+'</td><td>自动排序</td><td>'+(merged?'<span class="muted">-</span>':pinCell('data-va',n,r.pin,!dead))+'</td><td>'+rel+'</td><td class="op-fix"><div class="bk-ops">'+ops+'</div></td></tr>';
         if(noF&&r.pin&&r.pin===np&&i<rows.length-1) html+='<tr class="bk-sep"><td colspan="10"></td></tr>'; });
       $('vBody').innerHTML=html||emptyRow(10,'没有符合条件的场馆');
       $('vPinHint').innerHTML=np?'总控已置顶 '+np+' 个场馆，从第 1 位起连续排列；各站点对齐后排在本站点自己的置顶之后':'';
@@ -1591,7 +1594,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     ['A14','总控置顶的场馆在站点 A 被关闭','站点 A 跳过它、不占位；站点 B 照常显示'],
     ['A15','总控场馆内置顶后站点对齐','站点该场馆区块与场馆页「全部」为 商户场馆内置顶 → 总控场馆内置顶 → 热门值'],
     ['A16','总控改了置顶、站点 A 还没对齐','站点 A 前台不变；对齐后与 A12 一致；对齐不改商户置顶'],
-    ['A17','查看 MyPG电子、MyTaDa电子 行','置顶显示「-」，没有场馆游戏排序，不可勾选；对应 MY 场馆列显示「并入 PG电子」；维护 / 启用 / 停用照现网'],
+    ['A17','查看 MyPG电子、MyTaDa电子 行','分别紧挨着排在 PG电子、TaDa 电子 前面（PG电子 置顶第 1 位时 MyPG电子 为列表第一行）；置顶显示「-」，没有场馆游戏排序，不可勾选；对应 MY 场馆列显示「并入 PG电子」；维护 / 启用 / 停用照现网'],
     ['A18','站点 A 对齐后查看商户厂商管理、场馆游戏排序弹窗','总控置顶的场馆 / 游戏排在本站点置顶之后，排序类型旁标「总控置顶」；其余照现网'],
     ['A19','商户热门游戏排序','照现网（已关闭的游戏显示「已关闭」）；新增「前台显示」列；总控停用的游戏不出现'],
     ['A20','总控停用一个有总控场馆内置顶、站点 A 商户置顶的游戏','当下生效：总控置顶与各站点商户置顶取消，其后前移；各站点前台、热门游戏排序、场馆游戏排序都不显示；重新启用后回到自动排序区'],
@@ -1673,6 +1676,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
  'gshow': ['搜索 · 前台显示', '原：无。\n现：可以筛前台显示的版本、隐藏的版本、没有对应版本的游戏。'],
  'hshow': ['前台显示', '原：无。\n现：有对应版本的游戏，前台显示的版本标「显示」，另一个标「隐藏」；隐藏的版本置顶保留、前台不占位。'],
  'fpair': ['同款游戏只显示一款', '原：原厂版和 MY 版同时出现。\n现：只显示当前版本（站点自己改过的用站点的，否则用总控默认），隐藏的版本不占位。'],
+ 'vmy': ['MyPG电子 / MyTaDa电子 行位置', '原：和其他场馆一样按排序值单独排，和 PG电子 / TaDa 电子 不在一起。\n现：紧挨着排在所并入的 PG电子 / TaDa 电子 前面，方便对照。'],
  'mstop': ['收录范围', '原：总控停用的游戏也在列表里。\n现：总控停用的游戏、场馆不出现，已置顶的自动取消。']
 };
 var TIPSM={
