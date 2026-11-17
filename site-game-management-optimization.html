@@ -858,9 +858,9 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <div class="dt-lanes">
           <div class="pri-col">
             <div class="dt-q set">设置版本 = MY</div><div class="dt-n">↓</div>
-            <div class="dt-row"><div class="dt-q">MY 版可用？</div><div class="dt-y">是 →</div><div class="dt-r my"><b><i>1</i>显示 MY</b></div></div>
+            <div class="dt-row"><div class="dt-q">MY 版可用？<br><small style="font-weight:400;">维护、关闭、停用都算不可用</small></div><div class="dt-y">是 →</div><div class="dt-r my"><b><i>1</i>显示 MY</b></div></div>
             <div class="dt-n l"><span>否 ↓</span></div>
-            <div class="dt-row"><div class="dt-q">原厂版可用？</div><div class="dt-y">是 →</div><div class="dt-r og sw"><b><i>2</i>自动显示原厂</b>按原厂自己的置顶位置排；后台原厂行小字「MY 版不可用，暂时显示原厂」；MY 恢复后自动显示回 MY</div></div>
+            <div class="dt-row"><div class="dt-q">原厂版可用？</div><div class="dt-y">是 →</div><div class="dt-r og sw"><b><i>2</i>自动显示原厂</b>MY 维护也一样；按原厂自己的置顶位置排；后台原厂行小字「MY 版不可用，暂时显示原厂」；MY 恢复后自动显示回 MY</div></div>
             <div class="dt-n l"><span>否 ↓</span></div>
             <div class="dt-row"><div class="dt-q">MY 只是维护？</div><div class="dt-y">是 →</div><div class="dt-r mt"><b><i>3</i>显示 MY，标「维护中」</b>照现网</div></div>
             <div class="dt-n l"><span>否 ↓</span></div>
@@ -877,7 +877,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         </div>
         <div class="dt-def"><b>不可用</b>＝在本站点满足任意一条：站点关闭了这款游戏；总控停用或维护了这款游戏；所属场馆在站点被关闭或维护，或被总控停用或维护。<b>只是维护</b>＝不可用的原因只有维护。</div>
         <div class="pri-rule">
-          <div><b>只有 2 会换</b>：方向只有 MY → 原厂；设为原厂时原厂不能用，不会换成 MY</div>
+          <div><b>只有 2 会换</b>：方向只有 MY → 原厂；MY 只是维护、原厂启用中，也显示原厂。设为原厂时原厂不能用，不会换成 MY</div>
           <div><b>不改设置</b>：自动显示原厂时设置版本仍是 MY，不记版本、不进待确定，按钮仍是「改为原厂」</div>
           <div><b>恢复即换回</b>：状态一变，下一次下发前台就按本图重算，不需要点「确定」或「对齐平台排序」</div>
           <div><b>不显示的不占位</b>：没显示的那一款在前台任何位置都不出现；它的有效注单仍算进排序合计</div>
@@ -886,14 +886,14 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
       </div>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>#</th><th>设置版本</th><th>MY 版</th><th>原厂版</th><th>前台显示</th><th>后台提示</th></tr></thead><tbody>
         <tr><td><b>1</b></td><td>MY</td><td>可用</td><td>不看</td><td>MY</td><td>—</td></tr>
-        <tr><td><b>2</b></td><td>MY</td><td>不可用</td><td>可用</td><td>原厂，按原厂版自己的置顶位置排</td><td>原厂行「显示」，下方小字「MY 版不可用，暂时显示原厂」；MY 行「隐藏」</td></tr>
-        <tr><td><b>3</b></td><td>MY</td><td>维护</td><td>不可用</td><td>MY，照现网标「维护中」</td><td>—</td></tr>
+        <tr><td><b>2</b></td><td>MY</td><td>不可用（含维护）</td><td>可用</td><td>原厂，按原厂版自己的置顶位置排</td><td>原厂行「显示」，下方小字「MY 版不可用，暂时显示原厂」；MY 行「隐藏」</td></tr>
+        <tr><td><b>3</b></td><td>MY</td><td>维护（原厂也不可用时）</td><td>不可用</td><td>MY，照现网标「维护中」</td><td>—</td></tr>
         <tr><td><b>4</b></td><td>MY</td><td>关闭或停用</td><td>不可用</td><td>两款都不显示</td><td>MY 行下方小字「显示的版本已关闭 / 已停用，前台两款都不显示」</td></tr>
         <tr><td><b>5</b></td><td>原厂</td><td>不看</td><td>可用</td><td>原厂</td><td>—</td></tr>
         <tr><td><b>6</b></td><td>原厂</td><td>不看</td><td>维护</td><td>原厂，照现网标「维护中」</td><td>—</td></tr>
         <tr><td><b>7</b></td><td>原厂</td><td>不看</td><td>关闭或停用</td><td>两款都不显示，不会自动换成 MY</td><td>原厂行下方小字「显示的版本已关闭 / 已停用，前台两款都不显示」</td></tr>
       </tbody></table></div>
-      <div class="dh-prose"><ul><li>只有第 2 行会换成另一款，方向只有 MY → 原厂。</li><li>原厂场馆关闭或停用时，整个合并场馆不显示，不用再看本表。</li><li>状态恢复后，下一次下发就按本表重新算（例如 MY 恢复后自动显示回 MY），不需要点「确定」或「对齐平台排序」。</li><li>不显示的那一款在前台任何位置都不出现、不占位。</li></ul></div>
+      <div class="dh-prose"><ul><li>只有第 2 行会换成另一款，方向只有 MY → 原厂；MY 只是维护、原厂启用中，也显示原厂。</li><li>原厂场馆关闭或停用时，整个合并场馆不显示，不用再看本表。</li><li>状态恢复后，下一次下发就按本表重新算（例如 MY 恢复后自动显示回 MY），不需要点「确定」或「对齐平台排序」。</li><li>不显示的那一款在前台任何位置都不出现、不占位。</li></ul></div>
       <h3>4. 排序用的热门值</h3>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>项目</th><th>规则</th></tr></thead><tbody>
         <tr><td><b>算法</b></td><td>游戏对：排序热门值 = 原厂有效注单 + MY 有效注单，两款用同一个数；不是游戏对的游戏用自己的有效注单</td></tr>
