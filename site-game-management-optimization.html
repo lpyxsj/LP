@@ -693,7 +693,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td><b>5. 热门补满</b><span class="tag-new" data-tip="fhot" tabindex="0">本期修改</span></td><td>各站点首页热门区；商户厂商管理「排序(热门游戏数量)」</td><td>永远按后台配置补满：首页热门区取满 N 款（N 为商户「场馆排序规则设置」的游戏数量范围，默认 100）；站点关闭的、所属场馆关闭的、总控停用的、原厂 / MY 隐藏的版本不占名额，往后补满；场馆热门游戏数量按补满后的这 N 款统计。热门游戏排序列表照现网仍显示已关闭的游戏</td></tr>
         <tr><td><b>6. 游戏状态筛选</b><span class="tag-new" data-tip="gstf" tabindex="0">本期新增</span></td><td>游戏配置总控</td><td>搜索区新增「游戏状态」，选项只有维护 / 启用 / 停用，与其他条件同时生效；重置清空</td></tr>
         <tr><td><b>7. 原厂 / MY 切换</b><span class="tag-new" data-tip="vsw" tabindex="0">本期新增</span></td><td>场馆配置总控、游戏配置总控；商户厂商管理、游戏管理</td><td>总控切换是全平台默认，确定后所有站点生效（包括商户改过的）；商户可改本站点，只影响本站点；默认显示 MY；前台同一游戏对只显示当前版本，隐藏版本不占位；目标版本已被总控停用时不能切换</td></tr>
-        <tr><td><b>8. 统一确定与版本还原</b><span class="tag-new" data-tip="rv" tabindex="0">本期新增</span></td><td>同上</td><td>切换先加入「待确定」，页面上方点「确定」（备注选填）后一次生效，记为一个版本，也可「放弃修改」；工具栏「还原显示版本」记录最近 3 次修改，选一条「还原到这次修改前」；还原也记为一个版本；总控与商户各记各的</td></tr>
+        <tr><td><b>8. 统一确定与版本还原</b><span class="tag-new" data-tip="rv" tabindex="0">本期新增</span></td><td>同上</td><td>切换先加入「待确定」，页面上方点「确定」（备注选填）后一次生效，记为一个版本，也可「放弃修改」；工具栏「还原显示版本」记录最近 3 次修改，选一条「还原到这次修改前」；还原也记为一个版本；总控改了站点的显示时，站点记录里也记一条（操作人 system），商户可以还原</td></tr>
         <tr><td><b>不变</b></td><td>其余全部</td><td>游戏配置总控其余内容、商户三页其余内容、自动排序规则都照现网；总控不新增菜单</td></tr>
       </tbody></table></div></div>
   </div>
@@ -781,8 +781,8 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td><b>总控切换</b></td><td>入口：场馆配置总控「原厂 / MY 切换」（按场馆对一键）、对应游戏弹窗（逐个）、游戏配置总控前台切换（单个 / 批量）。确定后所有站点立即生效，覆盖各站点自己改过的值</td></tr>
         <tr><td><b>商户切换</b></td><td>入口：厂商管理「原厂 / MY 切换」、游戏管理前台切换（单个 / 批量）。确定后只影响本站点；总控之后再切换同一游戏对时会被覆盖</td></tr>
         <tr><td><b>待确定</b><span class="tag-new" data-tip="pend" tabindex="0">本期新增</span></td><td>切换先不生效；页面上方提示条显示数量，「确定」一次生效、「放弃修改」全部撤回；确定时目标版本已被总控停用的不生效，确认框写明数量；待确定存在后台：总控一份、每个站点一份，离开或刷新页面不丢；同一侧有权限的账号看到同一个提示条，都可以「确定」或「放弃修改」；版本记录的操作人记点「确定」的账号</td></tr>
-        <tr><td><b>版本记录</b><span class="tag-new" data-tip="rv" tabindex="0">本期新增</span></td><td>每次「确定」或还原记为一个版本：时间、操作人、修改内容、备注、修改前的显示版本；只保留最近 3 个。总控记录所有站点的实际显示版本（含站点自己的值）；商户只记本站点；总控与商户各记各的，总控还原不改商户的记录</td></tr>
-        <tr><td><b>还原</b></td><td>选一条「还原到这次修改前」：显示版本回到那次修改之前，之后的修改一起撤回（总控：所有站点；商户：本站点）；那时显示的版本已被总控停用的跳过；有待确定的修改时先确定或放弃</td></tr>
+        <tr><td><b>版本记录</b><span class="tag-new" data-tip="rv" tabindex="0">本期新增</span></td><td>每次「确定」或还原记为一个版本：时间、操作人、修改内容、备注、修改前的显示版本；只保留最近 3 个。总控记录所有站点的实际显示版本（含站点自己的值）；商户记本站点当时显示的版本。总控「确定」或还原后，显示版本有变化的站点在自己的记录里各记一条：操作人 system，修改内容「总控统一修改：改为原厂 X 款、改为 MY Y 款」（还原为「总控还原：…」，只算本站点变了的），备注「-」；算进本站点最近 3 个，商户可以像自己的记录一样还原，只影响本站点。商户的操作不记到总控</td></tr>
+        <tr><td><b>还原</b></td><td>选一条「还原到这次修改前」：显示版本回到那次修改之前，之后的修改一起撤回（总控：所有站点；商户：本站点）；那时显示的版本已被总控停用的跳过；有待确定的修改时先确定或放弃。商户还原的范围里有 system 记录时，确认框写明「其中 N 次是总控的修改」；还原后本站点按自己的值显示，总控显示「X 个站点自行改为…」</td></tr>
         <tr><td><b>置顶</b></td><td>游戏对两个版本各自的置顶保留；前台只显示当前版本，按它自己的位置排；隐藏版本的置顶不占位；切换、还原不改置顶</td></tr>
         <tr><td><b>合并场馆</b></td><td>PG电子 与 MyPG电子、TaDa 电子 与 MyTaDa电子 在前台合并为一个场馆（名称、置顶、顺序看原厂场馆）；原厂场馆关闭或停用时整个合并场馆不显示；MY 场馆关闭、停用或维护时，设为显示 MY 的游戏在原厂版启用中时自动显示原厂（见下）</td></tr>
         <tr><td><b>MY 不可用时显示原厂</b><span class="tag-new" data-tip="vfb" tabindex="0">本期新增</span></td><td>设为显示 MY 的游戏对，MY 版关闭、停用或维护（含站点关闭、总控停用 / 维护、MY 场馆关闭 / 停用 / 维护），而原厂版启用中时，前台自动显示原厂版；MY 恢复后自动显示回 MY；显示版本设置不变，不记版本。后台原厂行前台显示「显示」，下方小字「MY 版不可用，暂时显示原厂」。逐项判定见下方「游戏对显示与排序」</td></tr>
@@ -1261,19 +1261,22 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     ok.forEach(function(p){ setPend(s,p,to); }); renderAll();
     toast('已把 '+esc(o)+' 的 '+ok.length+' 款加入待确定：改为显示'+vtx(to)+'版'+(skip?'；另有 '+skip+' 款'+lab+'版已被总控停用，不切换':'')+PENDNOTE); }
   /* 当前值快照（只取用到的游戏对） */
-  function snapKeys(s,ks){ if(s){ var sv={}; ks.forEach(function(k){ sv[k]=s.sv[k]; }); return {sv:sv}; }
+  function snapKeys(s,ks){ if(s){ var sv={}; ks.forEach(function(k){ sv[k]=verS(s,pairByKey(k)); }); return {sv:sv}; }
     var t={},st={}; ks.forEach(function(k){ t[k]=T.show[k]; }); SITES.forEach(function(x){ var m={}; ks.forEach(function(k){ m[k]=SS[x[0]].sv[k]; }); st[x[0]]=m; }); return {t:t,s:st}; }
   function setVal(o,k,v){ if(v!=null) o[k]=v; else delete o[k]; }
   function pushVer(s,rec){ var vs=versOf(s); vs.unshift(rec); if(vs.length>3) vs.length=3; }
+  /* 总控确定或还原后：显示版本有变化的站点各记一条，操作人 system */
+  function siteVS(ks){ var r={}; SITES.forEach(function(x){ var s=SS[x[0]],mm={}; ks.forEach(function(k){ mm[k]=verS(s,pairByKey(k)); }); r[x[0]]=mm; }); return r; }
+  function sysVer(ks,bs,lab){ SITES.forEach(function(x){ var s=SS[x[0]],b=bs[x[0]],o=0,my=0,sv={}; ks.forEach(function(k){ var nv=verS(s,pairByKey(k)); if(nv!==b[k]){ sv[k]=b[k]; if(nv==='orig') o++; else my++; } }); if(o+my) pushVer(s,{time:now(),op:'system',remark:'-',desc:lab+cntTxt(o,my),before:{sv:sv},sys:1}); }); }
   /* 确定：把待确定的修改一次生效，记为一个版本 */
   function commitFlow(s){ var pd=pendOf(s),ks=Object.keys(pd); if(!ks.length){ toast('没有待确定的修改'); return; }
     var bad=ks.filter(function(k){ return !canTo(pairByKey(k),pd[k]); }),good=ks.filter(function(k){ return bad.indexOf(k)<0; });
     var o=good.filter(function(k){ return pd[k]==='orig'; }).length,m=good.length-o;
     var ovn=s?0:ovSites(good.map(pairByKey),function(p){ return pd[p.my]; });
     confirmBox('确定修改','共 '+good.length+' 款对应游戏：'+cntTxt(o,m)+'。'+muted(s?'只影响本站点':'所有站点生效'+(ovn?'，包括 '+ovn+' 个站点自己改过的':''))+(bad.length?muted('另有 '+bad.length+' 款目标版本已被总控停用，不生效'):'')+'<textarea class="bk-input" id="pdRm" maxlength="50" placeholder="备注（选填，最多 50 字）" style="margin-top:8px;width:100%;"></textarea>'+muted('确定后记为一个版本，可在「还原显示版本」还原到这次修改前'),function(){
-      var rm=$('pdRm').value.trim(),before=snapKeys(s,good);
+      var rm=$('pdRm').value.trim(),before=snapKeys(s,good),bs=s?null:siteVS(good);
       good.forEach(function(k){ var p=pairByKey(k); if(s) s.sv[k]=pd[k]; else { T.show[k]=pd[k]; SITES.forEach(function(x){ delete SS[x[0]].sv[k]; }); } touchPair(s,p); });
-      pushVer(s,{time:now(),op:s?'zune01':'admin',remark:rm||'-',desc:cntTxt(o,m),before:before});
+      pushVer(s,{time:now(),op:s?'zune01':'admin',remark:rm||'-',desc:cntTxt(o,m),before:before}); if(!s) sysVer(good,bs,'总控统一修改：');
       if(s) s.pend={}; else T.pend={}; renderAll(); toast('已确定，'+good.length+' 款修改已生效'+(s?'（只影响本站点）':'（所有站点）')); }); }
   function discardFlow(s){ var n=pendN(s); if(!n){ toast('没有待确定的修改'); return; }
     confirmBox('提示','放弃这 '+n+' 处待确定的修改？'+muted('前台与列表保持不变'),function(){ if(s) s.pend={}; else T.pend={}; renderAll(); toast('已放弃修改'); }); }
@@ -1286,16 +1289,17 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
       if(s){ var v=fin.sv[k]!=null?fin.sv[k]:verT(p); return !canTo(p,v); }
       var tv=fin.t[k]||'my'; if(!canTo(p,tv)) return true; return SITES.some(function(x){ var sv=fin.s[x[0]][k]; return !canTo(p,sv!=null?sv:tv); }); });
     var use=ks.filter(function(k){ return skip.indexOf(k)<0; });
-    confirmBox('还原显示版本','把原厂 / MY 显示还原到 '+rec.time+' 这次修改之前？'+muted(s?'只影响本站点':'所有站点恢复到那时的显示（含当时各站点自己改的）')+(i>0?muted('之后的 '+i+' 次修改也会一起撤回'):'')+(skip.length?muted('其中 '+skip.length+' 款那时显示的版本已被总控停用，不还原'):'')+muted('还原也会记为一个版本，可以再还原回来'),function(){
-      var before=snapKeys(s,use);
+    var ns=0; if(s) for(var j3=0;j3<=i;j3++) if(vs[j3].sys) ns++;
+    confirmBox('还原显示版本','把原厂 / MY 显示还原到 '+rec.time+' 这次修改之前？'+muted(s?'只影响本站点':'所有站点恢复到那时的显示（含当时各站点自己改的）')+(i>0?muted('之后的 '+i+' 次修改也会一起撤回'):'')+(ns?muted('其中 '+ns+' 次是总控的修改（操作人 system），也会撤回；只改本站点，总控和其他站点不变'):'')+(skip.length?muted('其中 '+skip.length+' 款那时显示的版本已被总控停用，不还原'):'')+muted('还原也会记为一个版本，可以再还原回来'),function(){
+      var before=snapKeys(s,use),bs=s?null:siteVS(use);
       use.forEach(function(k){ var p=pairByKey(k); if(s) setVal(s.sv,k,fin.sv[k]); else { setVal(T.show,k,fin.t[k]); SITES.forEach(function(x){ setVal(SS[x[0]].sv,k,fin.s[x[0]][k]); }); } touchPair(s,p); });
-      pushVer(s,{time:now(),op:s?'zune01':'admin',remark:'-',desc:'还原到 '+rec.time+' 修改前（'+use.length+' 款）',before:before});
+      pushVer(s,{time:now(),op:s?'zune01':'admin',remark:'-',desc:'还原到 '+rec.time+' 修改前（'+use.length+' 款）',before:before}); if(!s) sysVer(use,bs,'总控还原：');
       renderAll(); renderRv(); toast('已还原到 '+rec.time+' 修改前'+(s?'（只影响本站点）':'（所有站点）')); }); }
   function openRv(){ var s=isM()?MS():null; if(pendN(s)){ toast('请先确定或放弃待确定的修改'); return; } renderRv(); openM('rvModal'); }
   function renderRv(){ var s=isM()?MS():null,vs=versOf(s);
     $('rvTitle').textContent=isM()?'还原显示版本（本站点）':'还原显示版本';
-    $('rvBody').innerHTML=vs.length?vs.map(function(r,i){ return '<tr><td>'+(i+1)+'</td><td>'+r.time+'</td><td>'+esc(r.op)+'</td><td class="l">'+esc(r.desc)+'</td><td class="l">'+esc(r.remark)+'</td><td><button class="bk-btn sm primary" data-rv-i="'+i+'" type="button">还原到这次修改前</button></td></tr>'; }).join(''):emptyRow(6,'还没有修改记录');
-    $('rvNote').textContent=isM()?'只记录本站点最近 3 次原厂 / MY 修改（每次「确定」或还原各算一次），只影响本站点。总控之后再切换同一游戏时，会覆盖本站点的设置。':'只记录最近 3 次原厂 / MY 修改（每次「确定」或还原各算一次）。还原后所有站点回到那次修改之前的显示，包括当时各站点自己改的；不改商户自己的修改记录。'; }
+    $('rvBody').innerHTML=vs.length?vs.map(function(r,i){ return '<tr><td>'+(i+1)+'</td><td>'+r.time+'</td><td>'+(r.sys?'<span data-tip="rvsys" tabindex="0" style="border-bottom:1px dashed #999;cursor:help;">system</span>':esc(r.op))+'</td><td class="l">'+esc(r.desc)+'</td><td class="l">'+esc(r.remark)+'</td><td><button class="bk-btn sm primary" data-rv-i="'+i+'" type="button">还原到这次修改前</button></td></tr>'; }).join(''):emptyRow(6,'还没有修改记录');
+    $('rvNote').textContent=isM()?'只记录本站点最近 3 次原厂 / MY 修改（每次「确定」或还原各算一次），只影响本站点。总控修改了本站点的显示时，也会记一条，操作人为 system，可以同样还原。':'只记录最近 3 次原厂 / MY 修改（每次「确定」或还原各算一次）。还原后所有站点回到那次修改之前的显示，包括当时各站点自己改的；显示有变化的站点会在自己的记录里各记一条，操作人为 system。'; }
   $('rvBody').addEventListener('click',function(e){ var b=e.target.closest('[data-rv-i]'); if(!b) return; restoreTo(isM()?MS():null,+b.getAttribute('data-rv-i')); });
   document.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('[data-rv]'); if(b){ openRv(); return; } var c=e.target.closest&&e.target.closest('[data-pend]'); if(c){ var s=isM()?MS():null; if(c.getAttribute('data-pend')==='ok') commitFlow(s); else discardFlow(s); } });
   function renderPend(){ var s=isM()?MS():null,n=pendN(s),pd=pendOf(s),o=Object.keys(pd).filter(function(k){ return pd[k]==='orig'; }).length;
@@ -1670,7 +1674,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     ['A44','选第 2 条「还原到这次修改前」','确认框写明所有站点恢复、之后的 1 次修改也一起撤回；确定后显示版本回到第 2 次修改之前（含当时各站点自己改的）；还原记为新的一条，可再还原回来'],
     ['A45','还原时那次显示的版本已被总控停用','该款跳过、保持当前显示；确认框写明不还原的数量'],
     ['A46','有待确定的修改时点「还原显示版本」','提示「请先确定或放弃待确定的修改」，不打开弹窗'],
-    ['A47','商户在厂商管理或游戏管理点「还原显示版本」并还原','只恢复本站点；总控与其他站点不变；总控的还原不改商户的修改记录'],
+    ['A47','商户在厂商管理或游戏管理点「还原显示版本」并还原','只恢复本站点；总控与其他站点不变；总控的版本记录不变'],
     ['A48','总控改了置顶、确定了一次原厂 / MY 切换、停用了一款游戏，站点 A 不点「对齐平台排序」','站点 A 前台置顶顺序不变（对齐后才变）；切换后的显示版本、停用的游戏立即按新的显示'],
     ['A49','游戏对设为显示原厂，原厂版被站点 A 关闭（或被总控停用），MY 版启用中','不自动换成 MY：站点 A 前台两款都不显示（停用时所有站点）；后台前台显示列下方提示「显示的版本已关闭，前台两款都不显示」（停用时为「已停用」）；切到 MY 后按 MY 显示'],
     ['A50','总控账号甲加入 2 处待确定后刷新页面；账号乙打开场馆配置总控或游戏配置总控','刷新后待确定仍在；乙看到同一个提示条，可「确定」或「放弃修改」；乙确定后版本记录的操作人为乙；商户各站点的待确定各自一份，互不影响'],
@@ -1678,7 +1682,9 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     ['A52','A51 中 MY 版恢复启用 / 开启','前台自动显示回 MY 版，原厂版隐藏；不需要切换或确定'],
     ['A53','游戏对设为显示 MY，MY 版维护，原厂版也在维护','不自动换：照现网显示 MY 版并标「维护中」'],
     ['A54','游戏对原厂有效注单 30,000、MY 有效注单 50,000，另一单款游戏有效注单 60,000','排序按合计 80,000：前台显示的那一款排在 60,000 那款前面（热门列表、场馆内排序、首页热门区补满都一样）；游戏配置总控两款仍分别显示 30,000、50,000，下方小字「排序用合计 80,000」；编辑某一款只改它自己的数；报表分开计算'],
-    ['A55','本期第一次上线后查看各站点前台','所有游戏对默认显示 MY 版（MY 不可用、原厂启用中的显示原厂）；各站点没有自己的显示版本，没有版本记录与待确定']
+    ['A55','本期第一次上线后查看各站点前台','所有游戏对默认显示 MY 版（MY 不可用、原厂启用中的显示原厂）；各站点没有自己的显示版本，没有版本记录与待确定'],
+    ['A56','站点 A 显示 MY、站点 B 自己改为原厂；总控把这对游戏改为原厂并确定，之后再在总控还原','站点 A 版本记录多一条：操作人 system，修改内容「总控统一修改：改为原厂 1 款」，备注「-」；站点 B 显示没变，不记；总控还原后，显示有变化的站点各记一条「总控还原：…」；这些记录算进本站点最近 3 个'],
+    ['A57','站点 A 在上面那条 system 记录上点「还原到这次修改前」','确认框写明其中 1 次是总控的修改；确定后只有站点 A 显示回 MY，总控该游戏显示「1 个站点自行改为 MY」；总控与其他站点不变；还原也记为一个版本，操作人为本站点账号']
   ];
   $('accBody').innerHTML=ACC.map(function(a){ return '<tr><td>'+a[0]+'</td><td>'+esc(a[1])+'</td><td>'+esc(a[2])+'</td></tr>'; }).join('');
 
@@ -1737,11 +1743,12 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
  'mstop': ['收录范围', '原：总控停用的游戏也在列表里。\n现：总控停用的游戏、场馆不出现，已置顶的自动取消。']
 };
 var TIPSM={
+ 'rvsys': ['操作人 system', '总控修改了本站点的原厂 / MY 显示后自动记的一条；修改内容写本站点变了几款。可以像自己的记录一样还原，只影响本站点。'],
  'vsw': ['原厂 / MY 切换', '原：无。\n现：按场馆把对应游戏一次改为原厂或 MY；先加入待确定，点页面上方「确定」后只影响本站点。总控之后再切换会覆盖本站点的设置。'],
  'gsw': ['前台切换', '原：无。\n现：点「改为原厂」或「改为 MY」先加入待确定，点页面上方「确定」后只影响本站点。'],
  'grel': ['对应版本、前台显示', '原：无。\n现：「对应版本」显示另一个版本的游戏；「前台显示」写本站点显示的是哪一个。'],
  'bfoot': ['底部批量操作', '原：无。\n现：勾选后在列表底部批量改为原厂 / MY，先加入待确定，确定后只影响本站点。'],
- 'rv': ['还原显示版本', '原：无。\n现：记录本站点最近 3 次原厂 / MY 修改，选一条「还原到这次修改前」，只影响本站点；还原也记为一次，可再还原回来。'],
+ 'rv': ['还原显示版本', '原：无。\n现：记录本站点最近 3 次原厂 / MY 修改（总控改了本站点的显示也记一条，操作人 system），选一条「还原到这次修改前」，只影响本站点；还原也记为一次，可再还原回来。'],
  'pend': ['待确定的修改', '原：无。\n现：切换先不生效，在这里统一「确定」（可写备注）后一次生效，只影响本站点；也可「放弃修改」。'],
 };
 var box=document.getElementById('chgTip'),cur=null,pinned=false,ht=null;
