@@ -836,12 +836,12 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td><b>还原</b></td><td>选一条「还原到这次修改前」：显示版本回到那次修改之前，之后的修改一起撤回（总控：所有站点；商户：本站点）；那时显示的版本已被总控停用的跳过；有待确定的修改时先确定或放弃。商户还原的范围里有 system 记录时，确认框写明「其中 N 次是总控的修改」；还原后本站点按自己的值显示，总控显示「X 个站点自行改为…」</td></tr>
         <tr><td><b>置顶</b></td><td>游戏对两个版本各自的置顶保留；前台只显示当前版本，按它自己的位置排；隐藏版本的置顶不占位；切换、还原不改置顶</td></tr>
         <tr><td><b>合并场馆</b></td><td>PG电子 与 MyPG电子、TaDa 电子 与 MyTaDa电子 在前台合并为一个场馆（名称、置顶、顺序看原厂场馆）；原厂场馆关闭或停用时整个合并场馆不显示；MY 场馆关闭、停用或维护时，设为显示 MY 的游戏在原厂版启用中时自动显示原厂（见下）</td></tr>
-        <tr><td><b>MY 不可用时显示原厂</b><span class="tag-new" data-tip="vfb" tabindex="0">本期新增</span></td><td>设为显示 MY 的游戏对，MY 版关闭、停用或维护（含站点关闭、总控停用 / 维护、MY 场馆关闭 / 停用 / 维护），而原厂版启用中时，前台自动显示原厂版；MY 恢复后自动显示回 MY；显示版本设置不变，不记版本。后台原厂行前台显示「显示」，下方小字「MY 版不可用，暂时显示原厂」。逐项判定见下方「游戏对显示与排序」</td></tr>
+        <tr><td><b>MY 维护、关闭或停用时显示原厂</b><span class="tag-new" data-tip="vfb" tabindex="0">本期新增</span></td><td>设为显示 MY 的游戏对，MY 版不是启用中（维护中、已关闭或已停用，含所属场馆），而原厂版启用中时，前台自动显示原厂版；MY 恢复后自动显示回 MY；显示版本设置不变，不记版本。后台原厂行前台显示「显示」，下方小字写 MY 版的实际状态（维护中 / 已关闭 / 已停用）。逐项判定见下方「游戏对显示与排序」</td></tr>
         <tr><td><b>游戏对排序合并热门值</b><span class="tag-new" data-tip="vhot" tabindex="0">本期新增</span></td><td>游戏对两款的有效注单（热门值）相加，作为两款共同的排序依据：热门列表、场馆内自动排序、首页热门区补满与场馆热门游戏数量都按合计排；只在排序时合并，游戏配置总控「有效注单」与各类报表仍按各自的数计算，编辑也只改自己的；游戏对的有效注单下方小字「排序用合计 N」</td></tr>
-        <tr><td><b>显示的版本不可用</b><span class="tag-new" data-tip="vna" tabindex="0">本期新增</span></td><td>其余情况不自动换：设为显示原厂而原厂版被关闭或停用，或 MY 不可用而原厂版也不可用时，该游戏对前台不显示（显示的版本只是维护时照现网显示「维护中」）；后台前台显示列下方提示「显示的版本已关闭 / 已停用，前台两款都不显示」，运营可切到另一款</td></tr>
+        <tr><td><b>显示的版本已关闭或已停用</b><span class="tag-new" data-tip="vna" tabindex="0">本期新增</span></td><td>其余情况不自动换：设为显示原厂而原厂版已关闭或已停用，或设为显示 MY 而 MY 版已关闭或已停用、原厂版也不是启用中时，该游戏对前台不显示（显示的版本维护中时照现网显示「维护中」）；后台前台显示列下方提示「显示的版本已关闭 / 已停用，前台两款都不显示」，运营可切到另一款</td></tr>
       </tbody></table></div></div>
     <div class="req-block"><h2>游戏对显示与排序（开发按此实现）</h2>
-      <div class="dh-callout">每个站点、每个游戏对单独计算。先看「设置版本」，再看两款是否可用，按判定表得出前台实际显示哪一款；排序用的热门值是两款合计。</div>
+      <div class="dh-callout">每个站点、每个游戏对单独计算。先看「设置版本」，再看两款各自的状态（启用中 / 维护中 / 已关闭 / 已停用），按判定表得出前台实际显示哪一款；排序用的热门值是两款合计。</div>
       <h3>1. 两个值不要混用</h3>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th></th><th>设置版本</th><th>前台实际显示版本</th></tr></thead><tbody>
         <tr><td><b>是什么</b></td><td>运营选的版本：站点有自己的值用站点值，没有就用总控默认</td><td>前台真正展示的那一款</td></tr>
@@ -849,8 +849,9 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td><b>存不存</b></td><td>存，进版本记录</td><td>不存、不进版本记录、不进待确定、不更新最近操作人</td></tr>
         <tr><td><b>后台哪里用</b></td><td>「改为原厂 / 改为 MY」按钮、批量切换、切换弹窗的前台显示统计、对应游戏弹窗、「X 个站点自行改为…」、待确定、版本记录与还原</td><td>游戏配置总控、商户游戏管理的「前台显示」列（显示 / 隐藏）和按前台显示筛选、两条小字提示</td></tr>
       </tbody></table></div>
-      <h3>2. 什么算「不可用」</h3>
-      <div class="dh-prose"><p>一款游戏在某站点满足下面任意一条就算不可用：① 站点关闭了这款游戏；② 总控停用或维护了这款游戏；③ 它所属的场馆在站点被关闭或维护，或被总控停用或维护。都不满足就是可用。下表中「维护」指不可用的原因只有维护。</p></div>
+      <h3>2. 四种状态怎么判断</h3>
+      <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>状态</th><th>怎么判断（每个站点单独看）</th></tr></thead><tbody><tr><td><b>启用中</b></td><td>这款游戏和它所属的场馆：总控状态都是「启用」，本站点状态都是「开启」</td></tr><tr><td><b>维护中</b></td><td>有任意一项是「维护」（总控维护或本站点维护），没有「停用」「关闭」</td></tr><tr><td><b>已关闭</b></td><td>有任意一项本站点状态是「关闭」，没有「停用」</td></tr><tr><td><b>已停用</b></td><td>有任意一项总控状态是「停用」</td></tr></tbody></table></div>
+      <div class="dh-prose"><p>MY 游戏的所属场馆包括 MY 场馆和它并入的原厂场馆。同时有几种情况时按 已停用 → 已关闭 → 维护中 取一个。</p></div>
       <h3>3. 判定表（前台实际显示哪一款）</h3>
       <div class="dh-flow dt">
         <div class="dt-top"><div class="dt-q">原厂场馆（PG电子 / TaDa 电子）在本站点关闭或停用？</div><div class="dt-y">是 →</div><div class="dt-r no"><b>整个合并场馆不显示</b>原厂、MY 两款都不显示，不用往下看</div></div>
@@ -858,26 +859,26 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <div class="dt-lanes">
           <div class="pri-col">
             <div class="dt-q set">设置版本 = MY</div><div class="dt-n">↓</div>
-            <div class="dt-row"><div class="dt-q">MY 版可用？<br><small style="font-weight:400;">维护、关闭、停用都算不可用</small></div><div class="dt-y">是 →</div><div class="dt-r my"><b><i>1</i>显示 MY</b></div></div>
+            <div class="dt-row"><div class="dt-q">MY 版启用中？<br><small style="font-weight:400;">维护中、已关闭、已停用都走「否」</small></div><div class="dt-y">是 →</div><div class="dt-r my"><b><i>1</i>显示 MY</b></div></div>
             <div class="dt-n l"><span>否 ↓</span></div>
-            <div class="dt-row"><div class="dt-q">原厂版可用？</div><div class="dt-y">是 →</div><div class="dt-r og sw"><b><i>2</i>自动显示原厂</b>MY 维护也一样；按原厂自己的置顶位置排；后台原厂行小字「MY 版不可用，暂时显示原厂」；MY 恢复后自动显示回 MY</div></div>
+            <div class="dt-row"><div class="dt-q">原厂版启用中？</div><div class="dt-y">是 →</div><div class="dt-r og sw"><b><i>2</i>自动显示原厂</b>MY 维护中、已关闭、已停用都一样；按原厂自己的置顶位置排；后台原厂行小字写 MY 的实际状态，如「MY 版维护中，暂时显示原厂」；MY 恢复后自动显示回 MY</div></div>
             <div class="dt-n l"><span>否 ↓</span></div>
-            <div class="dt-row"><div class="dt-q">MY 只是维护？</div><div class="dt-y">是 →</div><div class="dt-r mt"><b><i>3</i>显示 MY，标「维护中」</b>照现网</div></div>
+            <div class="dt-row"><div class="dt-q">MY 版维护中？</div><div class="dt-y">是 →</div><div class="dt-r mt"><b><i>3</i>显示 MY，标「维护中」</b>照现网</div></div>
             <div class="dt-n l"><span>否 ↓</span></div>
-            <div class="dt-row"><div class="dt-q" style="visibility:hidden">-</div><div></div><div class="dt-r no"><b><i>4</i>两款都不显示</b>后台 MY 行小字「显示的版本已关闭 / 已停用，前台两款都不显示」</div></div>
+            <div class="dt-row"><div class="dt-q" style="visibility:hidden">-</div><div></div><div class="dt-r no"><b><i>4</i>两款都不显示</b>MY 已关闭或已停用；后台 MY 行小字「显示的版本已关闭 / 已停用，前台两款都不显示」</div></div>
           </div>
           <div class="pri-col">
             <div class="dt-q set">设置版本 = 原厂</div><div class="dt-n">↓</div>
-            <div class="dt-row"><div class="dt-q">原厂版可用？</div><div class="dt-y">是 →</div><div class="dt-r og"><b><i>5</i>显示原厂</b></div></div>
+            <div class="dt-row"><div class="dt-q">原厂版启用中？</div><div class="dt-y">是 →</div><div class="dt-r og"><b><i>5</i>显示原厂</b></div></div>
             <div class="dt-n l"><span>否 ↓</span></div>
-            <div class="dt-row"><div class="dt-q">原厂只是维护？</div><div class="dt-y">是 →</div><div class="dt-r mt"><b><i>6</i>显示原厂，标「维护中」</b>照现网</div></div>
+            <div class="dt-row"><div class="dt-q">原厂版维护中？</div><div class="dt-y">是 →</div><div class="dt-r mt"><b><i>6</i>显示原厂，标「维护中」</b>照现网</div></div>
             <div class="dt-n l"><span>否 ↓</span></div>
-            <div class="dt-row"><div class="dt-q" style="visibility:hidden">-</div><div></div><div class="dt-r no"><b><i>7</i>两款都不显示</b>不会自动换成 MY；后台原厂行小字「显示的版本已关闭 / 已停用，前台两款都不显示」</div></div>
+            <div class="dt-row"><div class="dt-q" style="visibility:hidden">-</div><div></div><div class="dt-r no"><b><i>7</i>两款都不显示</b>原厂已关闭或已停用，不会自动换成 MY；后台原厂行小字「显示的版本已关闭 / 已停用，前台两款都不显示」</div></div>
           </div>
         </div>
-        <div class="dt-def"><b>不可用</b>＝在本站点满足任意一条：站点关闭了这款游戏；总控停用或维护了这款游戏；所属场馆在站点被关闭或维护，或被总控停用或维护。<b>只是维护</b>＝不可用的原因只有维护。</div>
+        <div class="dt-def"><b>启用中</b>＝这款游戏和它所属的场馆：总控状态都是「启用」，本站点状态都是「开启」；<b>维护中</b>＝有任意一项是「维护」（总控维护或本站点维护），没有「停用」「关闭」；<b>已关闭</b>＝有任意一项本站点状态是「关闭」，没有「停用」；<b>已停用</b>＝有任意一项总控状态是「停用」。MY 游戏的所属场馆包括 MY 场馆和它并入的原厂场馆。同时有几种情况时按 已停用 → 已关闭 → 维护中 取一个。</div>
         <div class="pri-rule">
-          <div><b>只有 2 会换</b>：方向只有 MY → 原厂；MY 只是维护、原厂启用中，也显示原厂。设为原厂时原厂不能用，不会换成 MY</div>
+          <div><b>只有 2 会换</b>：方向只有 MY → 原厂；MY 维护中、原厂启用中，也显示原厂。设为原厂时原厂已关闭或已停用，也不会换成 MY</div>
           <div><b>不改设置</b>：自动显示原厂时设置版本仍是 MY，不记版本、不进待确定，按钮仍是「改为原厂」</div>
           <div><b>恢复即换回</b>：状态一变，下一次下发前台就按本图重算，不需要点「确定」或「对齐平台排序」</div>
           <div><b>不显示的不占位</b>：没显示的那一款在前台任何位置都不出现；它的有效注单仍算进排序合计</div>
@@ -885,15 +886,15 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <div class="cap">图：原厂 / MY 显示规则——每个站点、每个游戏对单独判定，编号对应下表（点击放大）</div>
       </div>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>#</th><th>设置版本</th><th>MY 版</th><th>原厂版</th><th>前台显示</th><th>后台提示</th></tr></thead><tbody>
-        <tr><td><b>1</b></td><td>MY</td><td>可用</td><td>不看</td><td>MY</td><td>—</td></tr>
-        <tr><td><b>2</b></td><td>MY</td><td>不可用（含维护）</td><td>可用</td><td>原厂，按原厂版自己的置顶位置排</td><td>原厂行「显示」，下方小字「MY 版不可用，暂时显示原厂」；MY 行「隐藏」</td></tr>
-        <tr><td><b>3</b></td><td>MY</td><td>维护（原厂也不可用时）</td><td>不可用</td><td>MY，照现网标「维护中」</td><td>—</td></tr>
-        <tr><td><b>4</b></td><td>MY</td><td>关闭或停用</td><td>不可用</td><td>两款都不显示</td><td>MY 行下方小字「显示的版本已关闭 / 已停用，前台两款都不显示」</td></tr>
-        <tr><td><b>5</b></td><td>原厂</td><td>不看</td><td>可用</td><td>原厂</td><td>—</td></tr>
-        <tr><td><b>6</b></td><td>原厂</td><td>不看</td><td>维护</td><td>原厂，照现网标「维护中」</td><td>—</td></tr>
-        <tr><td><b>7</b></td><td>原厂</td><td>不看</td><td>关闭或停用</td><td>两款都不显示，不会自动换成 MY</td><td>原厂行下方小字「显示的版本已关闭 / 已停用，前台两款都不显示」</td></tr>
+        <tr><td><b>1</b></td><td>MY</td><td>启用中</td><td>不看</td><td>MY</td><td>—</td></tr>
+        <tr><td><b>2</b></td><td>MY</td><td>维护中、已关闭或已停用</td><td>启用中</td><td>原厂，按原厂版自己的置顶位置排</td><td>原厂行「显示」，下方小字写 MY 版的实际状态：「MY 版维护中 / 已关闭 / 已停用，暂时显示原厂」；MY 行「隐藏」</td></tr>
+        <tr><td><b>3</b></td><td>MY</td><td>维护中</td><td>维护中、已关闭或已停用</td><td>MY，照现网标「维护中」</td><td>—</td></tr>
+        <tr><td><b>4</b></td><td>MY</td><td>已关闭或已停用</td><td>维护中、已关闭或已停用</td><td>两款都不显示</td><td>MY 行下方小字「显示的版本已关闭 / 已停用，前台两款都不显示」</td></tr>
+        <tr><td><b>5</b></td><td>原厂</td><td>不看</td><td>启用中</td><td>原厂</td><td>—</td></tr>
+        <tr><td><b>6</b></td><td>原厂</td><td>不看</td><td>维护中</td><td>原厂，照现网标「维护中」</td><td>—</td></tr>
+        <tr><td><b>7</b></td><td>原厂</td><td>不看</td><td>已关闭或已停用</td><td>两款都不显示，不会自动换成 MY</td><td>原厂行下方小字「显示的版本已关闭 / 已停用，前台两款都不显示」</td></tr>
       </tbody></table></div>
-      <div class="dh-prose"><ul><li>只有第 2 行会换成另一款，方向只有 MY → 原厂；MY 只是维护、原厂启用中，也显示原厂。</li><li>原厂场馆关闭或停用时，整个合并场馆不显示，不用再看本表。</li><li>状态恢复后，下一次下发就按本表重新算（例如 MY 恢复后自动显示回 MY），不需要点「确定」或「对齐平台排序」。</li><li>不显示的那一款在前台任何位置都不出现、不占位。</li></ul></div>
+      <div class="dh-prose"><ul><li>只有第 2 行会换成另一款，方向只有 MY → 原厂；MY 维护中、原厂启用中，也显示原厂。</li><li>原厂场馆关闭或停用时，整个合并场馆不显示，不用再看本表。</li><li>状态恢复后，下一次下发就按本表重新算（例如 MY 恢复后自动显示回 MY），不需要点「确定」或「对齐平台排序」。</li><li>不显示的那一款在前台任何位置都不出现、不占位。</li></ul></div>
       <h3>4. 排序用的热门值</h3>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>项目</th><th>规则</th></tr></thead><tbody>
         <tr><td><b>算法</b></td><td>游戏对：排序热门值 = 原厂有效注单 + MY 有效注单，两款用同一个数；不是游戏对的游戏用自己的有效注单</td></tr>
@@ -904,7 +905,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td><b>例子</b></td><td>原厂 30,000、MY 50,000，另一款单独游戏 60,000：游戏对按 80,000 排，前台显示的那一款排在 60,000 那款前面；后台两款仍分别显示 30,000、50,000</td></tr>
       </tbody></table></div>
       <h3>5. 第一次上线</h3>
-      <div class="dh-prose"><p>所有游戏对的总控默认版本都是 MY，各站点没有自己的值，没有版本记录和待确定。前台按上面的判定表显示：大部分显示 MY，MY 不可用而原厂可用的显示原厂。</p></div>
+      <div class="dh-prose"><p>所有游戏对的总控默认版本都是 MY，各站点没有自己的值，没有版本记录和待确定。前台按上面的判定表显示：大部分显示 MY，MY 不是启用中、原厂启用中的显示原厂。</p></div>
       <h3>6. 容易做错的地方</h3>
       <div class="dh-prose"><ol><li>第 2 行显示原厂时，不要把设置版本改成原厂，不记版本、不进待确定，两行的按钮仍是「改为原厂」（设置版本仍是 MY）。</li><li>不要做反方向：设为原厂而原厂关闭或停用时，不自动显示 MY。</li><li>两款合计只用来排序，不要写回有效注单，也不要进报表。</li><li>隐藏的那款不在前台出现，但它的有效注单仍算进合计。</li><li>前台排位置用实际显示那一款自己的置顶；隐藏那款的置顶保留、不占位。</li></ol></div>
     </div>
@@ -948,7 +949,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <li>F6【P1】游戏配置总控筛选：新增游戏状态。</li>
         <li>F7【P0】原厂 / MY 切换：总控定全平台默认（覆盖所有站点），商户可改本站点；一键、对应游戏弹窗逐个、单个、批量；前台只显示当前版本。</li>
         <li>F8【P0】统一确定与版本还原：切换先加入待确定，「确定」（备注选填）一次生效；「还原显示版本」记录最近 3 次修改，可还原到某次修改前；总控与商户各一份。</li>
-        <li>F5【P1】上线数据处理：总控置顶为空；商户置顶保留；游戏对默认显示 MY 版（MY 不可用、原厂启用中的显示原厂）。</li>
+        <li>F5【P1】上线数据处理：总控置顶为空；商户置顶保留；游戏对默认显示 MY 版（MY 不是启用中、原厂启用中的显示原厂）。</li>
       </ol></div></div>
     <div class="req-block"><h2>数据、依赖与风险</h2>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>项目</th><th>说明</th></tr></thead><tbody>
@@ -1147,14 +1148,15 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
   function verT(p){ return T.show[p.my]||'my'; }
   function verS(s,p){ return s.sv[p.my]!=null?s.sv[p.my]:verT(p); }
   function ver(s,p){ return s?verS(s,p):verT(p); }
-  /* 游戏是否不可用（关闭 / 停用 / 维护，含所属场馆）；MY 不可用而原厂启用中时前台显示原厂 */
-  function gDown(s,id){ var g=GI[id]; if(stopped(id)||pMaint(id)) return true; if(!s) return false; if(s.games[id].status!=='on') return true; var a=SV(s,g.venue),b=SV(s,fvOf(g.venue)); return !!((a&&a.status!=='开启')||(b&&b.status!=='开启')); }
+  /* 游戏在站点的状态（含所属场馆）：已停用 → 已关闭 → 维护中 → 启用中；MY 不是启用中而原厂启用中时前台显示原厂 */
+  function gState(s,id){ var g=GI[id],a=s?SV(s,g.venue):null,b=s?SV(s,fvOf(g.venue)):null; if(stopped(id)) return '已停用'; if(s&&(s.games[id].status==='off'||(a&&a.status==='关闭')||(b&&b.status==='关闭'))) return '已关闭'; if(pMaint(id)||(s&&(s.games[id].status==='mt'||(a&&a.status==='维护')||(b&&b.status==='维护')))) return '维护中'; return '启用中'; }
+  function gDown(s,id){ return gState(s,id)!=='启用中'; }
   function effV(s,p){ var v=ver(s,p); return (v==='my'&&gDown(s,p.my)&&!gDown(s,p.orig))?'orig':v; }
-  function fbNote(s,id,sh){ var p=pairOf(id); if(sh!=='show'||!p||p.orig!==id||ver(s,p)!=='my') return ''; return '<div class="muted" style="font-size:12px;line-height:16px;" data-tip="vfb" tabindex="0">MY 版不可用，暂时显示原厂</div>'; }
+  function fbNote(s,id,sh){ var p=pairOf(id); if(sh!=='show'||!p||p.orig!==id||ver(s,p)!=='my') return ''; return '<div class="muted" style="font-size:12px;line-height:16px;" data-tip="vfb" tabindex="0">MY 版'+gState(s,p.my)+'，暂时显示原厂</div>'; }
   function showOf(s,id){ var p=pairOf(id); if(p) return (effV(s,p)==='my'?p.my:p.orig)===id?'show':'hide'; return hasVPair(GI[id].venue)?'none':'na'; }
   function canTo(p,to){ return !stopped(to==='my'?p.my:p.orig); }
   function verLab(to){ return to==='my'?'MY':'原厂'; }
-  function naNote(s,id,sh){ if(sh!=='show'||!pairOf(id)) return ''; var t=stopped(id)?'已停用':(s&&s.games[id].status==='off'?'已关闭':''); return t?'<div class="muted" style="font-size:12px;line-height:16px;" data-tip="vna" tabindex="0">显示的版本'+t+'，前台两款都不显示</div>':''; }
+  function naNote(s,id,sh){ if(sh!=='show'||!pairOf(id)) return ''; var t=gState(s,id); if(t!=='已停用'&&t!=='已关闭') t=''; return t?'<div class="muted" style="font-size:12px;line-height:16px;" data-tip="vna" tabindex="0">显示的版本'+t+'，前台两款都不显示</div>':''; }
   function showTag(sh){ return sh==='show'?'<span class="bk-tag green">显示</span>':sh==='hide'?'<span class="bk-tag gray">隐藏</span>':'-'; }
   function pTag(st){ return st==='启用'?'<span class="bk-tag green">启用</span>':st==='维护'?'<span class="bk-tag gold">维护</span>':'<span class="bk-tag red">停用</span>'; }
   function sTag(st){ return st==='on'||st==='开启'?'<span class="bk-tag green">开启</span>':st==='mt'||st==='维护'?'<span class="bk-tag gold">维护</span>':'<span class="bk-tag red">关闭</span>'; }
@@ -1748,11 +1750,11 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     ['A46','总控改了置顶、确定了一次原厂 / MY 切换，站点 A 不点「对齐平台排序」','站点 A 前台置顶顺序不变（对齐后才变）；切换后的显示版本立即按新的显示'],
     ['A47','游戏对设为显示原厂，原厂版被站点 A 关闭（或被总控停用），MY 版启用中','不自动换成 MY：站点 A 前台两款都不显示（停用时所有站点）；后台前台显示列下方提示「显示的版本已关闭，前台两款都不显示」（停用时为「已停用」）；切到 MY 后按 MY 显示'],
     ['A48','总控账号甲加入 2 处待确定后刷新页面；账号乙打开场馆配置总控或游戏配置总控','刷新后待确定仍在；乙看到同一个提示条，可「确定」或「放弃修改」；乙确定后版本记录的操作人为乙；商户各站点的待确定各自一份，互不影响'],
-    ['A49','游戏对设为显示 MY，原厂版启用中；MY 版分别被站点 A 关闭、被总控维护、被总控停用、所属 MY 场馆在站点 A 维护','都自动显示原厂版，按原厂版的置顶 / 热门值排；后台原厂行显示「显示」，下方小字「MY 版不可用，暂时显示原厂」；显示版本设置仍为 MY，不新增版本记录'],
+    ['A49','游戏对设为显示 MY，原厂版启用中；MY 版分别被站点 A 关闭、被总控维护、被总控停用、所属 MY 场馆在站点 A 维护','都自动显示原厂版，按原厂版的置顶 / 热门值排；后台原厂行显示「显示」，下方小字按 MY 版实际状态写「MY 版已关闭 / 维护中 / 已停用，暂时显示原厂」；显示版本设置仍为 MY，不新增版本记录'],
     ['A50','A49 中 MY 版恢复启用 / 开启','前台自动显示回 MY 版，原厂版隐藏；不需要切换或确定'],
-    ['A51','游戏对设为显示 MY，MY 版维护，原厂版也在维护','不自动换：照现网显示 MY 版并标「维护中」'],
+    ['A51','游戏对设为显示 MY，MY 版维护中，原厂版也维护中','不自动换：照现网显示 MY 版并标「维护中」'],
     ['A52','游戏对原厂有效注单 30,000、MY 有效注单 50,000，另一单款游戏有效注单 60,000','排序按合计 80,000：前台显示的那一款排在 60,000 那款前面（热门列表、场馆内排序、首页热门区补满都一样）；游戏配置总控两款仍分别显示 30,000、50,000，下方小字「排序用合计 80,000」；编辑某一款只改它自己的数；报表分开计算'],
-    ['A53','本期第一次上线后查看各站点前台','所有游戏对默认显示 MY 版（MY 不可用、原厂启用中的显示原厂）；各站点没有自己的显示版本，没有版本记录与待确定'],
+    ['A53','本期第一次上线后查看各站点前台','所有游戏对默认显示 MY 版（MY 不是启用中、原厂启用中的显示原厂）；各站点没有自己的显示版本，没有版本记录与待确定'],
     ['A54','站点 A 显示 MY、站点 B 自己改为原厂；总控把这对游戏改为原厂并确定，之后再在总控还原','站点 A 版本记录多一条：操作人 system，修改内容「总控统一修改：改为原厂 1 款」，备注「-」；站点 B 显示没变，不记；总控还原后，显示有变化的站点各记一条「总控还原：…」；这些记录算进本站点最近 3 个'],
     ['A55','站点 A 在上面那条 system 记录上点「还原到这次修改前」','确认框写明其中 1 次是总控的修改；确定后只有站点 A 显示回 MY，总控该游戏显示「1 个站点自行改为 MY」；总控与其他站点不变；还原也记为一个版本，操作人为本站点账号']
   ];
@@ -1807,8 +1809,8 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
  'hshow': ['前台显示', '原：无。\n现：有对应版本的游戏，前台显示的版本标「显示」，另一个标「隐藏」；隐藏的版本置顶保留、前台不占位。'],
  'fpair': ['同款游戏只显示一款', '原：原厂版和 MY 版同时出现。\n现：只显示当前版本（站点自己改过的用站点的，否则用总控默认），隐藏的版本不占位。'],
  'vmy': ['MyPG电子 / MyTaDa电子 行', '原：和其他场馆一样按排序值单独排，和 PG电子 / TaDa 电子 不在一起。\n现：作为子行缩进显示在 PG电子 / TaDa 电子 下面；序号、置顶、场馆游戏排序都在上面的主行，子行只管自己的状态。'],
- 'vna': ['显示的版本不可用', '原：无。\n现：设为显示原厂而原厂版被关闭或停用，或两款都不可用时，不自动换，这对游戏前台不显示；可以切到另一款。'],
- 'vfb': ['MY 不可用时显示原厂', '原：无。\n现：设为显示 MY 的游戏对，MY 版关闭、停用或维护而原厂版启用中时，前台自动显示原厂；MY 恢复后自动显示回 MY，设置不变。'],
+ 'vna': ['显示的版本已关闭或已停用', '原：无。\n现：设为显示原厂而原厂版已关闭或已停用，或 MY 版已关闭或已停用、原厂版也不是启用中时，不自动换，这对游戏前台不显示；可以切到另一款。'],
+ 'vfb': ['MY 维护、关闭或停用时显示原厂', '原：无。\n现：设为显示 MY 的游戏对，MY 版维护中、已关闭或已停用，而原厂版启用中时，前台自动显示原厂；MY 恢复后自动显示回 MY，设置不变。'],
  'vhot': ['游戏对排序合并热门值', '原：原厂版、MY 版各按自己的有效注单排序。\n现：排序时两款的有效注单相加、共用合计；这里显示的有效注单、报表仍按各自的数。'],
  'mstop': ['收录范围', '原：总控停用的游戏也在列表里。\n现：总控停用的游戏、场馆不出现，已置顶的自动取消。']
 };
