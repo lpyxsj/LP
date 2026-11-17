@@ -635,6 +635,34 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
     </div>
   </div>
 </section>
+<style>
+.pri-l.sys{background:#f3f4f6;border-color:#a3a9b5;color:#30353f;}
+.sw-merge{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap;margin-top:6px;}
+.sw-merge .pri-l{flex:1 1 210px;}
+.sw-merge .pri-a{align-self:center;flex:0 0 auto;}
+.sw-join{text-align:center;font-size:12px;color:var(--doc-ink-faint);margin:8px 0 2px;}
+.dt-top{display:grid;grid-template-columns:minmax(0,1fr) 46px minmax(0,1.3fr);align-items:center;gap:6px;max-width:760px;margin:0 auto;}
+.dt-lanes{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:12px;margin-top:4px;}
+.dt-row{display:grid;grid-template-columns:minmax(0,1fr) 46px minmax(0,1.3fr);align-items:center;gap:6px;}
+.dt-q{background:var(--doc-paper-raised);border:1.5px solid #8a94a6;border-radius:18px;padding:7px 10px;font-size:12.5px;line-height:1.45;text-align:center;font-weight:600;color:var(--doc-ink);}
+.dt-q.set{border-radius:6px;background:#eef4ff;border-color:#6c9cf0;color:#1d3f7a;}
+.dt-y{font-size:11.5px;color:#1f7a45;text-align:center;white-space:nowrap;}
+.dt-n{font-size:11.5px;color:var(--doc-ink-faint);text-align:center;}
+.dt-n.l{display:grid;grid-template-columns:minmax(0,1fr) 46px minmax(0,1.3fr);}
+.dt-r{border-radius:6px;padding:7px 10px;font-size:12.5px;line-height:1.5;border:1px solid;}
+.dt-r b{display:block;font-size:13px;}
+.dt-r i{font-style:normal;display:inline-block;min-width:18px;height:18px;line-height:18px;border-radius:9px;background:rgba(0,0,0,.12);text-align:center;font-size:11px;margin-right:4px;}
+.dt-r.my{background:#eef4ff;border-color:#6c9cf0;color:#1d3f7a;}
+.dt-r.og{background:#e9f7ef;border-color:#6cc28f;color:#174d2e;}
+.dt-r.og.sw{border:2px solid #2f9e5d;}
+.dt-r.mt{background:#fff7e0;border-color:#f0c24b;color:#5c4400;}
+.dt-r.no{background:#f6eeee;border-color:#d39a9a;color:#6b2424;}
+.dt-def{margin-top:10px;background:var(--doc-paper);border:1px dashed var(--doc-line);border-radius:6px;padding:8px 10px;font-size:12.5px;line-height:1.55;color:var(--doc-ink-soft);}
+.dh-lightbox-body .dh-flow.sw,.dh-lightbox-body .dh-flow.dt{max-width:min(95vw,1180px);}
+.dh-lightbox-body .dt-q,.dh-lightbox-body .dt-r{font-size:15px;}
+.dh-lightbox-body .dt-r b{font-size:15.5px;}
+.dh-lightbox-body .dt-def{font-size:14.5px;}
+</style>
 
 <!-- ============================ 需求文档 ============================ -->
 <section class="dh-primary-panel" data-primary-panel="docs">
@@ -761,6 +789,31 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
   <!-- ===== 3 原厂 / MY 切换与还原 ===== -->
   <div class="dh-panel" data-panel="switch">
     <button type="button" class="proto-jump" data-goto="vendor">在交互原型中查看（场馆配置总控 → 原厂 / MY 切换） →</button>
+    <div class="req-block"><h2>切换逻辑</h2>
+      <div class="dh-flow sw pri"><div class="pri-grid">
+        <div class="pri-col"><h4>总控切换（全平台默认）</h4><div class="where">场馆配置总控、游戏配置总控</div>
+          <div class="pri-l pin"><b>① 切换</b>场馆配置总控「原厂 / MY 切换」按场馆对一键、对应游戏弹窗逐个、游戏配置总控单个 / 批量；目标版本已被总控停用的不能切</div><div class="pri-a">↓</div>
+          <div class="pri-l seq"><b>② 加入待确定</b>还不生效；可再点撤回，或「放弃修改」全部撤回；刷新页面不丢</div><div class="pri-a">↓</div>
+          <div class="pri-l hot"><b>③ 点「确定」（备注选填）</b>改总控默认版本，所有站点立即生效，<b style="display:inline;font-size:inherit;">覆盖各站点自己改过的</b></div><div class="pri-a">↓</div>
+          <div class="pri-l sys"><b>④ 记版本</b>总控记一条（保留最近 3 个）；显示有变化的站点各记一条，操作人 system，商户可以还原</div></div>
+        <div class="pri-col"><h4>商户切换（只管本站点）</h4><div class="where">商户厂商管理、游戏管理</div>
+          <div class="pri-l pin"><b>① 切换</b>厂商管理「原厂 / MY 切换」按场馆对一键、游戏管理单个 / 批量；目标版本已被总控停用的不能切</div><div class="pri-a">↓</div>
+          <div class="pri-l seq"><b>② 加入待确定</b>同左，本站点一份，本站点有权限的账号共用</div><div class="pri-a">↓</div>
+          <div class="pri-l hot"><b>③ 点「确定」（备注选填）</b>写成本站点自己的值，只影响本站点；总控之后再切换同一游戏对时会被覆盖</div><div class="pri-a">↓</div>
+          <div class="pri-l sys"><b>④ 记版本</b>本站点记一条，和 system 记录一起算最近 3 个</div></div>
+      </div>
+      <div class="sw-join">↓ 两边最后都落到每个站点、每个游戏对的「设置版本」 ↓</div>
+      <div class="sw-merge">
+        <div class="pri-l hot"><b>设置版本</b>站点有自己的值用站点值，没有就用总控默认；第一次上线全部是 MY</div><div class="pri-a">→</div>
+        <div class="pri-l seq"><b>看两款当前状态</b>按下方「显示规则」判定；状态变化不改设置版本、不记版本</div><div class="pri-a">→</div>
+        <div class="pri-l pin"><b>前台实际显示</b>同一游戏对只显示一款，按这一款自己的置顶位置排；自动排序按两款有效注单合计</div>
+      </div>
+      <div class="pri-rule">
+        <div><b>还原</b>：「还原显示版本」选一条「还原到这次修改前」，之后的修改一起撤回；总控回到那时所有站点的显示（含站点自己的值），商户只回本站点；还原也记一个版本</div>
+        <div><b>生效</b>：确定、还原保存即生效，不需要点「对齐平台排序」</div>
+        <div><b>会被覆盖</b>：商户改过的游戏对，总控再切换同一对并确定后，按总控的版本显示；商户可以在本站点 system 记录上还原回去</div>
+      </div>
+      <div class="cap">图：切换逻辑——总控定默认、商户改本站点，都先待确定再统一确定（点击放大）</div></div></div>
     <div class="req-block"><h2>修改与还原流程</h2>
       <div class="dh-flow"><div class="pri-grid">
         <div class="pri-col"><h4>修改</h4>
@@ -799,6 +852,38 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
       <h3>2. 什么算「不可用」</h3>
       <div class="dh-prose"><p>一款游戏在某站点满足下面任意一条就算不可用：① 站点关闭了这款游戏；② 总控停用或维护了这款游戏；③ 它所属的场馆在站点被关闭或维护，或被总控停用或维护。都不满足就是可用。下表中「维护」指不可用的原因只有维护。</p></div>
       <h3>3. 判定表（前台实际显示哪一款）</h3>
+      <div class="dh-flow dt">
+        <div class="dt-top"><div class="dt-q">原厂场馆（PG电子 / TaDa 电子）在本站点关闭或停用？</div><div class="dt-y">是 →</div><div class="dt-r no"><b>整个合并场馆不显示</b>原厂、MY 两款都不显示，不用往下看</div></div>
+        <div class="sw-join">否 ↓ 看「设置版本」</div>
+        <div class="dt-lanes">
+          <div class="pri-col">
+            <div class="dt-q set">设置版本 = MY</div><div class="dt-n">↓</div>
+            <div class="dt-row"><div class="dt-q">MY 版可用？</div><div class="dt-y">是 →</div><div class="dt-r my"><b><i>1</i>显示 MY</b></div></div>
+            <div class="dt-n l"><span>否 ↓</span></div>
+            <div class="dt-row"><div class="dt-q">原厂版可用？</div><div class="dt-y">是 →</div><div class="dt-r og sw"><b><i>2</i>自动显示原厂</b>按原厂自己的置顶位置排；后台原厂行小字「MY 版不可用，暂时显示原厂」；MY 恢复后自动显示回 MY</div></div>
+            <div class="dt-n l"><span>否 ↓</span></div>
+            <div class="dt-row"><div class="dt-q">MY 只是维护？</div><div class="dt-y">是 →</div><div class="dt-r mt"><b><i>3</i>显示 MY，标「维护中」</b>照现网</div></div>
+            <div class="dt-n l"><span>否 ↓</span></div>
+            <div class="dt-row"><div class="dt-q" style="visibility:hidden">-</div><div></div><div class="dt-r no"><b><i>4</i>两款都不显示</b>后台 MY 行小字「显示的版本已关闭 / 已停用，前台两款都不显示」</div></div>
+          </div>
+          <div class="pri-col">
+            <div class="dt-q set">设置版本 = 原厂</div><div class="dt-n">↓</div>
+            <div class="dt-row"><div class="dt-q">原厂版可用？</div><div class="dt-y">是 →</div><div class="dt-r og"><b><i>5</i>显示原厂</b></div></div>
+            <div class="dt-n l"><span>否 ↓</span></div>
+            <div class="dt-row"><div class="dt-q">原厂只是维护？</div><div class="dt-y">是 →</div><div class="dt-r mt"><b><i>6</i>显示原厂，标「维护中」</b>照现网</div></div>
+            <div class="dt-n l"><span>否 ↓</span></div>
+            <div class="dt-row"><div class="dt-q" style="visibility:hidden">-</div><div></div><div class="dt-r no"><b><i>7</i>两款都不显示</b>不会自动换成 MY；后台原厂行小字「显示的版本已关闭 / 已停用，前台两款都不显示」</div></div>
+          </div>
+        </div>
+        <div class="dt-def"><b>不可用</b>＝在本站点满足任意一条：站点关闭了这款游戏；总控停用或维护了这款游戏；所属场馆在站点被关闭或维护，或被总控停用或维护。<b>只是维护</b>＝不可用的原因只有维护。</div>
+        <div class="pri-rule">
+          <div><b>只有 2 会换</b>：方向只有 MY → 原厂；设为原厂时原厂不能用，不会换成 MY</div>
+          <div><b>不改设置</b>：自动显示原厂时设置版本仍是 MY，不记版本、不进待确定，按钮仍是「改为原厂」</div>
+          <div><b>恢复即换回</b>：状态一变，下一次下发前台就按本图重算，不需要点「确定」或「对齐平台排序」</div>
+          <div><b>不显示的不占位</b>：没显示的那一款在前台任何位置都不出现；它的有效注单仍算进排序合计</div>
+        </div>
+        <div class="cap">图：原厂 / MY 显示规则——每个站点、每个游戏对单独判定，编号对应下表（点击放大）</div>
+      </div>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>#</th><th>设置版本</th><th>MY 版</th><th>原厂版</th><th>前台显示</th><th>后台提示</th></tr></thead><tbody>
         <tr><td><b>1</b></td><td>MY</td><td>可用</td><td>不看</td><td>MY</td><td>—</td></tr>
         <tr><td><b>2</b></td><td>MY</td><td>不可用</td><td>可用</td><td>原厂，按原厂版自己的置顶位置排</td><td>原厂行「显示」，下方小字「MY 版不可用，暂时显示原厂」；MY 行「隐藏」</td></tr>
