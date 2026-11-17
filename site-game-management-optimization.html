@@ -841,7 +841,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td><b>显示的版本已关闭或已停用</b><span class="tag-new" data-tip="vna" tabindex="0">本期新增</span></td><td>其余情况不自动换：设为显示原厂而原厂版已关闭或已停用，或设为显示 MY 而 MY 版已关闭或已停用、原厂版也不是启用中时，该游戏对前台不显示（显示的版本维护中时照现网显示「维护中」）；后台前台显示列下方提示「显示的版本已关闭 / 已停用，前台两款都不显示」，运营可切到另一款</td></tr>
       </tbody></table></div></div>
     <div class="req-block"><h2>游戏对显示与排序（开发按此实现）</h2>
-      <div class="dh-callout">每个站点、每个游戏对单独计算。先看「设置版本」，再看两款各自的状态（启用中 / 维护中 / 已关闭 / 已停用），按判定表得出前台实际显示哪一款；排序用的热门值是两款合计。</div>
+      <div class="dh-callout"><b>只对游戏对生效：不是游戏对的游戏（对应版本为「无对应版本」或「-」）不受原厂 / MY 切换和本节规则影响，按自己的状态照现网显示，排序用自己的有效注单；热门补满对它们只按本站点已关闭、总控已停用跳过，维护中的占名额。</b><br>每个站点、每个游戏对单独计算。先看「设置版本」，再看两款各自的状态（启用中 / 维护中 / 已关闭 / 已停用），按判定表得出前台实际显示哪一款；排序用的热门值是两款合计。</div>
       <h3>1. 两个值不要混用</h3>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th></th><th>设置版本</th><th>前台实际显示版本</th></tr></thead><tbody>
         <tr><td><b>是什么</b></td><td>运营选的版本：站点有自己的值用站点值，没有就用总控默认</td><td>前台真正展示的那一款</td></tr>
@@ -883,7 +883,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
           <div><b>恢复即换回</b>：状态一变，下一次下发前台就按本图重算，不需要点「确定」或「对齐平台排序」</div>
           <div><b>不显示的不占位</b>：没显示的那一款在前台任何位置都不出现；它的有效注单仍算进排序合计</div>
         </div>
-        <div class="cap">图：原厂 / MY 显示规则——每个站点、每个游戏对单独判定，编号对应下表（点击放大）</div>
+        <div class="cap">图：原厂 / MY 显示规则——只用于游戏对，每个站点、每个游戏对单独判定，编号对应下表；其他游戏照现网（点击放大）</div>
       </div>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>#</th><th>设置版本</th><th>MY 版</th><th>原厂版</th><th>前台显示</th><th>后台提示</th></tr></thead><tbody>
         <tr><td><b>1</b></td><td>MY</td><td>启用中</td><td>不看</td><td>MY</td><td>—</td></tr>
