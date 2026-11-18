@@ -799,7 +799,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td>分页 / 工具栏</td><td>每页 50 条可跳页；批量修改有效注单；刷新 / 密度 / 列设置</td><td>保留</td><td>—</td></tr>
         <tr><td>工具栏</td><td>—</td><td>新增 还原显示版本</td><td>和场馆配置总控打开同一个弹窗，见第 3 页</td></tr>
         <tr><td>列表</td><td>序号、游戏ID、游戏名称、场馆名称、游戏状态、游戏图片、创建时间、最近操作人、最近操作时间、备注、有效注单、前1小时有效注单、当前小时注单量</td><td>保留</td><td>有效注单修改方式、表头排序照现网</td></tr>
-        <tr><td>列表</td><td>—</td><td>新增 勾选、名称后标签、操作列切换</td><td>只有游戏对有：游戏名称后按总控默认版本、在总控状态下前台实际显示的那一款标「前台显示」或「前台隐藏」，有站点自己改过的在名称下方写「X 个站点自行改为…」；操作列最前面「改为原厂」/「改为 MY」，点击后加入待确定，再点一次撤回；目标版本已被总控停用时写「原厂已停用」/「MY 已停用」并置灰</td></tr>
+        <tr><td>列表</td><td>—</td><td>新增 勾选、名称后标签、操作列切换</td><td>只有游戏对有：游戏名称后按总控默认版本、在总控状态下前台实际显示的那一款标「前台显示」或「前台隐藏」，有站点自己改过的在名称下方写「X 个站点自行改为…」；操作列最前面「改为原厂」/「改为 MY」，点击后加入待确定，再点一次撤回；目标版本已被总控停用时写「原厂已停用」/「MY 已停用」并置灰；设为 MY 而前台暂时显示原厂时（判定表第 4、7、8 行），「改为原厂」按钮悬停提示「当前设置为 MY，MY 版恢复启用后自动显示回 MY」</td></tr>
         <tr><td>工具栏</td><td>—</td><td>新增 批量改为原厂 / MY</td><td>批量改为原厂 / 批量改为 MY：可切换的加入待确定，提示不处理的数量；一对游戏算 1 个</td></tr>
         <tr><td>操作列</td><td>维护 / 启用、停用、排序</td><td>保留</td><td>平台级，照现网</td></tr>
       </tbody></table></div></div>
@@ -850,7 +850,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td><b>显示版本</b></td><td>总控默认版本全平台一份，默认 MY；商户可改本站点。前台：站点有自己的值用站点值，否则用总控默认；同一游戏对只显示一款</td></tr>
         <tr><td><b>总控切换</b></td><td>入口：场馆配置总控「原厂 / MY 切换」（按场馆对一键）、游戏配置总控操作列「改为原厂 / 改为 MY」（单个）与工具栏批量。确定后所有站点立即生效，覆盖各站点自己改过的值</td></tr>
         <tr><td><b>商户切换</b></td><td>入口：厂商管理「原厂 / MY 切换」、游戏管理操作列切换（单个）与工具栏批量。确定后只影响本站点；总控之后再切换同一游戏对时会被覆盖</td></tr>
-        <tr><td><b>切换弹窗</b></td><td>标题「原厂 / MY 切换」（商户为「原厂 / MY 切换（本站点）」）。每个场馆对一行：原厂场馆 / MY 场馆 / 对应游戏数量 / 前台显示（全部 MY、全部原厂或「MY X 款 · 原厂 Y 款」）/ 操作「全部显示原厂」「全部显示 MY」（点后加入待确定，前台显示标签加「待确定 N 款」）。已全是该版本或可切换数为 0 时对应按钮置灰</td></tr>
+        <tr><td><b>切换弹窗</b></td><td>标题「原厂 / MY 切换」（商户为「原厂 / MY 切换（本站点）」）。每个场馆对一行：原厂场馆 / MY 场馆 / 对应游戏数量 / 显示设置（统计设置的版本，不是前台实际显示：全部 MY、全部原厂或「MY X 款 · 原厂 Y 款」）/ 操作「全部显示原厂」「全部显示 MY」（点后加入待确定，前台显示标签加「待确定 N 款」）。已全是该版本或可切换数为 0 时对应按钮置灰</td></tr>
         <tr><td><b>待确定</b><span class="tag-new" data-tip="pend" tabindex="0">本期新增</span></td><td>切换先不生效；页面上方提示条「有 N 处原厂 / MY 修改待确定（改为原厂 X 款、改为 MY Y 款），点「确定」后才生效」+「放弃修改」「确定」。「确定」弹确认框：写数量、影响范围（总控「所有站点生效，包括 Z 个站点自己改过的」；商户「只影响本站点」）、目标版本已被总控停用不生效的数量，备注选填（最多 50 字）；确定后一次生效，提示「已确定，N 款修改已生效」。「放弃修改」确认后全部撤回。待确定存在后台：总控一份、每个站点一份（场馆配置总控与游戏配置总控共用，商户厂商管理与游戏管理共用），离开或刷新页面不丢；两个菜单显示同一个提示条，写明来自哪个菜单（如「来自场馆配置总控 10 处、游戏配置总控 1 处」），在哪个菜单都可以「确定」或「放弃修改」，一次全部生效；同一侧有权限的账号看到同一个提示条，都可以「确定」或「放弃修改」；版本记录的操作人记点「确定」的账号</td></tr>
         <tr><td><b>版本记录</b><span class="tag-new" data-tip="rv" tabindex="0">本期新增</span></td><td>每次「确定」或还原记为一个版本：修改时间、操作人、修改内容、备注、修改前的显示版本；只保留最近 5 个。总控记录所有站点的实际显示版本（含站点自己的值）；商户记本站点当时显示的版本（站点没有自己的值时记当时总控默认的版本）。总控「确定」或还原后，显示版本有变化的站点在自己的记录里各记一条：操作人 system，修改内容「总控统一修改：改为原厂 X 款、改为 MY Y 款」（还原为「总控还原：…」，只算本站点变了的款数），备注「-」，修改前的显示版本记本站点当时显示的版本；显示没变的站点不记。这条算进本站点最近 5 个，商户可以像自己的记录一样还原，只影响本站点。商户的操作不记到总控；system 记录的「修改菜单」写总控的菜单名</td></tr>
         <tr><td><b>还原显示版本</b></td><td>入口：总控场馆配置总控、游戏配置总控工具栏（同一个弹窗）；商户厂商管理、游戏管理工具栏（本站点）。总控一份、每个站点一份，弹窗列 序号 / 修改时间 / 操作人 / 修改菜单（这次确定包含的菜单；还原写点还原的菜单）/ 修改内容 / 备注 / 「还原到这次修改前」；没有记录显示「还没有修改记录」。有待确定修改时点入口，提示「请先确定或放弃待确定的修改」</td></tr>
@@ -870,7 +870,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <tr><td><b>是什么</b></td><td>运营选的版本：站点有自己的值用站点值，没有就用总控默认</td><td>前台真正展示的那一款</td></tr>
         <tr><td><b>什么时候变</b></td><td>只有切换后点「确定」、还原时才变</td><td>每次下发前台数据时，按设置版本和两款当前状态现算</td></tr>
         <tr><td><b>存不存</b></td><td>存，进版本记录</td><td>不存、不进版本记录、不进待确定、不更新最近操作人</td></tr>
-        <tr><td><b>后台哪里用</b></td><td>「改为原厂 / 改为 MY」按钮、批量切换、切换弹窗的前台显示统计、「X 个站点自行改为…」、待确定、版本记录与还原</td><td>游戏配置总控、商户游戏管理、热门游戏排序、场馆游戏排序弹窗名称后的「前台显示 / 前台隐藏」标签和按前台显示筛选、名称下方小字提示、对应游戏分组的主行（前台显示的那一款）</td></tr>
+        <tr><td><b>后台哪里用</b></td><td>「改为原厂 / 改为 MY」按钮、批量切换、切换弹窗的显示设置统计、「X 个站点自行改为…」、待确定、版本记录与还原</td><td>游戏配置总控、商户游戏管理、热门游戏排序、场馆游戏排序弹窗名称后的「前台显示 / 前台隐藏」标签和按前台显示筛选、名称下方小字提示、对应游戏分组的主行（前台显示的那一款）</td></tr>
       </tbody></table></div>
       <h3>2. 四种状态怎么判断</h3>
       <div class="tbl-wrap"><table class="dh-table-simple"><thead><tr><th>状态</th><th>怎么判断（每个站点单独看）</th></tr></thead><tbody><tr><td><b>启用中</b></td><td>这款游戏和它所属的场馆：总控状态都是「启用」，本站点状态都是「开启」</td></tr><tr><td><b>维护中</b></td><td>有任意一项是「维护」（总控维护或本站点维护），没有「停用」「关闭」</td></tr><tr><td><b>已关闭</b></td><td>有任意一项本站点状态是「关闭」，没有「停用」</td></tr><tr><td><b>已停用</b></td><td>有任意一项总控状态是「停用」</td></tr></tbody></table></div>
@@ -1030,7 +1030,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
 <div class="modal-mask" id="swModal" role="dialog" aria-modal="true" aria-labelledby="swTitle"><div class="modal-box" style="width:900px;">
   <div class="modal-hd"><span id="swTitle">原厂 / MY 切换</span><button class="x" data-close type="button" aria-label="关闭">✕</button></div>
   <div class="modal-bd">
-    <div class="bk-table-wrap"><table class="bk-table" style="min-width:780px;"><thead><tr><th>原厂场馆</th><th>MY 场馆</th><th>对应游戏数量</th><th>前台显示</th><th style="width:330px;">操作</th></tr></thead><tbody id="swBody"></tbody></table></div>
+    <div class="bk-table-wrap"><table class="bk-table" style="min-width:780px;"><thead><tr><th>原厂场馆</th><th>MY 场馆</th><th>对应游戏数量</th><th>显示设置</th><th style="width:330px;">操作</th></tr></thead><tbody id="swBody"></tbody></table></div>
     <div class="muted" style="font-size:12.5px;margin-top:10px;" id="swNote"></div>
   </div>
   <div class="modal-ft"><button class="bk-btn" data-close type="button">关 闭</button></div>
@@ -1428,7 +1428,8 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     ['vPend','gPend'].forEach(function(id){ var el=$(id); if(!n){ el.classList.add('hide'); el.innerHTML=''; return; } el.classList.remove('hide');
       el.innerHTML='<span>有 <b>'+n+'</b> 处原厂 / MY 修改待确定（'+cntTxt(o,n-o)+'），来自'+fr+'；点「确定」后一次全部生效'+(s?'，只影响本站点':'，所有站点生效')+'</span><span class="mk" data-tip="pend" tabindex="0">本期新增</span><span class="sp"></span><button class="bk-btn sm" data-pend="no" type="button">放弃修改</button><button class="bk-btn sm primary" data-pend="ok" type="button">确定</button>'; }); }
   function swCell(s,id,attr){ var p=pairOf(id); if(!p) return '-'; var to=verE(s,p)==='my'?'orig':'my';
-    return canTo(p,to)?'<button class="bk-btn sm primary" '+attr+'="sw" data-id="'+id+'" type="button">改为'+(to==='my'?' MY':'原厂')+'</button>':'<button class="bk-btn sm" disabled title="'+verLab(to)+'版已被总控停用，不能切换" type="button">'+(to==='my'?'MY ':'原厂')+'已停用</button>'; }
+    var auto=to==='orig'&&ver(s,p)==='my'&&effV(s,p)==='orig';
+    return canTo(p,to)?'<button class="bk-btn sm primary" '+attr+'="sw" data-id="'+id+'" type="button"'+(auto?' title="当前设置为 MY，MY 版恢复启用后自动显示回 MY"':'')+'>改为'+(to==='my'?' MY':'原厂')+'</button>':'<button class="bk-btn sm" disabled title="'+verLab(to)+'版已被总控停用，不能切换" type="button">'+(to==='my'?'MY ':'原厂')+'已停用</button>'; }
   function ovSmall(p,id){ if(showOf(null,id)!=='show') return ''; var t=verT(p),n=SITES.filter(function(x){ var v=SS[x[0]].sv[p.my]; return v!=null&&v!==t; }).length; return n?'<span class="pair-note">'+n+' 个站点自行改为'+verLab(t==='my'?'orig':'my')+'</span>':''; }
   function renderSw(){ var s=isM()?MS():null; $('swTitle').textContent=isM()?'原厂 / MY 切换（本站点）':'原厂 / MY 切换'; var html='';
     Object.keys(VPAIR).forEach(function(o){ var ps=pairsOfO(o); if(!ps.length) return;
@@ -1765,7 +1766,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     ['A23','回归总控两页、商户三页现网功能','编辑排序数值、取消手动排序、游戏排序、有效注单、维护 / 启用 / 停用、入场余额限制、编辑、真人扣费配置、场馆排序规则设置、商户置顶等与现网一致（对齐平台排序见 A12 ~ A16）'],
     ['A24','试玩模式进入前台','顺序与正式模式一致'],
     ['A25','游戏配置总控打开游戏状态下拉并查询','下拉只有「维护」「启用」「停用」三项；只返回该状态的游戏；可与游戏ID、游戏名称、场馆名称同时生效；重置后清空'],
-    ['A26','点「原厂 / MY 切换」','列出 PG / TaDa 两个场馆对、对应游戏数量、前台显示；每行「全部显示原厂」「全部显示 MY」'],
+    ['A26','点「原厂 / MY 切换」','列出 PG / TaDa 两个场馆对、对应游戏数量、显示设置；每行「全部显示原厂」「全部显示 MY」'],
     ['A27','对 PG 场馆对点「全部显示原厂」（部分原厂已被总控停用）','不立即生效：提示已加入待确定、写明不切换的数量；页面上方出现「有 N 处原厂 / MY 修改待确定」与「确定」「放弃修改」；前台不变'],
     ['A28','游戏配置总控查看游戏对','前台显示标签按总控默认版本、在总控状态下前台实际显示的那一款标；有站点自己改过的显示「X 个站点自行改为…」'],
     ['A29','游戏配置总控按游戏名称或 ID 搜索游戏对中任一款','两行一起返回（前台显示的那一款为主行）；按「显示原厂 / 显示 MY」筛选时返回整组'],
@@ -1786,7 +1787,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     ['A44','总控改了置顶、确定了一次原厂 / MY 切换，站点 A 不点「对齐平台排序」','站点 A 前台置顶顺序不变（对齐后才变）；切换后的显示版本立即按新的显示'],
     ['A45','游戏对设为显示原厂，原厂版被站点 A 关闭（或被总控停用），MY 版启用中','不自动换成 MY：站点 A 前台两款都不显示（停用时所有站点）；后台游戏名称下方提示「显示的版本已关闭，前台两款都不显示」（停用时为「已停用」）；切到 MY 后按 MY 显示'],
     ['A46','总控账号甲在场馆配置总控加入 2 处待确定后刷新页面；账号乙打开游戏配置总控','刷新后待确定仍在；乙在游戏配置总控也看到同一个提示条，写明「来自场馆配置总控 2 处」，可「确定」或「放弃修改」；乙确定后版本记录的操作人为乙；商户各站点的待确定各自一份，互不影响'],
-    ['A47','游戏对设为显示 MY，原厂版启用中；MY 版分别被站点 A 关闭、被总控维护、被总控停用、所属 MY 场馆在站点 A 维护','都自动显示原厂版，按这对游戏的置顶位置 / 热门值排；后台原厂行标「前台显示」，名称下方小字按 MY 版实际状态写「MY 版已关闭 / 维护中 / 已停用，暂时显示原厂」；显示版本设置仍为 MY，不新增版本记录'],
+    ['A47','游戏对设为显示 MY，原厂版启用中；MY 版分别被站点 A 关闭、被总控维护、被总控停用、所属 MY 场馆在站点 A 维护','都自动显示原厂版，按这对游戏的置顶位置 / 热门值排；后台原厂行标「前台显示」，名称下方小字按 MY 版实际状态写「MY 版已关闭 / 维护中 / 已停用，暂时显示原厂」，「改为原厂」按钮悬停提示「当前设置为 MY，MY 版恢复启用后自动显示回 MY」；显示版本设置仍为 MY，不新增版本记录'],
     ['A48','A47 中 MY 版回到启用中（总控改回启用、站点改回开启）','前台自动显示回 MY 版，原厂版隐藏；不需要切换或确定'],
     ['A49','游戏对设为显示 MY，MY 版维护中，原厂版也维护中','不自动换：照现网显示 MY 版并标「维护中」'],
     ['A50','游戏对原厂有效注单 30,000、MY 有效注单 50,000，另一单款游戏有效注单 60,000','排序按合计 80,000：前台显示的那一款排在 60,000 那款前面（热门列表、场馆内排序、首页热门区补满都一样）；游戏配置总控两款仍分别显示 30,000、50,000，下方小字「排序用合计 80,000」；编辑某一款只改它自己的数；报表分开计算'],
