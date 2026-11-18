@@ -1323,7 +1323,7 @@ var FICON={"tile:热门":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABg
     if(pos) return '<span class="pin-cell"><button class="lk" '+attr+'="pos" data-id="'+esc(id)+'" type="button">第 '+pos+' 位</button><button class="lk red" '+attr+'="unpin" data-id="'+esc(id)+'" type="button">取消</button></span>'+(hid||'');
     return canPin?'<button class="lk" '+attr+'="pin" data-id="'+esc(id)+'" type="button">置顶</button>':'<span class="muted">-</span>';
   }
-  function hidNote(s,id){ if(showOf(s,id)!=='hide') return ''; var p=pairOf(id); return '<span class="hid-note">前台不显示（当前显示 '+verLab(effV(s,p))+' 版）</span>'; }
+  function hidNote(s,id){ if(showOf(s,id)!=='hide') return ''; var p=pairOf(id); return '<span class="hid-note">前台显示 '+verLab(effV(s,p))+' 版，置顶位置跟着游戏对</span>'; }
   /* 商户现网三列：排序类型 / 置顶位置 / 是否置顶 */
   function mPinCols(attr,id,mp,kind,canPin,hid){
     var type=mp?'置顶':'自动排序';
