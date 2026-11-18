@@ -486,6 +486,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
 .mode-tip{font-size:12.5px;color:var(--text-secondary);margin:-4px 0 8px;}
 .bk-btn[disabled]+.sw-note{color:var(--text-secondary);}
 </style>
+<style>.bk-btn.ghost-primary{color:var(--primary);border-color:var(--primary);}.bk-btn.ghost-primary:hover{color:#40a9ff;border-color:#40a9ff;}</style>
 <style>
 .tpl-tag{display:inline-block;margin-left:4px;font-size:11px;line-height:16px;padding:0 5px;border-radius:3px;background:#e6fffb;color:#08979c;border:1px solid #87e8de;white-space:nowrap;}
 .sw-snap{display:block;font-size:11.5px;color:var(--text-secondary);line-height:1.4;margin-top:4px;}
@@ -534,7 +535,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
               <span class="mch-only" style="align-items:center;gap:8px;"><button class="bk-btn primary" id="vMBatchPin" type="button">批量置顶</button><button class="bk-btn" id="vMBatchUnpin" type="button">批量取消置顶</button><span class="muted">已选 <b id="vMSel">0</b> 项</span></span><span class="zk-only" style="display:inline-flex;align-items:center;gap:8px;"><label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="chk" id="vAllTop"><span id="vAllLabel">勾选全部（共 0 条）</span></label><button class="bk-btn primary" data-batch="v:pin" type="button">批量置顶</button><button class="bk-btn" data-batch="v:unpin" type="button">批量取消置顶</button><span class="muted">已选 <b id="vZSel">0</b> 项</span><span class="mk" data-tip="bfoot" tabindex="0">本期新增</span></span>
               <span class="hint" id="vPinHint"></span>
             </span>
-            <button class="bk-btn mch-only" data-mchtoast="1" type="button">真人扣费配置</button><button class="bk-btn mch-only" data-rule="m" type="button">场馆排序规则设置</button><button class="bk-btn mch-only" data-sync="1" type="button">对齐平台排序</button><span><button class="bk-btn primary" id="vSwitch" type="button">原厂 / MY 切换</button><span class="mk" data-tip="vsw" tabindex="0">本期新增</span></span><span><button class="bk-btn" data-rv="1" type="button">还原显示版本</button><span class="mk" data-tip="rv" tabindex="0">本期新增</span></span>
+            <button class="bk-btn mch-only" data-mchtoast="1" type="button">真人扣费配置</button><button class="bk-btn mch-only" data-rule="m" type="button">场馆排序规则设置</button><button class="bk-btn mch-only" data-sync="1" type="button">对齐平台排序</button><span><button class="bk-btn primary" id="vSwitch" type="button">原厂 / MY 切换</button><span class="mk" data-tip="vsw" tabindex="0">本期新增</span></span><span><button class="bk-btn ghost-primary" data-rv="1" type="button">还原显示版本</button><span class="mk" data-tip="rv" tabindex="0">本期新增</span></span>
             <span class="ico-btns"><span title="刷新" data-mchtoast="1">⟳</span><span title="密度">☰</span><span title="列设置">⚙</span></span>
           </div>
           <div class="sel-hint hide" id="vSelHint" role="status"></div>
@@ -566,7 +567,7 @@ textarea.bk-input{height:72px;width:100%;resize:none;padding:6px 11px;}
         <div class="bk-card">
           <div class="bk-toolbar">
             <span class="left">
-              <span style="display:inline-flex;align-items:center;gap:8px;"><label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="chk" id="gAllTop"><span id="gAllLabel">勾选全部（共 0 条）</span></label><button class="bk-btn" data-batch="g:orig" type="button">批量改为原厂</button><button class="bk-btn" data-batch="g:my" type="button">批量改为 MY</button><span class="muted">已选 <b id="gMSel">0</b> 项</span><span class="mk" data-tip="bfoot" tabindex="0">本期新增</span></span><button class="bk-btn mch-only" data-sync="1" type="button">对齐平台排序</button><button class="bk-btn primary zk-only" data-mchtoast="1" type="button">批量修改有效注单</button><span><button class="bk-btn" data-rv="1" type="button">还原显示版本</button><span class="mk" data-tip="rv" tabindex="0">本期新增</span></span>
+              <span style="display:inline-flex;align-items:center;gap:8px;"><label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="chk" id="gAllTop"><span id="gAllLabel">勾选全部（共 0 条）</span></label><button class="bk-btn" data-batch="g:orig" type="button">批量改为原厂</button><button class="bk-btn" data-batch="g:my" type="button">批量改为 MY</button><span class="muted">已选 <b id="gMSel">0</b> 项</span><span class="mk" data-tip="bfoot" tabindex="0">本期新增</span></span><button class="bk-btn mch-only" data-sync="1" type="button">对齐平台排序</button><button class="bk-btn primary zk-only" data-mchtoast="1" type="button">批量修改有效注单</button><span><button class="bk-btn ghost-primary" data-rv="1" type="button">还原显示版本</button><span class="mk" data-tip="rv" tabindex="0">本期新增</span></span>
             </span>
             <span class="ico-btns"><span title="刷新" data-mchtoast="1">⟳</span><span title="密度">☰</span><span title="列设置">⚙</span></span>
           </div>
